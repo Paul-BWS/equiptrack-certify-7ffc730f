@@ -42,7 +42,7 @@ export const TorqueReadingsModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto bg-popover">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Torque Wrench Readings</DialogTitle>
         </DialogHeader>
@@ -56,7 +56,6 @@ export const TorqueReadingsModal = ({
                 value={readings.certNumber}
                 onChange={(e) => setReadings({ ...readings, certNumber: e.target.value })}
                 placeholder="BWS13009"
-                className="bg-field"
               />
             </div>
 
@@ -68,7 +67,6 @@ export const TorqueReadingsModal = ({
                   type="date"
                   value={readings.date}
                   onChange={(e) => setReadings({ ...readings, date: e.target.value })}
-                  className="bg-field"
                 />
                 <Calendar className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground" />
               </div>
@@ -81,7 +79,6 @@ export const TorqueReadingsModal = ({
                 value={readings.model}
                 onChange={(e) => setReadings({ ...readings, model: e.target.value })}
                 placeholder="Silver (red handle)"
-                className="bg-field"
               />
             </div>
 
@@ -92,7 +89,6 @@ export const TorqueReadingsModal = ({
                 value={readings.serialNumber}
                 onChange={(e) => setReadings({ ...readings, serialNumber: e.target.value })}
                 placeholder="TW01"
-                className="bg-field"
               />
             </div>
 
@@ -103,7 +99,6 @@ export const TorqueReadingsModal = ({
                 value={readings.engineer}
                 onChange={(e) => setReadings({ ...readings, engineer: e.target.value })}
                 placeholder="Engineer name"
-                className="bg-field"
               />
             </div>
 
@@ -115,7 +110,6 @@ export const TorqueReadingsModal = ({
                   type="date"
                   value={readings.retestDate}
                   onChange={(e) => setReadings({ ...readings, retestDate: e.target.value })}
-                  className="bg-field"
                 />
                 <Calendar className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground" />
               </div>
@@ -129,7 +123,6 @@ export const TorqueReadingsModal = ({
                 value={readings.min}
                 onChange={(e) => setReadings({ ...readings, min: e.target.value })}
                 placeholder="40"
-                className="bg-field"
               />
             </div>
 
@@ -141,7 +134,6 @@ export const TorqueReadingsModal = ({
                 value={readings.max}
                 onChange={(e) => setReadings({ ...readings, max: e.target.value })}
                 placeholder="340"
-                className="bg-field"
               />
             </div>
           </div>
@@ -161,7 +153,6 @@ export const TorqueReadingsModal = ({
                       setReadings({ ...readings, readings: newReadings });
                     }}
                     placeholder="Target value"
-                    className="bg-field"
                   />
                 </div>
                 <div>
@@ -175,7 +166,6 @@ export const TorqueReadingsModal = ({
                       setReadings({ ...readings, readings: newReadings });
                     }}
                     placeholder="Actual value"
-                    className="bg-field"
                   />
                 </div>
                 <div>
@@ -189,7 +179,6 @@ export const TorqueReadingsModal = ({
                       setReadings({ ...readings, readings: newReadings });
                     }}
                     placeholder="Deviation"
-                    className="bg-field"
                   />
                 </div>
               </div>

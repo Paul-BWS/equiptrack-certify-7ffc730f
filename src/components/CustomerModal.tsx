@@ -29,7 +29,7 @@ export const CustomerModal = () => {
           Add Customer
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-popover">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add New Customer</DialogTitle>
         </DialogHeader>
@@ -37,72 +37,72 @@ export const CustomerModal = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="company">Company</Label>
-              <Input id="company" placeholder="Company name" className="bg-field" />
+              <Input id="company" placeholder="Company name" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="status">Status</Label>
-              <Input id="status" placeholder="Status" className="bg-field" />
+              <Input id="status" placeholder="Status" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="contactFirstName">Contact First Name</Label>
-              <Input id="contactFirstName" placeholder="First name" className="bg-field" />
+              <Input id="contactFirstName" placeholder="First name" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="contactLastName">Contact Last Name</Label>
-              <Input id="contactLastName" placeholder="Last name" className="bg-field" />
+              <Input id="contactLastName" placeholder="Last name" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="phone">Phone</Label>
-              <Input id="phone" type="tel" placeholder="Phone number" className="bg-field" />
+              <Input id="phone" type="tel" placeholder="Phone number" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="mobile">Mobile Phone</Label>
-              <Input id="mobile" type="tel" placeholder="Mobile number" className="bg-field" />
+              <Input id="mobile" type="tel" placeholder="Mobile number" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="Email address" className="bg-field" />
+              <Input id="email" type="email" placeholder="Email address" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="accountsEmail">Accounts Email</Label>
-              <Input id="accountsEmail" type="email" placeholder="Accounts email" className="bg-field" />
+              <Input id="accountsEmail" type="email" placeholder="Accounts email" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="street">Site Address</Label>
-              <Input id="street" placeholder="Street address" className="bg-field" />
+              <Input id="street" placeholder="Street address" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="street2">Site Address 2</Label>
-              <Input id="street2" placeholder="Street address 2" className="bg-field" />
+              <Input id="street2" placeholder="Street address 2" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="city">City</Label>
-              <Input id="city" placeholder="City" className="bg-field" />
+              <Input id="city" placeholder="City" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="county">County</Label>
-              <Input id="county" placeholder="County" className="bg-field" />
+              <Input id="county" placeholder="County" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="postcode">Postcode</Label>
-              <Input id="postcode" placeholder="Postal code" className="bg-field" />
+              <Input id="postcode" placeholder="Postal code" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="country">Country</Label>
-              <Input id="country" placeholder="Country" className="bg-field" />
+              <Input id="country" placeholder="Country" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="accountsPhone">Accounts Phone</Label>
-              <Input id="accountsPhone" type="tel" placeholder="Accounts phone" className="bg-field" />
+              <Input id="accountsPhone" type="tel" placeholder="Accounts phone" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="approvals">Approvals</Label>
-              <Input id="approvals" placeholder="Manufacturer approvals" className="bg-field" />
+              <Input id="approvals" placeholder="Manufacturer approvals" />
             </div>
           </div>
           <div className="space-y-2 col-span-full">
             <Label htmlFor="notes">Notes</Label>
-            <Textarea id="notes" placeholder="Additional notes" className="bg-field" />
+            <Textarea id="notes" placeholder="Additional notes" />
           </div>
           <div className="flex justify-end space-x-2">
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>

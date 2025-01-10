@@ -45,21 +45,13 @@ export default {
           foreground: "hsl(var(--muted-foreground))",
         },
         popover: {
-          DEFAULT: "#FFFFFF",
+          DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        field: {
-          DEFAULT: "#F9F9F9",
-          header: "#B3B3B3",
-        },
-      },
-      fontSize: {
-        'field-header': '12px',
-        'field-input': '14px',
       },
       borderRadius: {
         lg: "var(--radius)",
