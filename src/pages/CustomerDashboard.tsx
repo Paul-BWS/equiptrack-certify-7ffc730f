@@ -1,9 +1,8 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Customer } from "@/types/customer";
 import { Equipment } from "@/types/equipment";
 
@@ -47,6 +46,15 @@ const CustomerDashboard = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       <main className="container mx-auto py-8">
+        <Button
+          variant="outline"
+          className="mb-6"
+          onClick={() => navigate('/')}
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Customers
+        </Button>
+
         <div className="space-y-6">
           {/* Customer Details Card */}
           <Card>
