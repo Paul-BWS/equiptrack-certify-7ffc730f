@@ -2,10 +2,11 @@ import { Navigation } from "@/components/Navigation";
 import { EquipmentCategories } from "@/components/EquipmentCategories";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Equipment = () => {
   const navigate = useNavigate();
+  const { customerId } = useParams();
 
   return (
     <div className="min-h-screen bg-background">
@@ -16,10 +17,10 @@ const Equipment = () => {
           <Button
             variant="outline"
             className="mb-4"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate(`/customers/${customerId}`)}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Customers
+            Back to Customer
           </Button>
           
           <h1 className="text-3xl font-bold text-foreground mb-2">
