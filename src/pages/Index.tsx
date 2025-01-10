@@ -3,6 +3,7 @@ import { Navigation } from "@/components/Navigation";
 import { CustomerSearch } from "@/components/CustomerSearch";
 import { CustomerList } from "@/components/CustomerList";
 import { Customer } from "@/types/customer";
+import { CustomerModal } from "@/components/CustomerModal";
 
 // Sample data - in a real app, this would come from a backend
 const sampleCustomers: Customer[] = [
@@ -41,6 +42,7 @@ const Index = () => {
               Customers
             </h1>
           </div>
+          <CustomerModal />
         </div>
 
         <div className="mb-6">
