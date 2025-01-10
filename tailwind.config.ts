@@ -57,6 +57,10 @@ export default {
           header: "#B3B3B3",
         },
       },
+      fontSize: {
+        'field-header': '12px',
+        'field-input': '14px',
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

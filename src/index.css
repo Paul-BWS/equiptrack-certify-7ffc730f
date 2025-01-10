@@ -42,12 +42,12 @@
   
   /* Form field styles */
   input, textarea, select {
-    @apply bg-field;
+    @apply bg-field text-field-input;
   }
   
   /* Field header/label styles */
   label {
-    @apply text-field-header;
+    @apply text-field-header text-field-header;
   }
 }
 
