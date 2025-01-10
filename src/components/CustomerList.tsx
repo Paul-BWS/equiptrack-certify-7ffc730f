@@ -24,10 +24,10 @@ export const CustomerList = ({ customers }: CustomerListProps) => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate(`/customers/${customer.id}/equipment`)}
+            onClick={() => navigate(`/customers/${customer.id}`)}
           >
             <ArrowRight className="h-4 w-4" />
-            View Equipment
+            View Details
           </Button>
         </div>
       ))}
