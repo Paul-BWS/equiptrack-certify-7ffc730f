@@ -50,9 +50,6 @@ const TorqueWrenches = () => {
               <h1 className="text-3xl font-bold text-foreground mb-2">
                 Torque Wrenches
               </h1>
-              <p className="text-muted-foreground">
-                Manage and calibrate torque wrenches
-              </p>
             </div>
             <Button onClick={() => setShowReadingsModal(true)}>
               <Plus className="mr-2 h-4 w-4" />
