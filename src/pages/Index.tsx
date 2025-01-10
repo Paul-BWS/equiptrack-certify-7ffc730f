@@ -2,8 +2,6 @@ import { useState } from "react";
 import { Navigation } from "@/components/Navigation";
 import { CustomerSearch } from "@/components/CustomerSearch";
 import { CustomerList } from "@/components/CustomerList";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import { Customer } from "@/types/customer";
 
 // Sample data - in a real app, this would come from a backend
@@ -42,14 +40,7 @@ const Index = () => {
             <h1 className="text-3xl font-bold text-foreground mb-2">
               Customers
             </h1>
-            <p className="text-muted-foreground">
-              Manage your customers and their equipment
-            </p>
           </div>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Add Customer
-          </Button>
         </div>
 
         <div className="mb-6">
