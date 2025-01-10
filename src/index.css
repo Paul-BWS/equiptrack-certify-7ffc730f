@@ -34,6 +34,21 @@
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* Modal styles */
+  [role="dialog"] {
+    @apply bg-popover;
+  }
+  
+  /* Form field styles */
+  input, textarea, select {
+    @apply bg-field;
+  }
+  
+  /* Field header/label styles */
+  label {
+    @apply text-field-header;
+  }
 }
 
 @media print {
