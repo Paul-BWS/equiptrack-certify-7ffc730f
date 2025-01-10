@@ -27,9 +27,9 @@ export const EquipmentList = ({
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
-            <TableHead>Serial Number</TableHead>
-            <TableHead>Last Service</TableHead>
-            <TableHead>Next Due</TableHead>
+            <TableHead>Serial</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Retest</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
