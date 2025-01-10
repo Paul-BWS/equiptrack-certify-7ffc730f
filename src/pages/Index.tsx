@@ -1,102 +1,62 @@
 import { useState } from "react";
 import { Navigation } from "@/components/Navigation";
-import { EquipmentList } from "@/components/EquipmentList";
-import { CertificateTemplate } from "@/components/CertificateTemplate";
+import { CustomerSearch } from "@/components/CustomerSearch";
+import { CustomerList } from "@/components/CustomerList";
 import { Button } from "@/components/ui/button";
-import { Equipment, ServiceRecord, Certificate } from "@/types/equipment";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { useToast } from "@/components/ui/use-toast";
+import { Plus } from "lucide-react";
+import { Customer } from "@/types/customer";
 
 // Sample data - in a real app, this would come from a backend
-const sampleEquipment: Equipment[] = [
+const sampleCustomers: Customer[] = [
   {
     id: "1",
-    name: "Digital Multimeter",
-    serialNumber: "DMM-2024-001",
-    manufacturer: "Fluke",
-    model: "87V",
-    purchaseDate: "2024-01-15",
-    lastServiceDate: "2024-03-01",
-    nextServiceDue: "2024-09-01",
+    name: "Acme Corp",
+    email: "contact@acme.com",
+    phone: "123-456-7890",
+    address: "123 Main St, City, Country",
   },
   {
     id: "2",
-    name: "Oscilloscope",
-    serialNumber: "OSC-2024-002",
-    manufacturer: "Tektronix",
-    model: "TBS1052B",
-    purchaseDate: "2023-11-20",
-    lastServiceDate: "2024-02-15",
-    nextServiceDue: "2024-08-15",
+    name: "TechServ Ltd",
+    email: "info@techserv.com",
+    phone: "098-765-4321",
+    address: "456 Tech Ave, City, Country",
   },
 ];
 
-const sampleServiceRecord: ServiceRecord = {
-  id: "1",
-  equipmentId: "1",
-  date: "2024-03-01",
-  type: "calibration",
-  technician: "John Smith",
-  notes: "Annual calibration performed",
-  nextDueDate: "2024-09-01",
-};
-
-const sampleCertificate: Certificate = {
-  id: "1",
-  serviceRecordId: "1",
-  equipmentId: "1",
-  issueDate: "2024-03-01",
-  expiryDate: "2024-09-01",
-  certificationNumber: "CERT-2024-001",
-};
-
 const Index = () => {
-  const [showCertificate, setShowCertificate] = useState(false);
-  const { toast } = useToast();
+  const [customers, setCustomers] = useState<Customer[]>(sampleCustomers);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const handleGenerateCertificate = (equipmentId: string) => {
-    setShowCertificate(true);
-  };
-
-  const handlePrintCertificate = () => {
-    window.print();
-    toast({
-      title: "Certificate Ready",
-      description: "The certificate has been sent to your printer.",
-    });
-  };
+  const filteredCustomers = customers.filter((customer) =>
+    customer.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <Navigation />
       
       <main className="container mx-auto py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Equipment Management
-          </h1>
-          <p className="text-gray-600">
-            Manage your equipment service records and certificates
-          </p>
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground mb-2">
+              Customers
+            </h1>
+            <p className="text-muted-foreground">
+              Manage your customers and their equipment
+            </p>
+          </div>
+          <Button>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Customer
+          </Button>
         </div>
 
-        <EquipmentList
-          equipment={sampleEquipment}
-          onGenerateCertificate={handleGenerateCertificate}
-        />
+        <div className="mb-6">
+          <CustomerSearch onSearch={setSearchQuery} />
+        </div>
 
-        <Dialog open={showCertificate} onOpenChange={setShowCertificate}>
-          <DialogContent className="max-w-4xl">
-            <CertificateTemplate
-              certificate={sampleCertificate}
-              equipment={sampleEquipment[0]}
-              serviceRecord={sampleServiceRecord}
-            />
-            <div className="mt-4 flex justify-end">
-              <Button onClick={handlePrintCertificate}>Print Certificate</Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+        <CustomerList customers={filteredCustomers} />
       </main>
     </div>
   );
