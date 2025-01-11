@@ -27,19 +27,8 @@ export const HeaderSection = ({
     return today <= retestDateObj ? "ACTIVE" : "INACTIVE";
   };
 
-  const handleDateChange = (newDate: string) => {
-    onDateChange(newDate);
-    
-    // Only set retest date if a date is selected
-    if (newDate) {
-      const testDate = new Date(newDate);
-      const newRetestDate = new Date(testDate);
-      newRetestDate.setDate(testDate.getDate() + 364);
-      
-      // Format the date to YYYY-MM-DD for the input
-      const formattedRetestDate = newRetestDate.toISOString().split('T')[0];
-      onRetestDateChange(formattedRetestDate);
-    }
+  const handleRetestDateChange = (newDate: string) => {
+    onRetestDateChange(newDate);
   };
 
   const status = calculateStatus();
@@ -47,14 +36,16 @@ export const HeaderSection = ({
   
   return (
     <div className={`grid ${isMobile ? 'grid-cols-1 gap-4' : 'grid-cols-4 gap-4'}`}>
-      <FormField
-        id="date"
-        label="Test Date"
-        type="date"
-        value={date}
-        onChange={(e) => handleDateChange(e.target.value)}
-        showCalendar
-      />
+      <div className="space-y-2">
+        <label htmlFor="date" className="text-[#C8C8C9] text-sm">Test Date</label>
+        <input
+          id="date"
+          type="date"
+          value={date}
+          onChange={(e) => onDateChange(e.target.value)}
+          className="flex h-10 w-full rounded-md border border-input bg-[#F9F9F9] px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-[#CCCCCC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        />
+      </div>
       <FormField
         id="status"
         label="Status"
@@ -67,7 +58,7 @@ export const HeaderSection = ({
         label="Retest Date"
         type="date"
         value={retestDate}
-        onChange={(e) => onRetestDateChange(e.target.value)}
+        onChange={(e) => handleRetestDateChange(e.target.value)}
         showCalendar
       />
       <FormField
