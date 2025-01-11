@@ -1,12 +1,23 @@
 import { Reading } from "@/types/equipment";
 import { calculateDeviation } from "@/utils/deviationCalculator";
+import { TorqueReadingsContent } from "./TorqueReadingsContent";
+import { TorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
 
 interface ReadingsHandlerProps {
-  readings: any;
-  setReadings: (readings: any) => void;
+  readings: TorqueReadingsForm;
+  setReadings: (readings: TorqueReadingsForm) => void;
+  handleSubmit: (e: React.FormEvent) => void;
+  handleSave: () => void;
+  isSaving: boolean;
 }
 
-export const ReadingsHandler = ({ readings, setReadings }: ReadingsHandlerProps) => {
+export const ReadingsHandler = ({ 
+  readings, 
+  setReadings, 
+  handleSubmit,
+  handleSave,
+  isSaving 
+}: ReadingsHandlerProps) => {
   const handleReadingChange = (index: number, field: string, value: string) => {
     const newReadings = [...readings.readings];
     newReadings[index] = { ...newReadings[index], [field]: value };
