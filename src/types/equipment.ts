@@ -5,7 +5,7 @@ export interface Reading {
 }
 
 export interface TorqueWrench {
-  id: string;
+  id?: string;
   company_id: string;
   model: string;
   serial_number: string;

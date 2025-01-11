@@ -15,6 +15,7 @@ import { validateForm } from "@/utils/torqueReadingsValidation";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { prepareCertificateData } from "@/utils/certificateDataPreparation";
+import { TorqueWrench } from "@/types/equipment";
 
 const calculateDeviation = (target: string, actual: string): string => {
   if (!target || !actual) return "";
@@ -57,7 +58,7 @@ export const TorqueReadingsModal = ({
       const companyIdIndex = pathSegments.indexOf('customers') + 1;
       const companyId = pathSegments[companyIdIndex];
 
-      const torqueWrenchData = {
+      const torqueWrenchData: TorqueWrench = {
         id: equipmentId || undefined,
         company_id: companyId,
         model: readings.model,
