@@ -4,8 +4,7 @@ import { OrganizationSettings } from "@/types/settings";
 const DEFAULT_SETTINGS: OrganizationSettings = {
   logo: "/placeholder.svg",
   digitalSignature: "/placeholder.svg",
-  organizationName: "Your Company Name",
-  inspectionAuthority: "Inspection Authority"
+  organizationName: "Your Company Name"
 };
 
 export const getOrganizationSettings = (): OrganizationSettings => {
