@@ -29,14 +29,14 @@ export const CertificateModal = ({
 
   const handlePrint = () => {
     const sentOn = updateSentOn();
-    toast.success(`Certificate printed at ${new Date(sentOn).toLocaleString()}`);
+    toast.success(`Certificate ${certificate.certificationNumber} printed at ${new Date(sentOn).toLocaleString()}`);
     window.print();
   };
 
   const handleEmail = () => {
     const sentOn = updateSentOn();
     // This would be connected to your email service
-    toast.success(`Certificate emailed at ${new Date(sentOn).toLocaleString()}`);
+    toast.success(`Certificate ${certificate.certificationNumber} emailed at ${new Date(certificate.issueDate).toLocaleString()}`);
   };
 
   const handleClose = () => {
