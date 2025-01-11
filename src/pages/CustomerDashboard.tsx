@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, ArrowRight, Mail, Phone, Eye } from "lucide-react";
+import { Users, Grid, Mail, Phone, Eye } from "lucide-react";
 import { Customer } from "@/types/customer";
 import { Equipment } from "@/types/equipment";
 
@@ -61,7 +61,7 @@ const CustomerDashboard = () => {
             className="bg-primary hover:bg-primary/90"
             onClick={() => navigate(`/customers/${customerId}/equipment`)}
           >
-            <ArrowRight className="h-4 w-4 text-primary-foreground" />
+            <Grid className="h-4 w-4 text-primary-foreground" />
           </Button>
         </div>
 
@@ -119,7 +119,7 @@ const CustomerDashboard = () => {
                         navigate(`/customers/${customerId}/equipment`)
                       }
                     >
-                      <ArrowRight className="h-4 w-4 text-primary-foreground" />
+                      <Grid className="h-4 w-4 text-primary-foreground" />
                     </Button>
                   </div>
                 ))}
