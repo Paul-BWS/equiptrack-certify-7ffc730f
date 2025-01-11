@@ -32,9 +32,14 @@ export const FormField = ({
         type={showCalendar ? "date" : type}
         value={value}
         onChange={onChange}
-        placeholder={placeholder}
+        placeholder={placeholder || (showCalendar ? "DD/MM/YYYY" : undefined)}
         readOnly={readOnly}
         className={`text-sm bg-[#F9F9F9] placeholder:text-[#CCCCCC] ${className}`}
+        onFocus={(e) => {
+          if (showCalendar) {
+            e.currentTarget.showPicker();
+          }
+        }}
       />
     </div>
   </div>
