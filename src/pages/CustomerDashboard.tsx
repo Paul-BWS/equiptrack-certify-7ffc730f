@@ -2,12 +2,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Grid, Mail, Phone, ArrowRight, Globe, Building2, Factory } from "lucide-react";
-import { Customer } from "@/types/customer";
+import { Users, Grid, Mail, Phone, ArrowRight, Globe, Building2, Factory, UserPlus } from "lucide-react";
+import { Company } from "@/types/company";
+import { Contact } from "@/types/contact";
 import { Equipment } from "@/types/equipment";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { CustomerEditForm } from "@/components/CustomerEditForm";
+import { CompanyEditForm } from "@/components/CompanyEditForm";
+import { ContactForm } from "@/components/ContactForm";
 
 const sampleUpcomingService: Equipment[] = [
   {
@@ -36,24 +38,35 @@ const CustomerDashboard = () => {
   const { customerId } = useParams();
   const navigate = useNavigate();
 
-  const { data: customer, isLoading } = useQuery({
-    queryKey: ['customer', customerId],
+  const { data: company, isLoading: isLoadingCompany } = useQuery({
+    queryKey: ['company', customerId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('customers')
+        .from('companies')
         .select('*')
         .eq('id', customerId)
         .single();
       
-      if (error) {
-        throw error;
-      }
-      
-      return data as Customer;
+      if (error) throw error;
+      return data as Company;
     }
   });
 
-  if (isLoading) {
+  const { data: contacts, isLoading: isLoadingContacts } = useQuery({
+    queryKey: ['contacts', customerId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('contacts')
+        .select('*')
+        .eq('company_id', customerId)
+        .order('is_primary', { ascending: false });
+      
+      if (error) throw error;
+      return data as Contact[];
+    }
+  });
+
+  if (isLoadingCompany || isLoadingContacts) {
     return (
       <div className="min-h-screen bg-background">
         <Navigation />
@@ -66,18 +79,20 @@ const CustomerDashboard = () => {
     );
   }
 
-  if (!customer) {
+  if (!company) {
     return (
       <div className="min-h-screen bg-background">
         <Navigation />
         <main className="container mx-auto py-8">
           <div className="text-center">
-            <h2 className="text-xl font-semibold">Customer not found</h2>
+            <h2 className="text-xl font-semibold">Company not found</h2>
           </div>
         </main>
       </div>
     );
   }
+
+  const primaryContact = contacts?.find(contact => contact.is_primary);
 
   return (
     <div className="min-h-screen bg-background">
@@ -106,76 +121,100 @@ const CustomerDashboard = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-2xl font-bold">
-                {customer.name}
+                {company.name}
               </CardTitle>
-              <CustomerEditForm customer={customer} />
+              <div className="flex gap-2">
+                <ContactForm companyId={company.id} />
+                <CompanyEditForm company={company} />
+              </div>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div>
                     <h3 className="text-xs text-[#B3B3B3] mb-1 flex items-center gap-2">
-                      <Building2 className="h-4 w-4" />
-                      Company
-                    </h3>
-                    <p className="text-sm">{customer.company}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-xs text-[#B3B3B3] mb-1 flex items-center gap-2">
                       <Factory className="h-4 w-4" />
                       Industry
                     </h3>
-                    <p className="text-sm">{customer.industry}</p>
+                    <p className="text-sm">{company.industry}</p>
                   </div>
-                  <div>
-                    <h3 className="text-xs text-[#B3B3B3] mb-1 flex items-center gap-2">
-                      <Mail className="h-4 w-4" />
-                      Email
-                    </h3>
-                    <p className="text-sm">{customer.email}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-xs text-[#B3B3B3] mb-1 flex items-center gap-2">
-                      <Phone className="h-4 w-4" />
-                      Phone
-                    </h3>
-                    <p className="text-sm">{customer.phone}</p>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-xs text-[#B3B3B3] mb-1">Site Address</h3>
-                    <p className="text-sm">{customer.address}</p>
-                  </div>
-                  {customer.useSeparateBillingAddress && (
-                    <div>
-                      <h3 className="text-xs text-[#B3B3B3] mb-1">Billing Address</h3>
-                      <p className="text-sm">{customer.billingAddress}</p>
-                    </div>
-                  )}
-                  {customer.website && (
+                  {company.website && (
                     <div>
                       <h3 className="text-xs text-[#B3B3B3] mb-1 flex items-center gap-2">
                         <Globe className="h-4 w-4" />
                         Website
                       </h3>
                       <a 
-                        href={customer.website}
+                        href={company.website}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-sm text-primary hover:underline"
                       >
-                        {customer.website}
+                        {company.website}
                       </a>
                     </div>
                   )}
-                  {customer.notes && (
+                </div>
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-xs text-[#B3B3B3] mb-1">Site Address</h3>
+                    <p className="text-sm">{company.address}</p>
+                  </div>
+                  {company.useSeparateBillingAddress && (
+                    <div>
+                      <h3 className="text-xs text-[#B3B3B3] mb-1">Billing Address</h3>
+                      <p className="text-sm">{company.billingAddress}</p>
+                    </div>
+                  )}
+                  {company.notes && (
                     <div>
                       <h3 className="text-xs text-[#B3B3B3] mb-1">Notes</h3>
-                      <p className="text-sm whitespace-pre-wrap">{customer.notes}</p>
+                      <p className="text-sm whitespace-pre-wrap">{company.notes}</p>
                     </div>
                   )}
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-2xl font-bold">Contacts</CardTitle>
+              <Button variant="outline" size="icon">
+                <UserPlus className="h-4 w-4" />
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {contacts?.map((contact) => (
+                  <div
+                    key={contact.id}
+                    className="flex items-center justify-between p-4 rounded-lg border bg-[#F9F9F9]"
+                  >
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-medium">
+                          {contact.name}
+                          {contact.is_primary && (
+                            <span className="ml-2 text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
+                              Primary Contact
+                            </span>
+                          )}
+                        </h3>
+                      </div>
+                      <div className="space-y-1 text-sm text-muted-foreground">
+                        <p className="flex items-center gap-2">
+                          <Mail className="h-4 w-4" />
+                          {contact.email}
+                        </p>
+                        <p className="flex items-center gap-2">
+                          <Phone className="h-4 w-4" />
+                          {contact.phone}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
