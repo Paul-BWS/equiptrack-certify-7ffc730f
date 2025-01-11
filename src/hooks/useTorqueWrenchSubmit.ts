@@ -16,46 +16,48 @@ export const useTorqueWrenchSubmit = (
       return;
     }
 
+    if (!torqueWrenchData.company_id) {
+      toast.error("Company ID is required");
+      return;
+    }
+
     setIsSaving(true);
     try {
-      let torqueWrenchError;
-
-      if (equipmentId) {
-        // Check if the record exists
-        const { data: existingData, error: fetchError } = await supabase
-          .from('torque_wrench')
-          .select('id')
-          .eq('id', equipmentId)
-          .single();
-
-        if (fetchError && fetchError.code !== 'PGRST116') {
-          throw fetchError;
-        }
-
-        if (existingData) {
-          // Update existing record
-          const { error } = await supabase
-            .from('torque_wrench')
-            .update(torqueWrenchData)
-            .eq('id', equipmentId);
-          torqueWrenchError = error;
-        }
-      }
+      console.log('Saving torque wrench with data:', torqueWrenchData);
       
-      if (!equipmentId || !torqueWrenchError) {
-        // Insert new record
-        const { error } = await supabase
+      const dataToSave = {
+        ...torqueWrenchData,
+        readings: JSON.stringify(torqueWrenchData.readings),
+        definitive_readings: JSON.stringify(torqueWrenchData.definitive_readings)
+      };
+
+      let result;
+      
+      if (equipmentId) {
+        console.log('Updating existing torque wrench:', equipmentId);
+        result = await supabase
           .from('torque_wrench')
-          .insert([torqueWrenchData]);
-        torqueWrenchError = error;
+          .update(dataToSave)
+          .eq('id', equipmentId)
+          .select()
+          .single();
+      } else {
+        console.log('Creating new torque wrench');
+        result = await supabase
+          .from('torque_wrench')
+          .insert([dataToSave])
+          .select()
+          .single();
       }
 
-      if (torqueWrenchError) {
-        console.error('Error saving torque wrench:', torqueWrenchError);
-        throw torqueWrenchError;
+      if (result.error) {
+        console.error('Error saving torque wrench:', result.error);
+        throw result.error;
       }
 
-      // Only proceed with certificate if torque wrench was saved successfully
+      console.log('Successfully saved torque wrench:', result.data);
+
+      // Save certificate data
       const certificate = prepareCertificateData(torqueWrenchData, equipmentId);
       const { error: certError } = await supabase
         .from('certificates')
