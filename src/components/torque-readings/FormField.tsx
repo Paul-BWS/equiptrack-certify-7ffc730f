@@ -41,7 +41,10 @@ export const FormField = ({
         <button 
           type="button"
           className="absolute right-3 top-1/2 -translate-y-1/2"
-          onClick={() => document.getElementById(id)?.showPicker()}
+          onClick={() => {
+            const input = document.getElementById(id) as HTMLInputElement;
+            input?.showPicker();
+          }}
         >
           <Calendar className="h-4 w-4 text-muted-foreground" strokeWidth={2.5} />
         </button>
