@@ -25,7 +25,12 @@ export const prepareCertificateData = (readings: any, equipmentId: string | null
 };
 
 export const prepareEquipmentData = (readings: any, equipmentId: string | null) => {
-  const companyId = window.location.pathname.split('/')[2];
+  // Extract company_id from the URL path
+  const pathSegments = window.location.pathname.split('/');
+  const companyIdIndex = pathSegments.indexOf('customers') + 1;
+  const companyId = pathSegments[companyIdIndex];
+  
+  console.log('Preparing equipment data with company_id:', companyId);
   
   return {
     id: equipmentId || undefined,
