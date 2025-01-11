@@ -30,7 +30,10 @@ export const CustomerForm = () => {
   });
 
   const { mutate: createCompany, isPending } = useMutation({
-    mutationFn: companyService.createCompany,
+    mutationFn: async (data: CompanyFormData) => {
+      const result = await companyService.createCompany(data);
+      return result;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["companies"] });
       toast({
@@ -50,9 +53,11 @@ export const CustomerForm = () => {
     },
   });
 
-  const onSubmit = (data: CompanyFormData) => {
-    if (!isPending) {
-      createCompany(data);
+  const onSubmit = async (data: CompanyFormData) => {
+    try {
+      await createCompany(data);
+    } catch (error) {
+      console.error("Form submission error:", error);
     }
   };
 
