@@ -27,6 +27,21 @@ export const HeaderSection = ({
     return today <= retestDateObj ? "ACTIVE" : "INACTIVE";
   };
 
+  const handleDateChange = (newDate: string) => {
+    onDateChange(newDate);
+    
+    // If a date is selected, automatically set retest date to 364 days later
+    if (newDate) {
+      const testDate = new Date(newDate);
+      const newRetestDate = new Date(testDate);
+      newRetestDate.setDate(testDate.getDate() + 364);
+      
+      // Format the date to YYYY-MM-DD for the input
+      const formattedRetestDate = newRetestDate.toISOString().split('T')[0];
+      onRetestDateChange(formattedRetestDate);
+    }
+  };
+
   const status = calculateStatus();
   const statusColor = status === "ACTIVE" ? "text-green-500" : "text-red-500";
   
@@ -37,7 +52,7 @@ export const HeaderSection = ({
         label="Test Date"
         type="date"
         value={date}
-        onChange={(e) => onDateChange(e.target.value)}
+        onChange={(e) => handleDateChange(e.target.value)}
         showCalendar
       />
       <FormField
