@@ -53,7 +53,7 @@ const TorqueWrenches = () => {
             </Button>
           </div>
           
-          <h1 className="text-3xl font-bold text-foreground mb-2 text-center">
+          <h1 className="text-3xl font-bold text-foreground mb-2">
             Torque Wrenches
           </h1>
         </div>
