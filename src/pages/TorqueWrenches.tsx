@@ -1,19 +1,15 @@
 import { Navigation } from "@/components/Navigation";
-import { EquipmentList } from "@/components/EquipmentList";
-import { Button } from "@/components/ui/button";
-import { Grid, Plus } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
 import { TorqueReadingsModal } from "@/components/TorqueReadingsModal";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import { TorqueWrenchHeader } from "@/components/torque-wrenches/TorqueWrenchHeader";
+import { TorqueWrenchList } from "@/components/torque-wrenches/TorqueWrenchList";
 
 const TorqueWrenches = () => {
-  const navigate = useNavigate();
   const { customerId } = useParams();
-  const isMobile = useIsMobile();
   const [showReadingsModal, setShowReadingsModal] = useState(false);
   const [selectedEquipmentId, setSelectedEquipmentId] = useState<string | null>(null);
 
@@ -72,7 +68,7 @@ const TorqueWrenches = () => {
   });
 
   const handleNewTorqueWrench = () => {
-    setSelectedEquipmentId(null); // Explicitly set to null for new torque wrench
+    setSelectedEquipmentId(null);
     setShowReadingsModal(true);
   };
 
@@ -94,54 +90,20 @@ const TorqueWrenches = () => {
       <Navigation />
       <main className="container mx-auto py-8">
         <div className="space-y-6">
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => navigate(`/customers/${customerId}/equipment`)}
-                  className="rounded-full bg-primary hover:bg-primary/90 w-10"
-                >
-                  <Grid className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
-                </Button>
-                <Button 
-                  size="icon"
-                  onClick={handleNewTorqueWrench}
-                  className="rounded-full bg-primary hover:bg-primary/90"
-                >
-                  <Plus className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
-                </Button>
-              </div>
-            </div>
-            {customerData && (
-              <div className="flex flex-col gap-1">
-                <h1 className="text-3xl font-bold">
-                  {customerData.name}
-                </h1>
-              </div>
-            )}
-          </div>
+          <TorqueWrenchHeader
+            customerId={customerId!}
+            customerName={customerData?.name}
+            onNewTorqueWrench={handleNewTorqueWrench}
+          />
           
-          {torqueWrenches.length === 0 ? (
-            <div className="flex flex-col items-center justify-center p-8 text-center border rounded-lg bg-muted/10">
-              <p className="text-muted-foreground mb-4">No torque wrenches found for this customer.</p>
-              <Button 
-                onClick={handleNewTorqueWrench}
-                className="bg-primary hover:bg-primary/90"
-              >
-                Add First Torque Wrench
-              </Button>
-            </div>
-          ) : (
-            <EquipmentList
-              equipment={torqueWrenches}
-              onGenerateCertificate={(id) => {
-                setSelectedEquipmentId(id);
-                setShowReadingsModal(true);
-              }}
-            />
-          )}
+          <TorqueWrenchList
+            torqueWrenches={torqueWrenches}
+            onNewTorqueWrench={handleNewTorqueWrench}
+            onGenerateCertificate={(id) => {
+              setSelectedEquipmentId(id);
+              setShowReadingsModal(true);
+            }}
+          />
         </div>
       </main>
 
