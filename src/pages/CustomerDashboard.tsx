@@ -5,20 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Grid, Mail, Phone, ArrowRight } from "lucide-react";
 import { Customer } from "@/types/customer";
 import { Equipment } from "@/types/equipment";
-
-const sampleCustomer: Customer = {
-  id: "1",
-  name: "Acme Corp",
-  email: "contact@acme.com",
-  phone: "123-456-7890",
-  address: "123 Main St, City, Country",
-  billingAddress: "456 Finance Ave, City, Country",
-  useSeparateBillingAddress: true,
-  company: "Acme Corporation",
-  website: "https://www.acme.com",
-  notes: "Leading manufacturer of innovative products",
-  industry: "Manufacturing",
-};
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 const sampleUpcomingService: Equipment[] = [
   {
@@ -46,6 +34,49 @@ const sampleUpcomingService: Equipment[] = [
 const CustomerDashboard = () => {
   const { customerId } = useParams();
   const navigate = useNavigate();
+
+  const { data: customer, isLoading } = useQuery({
+    queryKey: ['customer', customerId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('customers')
+        .select('*')
+        .eq('id', customerId)
+        .single();
+      
+      if (error) {
+        throw error;
+      }
+      
+      return data as Customer;
+    }
+  });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <main className="container mx-auto py-8">
+          <div className="flex justify-center items-center h-48">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  if (!customer) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <main className="container mx-auto py-8">
+          <div className="text-center">
+            <h2 className="text-xl font-semibold">Customer not found</h2>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -75,22 +106,22 @@ const CustomerDashboard = () => {
           <Card>
             <CardHeader>
               <CardTitle className="text-2xl font-bold">
-                {sampleCustomer.name}
+                {customer.name}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <h3 className="text-xs text-[#B3B3B3] mb-1">Email</h3>
-                  <p className="text-sm">{sampleCustomer.email}</p>
+                  <p className="text-sm">{customer.email}</p>
                 </div>
                 <div>
                   <h3 className="text-xs text-[#B3B3B3] mb-1">Phone</h3>
-                  <p className="text-sm">{sampleCustomer.phone}</p>
+                  <p className="text-sm">{customer.phone}</p>
                 </div>
                 <div className="md:col-span-2">
                   <h3 className="text-xs text-[#B3B3B3] mb-1">Address</h3>
-                  <p className="text-sm">{sampleCustomer.address}</p>
+                  <p className="text-sm">{customer.address}</p>
                 </div>
               </div>
             </CardContent>
@@ -138,5 +169,3 @@ const CustomerDashboard = () => {
 };
 
 export default CustomerDashboard;
-
-
