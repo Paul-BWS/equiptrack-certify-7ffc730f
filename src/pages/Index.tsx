@@ -3,38 +3,31 @@ import { Navigation } from "@/components/Navigation";
 import { CustomerSearch } from "@/components/CustomerSearch";
 import { CustomerList } from "@/components/CustomerList";
 import { Customer } from "@/types/customer";
-
-// Sample data - in a real app, this would come from a backend
-const sampleCustomers: Customer[] = [
-  {
-    id: "1",
-    name: "Acme Corp",
-    email: "contact@acme.com",
-    phone: "123-456-7890",
-    address: "123 Main St, City, Country",
-  },
-  {
-    id: "2",
-    name: "TechServ Ltd",
-    email: "info@techserv.com",
-    phone: "098-765-4321",
-    address: "456 Tech Ave, City, Country",
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 const Index = () => {
-  console.log("Index component rendering");
-  const [customers, setCustomers] = useState<Customer[]>(sampleCustomers);
   const [searchQuery, setSearchQuery] = useState("");
 
-  console.log("Current customers:", customers);
-  console.log("Current search query:", searchQuery);
+  const { data: customers = [], isLoading } = useQuery({
+    queryKey: ['customers'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('customers')
+        .select('*');
+      
+      if (error) {
+        console.error('Error fetching customers:', error);
+        return [];
+      }
+      
+      return data as Customer[];
+    }
+  });
 
   const filteredCustomers = customers.filter((customer) =>
     customer.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  console.log("Filtered customers:", filteredCustomers);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -55,7 +48,13 @@ const Index = () => {
             <CustomerSearch onSearch={setSearchQuery} />
           </div>
 
-          <CustomerList customers={filteredCustomers} />
+          {isLoading ? (
+            <div className="flex justify-center items-center h-48">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            </div>
+          ) : (
+            <CustomerList customers={filteredCustomers} />
+          )}
         </div>
       </main>
     </div>
