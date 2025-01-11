@@ -127,13 +127,25 @@ const TorqueWrenches = () => {
             )}
           </div>
           
-          <EquipmentList
-            equipment={torqueWrenches}
-            onGenerateCertificate={(id) => {
-              setSelectedEquipmentId(id);
-              setShowReadingsModal(true);
-            }}
-          />
+          {torqueWrenches.length === 0 ? (
+            <div className="flex flex-col items-center justify-center p-8 text-center border rounded-lg bg-muted/10">
+              <p className="text-muted-foreground mb-4">No torque wrenches found for this customer.</p>
+              <Button 
+                onClick={() => setShowReadingsModal(true)}
+                className="bg-primary hover:bg-primary/90"
+              >
+                Add First Torque Wrench
+              </Button>
+            </div>
+          ) : (
+            <EquipmentList
+              equipment={torqueWrenches}
+              onGenerateCertificate={(id) => {
+                setSelectedEquipmentId(id);
+                setShowReadingsModal(true);
+              }}
+            />
+          )}
         </div>
       </main>
 
