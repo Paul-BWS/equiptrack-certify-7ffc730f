@@ -45,7 +45,7 @@ const TorqueWrenches = () => {
         .from('equipment')
         .select('*')
         .eq('company_id', customerId)
-        .eq('type', 'torque-wrench')
+        .eq('equipment_type', 'torque-wrenches')
         .order('created_at', { ascending: false });
 
       if (error) {
