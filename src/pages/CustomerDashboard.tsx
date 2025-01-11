@@ -46,14 +46,24 @@ const CustomerDashboard = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       <main className="container mx-auto py-8">
-        <Button
-          variant="outline"
-          size="icon"
-          className="mb-6 bg-primary hover:bg-primary/90"
-          onClick={() => navigate('/')}
-        >
-          <Users className="h-4 w-4 text-primary-foreground" />
-        </Button>
+        <div className="flex items-center gap-2 mb-6">
+          <Button
+            variant="outline"
+            size="icon"
+            className="bg-primary hover:bg-primary/90"
+            onClick={() => navigate('/')}
+          >
+            <Users className="h-4 w-4 text-primary-foreground" />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            className="bg-primary hover:bg-primary/90"
+            onClick={() => navigate(`/customers/${customerId}/equipment`)}
+          >
+            <ArrowRight className="h-4 w-4 text-primary-foreground" />
+          </Button>
+        </div>
 
         <div className="space-y-6">
           {/* Customer Details Card */}
@@ -77,15 +87,6 @@ const CustomerDashboard = () => {
                   <h3 className="text-xs text-[#B3B3B3] mb-1">Address</h3>
                   <p className="text-sm">{sampleCustomer.address}</p>
                 </div>
-              </div>
-              <div className="pt-4">
-                <Button
-                  onClick={() => navigate(`/customers/${customerId}/equipment`)}
-                  className="w-full md:w-auto bg-primary hover:bg-primary/90"
-                >
-                  View All Equipment
-                  <ArrowRight className="ml-2 h-4 w-4 text-primary-foreground" />
-                </Button>
               </div>
             </CardContent>
           </Card>
