@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Navigation } from "@/components/Navigation";
 import { EquipmentList } from "@/components/EquipmentList";
 import { Button } from "@/components/ui/button";
-import { Plus, ArrowLeft } from "lucide-react";
+import { Plus, Grid } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { TorqueReadingsModal } from "@/components/TorqueReadingsModal";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -43,12 +43,12 @@ const TorqueWrenches = () => {
               variant="outline"
               onClick={() => navigate(-1)}
             >
-              <ArrowLeft className="h-5 w-5" strokeWidth={2.5} />
+              <Grid className="h-5 w-5 text-primary" strokeWidth={2.5} />
               {!isMobile && <span className="ml-2">Back to Equipment</span>}
             </Button>
             
             <Button onClick={() => setShowReadingsModal(true)}>
-              <Plus className="h-5 w-5" strokeWidth={2.5} />
+              <Plus className="h-6 w-6 text-primary" strokeWidth={2.5} />
               {!isMobile && <span className="ml-2">Add Torque</span>}
             </Button>
           </div>
