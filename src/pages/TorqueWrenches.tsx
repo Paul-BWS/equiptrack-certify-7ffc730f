@@ -10,17 +10,13 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 
-interface ServiceRecord {
-  id: string;
-  service_date: string;
-  next_service_date: string;
-}
-
-interface EquipmentWithServices {
+interface TorqueWrench {
   id: string;
   model: string;
   serial_number: string;
-  service_records: ServiceRecord[];
+  service_date: string;
+  next_service_date: string;
+  company_id: string;
 }
 
 const TorqueWrenches = () => {
@@ -49,52 +45,37 @@ const TorqueWrenches = () => {
     }
   });
 
-  const { data: equipment = [], isLoading } = useQuery({
-    queryKey: ['equipment', customerId],
+  const { data: torqueWrenches = [], isLoading } = useQuery({
+    queryKey: ['torque_wrenches', customerId],
     queryFn: async () => {
-      console.log('Fetching equipment for customer:', customerId);
+      console.log('Fetching torque wrenches for customer:', customerId);
       
-      const { data: equipmentData, error: equipmentError } = await supabase
-        .from('equipment')
-        .select(`
-          id,
-          model,
-          serial_number,
-          service_records (
-            service_date,
-            next_service_date
-          )
-        `)
+      const { data: wrenchData, error } = await supabase
+        .from('torque_wrenches')
+        .select('*')
         .eq('company_id', customerId)
         .order('created_at', { ascending: false });
 
-      if (equipmentError) {
-        console.error('Error fetching equipment:', equipmentError);
-        toast.error("Failed to load equipment data");
-        throw equipmentError;
+      if (error) {
+        console.error('Error fetching torque wrenches:', error);
+        toast.error("Failed to load torque wrench data");
+        throw error;
       }
 
-      console.log('Fetched equipment:', equipmentData);
+      console.log('Fetched torque wrenches:', wrenchData);
       
-      return (equipmentData as EquipmentWithServices[]).map(item => {
-        const latestService = item.service_records?.[0] || {
-          service_date: '',
-          next_service_date: ''
-        };
-        
-        return {
-          id: item.id,
-          model: item.model || '',
-          serialNumber: item.serial_number || '',
-          lastServiceDate: latestService.service_date || '',
-          nextServiceDue: latestService.next_service_date || ''
-        };
-      });
+      return (wrenchData as TorqueWrench[]).map(wrench => ({
+        id: wrench.id,
+        model: wrench.model || '',
+        serialNumber: wrench.serial_number || '',
+        lastServiceDate: wrench.service_date || '',
+        nextServiceDue: wrench.next_service_date || ''
+      }));
     },
     meta: {
       onError: (error: Error) => {
         console.error('Query error:', error);
-        toast.error("Could not load equipment data. Please try again later.");
+        toast.error("Could not load torque wrench data. Please try again later.");
       }
     }
   });
@@ -147,7 +128,7 @@ const TorqueWrenches = () => {
           </div>
           
           <EquipmentList
-            equipment={equipment}
+            equipment={torqueWrenches}
             onGenerateCertificate={(id) => {
               setSelectedEquipmentId(id);
               setShowReadingsModal(true);
