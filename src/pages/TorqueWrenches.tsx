@@ -42,7 +42,7 @@ const TorqueWrenches = () => {
       console.log('Fetching torque wrenches for customer:', customerId);
       
       const { data: equipmentData, error } = await supabase
-        .from('torque_wrench')  // Changed from 'equipment' to 'torque_wrench'
+        .from('torque_wrench')
         .select('*')
         .eq('company_id', customerId)
         .order('created_at', { ascending: false });
@@ -70,6 +70,11 @@ const TorqueWrenches = () => {
       }
     }
   });
+
+  const handleNewTorqueWrench = () => {
+    setSelectedEquipmentId(null); // Explicitly set to null for new torque wrench
+    setShowReadingsModal(true);
+  };
 
   if (isLoading) {
     return (
@@ -102,7 +107,7 @@ const TorqueWrenches = () => {
                 </Button>
                 <Button 
                   size="icon"
-                  onClick={() => setShowReadingsModal(true)}
+                  onClick={handleNewTorqueWrench}
                   className="rounded-full bg-primary hover:bg-primary/90"
                 >
                   <Plus className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
@@ -122,7 +127,7 @@ const TorqueWrenches = () => {
             <div className="flex flex-col items-center justify-center p-8 text-center border rounded-lg bg-muted/10">
               <p className="text-muted-foreground mb-4">No torque wrenches found for this customer.</p>
               <Button 
-                onClick={() => setShowReadingsModal(true)}
+                onClick={handleNewTorqueWrench}
                 className="bg-primary hover:bg-primary/90"
               >
                 Add First Torque Wrench
