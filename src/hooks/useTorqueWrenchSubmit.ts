@@ -45,6 +45,7 @@ export const useTorqueWrenchSubmit = (
       const now = new Date().toISOString();
       const dataToSave = {
         ...torqueWrenchData,
+        id: equipmentId || crypto.randomUUID(), // Generate UUID for new records
         readings: JSON.stringify(torqueWrenchData.readings),
         definitive_readings: JSON.stringify(torqueWrenchData.definitive_readings),
         notes: torqueWrenchData.notes || null,
@@ -56,7 +57,7 @@ export const useTorqueWrenchSubmit = (
       
       if (equipmentId) {
         console.log('Updating existing torque wrench:', equipmentId);
-        const { created_at, ...updateData } = dataToSave;
+        const { id, created_at, ...updateData } = dataToSave;
         result = await supabase
           .from('torque_wrench')
           .update(updateData)
