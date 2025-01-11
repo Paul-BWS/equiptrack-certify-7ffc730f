@@ -3,6 +3,9 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 import Index from "./pages/Index";
 import Equipment from "./pages/Equipment";
 import TorqueWrenches from "./pages/TorqueWrenches";
@@ -13,6 +16,28 @@ import AllEquipment from "./pages/AllEquipment";
 const queryClient = new QueryClient();
 
 function App() {
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (error) {
+        console.error("Auth check error:", error);
+        toast.error("Authentication error. Please sign in.");
+        return;
+      }
+      
+      if (!session) {
+        console.log("No active session found");
+        toast.error("Please sign in to access the application");
+        return;
+      }
+      
+      console.log("Active session found:", session.user.id);
+      toast.success("Successfully authenticated");
+    };
+
+    checkAuth();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
