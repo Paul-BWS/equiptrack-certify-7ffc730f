@@ -21,15 +21,15 @@ export const CertificateTemplate = ({
       <CertificateHeader certificate={certificate} />
       
       <div className="space-y-4">
+        <EquipmentDetails equipment={equipment} serviceRecord={serviceRecord} />
+        <TechnicianStatus serviceRecord={serviceRecord} />
+        <Measurements />
+        
         <div className="bg-gray-50 p-4 rounded-lg">
           <h2 className="text-sm font-semibold mb-2 text-primary">Equipment and Standards Used</h2>
           <p className="text-xs">Test Equipment - Torque Master Digital Precision 516.0100. - Traceability NAMAS</p>
         </div>
 
-        <EquipmentDetails equipment={equipment} serviceRecord={serviceRecord} />
-        <TechnicianStatus serviceRecord={serviceRecord} />
-        <Measurements />
-        
         <div className="bg-gray-50 p-4 rounded-lg">
           <h2 className="text-sm font-semibold mb-2 text-primary">Notes</h2>
           <p className="min-h-[60px] whitespace-pre-wrap text-[11px]">{serviceRecord.notes}</p>
