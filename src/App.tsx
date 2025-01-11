@@ -11,28 +11,30 @@ import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/customers/:customerId" element={<CustomerDashboard />} />
-          <Route
-            path="/customers/:customerId/equipment"
-            element={<Equipment />}
-          />
-          <Route
-            path="/customers/:customerId/equipment/torque-wrenches"
-            element={<TorqueWrenches />}
-          />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/customers/:customerId" element={<CustomerDashboard />} />
+            <Route
+              path="/customers/:customerId/equipment"
+              element={<Equipment />}
+            />
+            <Route
+              path="/customers/:customerId/equipment/torque-wrenches"
+              element={<TorqueWrenches />}
+            />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+}
 
 export default App;
