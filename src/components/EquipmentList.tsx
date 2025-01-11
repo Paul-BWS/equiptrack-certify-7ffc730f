@@ -8,12 +8,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { FileText } from "lucide-react";
+import { Pen } from "lucide-react";
 
 interface EquipmentListProps {
   equipment: Equipment[];
   onGenerateCertificate: (equipmentId: string) => void;
-  onEdit?: (equipmentId: string) => void;
 }
 
 export const EquipmentList = ({
@@ -45,8 +44,8 @@ export const EquipmentList = ({
                   size="sm"
                   onClick={() => onGenerateCertificate(item.id)}
                 >
-                  <FileText className="mr-2 h-4 w-4" />
-                  Certificate
+                  <Pen className="mr-2 h-4 w-4" />
+                  Edit
                 </Button>
               </TableCell>
             </TableRow>
