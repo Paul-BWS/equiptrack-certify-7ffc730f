@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Navigation } from "@/components/Navigation";
 import { CustomerSearch } from "@/components/CustomerSearch";
 import { CustomerList } from "@/components/CustomerList";
+import { CustomerForm } from "@/components/CustomerForm";
 import { Customer } from "@/types/customer";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
@@ -41,6 +42,7 @@ const Index = () => {
               </h1>
               <p className="text-gray-500">Manage your customer relationships</p>
             </div>
+            <CustomerForm />
           </div>
 
           <div className="mb-8">
