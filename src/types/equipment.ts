@@ -7,6 +7,7 @@ export interface Equipment {
   purchase_date: string;
   last_service_date: string;
   next_service_due: string;
+  company_id: string;
 }
 
 export interface ServiceRecord {

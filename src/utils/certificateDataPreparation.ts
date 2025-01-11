@@ -25,6 +25,8 @@ export const prepareCertificateData = (readings: any, equipmentId: string | null
 };
 
 export const prepareEquipmentData = (readings: any, equipmentId: string | null) => {
+  const companyId = window.location.pathname.split('/')[2];
+  
   return {
     id: equipmentId || undefined,
     name: `Torque Wrench ${readings.model}`,
@@ -33,7 +35,8 @@ export const prepareEquipmentData = (readings: any, equipmentId: string | null) 
     serial_number: readings.serialNumber,
     purchase_date: new Date().toISOString(),
     last_service_date: readings.date,
-    next_service_due: readings.retestDate
+    next_service_due: readings.retestDate,
+    company_id: companyId
   };
 };
 
