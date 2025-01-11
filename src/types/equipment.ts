@@ -13,11 +13,11 @@ export interface Equipment {
 export interface ServiceRecord {
   id: string;
   equipment_id: string;
-  service_date: string; // Changed from date to service_date
-  service_type: string; // Changed from type to service_type
+  service_date: string;
+  service_type: string;
   technician: string;
   notes: string;
-  next_service_date: string; // Changed from next_due_date to next_service_date
+  retest_date: string; // Changed from next_service_date to retest_date to match DB
 }
 
 export interface Certificate {
