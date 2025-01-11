@@ -1,4 +1,4 @@
-import { FormField } from "./FormField";
+import { Input } from "@/components/ui/input";
 
 interface Reading {
   target: string;
