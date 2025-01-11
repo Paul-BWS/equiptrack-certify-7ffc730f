@@ -20,21 +20,19 @@ export const CertificateModal = ({
   equipment,
   serviceRecord,
 }: CertificateModalProps) => {
-  const updateSentOn = () => {
-    const timestamp = new Date().toISOString();
-    console.log("Certificate sent on:", timestamp);
-    return timestamp;
-  };
-
   const handlePrint = () => {
-    const sentOn = updateSentOn();
-    toast.success(`Certificate ${certificate.certificationNumber} printed at ${new Date(sentOn).toLocaleString()}`);
+    const timestamp = new Date().toISOString();
+    console.log("Certificate printed on:", timestamp);
+    toast.success(`Certificate ${certificate.certificationNumber} printed at ${new Date(timestamp).toLocaleString()}`);
     window.print();
   };
 
   const handleEmail = () => {
-    const sentOn = updateSentOn();
-    toast.success(`Certificate ${certificate.certificationNumber} emailed at ${new Date(certificate.issueDate).toLocaleString()}`);
+    // Simulate email sending without modifying dates
+    console.log("Simulating email send for certificate:", certificate.certificationNumber);
+    toast.success(`Email sent successfully for certificate ${certificate.certificationNumber}`, {
+      description: `To: ${equipment.name} (${equipment.serialNumber})`,
+    });
   };
 
   const handleClose = () => {
