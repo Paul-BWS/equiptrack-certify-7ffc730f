@@ -60,6 +60,6 @@ export const prepareServiceRecordData = (readings: any, equipmentId: string | nu
     service_type: 'calibration',
     technician: readings.engineer,
     notes: readings.notes,
-    retest_date: readings.retestDate
+    next_service_date: readings.retestDate // Changed from retest_date to next_service_date
   };
 };

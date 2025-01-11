@@ -17,7 +17,7 @@ export interface ServiceRecord {
   service_type: string;
   technician: string;
   notes: string;
-  retest_date: string; // Changed from next_service_date to retest_date to match DB
+  next_service_date: string; // Changed from retest_date to next_service_date
 }
 
 export interface Certificate {
