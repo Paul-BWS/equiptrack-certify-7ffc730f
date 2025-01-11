@@ -26,6 +26,10 @@ export const TorqueReadingsModal = ({
     min: "",
     max: "",
     units: "nm",
+    status: "ACTIVE",
+    sentOn: "",
+    result: "PASS",
+    notes: "",
     readings: [
       { target: "", actual: "", deviation: "" },
       { target: "", actual: "", deviation: "" },
@@ -47,7 +51,8 @@ export const TorqueReadingsModal = ({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* First Row */}
+          <div className="grid grid-cols-4 gap-4">
             <div className="space-y-2">
               <Label htmlFor="certNumber" className="text-[#B3B3B3] text-xs">Certificate Number</Label>
               <Input
@@ -74,6 +79,33 @@ export const TorqueReadingsModal = ({
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="retestDate" className="text-[#B3B3B3] text-xs">Retest Date</Label>
+              <div className="relative">
+                <Input
+                  id="retestDate"
+                  type="date"
+                  value={readings.retestDate}
+                  onChange={(e) => setReadings({ ...readings, retestDate: e.target.value })}
+                  className="text-sm bg-[#F9F9F9]"
+                />
+                <Calendar className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground" />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="status" className="text-[#B3B3B3] text-xs">Status</Label>
+              <Input
+                id="status"
+                value={readings.status}
+                readOnly
+                className="text-sm bg-[#F9F9F9] text-green-500 font-medium"
+              />
+            </div>
+          </div>
+
+          {/* Second Row */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
               <Label htmlFor="model" className="text-[#B3B3B3] text-xs">Model</Label>
               <Input
                 id="model"
@@ -94,7 +126,10 @@ export const TorqueReadingsModal = ({
                 className="text-sm bg-[#F9F9F9]"
               />
             </div>
+          </div>
 
+          {/* Third Row */}
+          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="engineer" className="text-[#B3B3B3] text-xs">Engineer</Label>
               <Input
@@ -107,21 +142,20 @@ export const TorqueReadingsModal = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="retestDate" className="text-[#B3B3B3] text-xs">Retest Date</Label>
-              <div className="relative">
-                <Input
-                  id="retestDate"
-                  type="date"
-                  value={readings.retestDate}
-                  onChange={(e) => setReadings({ ...readings, retestDate: e.target.value })}
-                  className="text-sm bg-[#F9F9F9]"
-                />
-                <Calendar className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground" />
-              </div>
+              <Label htmlFor="sentOn" className="text-[#B3B3B3] text-xs">Sent On</Label>
+              <Input
+                id="sentOn"
+                value={readings.sentOn}
+                readOnly
+                className="text-sm bg-[#F9F9F9] bg-gray-100"
+              />
             </div>
+          </div>
 
+          {/* Fourth Row */}
+          <div className="grid grid-cols-4 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="min" className="text-[#B3B3B3] text-xs">Minimum Value</Label>
+              <Label htmlFor="min" className="text-[#B3B3B3] text-xs">MIN</Label>
               <Input
                 id="min"
                 type="number"
@@ -133,7 +167,7 @@ export const TorqueReadingsModal = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="max" className="text-[#B3B3B3] text-xs">Maximum Value</Label>
+              <Label htmlFor="max" className="text-[#B3B3B3] text-xs">MAX</Label>
               <Input
                 id="max"
                 type="number"
@@ -143,56 +177,103 @@ export const TorqueReadingsModal = ({
                 className="text-sm bg-[#F9F9F9]"
               />
             </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="units" className="text-[#B3B3B3] text-xs">UNITS</Label>
+              <Input
+                id="units"
+                value={readings.units}
+                onChange={(e) => setReadings({ ...readings, units: e.target.value })}
+                className="text-sm bg-[#F9F9F9]"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="result" className="text-[#B3B3B3] text-xs">RESULT</Label>
+              <Input
+                id="result"
+                value={readings.result}
+                readOnly
+                className="text-sm bg-[#F9F9F9] text-green-500 font-medium"
+              />
+            </div>
           </div>
 
+          {/* Test Readings */}
           <div className="space-y-4">
-            <h3 className="font-semibold">Test Readings</h3>
-            {readings.readings.map((reading, index) => (
-              <div key={index} className="grid grid-cols-3 gap-4">
-                <div>
-                  <Label htmlFor={`target-${index}`} className="text-[#B3B3B3] text-xs">Target</Label>
-                  <Input
-                    id={`target-${index}`}
-                    value={reading.target}
-                    onChange={(e) => {
-                      const newReadings = [...readings.readings];
-                      newReadings[index].target = e.target.value;
-                      setReadings({ ...readings, readings: newReadings });
-                    }}
-                    placeholder="Target value"
-                    className="text-sm bg-[#F9F9F9]"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor={`actual-${index}`} className="text-[#B3B3B3] text-xs">Actual</Label>
-                  <Input
-                    id={`actual-${index}`}
-                    value={reading.actual}
-                    onChange={(e) => {
-                      const newReadings = [...readings.readings];
-                      newReadings[index].actual = e.target.value;
-                      setReadings({ ...readings, readings: newReadings });
-                    }}
-                    placeholder="Actual value"
-                    className="text-sm bg-[#F9F9F9]"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor={`deviation-${index}`} className="text-[#B3B3B3] text-xs">Deviation %</Label>
-                  <Input
-                    id={`deviation-${index}`}
-                    value={reading.deviation}
-                    onChange={(e) => {
-                      const newReadings = [...readings.readings];
-                      newReadings[index].deviation = e.target.value;
-                      setReadings({ ...readings, readings: newReadings });
-                    }}
-                    placeholder="Deviation"
-                    className="text-sm bg-[#F9F9F9]"
-                  />
-                </div>
+            <div className="grid grid-cols-2 gap-8">
+              <div>
+                <h3 className="font-semibold mb-4">AS FOUND</h3>
+                {readings.readings.map((reading, index) => (
+                  <div key={`as-found-${index}`} className="grid grid-cols-3 gap-2 mb-2">
+                    <Input
+                      value={reading.target}
+                      onChange={(e) => {
+                        const newReadings = [...readings.readings];
+                        newReadings[index].target = e.target.value;
+                        setReadings({ ...readings, readings: newReadings });
+                      }}
+                      placeholder="Target"
+                      className="text-sm bg-[#F9F9F9]"
+                    />
+                    <Input
+                      value={reading.actual}
+                      onChange={(e) => {
+                        const newReadings = [...readings.readings];
+                        newReadings[index].actual = e.target.value;
+                        setReadings({ ...readings, readings: newReadings });
+                      }}
+                      placeholder="Actual"
+                      className="text-sm bg-[#F9F9F9]"
+                    />
+                    <Input
+                      value={reading.deviation}
+                      onChange={(e) => {
+                        const newReadings = [...readings.readings];
+                        newReadings[index].deviation = e.target.value;
+                        setReadings({ ...readings, readings: newReadings });
+                      }}
+                      placeholder="Deviation"
+                      className="text-sm bg-[#F9F9F9]"
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
+
+              <div>
+                <h3 className="font-semibold mb-4">DEFINITIVE</h3>
+                {readings.readings.map((reading, index) => (
+                  <div key={`definitive-${index}`} className="grid grid-cols-3 gap-2 mb-2">
+                    <Input
+                      value={reading.target}
+                      readOnly
+                      className="text-sm bg-[#F9F9F9]"
+                    />
+                    <Input
+                      value={reading.actual}
+                      readOnly
+                      className="text-sm bg-[#F9F9F9]"
+                    />
+                    <Input
+                      value={reading.deviation}
+                      readOnly
+                      className="text-sm bg-[#F9F9F9]"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Notes */}
+          <div className="space-y-2">
+            <Label htmlFor="notes" className="text-[#B3B3B3] text-xs">NOTES</Label>
+            <Input
+              id="notes"
+              value={readings.notes}
+              onChange={(e) => setReadings({ ...readings, notes: e.target.value })}
+              className="text-sm bg-[#F9F9F9]"
+            />
           </div>
 
           <div className="flex justify-end">
