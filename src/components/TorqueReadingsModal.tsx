@@ -54,7 +54,7 @@ export const TorqueReadingsModal = ({
           {/* First Row */}
           <div className="grid grid-cols-4 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="certNumber" className="text-[#B3B3B3] text-xs">Certificate Number</Label>
+              <Label htmlFor="certNumber" className="text-[#C8C8C9] text-sm">Certificate Number</Label>
               <Input
                 id="certNumber"
                 value={readings.certNumber}
@@ -65,7 +65,7 @@ export const TorqueReadingsModal = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="date" className="text-[#B3B3B3] text-xs">Test Date</Label>
+              <Label htmlFor="date" className="text-[#C8C8C9] text-sm">Test Date</Label>
               <div className="relative">
                 <Input
                   id="date"
@@ -79,7 +79,7 @@ export const TorqueReadingsModal = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="retestDate" className="text-[#B3B3B3] text-xs">Retest Date</Label>
+              <Label htmlFor="retestDate" className="text-[#C8C8C9] text-sm">Retest Date</Label>
               <div className="relative">
                 <Input
                   id="retestDate"
@@ -93,7 +93,7 @@ export const TorqueReadingsModal = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="status" className="text-[#B3B3B3] text-xs">Status</Label>
+              <Label htmlFor="status" className="text-[#C8C8C9] text-sm">Status</Label>
               <Input
                 id="status"
                 value={readings.status}
@@ -106,7 +106,7 @@ export const TorqueReadingsModal = ({
           {/* Second Row */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="model" className="text-[#B3B3B3] text-xs">Model</Label>
+              <Label htmlFor="model" className="text-[#C8C8C9] text-sm">Model</Label>
               <Input
                 id="model"
                 value={readings.model}
@@ -117,7 +117,7 @@ export const TorqueReadingsModal = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="serialNumber" className="text-[#B3B3B3] text-xs">Serial Number</Label>
+              <Label htmlFor="serialNumber" className="text-[#C8C8C9] text-sm">Serial Number</Label>
               <Input
                 id="serialNumber"
                 value={readings.serialNumber}
@@ -131,7 +131,7 @@ export const TorqueReadingsModal = ({
           {/* Third Row */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="engineer" className="text-[#B3B3B3] text-xs">Engineer</Label>
+              <Label htmlFor="engineer" className="text-[#C8C8C9] text-sm">Engineer</Label>
               <Input
                 id="engineer"
                 value={readings.engineer}
@@ -142,7 +142,7 @@ export const TorqueReadingsModal = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="sentOn" className="text-[#B3B3B3] text-xs">Sent On</Label>
+              <Label htmlFor="sentOn" className="text-[#C8C8C9] text-sm">Sent On</Label>
               <Input
                 id="sentOn"
                 value={readings.sentOn}
@@ -155,7 +155,7 @@ export const TorqueReadingsModal = ({
           {/* Fourth Row */}
           <div className="grid grid-cols-4 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="min" className="text-[#B3B3B3] text-xs">MIN</Label>
+              <Label htmlFor="min" className="text-[#C8C8C9] text-sm">MIN</Label>
               <Input
                 id="min"
                 type="number"
@@ -167,7 +167,7 @@ export const TorqueReadingsModal = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="max" className="text-[#B3B3B3] text-xs">MAX</Label>
+              <Label htmlFor="max" className="text-[#C8C8C9] text-sm">MAX</Label>
               <Input
                 id="max"
                 type="number"
@@ -179,7 +179,7 @@ export const TorqueReadingsModal = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="units" className="text-[#B3B3B3] text-xs">UNITS</Label>
+              <Label htmlFor="units" className="text-[#C8C8C9] text-sm">UNITS</Label>
               <Input
                 id="units"
                 value={readings.units}
@@ -189,7 +189,7 @@ export const TorqueReadingsModal = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="result" className="text-[#B3B3B3] text-xs">RESULT</Label>
+              <Label htmlFor="result" className="text-[#C8C8C9] text-sm">RESULT</Label>
               <Input
                 id="result"
                 value={readings.result}
@@ -267,7 +267,7 @@ export const TorqueReadingsModal = ({
 
           {/* Notes */}
           <div className="space-y-2">
-            <Label htmlFor="notes" className="text-[#B3B3B3] text-xs">NOTES</Label>
+            <Label htmlFor="notes" className="text-[#C8C8C9] text-sm">NOTES</Label>
             <Input
               id="notes"
               value={readings.notes}
