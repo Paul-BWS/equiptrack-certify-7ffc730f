@@ -22,7 +22,6 @@ export const CertificateModal = ({
 }: CertificateModalProps) => {
   const updateSentOn = () => {
     const timestamp = new Date().toISOString();
-    // In a real application, you would update this in your database
     console.log("Certificate sent on:", timestamp);
     return timestamp;
   };
@@ -35,7 +34,6 @@ export const CertificateModal = ({
 
   const handleEmail = () => {
     const sentOn = updateSentOn();
-    // This would be connected to your email service
     toast.success(`Certificate ${certificate.certificationNumber} emailed at ${new Date(certificate.issueDate).toLocaleString()}`);
   };
 
@@ -46,7 +44,7 @@ export const CertificateModal = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[95vw] h-[90vh] p-4 overflow-auto bg-white">
-        <div className="flex justify-between gap-4 mb-4 sticky top-0 bg-white z-10 p-2">
+        <div className="flex justify-between gap-4 mb-4 sticky top-0 bg-white z-10 p-2 no-print">
           <Button
             variant="ghost"
             size="icon"
@@ -76,7 +74,7 @@ export const CertificateModal = ({
         </div>
         
         <div className="flex justify-center">
-          <div className="w-full max-w-4xl transform scale-[0.85] origin-top">
+          <div className="w-full max-w-4xl">
             <CertificateTemplate
               certificate={certificate}
               equipment={equipment}
