@@ -112,14 +112,12 @@ export const TorqueReadingsModal = ({
               label="Model"
               value={readings.model}
               onChange={(e) => setReadings({ ...readings, model: e.target.value })}
-              placeholder="Silver (red handle)"
             />
             <FormField
               id="serialNumber"
               label="Serial Number"
               value={readings.serialNumber}
               onChange={(e) => setReadings({ ...readings, serialNumber: e.target.value })}
-              placeholder="TW01"
             />
           </div>
 
@@ -129,7 +127,6 @@ export const TorqueReadingsModal = ({
               label="Engineer"
               value={readings.engineer}
               onChange={(e) => setReadings({ ...readings, engineer: e.target.value })}
-              placeholder="Engineer name"
             />
             <FormField
               id="sentOn"
@@ -147,7 +144,6 @@ export const TorqueReadingsModal = ({
               type="number"
               value={readings.min}
               onChange={(e) => setReadings({ ...readings, min: e.target.value })}
-              placeholder="40"
             />
             <FormField
               id="max"
@@ -155,7 +151,6 @@ export const TorqueReadingsModal = ({
               type="number"
               value={readings.max}
               onChange={(e) => setReadings({ ...readings, max: e.target.value })}
-              placeholder="340"
             />
             <FormField
               id="units"
