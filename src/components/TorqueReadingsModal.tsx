@@ -195,10 +195,7 @@ export const TorqueReadingsModal = ({
             ))}
           </div>
 
-          <div className="flex justify-end space-x-4">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
-            </Button>
+          <div className="flex justify-end">
             <Button type="submit">Generate Certificate</Button>
           </div>
         </form>
