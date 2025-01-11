@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ClipboardList, Settings, LayoutDashboard, Menu } from "lucide-react";
+import { ClipboardList, Settings, LayoutDashboard, Menu, Users } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
 
@@ -34,6 +34,13 @@ export const Navigation = () => {
               <span>Dashboard</span>
             </Link>
             <Link
+              to="/customers"
+              className="text-white hover:text-accent flex items-center gap-2"
+            >
+              <Users size={20} />
+              <span>Customers</span>
+            </Link>
+            <Link
               to="/equipment"
               className="text-white hover:text-accent flex items-center gap-2"
             >
@@ -60,6 +67,14 @@ export const Navigation = () => {
             >
               <LayoutDashboard size={20} />
               <span>Dashboard</span>
+            </Link>
+            <Link
+              to="/customers"
+              className="text-white hover:text-accent flex items-center gap-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <Users size={20} />
+              <span>Customers</span>
             </Link>
             <Link
               to="/equipment"
