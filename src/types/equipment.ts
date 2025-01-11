@@ -16,7 +16,7 @@ export interface TorqueWrench {
   next_service_due: string;
   engineer: string;
   result: string;
-  notes: string;
+  notes: string | null;
   readings: Reading[];
   definitive_readings: Reading[];
   cert_number: string;

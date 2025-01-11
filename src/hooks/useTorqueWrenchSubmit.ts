@@ -47,15 +47,16 @@ export const useTorqueWrenchSubmit = (
         ...torqueWrenchData,
         readings: JSON.stringify(torqueWrenchData.readings),
         definitive_readings: JSON.stringify(torqueWrenchData.definitive_readings),
+        notes: torqueWrenchData.notes || null,
         updated_at: now,
-        created_at: equipmentId ? undefined : now // Only set created_at for new records
+        created_at: equipmentId ? undefined : now
       };
 
       let result;
       
       if (equipmentId) {
         console.log('Updating existing torque wrench:', equipmentId);
-        const { created_at, ...updateData } = dataToSave; // Remove created_at from update
+        const { created_at, ...updateData } = dataToSave;
         result = await supabase
           .from('torque_wrench')
           .update(updateData)
