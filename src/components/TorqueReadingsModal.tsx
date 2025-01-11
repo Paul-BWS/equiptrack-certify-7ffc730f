@@ -14,7 +14,7 @@ import { useTorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
 import { validateForm } from "@/utils/torqueReadingsValidation";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
-import { prepareCertificateData, prepareEquipmentData, prepareServiceRecordData } from "@/utils/certificateDataPreparation";
+import { prepareCertificateData } from "@/utils/certificateDataPreparation";
 
 const calculateDeviation = (target: string, actual: string): string => {
   if (!target || !actual) return "";
@@ -53,22 +53,36 @@ export const TorqueReadingsModal = ({
 
     setIsSaving(true);
     try {
-      const equipment = prepareEquipmentData(readings, equipmentId);
-      const serviceRecord = prepareServiceRecordData(readings, equipmentId);
+      const pathSegments = window.location.pathname.split('/');
+      const companyIdIndex = pathSegments.indexOf('customers') + 1;
+      const companyId = pathSegments[companyIdIndex];
+
+      const torqueWrenchData = {
+        id: equipmentId || undefined,
+        company_id: companyId,
+        model: readings.model,
+        serial_number: readings.serialNumber,
+        min_torque: parseFloat(readings.min),
+        max_torque: parseFloat(readings.max),
+        units: readings.units,
+        last_service_date: readings.date,
+        next_service_due: readings.retestDate,
+        engineer: readings.engineer,
+        result: readings.result,
+        notes: readings.notes,
+        readings: readings.readings,
+        definitive_readings: readings.definitiveReadings,
+        cert_number: readings.certNumber,
+        status: readings.status
+      };
+
+      const { error: torqueWrenchError } = await supabase
+        .from('torque_wrench')
+        .upsert([torqueWrenchData]);
+
+      if (torqueWrenchError) throw torqueWrenchError;
+
       const certificate = prepareCertificateData(readings, equipmentId);
-
-      const { error: equipmentError } = await supabase
-        .from('equipment')
-        .upsert([equipment]);
-
-      if (equipmentError) throw equipmentError;
-
-      const { error: serviceError } = await supabase
-        .from('service_records')
-        .insert([serviceRecord]);
-
-      if (serviceError) throw serviceError;
-
       const { error: certError } = await supabase
         .from('certificates')
         .insert([certificate]);
@@ -197,8 +211,8 @@ export const TorqueReadingsModal = ({
         open={showCertificate}
         onOpenChange={setShowCertificate}
         certificate={prepareCertificateData(readings, equipmentId)}
-        equipment={prepareEquipmentData(readings, equipmentId)}
-        serviceRecord={prepareServiceRecordData(readings, equipmentId)}
+        equipment={readings}
+        serviceRecord={null}
       />
     </>
   );
