@@ -24,7 +24,8 @@ const TorqueWrenches = () => {
       const { data, error } = await supabase
         .from('equipment')
         .select('*')
-        .eq('company_id', customerId);
+        .eq('company_id', customerId)
+        .eq('type', 'torque-wrench'); // Add this line to filter by type
 
       if (error) {
         console.error('Error fetching equipment:', error);
@@ -70,14 +71,17 @@ const TorqueWrenches = () => {
       <main className="container mx-auto py-8">
         <div className="space-y-6">
           <div className="flex flex-row justify-between items-center gap-4 mb-6">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => navigate(`/customers/${customerId}/equipment`)}
-              className="rounded-full bg-primary hover:bg-primary/90"
-            >
-              <Grid className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
-            </Button>
+            <div className="flex flex-col gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => navigate(`/customers/${customerId}/equipment`)}
+                className="rounded-full bg-primary hover:bg-primary/90"
+              >
+                <Grid className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
+              </Button>
+              <h1 className="text-2xl font-bold">Torque Wrenches</h1>
+            </div>
             
             <Button 
               size="icon"
