@@ -4,6 +4,14 @@ export const generateCertificateNumber = () => {
   return `${prefix}${randomNum}`;
 };
 
+export const generateUUID = () => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+};
+
 export const calculateDeviation = (target: string, actual: string): string => {
   if (!target || !actual) return "";
   const targetNum = parseFloat(target);
@@ -15,7 +23,7 @@ export const calculateDeviation = (target: string, actual: string): string => {
 
 export const prepareCertificateData = (readings: any, equipmentId: string | null) => {
   return {
-    id: `cert-${readings.certNumber}`,
+    id: generateUUID(),
     service_record_id: `sr-${readings.certNumber}`,
     equipment_id: equipmentId || undefined,
     certification_number: readings.certNumber,
@@ -33,7 +41,7 @@ export const prepareEquipmentData = (readings: any, equipmentId: string | null) 
   console.log('Preparing equipment data with company_id:', companyId);
   
   return {
-    id: equipmentId || undefined,
+    id: equipmentId || generateUUID(),
     name: `Torque Wrench ${readings.model}`,
     manufacturer: 'Unknown',
     model: readings.model,
@@ -47,7 +55,7 @@ export const prepareEquipmentData = (readings: any, equipmentId: string | null) 
 
 export const prepareServiceRecordData = (readings: any, equipmentId: string | null) => {
   return {
-    id: `sr-${readings.certNumber}`,
+    id: generateUUID(),
     equipment_id: equipmentId || undefined,
     date: readings.date,
     type: 'calibration' as const,
