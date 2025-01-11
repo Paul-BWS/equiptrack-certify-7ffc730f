@@ -62,11 +62,9 @@
     left: 0;
     top: 0;
     width: 210mm;
-    height: auto;
-    min-height: 297mm;
+    height: 297mm;
     margin: 0;
-    padding: 10mm;
-    transform: none !important;
+    padding: 15mm;
     box-shadow: none;
     border: none;
   }
