@@ -30,6 +30,13 @@ export const CertificateModal = ({
 
   const handleEmail = async () => {
     try {
+      console.log('Saving certificate with data:', {
+        torque_wrench_id: equipment.id,
+        certification_number: certificate.certification_number,
+        issue_date: certificate.issue_date,
+        expiry_date: certificate.expiry_date
+      });
+
       // Validate required fields
       if (!equipment.id) {
         throw new Error('Equipment ID is required');
@@ -45,23 +52,23 @@ export const CertificateModal = ({
       }
 
       // Save certificate to database before sending email
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('certificates')
-        .insert([
-          {
-            torque_wrench_id: equipment.id,
-            certification_number: certificate.certification_number,
-            issue_date: certificate.issue_date,
-            expiry_date: certificate.expiry_date
-          }
-        ]);
+        .insert([{
+          id: crypto.randomUUID(), // Ensure unique ID
+          torque_wrench_id: equipment.id,
+          certification_number: certificate.certification_number,
+          issue_date: new Date(certificate.issue_date).toISOString(),
+          expiry_date: new Date(certificate.expiry_date).toISOString()
+        }])
+        .select();
 
       if (error) {
         console.error('Error saving certificate:', error);
         throw error;
       }
 
-      console.log("Simulating email send for certificate:", certificate.certification_number);
+      console.log("Certificate saved successfully:", data);
       toast.success(`Email sent successfully for certificate ${certificate.certification_number}`, {
         description: `To: ${equipment.model} (${equipment.serial_number})`,
       });
