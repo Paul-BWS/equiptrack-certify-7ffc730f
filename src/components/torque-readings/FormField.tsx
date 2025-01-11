@@ -1,6 +1,6 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Calendar } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface FormFieldProps {
   id: string;
@@ -27,7 +27,7 @@ export const FormField = ({
 }: FormFieldProps) => (
   <div className="space-y-2">
     <Label htmlFor={id} className="text-[#C8C8C9] text-sm">{label}</Label>
-    <div className="relative">
+    <div className="relative flex gap-2">
       <Input
         id={id}
         type={type}
@@ -38,15 +38,18 @@ export const FormField = ({
         className={`text-sm bg-[#F9F9F9] ${className}`}
       />
       {showCalendar && (
-        <div 
-          className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="shrink-0"
           onClick={() => {
             const input = document.getElementById(id) as HTMLInputElement;
             if (input) input.showPicker();
           }}
         >
-          <Calendar className="h-4 w-4 text-muted-foreground" strokeWidth={2.5} />
-        </div>
+          Calendar
+        </Button>
       )}
     </div>
   </div>
