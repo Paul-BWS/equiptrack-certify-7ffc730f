@@ -22,7 +22,7 @@ export const CertificateTemplate = ({
           <img src={settings.logo} alt="Company Logo" className="h-12 w-auto" />
           <div>
             <h1 className="text-lg font-bold text-primary">CALIBRATION CERTIFICATE</h1>
-            <p className="text-xs text-gray-600">{settings.inspectionAuthority}</p>
+            <p className="text-xs text-gray-600">{settings.organizationName}</p>
             <p className="text-xs text-gray-600">ISO 9001:2015 Certified</p>
           </div>
         </div>

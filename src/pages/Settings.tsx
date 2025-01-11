@@ -59,16 +59,6 @@ export default function Settings() {
                 placeholder="Enter organization name"
               />
             </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="inspectionAuthority">Inspection Authority</Label>
-              <Input
-                id="inspectionAuthority"
-                value={settings.inspectionAuthority}
-                onChange={(e) => setSettings(prev => ({ ...prev, inspectionAuthority: e.target.value }))}
-                placeholder="Enter inspection authority"
-              />
-            </div>
           </CardContent>
         </Card>
 
