@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -43,14 +43,14 @@ export const CustomerForm = () => {
     onError: (error) => {
       toast({
         title: "Error",
-        description: "Failed to create company. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to create company. Please try again.",
         variant: "destructive",
       });
       console.error("Error creating company:", error);
     },
   });
 
-  const onSubmit = (data: CompanyFormData) => {
+  const onSubmit = async (data: CompanyFormData) => {
     createCompany(data);
   };
 
@@ -65,6 +65,9 @@ export const CustomerForm = () => {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Add New Company</DialogTitle>
+          <DialogDescription>
+            Fill in the company details below. All fields marked with * are required.
+          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

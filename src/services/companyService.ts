@@ -15,16 +15,29 @@ export const companyService = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error("Supabase error:", error);
+      throw new Error(error.message);
+    }
+
+    if (!company) {
+      throw new Error("Failed to create company");
+    }
+
     return company as Company;
   },
 
   async getCompanies(): Promise<Company[]> {
     const { data, error } = await supabase
       .from("companies")
-      .select("*");
+      .select("*")
+      .order("created_at", { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+      console.error("Supabase error:", error);
+      throw new Error(error.message);
+    }
+
     return data as Company[];
   }
 };
