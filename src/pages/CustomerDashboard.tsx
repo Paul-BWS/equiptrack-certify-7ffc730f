@@ -8,29 +8,44 @@ import { useToast } from "@/components/ui/use-toast";
 import { CompanyCard } from "@/components/customer-dashboard/CompanyCard";
 import { ContactsList } from "@/components/customer-dashboard/ContactsList";
 import { EquipmentServiceList } from "@/components/customer-dashboard/EquipmentServiceList";
+import { TorqueWrench } from "@/types/equipment";
 
-const sampleUpcomingService = [
+const sampleUpcomingService: TorqueWrench[] = [
   {
     id: "1",
-    name: "Torque Wrench XL",
-    serial_number: "TW-001",
-    manufacturer: "TorcPro",
+    company_id: "56cb3b5c-2bf0-4118-964a-bc30319614e2",
     model: "TP-100",
-    purchase_date: "2023-01-15",
+    serial_number: "TW-001",
+    min_torque: 10,
+    max_torque: 100,
+    units: "nm",
     last_service_date: "2023-06-15",
     next_service_due: "2024-06-15",
-    company_id: "56cb3b5c-2bf0-4118-964a-bc30319614e2"
+    engineer: "John Smith",
+    result: "PASS",
+    notes: "",
+    readings: [],
+    definitive_readings: [],
+    cert_number: "BWS12345",
+    status: "ACTIVE"
   },
   {
     id: "2",
-    name: "Pressure Gauge",
-    serial_number: "PG-002",
-    manufacturer: "PressureTech",
+    company_id: "56cb3b5c-2bf0-4118-964a-bc30319614e2",
     model: "PT-200",
-    purchase_date: "2023-02-20",
+    serial_number: "PG-002",
+    min_torque: 20,
+    max_torque: 200,
+    units: "nm",
     last_service_date: "2023-07-20",
     next_service_due: "2024-05-20",
-    company_id: "56cb3b5c-2bf0-4118-964a-bc30319614e2"
+    engineer: "Sarah Johnson",
+    result: "PASS",
+    notes: "",
+    readings: [],
+    definitive_readings: [],
+    cert_number: "BWS12346",
+    status: "ACTIVE"
   },
 ];
 

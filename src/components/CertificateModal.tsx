@@ -2,14 +2,14 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Mail, Printer, X } from "lucide-react";
 import { CertificateTemplate } from "./CertificateTemplate";
-import { Certificate, Equipment, ServiceRecord } from "@/types/equipment";
+import { Certificate, TorqueWrench, ServiceRecord } from "@/types/equipment";
 import { toast } from "sonner";
 
 interface CertificateModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   certificate: Certificate;
-  equipment: Equipment;
+  equipment: TorqueWrench;
   serviceRecord: ServiceRecord;
 }
 
@@ -31,7 +31,7 @@ export const CertificateModal = ({
     // Simulate email sending without modifying dates
     console.log("Simulating email send for certificate:", certificate.certification_number);
     toast.success(`Email sent successfully for certificate ${certificate.certification_number}`, {
-      description: `To: ${equipment.name} (${equipment.serial_number})`,
+      description: `To: ${equipment.model} (${equipment.serial_number})`,
     });
   };
 
