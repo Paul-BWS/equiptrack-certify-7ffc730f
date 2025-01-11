@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { FormField } from "./torque-readings/FormField";
@@ -10,6 +10,12 @@ interface TorqueReadingsModalProps {
   onOpenChange: (open: boolean) => void;
   equipmentId: string | null;
 }
+
+const generateCertificateNumber = () => {
+  const prefix = 'BWS';
+  const randomNum = Math.floor(10000 + Math.random() * 90000);
+  return `${prefix}${randomNum}`;
+};
 
 export const TorqueReadingsModal = ({
   open,
@@ -37,6 +43,15 @@ export const TorqueReadingsModal = ({
       { target: "", actual: "", deviation: "" },
     ],
   });
+
+  useEffect(() => {
+    if (open) {
+      setReadings(prev => ({
+        ...prev,
+        certNumber: generateCertificateNumber()
+      }));
+    }
+  }, [open]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,7 +102,7 @@ export const TorqueReadingsModal = ({
               label="Certificate Number"
               value={readings.certNumber}
               onChange={(e) => setReadings({ ...readings, certNumber: e.target.value })}
-              placeholder="BWS13009"
+              readOnly
             />
           </div>
 
