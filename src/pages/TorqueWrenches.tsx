@@ -54,9 +54,8 @@ const TorqueWrenches = () => {
       console.log('Fetched equipment:', data);
       return data.map(item => ({
         id: item.id,
-        name: item.name || 'Unnamed Equipment',
-        serialNumber: item.serial_number || '',
         model: item.model || '',
+        serialNumber: item.serial_number || '',
         lastServiceDate: item.last_service_date || '',
         nextServiceDue: item.next_service_due || ''
       }));
