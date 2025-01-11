@@ -6,13 +6,14 @@ import { Users, Grid, Mail, Phone, ArrowRight } from "lucide-react";
 import { Customer } from "@/types/customer";
 import { Equipment } from "@/types/equipment";
 
-// Sample data - in a real app, this would come from your backend
 const sampleCustomer: Customer = {
   id: "1",
   name: "Acme Corp",
   email: "contact@acme.com",
   phone: "123-456-7890",
   address: "123 Main St, City, Country",
+  billingAddress: "456 Finance Ave, City, Country",
+  useSeparateBillingAddress: true,
   company: "Acme Corporation",
   website: "https://www.acme.com",
   notes: "Leading manufacturer of innovative products",
@@ -137,4 +138,5 @@ const CustomerDashboard = () => {
 };
 
 export default CustomerDashboard;
+
 

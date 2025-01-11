@@ -4,6 +4,8 @@ export interface Customer {
   email: string;
   phone: string;
   address: string;
+  billingAddress: string;
+  useSeparateBillingAddress: boolean;
   company: string;
   website: string;
   notes: string;

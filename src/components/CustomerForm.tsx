@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { Customer } from "@/types/customer";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,11 +18,21 @@ const customerSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email address"),
   phone: z.string().min(1, "Phone number is required"),
-  address: z.string().min(1, "Address is required"),
+  address: z.string().min(1, "Site address is required"),
+  useSeparateBillingAddress: z.boolean().default(false),
+  billingAddress: z.string().min(1, "Billing address is required").optional(),
   company: z.string().min(1, "Company name is required"),
   website: z.string().url("Invalid website URL").or(z.string().length(0)),
   notes: z.string(),
   industry: z.string().min(1, "Industry is required"),
+}).refine((data) => {
+  if (data.useSeparateBillingAddress && !data.billingAddress) {
+    return false;
+  }
+  return true;
+}, {
+  message: "Billing address is required when using separate billing address",
+  path: ["billingAddress"],
 });
 
 type CustomerFormData = z.infer<typeof customerSchema>;
@@ -38,6 +49,8 @@ export const CustomerForm = () => {
       email: "",
       phone: "",
       address: "",
+      useSeparateBillingAddress: false,
+      billingAddress: "",
       company: "",
       website: "",
       notes: "",
@@ -47,9 +60,14 @@ export const CustomerForm = () => {
 
   const { mutate: createCustomer, isPending } = useMutation({
     mutationFn: async (data: CustomerFormData) => {
+      const customerData = {
+        ...data,
+        billingAddress: data.useSeparateBillingAddress ? data.billingAddress : data.address,
+      };
+      
       const { data: customer, error } = await supabase
         .from("customers")
-        .insert([data])
+        .insert([customerData])
         .select()
         .single();
 
@@ -78,6 +96,8 @@ export const CustomerForm = () => {
   const onSubmit = (data: CustomerFormData) => {
     createCustomer(data);
   };
+
+  const watchUseSeparateBillingAddress = form.watch("useSeparateBillingAddress");
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -171,19 +191,55 @@ export const CustomerForm = () => {
                 </FormItem>
               )}
             />
+            
             <FormField
               control={form.control}
               name="address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Address</FormLabel>
+                  <FormLabel>Site Address</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter address" {...field} />
+                    <Input placeholder="Enter site address" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="useSeparateBillingAddress"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>Use separate billing address</FormLabel>
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            {watchUseSeparateBillingAddress && (
+              <FormField
+                control={form.control}
+                name="billingAddress"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Billing Address</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter billing address" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
             <FormField
               control={form.control}
               name="notes"
@@ -201,6 +257,7 @@ export const CustomerForm = () => {
                 </FormItem>
               )}
             />
+            
             <Button type="submit" className="w-full" disabled={isPending}>
               {isPending ? "Creating..." : "Create Customer"}
             </Button>
