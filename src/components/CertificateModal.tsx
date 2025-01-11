@@ -39,11 +39,11 @@ export const CertificateModal = ({
     const settings = getOrganizationSettings();
     
     // Prepare email content
-    const subject = `Certificate for ${equipment.name} - ${certificate.certificateNumber}`;
+    const subject = `Certificate for ${equipment.name} - ${certificate.certificationNumber}`;
     const body = `Please find attached the certificate for:\n\n` +
       `Equipment: ${equipment.name}\n` +
-      `Certificate Number: ${certificate.certificateNumber}\n` +
-      `Date: ${new Date(certificate.date).toLocaleDateString()}\n\n` +
+      `Certificate Number: ${certificate.certificationNumber}\n` +
+      `Date: ${new Date(certificate.issueDate).toLocaleDateString()}\n\n` +
       `Best regards,\n${settings.organizationName}`;
 
     // Create mailto URL
