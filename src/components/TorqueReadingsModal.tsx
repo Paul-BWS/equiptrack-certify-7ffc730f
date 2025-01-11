@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { HeaderSection } from "./torque-readings/HeaderSection";
@@ -14,6 +15,15 @@ import { validateForm } from "@/utils/torqueReadingsValidation";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { prepareCertificateData, prepareEquipmentData, prepareServiceRecordData } from "@/utils/certificateDataPreparation";
+
+const calculateDeviation = (target: string, actual: string): string => {
+  if (!target || !actual) return "";
+  const targetNum = parseFloat(target);
+  const actualNum = parseFloat(actual);
+  if (isNaN(targetNum) || isNaN(actualNum) || targetNum === 0) return "";
+  const deviation = ((actualNum - targetNum) / targetNum) * 100;
+  return deviation.toFixed(2);
+};
 
 interface TorqueReadingsModalProps {
   open: boolean;
