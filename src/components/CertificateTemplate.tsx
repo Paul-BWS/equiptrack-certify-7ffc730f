@@ -12,110 +12,140 @@ export const CertificateTemplate = ({
   serviceRecord,
 }: CertificateTemplateProps) => {
   return (
-    <div className="max-w-4xl mx-auto p-8 bg-white shadow-lg" id="certificate">
-      <div className="grid grid-cols-2 gap-8 mb-8">
-        <div>
-          <h2 className="text-gray-500 mb-1">CERTIFICATE NO</h2>
+    <div className="max-w-4xl mx-auto p-8 bg-white shadow-lg border-8 border-double border-gray-200" id="certificate">
+      {/* Header with Logo and Title */}
+      <div className="flex justify-between items-center mb-8 border-b pb-4">
+        <div className="flex items-center gap-4">
+          {/* Replace with your actual logo path */}
+          <img src="/placeholder.svg" alt="Company Logo" className="h-16 w-auto" />
+          <div>
+            <h1 className="text-2xl font-bold text-primary">CALIBRATION CERTIFICATE</h1>
+            <p className="text-gray-600">ISO 9001:2015 Certified</p>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="text-xl font-semibold text-primary">Certificate No:</p>
           <p className="text-xl">{certificate.certificationNumber}</p>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <h2 className="text-gray-500 mb-1">DATE</h2>
-            <p>{serviceRecord.date}</p>
-          </div>
-          <div>
-            <h2 className="text-gray-500 mb-1">RETEST DATE</h2>
-            <p>{serviceRecord.nextDueDate}</p>
-          </div>
-        </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-8 mb-8">
-        <div>
-          <h2 className="text-gray-500 mb-1">MODEL</h2>
-          <p>{equipment.model}</p>
-        </div>
-        <div>
-          <h2 className="text-gray-500 mb-1">SERIAL NUMBER</h2>
-          <p>{equipment.serialNumber}</p>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-8 mb-8">
-        <div>
-          <h2 className="text-gray-500 mb-1">ENGINEER</h2>
-          <p>{serviceRecord.technician}</p>
-        </div>
-        <div>
-          <h2 className="text-gray-500 mb-1">STATUS</h2>
-          <p className="text-green-500 font-semibold">ACTIVE</p>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-4 gap-4 mb-8">
-        <div>
-          <h2 className="text-gray-500 mb-1">MIN</h2>
-          <p>40</p>
-        </div>
-        <div>
-          <h2 className="text-gray-500 mb-1">MAX</h2>
-          <p>340</p>
-        </div>
-        <div>
-          <h2 className="text-gray-500 mb-1">UNITS</h2>
-          <p>nm</p>
-        </div>
-        <div>
-          <h2 className="text-gray-500 mb-1">RESULT</h2>
-          <p className="text-green-500">PASS</p>
-        </div>
-      </div>
-
-      <div className="mb-8">
-        <div className="grid grid-cols-2 gap-8">
-          <div>
-            <h2 className="text-gray-500 mb-4">AS FOUND</h2>
-            <div className="space-y-4">
-              {[
-                { target: "40", actual: "38.9", deviation: "-2.8%" },
-                { target: "190", actual: "185.0", deviation: "-2.6%" },
-                { target: "340", actual: "329.0", deviation: "-3.2%" },
-              ].map((reading, index) => (
-                <div key={index} className="grid grid-cols-3 gap-4">
-                  <p>{reading.target}</p>
-                  <p>{reading.actual}</p>
-                  <p>{reading.deviation}</p>
-                </div>
-              ))}
+      {/* Main Content */}
+      <div className="space-y-6">
+        {/* Equipment Details */}
+        <div className="grid grid-cols-2 gap-8 bg-gray-50 p-4 rounded-lg">
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-sm font-semibold text-gray-500 uppercase">Model</h2>
+              <p className="text-lg font-medium">{equipment.model}</p>
+            </div>
+            <div>
+              <h2 className="text-sm font-semibold text-gray-500 uppercase">Serial Number</h2>
+              <p className="text-lg font-medium">{equipment.serialNumber}</p>
             </div>
           </div>
-          <div>
-            <h2 className="text-gray-500 mb-4">DEFINITIVE</h2>
-            <div className="space-y-4">
-              {[
-                { target: "40", actual: "38.9", deviation: "-2.8%" },
-                { target: "190", actual: "185.0", deviation: "-2.6%" },
-                { target: "340", actual: "329.0", deviation: "-3.2%" },
-              ].map((reading, index) => (
-                <div key={index} className="grid grid-cols-3 gap-4">
-                  <p>{reading.target}</p>
-                  <p>{reading.actual}</p>
-                  <p>{reading.deviation}</p>
-                </div>
-              ))}
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-sm font-semibold text-gray-500 uppercase">Calibration Date</h2>
+              <p className="text-lg font-medium">{serviceRecord.date}</p>
+            </div>
+            <div>
+              <h2 className="text-sm font-semibold text-gray-500 uppercase">Next Due Date</h2>
+              <p className="text-lg font-medium">{serviceRecord.nextDueDate}</p>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="text-sm text-gray-600">
-        <p>Torque Equipment Tested according to BS EN ISO 6789:2017 Tolerance +/- 4% of stated load</p>
-      </div>
+        {/* Technician & Status */}
+        <div className="grid grid-cols-2 gap-8 bg-gray-50 p-4 rounded-lg">
+          <div>
+            <h2 className="text-sm font-semibold text-gray-500 uppercase">Engineer</h2>
+            <p className="text-lg font-medium">{serviceRecord.technician}</p>
+          </div>
+          <div>
+            <h2 className="text-sm font-semibold text-gray-500 uppercase">Status</h2>
+            <p className="text-lg font-medium text-green-600">ACTIVE</p>
+          </div>
+        </div>
 
-      <div className="mt-8">
-        <h2 className="text-gray-500 mb-2">NOTES</h2>
-        <div className="border p-4 rounded min-h-[100px]">
-          {serviceRecord.notes}
+        {/* Measurements */}
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <div className="grid grid-cols-4 gap-4 mb-4">
+            <div>
+              <h2 className="text-sm font-semibold text-gray-500 uppercase">Min</h2>
+              <p className="text-lg font-medium">40</p>
+            </div>
+            <div>
+              <h2 className="text-sm font-semibold text-gray-500 uppercase">Max</h2>
+              <p className="text-lg font-medium">340</p>
+            </div>
+            <div>
+              <h2 className="text-sm font-semibold text-gray-500 uppercase">Units</h2>
+              <p className="text-lg font-medium">nm</p>
+            </div>
+            <div>
+              <h2 className="text-sm font-semibold text-gray-500 uppercase">Result</h2>
+              <p className="text-lg font-medium text-green-600">PASS</p>
+            </div>
+          </div>
+
+          {/* Readings Table */}
+          <div className="grid grid-cols-2 gap-8">
+            <div>
+              <h2 className="text-lg font-semibold mb-4 text-primary">As Found</h2>
+              <div className="space-y-2">
+                <div className="grid grid-cols-3 gap-4 font-semibold text-gray-600 pb-2">
+                  <span>Target</span>
+                  <span>Actual</span>
+                  <span>Deviation</span>
+                </div>
+                {[
+                  { target: "40", actual: "38.9", deviation: "-2.8%" },
+                  { target: "190", actual: "185.0", deviation: "-2.6%" },
+                  { target: "340", actual: "329.0", deviation: "-3.2%" },
+                ].map((reading, index) => (
+                  <div key={index} className="grid grid-cols-3 gap-4 py-2 border-t">
+                    <span>{reading.target}</span>
+                    <span>{reading.actual}</span>
+                    <span>{reading.deviation}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold mb-4 text-primary">Definitive</h2>
+              <div className="space-y-2">
+                <div className="grid grid-cols-3 gap-4 font-semibold text-gray-600 pb-2">
+                  <span>Target</span>
+                  <span>Actual</span>
+                  <span>Deviation</span>
+                </div>
+                {[
+                  { target: "40", actual: "38.9", deviation: "-2.8%" },
+                  { target: "190", actual: "185.0", deviation: "-2.6%" },
+                  { target: "340", actual: "329.0", deviation: "-3.2%" },
+                ].map((reading, index) => (
+                  <div key={index} className="grid grid-cols-3 gap-4 py-2 border-t">
+                    <span>{reading.target}</span>
+                    <span>{reading.actual}</span>
+                    <span>{reading.deviation}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Notes */}
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <h2 className="text-lg font-semibold mb-2 text-primary">Notes</h2>
+          <p className="min-h-[100px] whitespace-pre-wrap">{serviceRecord.notes}</p>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-8 pt-4 border-t">
+          <p className="text-sm text-gray-600 text-center">
+            Torque Equipment Tested according to BS EN ISO 6789:2017 Tolerance +/- 4% of stated load
+          </p>
         </div>
       </div>
     </div>
