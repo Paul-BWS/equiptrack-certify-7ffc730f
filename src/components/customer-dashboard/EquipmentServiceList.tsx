@@ -29,7 +29,7 @@ export const EquipmentServiceList = ({ equipment, companyId }: EquipmentServiceL
               <div>
                 <h3 className="font-medium text-sm">{item.name}</h3>
                 <p className="text-xs text-[#B3B3B3]">
-                  Next Service: {item.nextServiceDue}
+                  Next Service: {item.next_service}
                 </p>
               </div>
               <Button

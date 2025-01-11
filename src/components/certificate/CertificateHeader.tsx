@@ -19,7 +19,7 @@ export const CertificateHeader = ({ certificate }: CertificateHeaderProps) => {
       </div>
       <div className="text-right">
         <p className="text-base font-semibold text-primary">Certificate No:</p>
-        <p className="text-base">{certificate.certificationNumber}</p>
+        <p className="text-base">{certificate.certification_number}</p>
       </div>
     </div>
   );

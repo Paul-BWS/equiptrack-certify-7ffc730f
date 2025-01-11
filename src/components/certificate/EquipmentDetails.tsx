@@ -15,7 +15,7 @@ export const EquipmentDetails = ({ equipment, serviceRecord }: EquipmentDetailsP
         </div>
         <div>
           <h2 className="text-xs font-semibold text-gray-500 uppercase">Serial Number</h2>
-          <p className="text-sm font-medium">{equipment.serialNumber}</p>
+          <p className="text-sm font-medium">{equipment.serial_number}</p>
         </div>
       </div>
       <div className="space-y-3">
@@ -25,7 +25,7 @@ export const EquipmentDetails = ({ equipment, serviceRecord }: EquipmentDetailsP
         </div>
         <div>
           <h2 className="text-xs font-semibold text-gray-500 uppercase">Next Due Date</h2>
-          <p className="text-sm font-medium">{serviceRecord.nextDueDate}</p>
+          <p className="text-sm font-medium">{serviceRecord.next_due_date}</p>
         </div>
       </div>
     </div>
