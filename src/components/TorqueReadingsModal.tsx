@@ -21,6 +21,16 @@ const generateCertificateNumber = () => {
   return `${prefix}${randomNum}`;
 };
 
+// Calculate deviation percentage
+const calculateDeviation = (target: string, actual: string): string => {
+  if (!target || !actual) return "";
+  const targetNum = parseFloat(target);
+  const actualNum = parseFloat(actual);
+  if (isNaN(targetNum) || isNaN(actualNum) || targetNum === 0) return "";
+  const deviation = ((actualNum - targetNum) / targetNum) * 100;
+  return deviation.toFixed(2);
+};
+
 export const TorqueReadingsModal = ({
   open,
   onOpenChange,
@@ -41,6 +51,11 @@ export const TorqueReadingsModal = ({
     result: "PASS",
     notes: "",
     readings: [
+      { target: "", actual: "", deviation: "" },
+      { target: "", actual: "", deviation: "" },
+      { target: "", actual: "", deviation: "" },
+    ],
+    definitiveReadings: [
       { target: "", actual: "", deviation: "" },
       { target: "", actual: "", deviation: "" },
       { target: "", actual: "", deviation: "" },
@@ -68,7 +83,22 @@ export const TorqueReadingsModal = ({
   const handleReadingChange = (index: number, field: string, value: string) => {
     const newReadings = [...readings.readings];
     newReadings[index] = { ...newReadings[index], [field]: value };
-    setReadings({ ...readings, readings: newReadings });
+
+    // Calculate deviation if both target and actual are present
+    if (field === 'target' || field === 'actual') {
+      const target = field === 'target' ? value : newReadings[index].target;
+      const actual = field === 'actual' ? value : newReadings[index].actual;
+      newReadings[index].deviation = calculateDeviation(target, actual);
+    }
+
+    // Copy to definitive readings
+    const newDefinitiveReadings = [...newReadings];
+
+    setReadings({ 
+      ...readings, 
+      readings: newReadings,
+      definitiveReadings: newDefinitiveReadings
+    });
   };
 
   // Create certificate data from readings with all required properties
@@ -98,7 +128,7 @@ export const TorqueReadingsModal = ({
     id: `sr-${readings.certNumber}`,
     equipmentId: equipmentId || 'unknown',
     date: readings.date,
-    type: 'calibration' as const, // Explicitly type as 'calibration'
+    type: 'calibration' as const,
     technician: readings.engineer,
     notes: readings.notes,
     nextDueDate: readings.retestDate
@@ -152,7 +182,7 @@ export const TorqueReadingsModal = ({
                 />
                 <ReadingsSection
                   title="DEFINITIVE"
-                  readings={readings.readings}
+                  readings={readings.definitiveReadings}
                   readOnly
                 />
               </div>
