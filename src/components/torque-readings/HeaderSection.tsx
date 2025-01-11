@@ -27,18 +27,17 @@ export const HeaderSection = ({
   };
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newDate = e.target.value;
-    onDateChange(newDate);
+    const selectedDate = e.target.value;
+    onDateChange(selectedDate);
     
-    if (newDate) {
-      const testDate = new Date(newDate);
+    if (selectedDate) {
+      const testDate = new Date(selectedDate);
       const newRetestDate = new Date(testDate);
-      newRetestDate.setDate(testDate.getDate() + 364);
+      newRetestDate.setFullYear(testDate.getFullYear() + 1);
+      newRetestDate.setDate(newRetestDate.getDate() - 1);
       
       const formattedRetestDate = newRetestDate.toISOString().split('T')[0];
       onRetestDateChange(formattedRetestDate);
-    } else {
-      onRetestDateChange('');
     }
   };
 
@@ -53,7 +52,6 @@ export const HeaderSection = ({
         type="date"
         value={date}
         onChange={handleDateChange}
-        showCalendar
       />
       <FormField
         id="status"
@@ -67,8 +65,7 @@ export const HeaderSection = ({
         label="Retest Date"
         type="date"
         value={retestDate}
-        onChange={(e) => onRetestDateChange(e.target.value)}
-        showCalendar
+        readOnly
       />
       <FormField
         id="certNumber"
