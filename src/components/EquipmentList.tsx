@@ -47,7 +47,7 @@ export const EquipmentList = ({
                   size="sm"
                   onClick={() => onGenerateCertificate(item.id)}
                 >
-                  <Pen className="h-4 w-4" strokeWidth={2.5} />
+                  <Pen className="h-4 w-4 text-primary" strokeWidth={2.5} />
                   {!isMobile && <span className="ml-2">Edit</span>}
                 </Button>
               </TableCell>
