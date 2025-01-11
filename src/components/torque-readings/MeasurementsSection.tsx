@@ -35,26 +35,26 @@ export const MeasurementsSection = ({
     <div className={`grid ${isMobile ? 'grid-cols-2' : 'grid-cols-4'} gap-4`}>
       <FormField
         id="min"
-        label="MIN"
+        label="Min"
         type="number"
         value={min}
         onChange={(e) => onMinChange(e.target.value)}
       />
       <FormField
         id="max"
-        label="MAX"
+        label="Max"
         type="number"
         value={max}
         onChange={(e) => onMaxChange(e.target.value)}
       />
       <FormField
         id="units"
-        label="UNITS"
+        label="Units"
         value={units}
         onChange={(e) => onUnitsChange(e.target.value)}
       />
       <div className="space-y-2">
-        <label htmlFor="result" className="text-[#C8C8C9] text-sm">RESULT</label>
+        <label htmlFor="result" className="text-[#C8C8C9] text-sm">Result</label>
         <Select
           value={result}
           onValueChange={onResultChange}
