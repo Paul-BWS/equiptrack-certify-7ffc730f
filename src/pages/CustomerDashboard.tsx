@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { Users, ArrowRight } from "lucide-react";
 import { Customer } from "@/types/customer";
 import { Equipment } from "@/types/equipment";
 
@@ -48,11 +48,11 @@ const CustomerDashboard = () => {
       <main className="container mx-auto py-8">
         <Button
           variant="outline"
+          size="icon"
           className="mb-6"
           onClick={() => navigate('/')}
         >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Customers
+          <Users className="h-4 w-4 text-primary" />
         </Button>
 
         <div className="space-y-6">
@@ -84,7 +84,7 @@ const CustomerDashboard = () => {
                   className="w-full md:w-auto"
                 >
                   View All Equipment
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <ArrowRight className="ml-2 h-4 w-4 text-primary-foreground" />
                 </Button>
               </div>
             </CardContent>
