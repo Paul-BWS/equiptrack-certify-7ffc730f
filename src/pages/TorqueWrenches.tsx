@@ -10,15 +10,6 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 
-interface TorqueWrench {
-  id: string;
-  model: string;
-  serial_number: string;
-  service_date: string;
-  next_service_date: string;
-  company_id: string;
-}
-
 const TorqueWrenches = () => {
   const navigate = useNavigate();
   const { customerId } = useParams();
@@ -46,14 +37,15 @@ const TorqueWrenches = () => {
   });
 
   const { data: torqueWrenches = [], isLoading } = useQuery({
-    queryKey: ['torque_wrenches', customerId],
+    queryKey: ['equipment', customerId, 'torque-wrenches'],
     queryFn: async () => {
       console.log('Fetching torque wrenches for customer:', customerId);
       
-      const { data: wrenchData, error } = await supabase
-        .from('torque_wrenches')
+      const { data: equipmentData, error } = await supabase
+        .from('equipment')
         .select('*')
         .eq('company_id', customerId)
+        .eq('type', 'torque-wrench')
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -62,14 +54,14 @@ const TorqueWrenches = () => {
         throw error;
       }
 
-      console.log('Fetched torque wrenches:', wrenchData);
+      console.log('Fetched torque wrenches:', equipmentData);
       
-      return (wrenchData as TorqueWrench[]).map(wrench => ({
+      return equipmentData.map(wrench => ({
         id: wrench.id,
         model: wrench.model || '',
         serialNumber: wrench.serial_number || '',
-        lastServiceDate: wrench.service_date || '',
-        nextServiceDue: wrench.next_service_date || ''
+        lastServiceDate: wrench.last_service_date || '',
+        nextServiceDue: wrench.next_service_due || ''
       }));
     },
     meta: {
