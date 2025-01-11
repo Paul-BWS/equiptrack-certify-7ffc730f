@@ -30,7 +30,6 @@ export const HeaderSection = ({
   const handleDateChange = (newDate: string) => {
     onDateChange(newDate);
     
-    // If a date is selected, automatically set retest date to 364 days later
     if (newDate) {
       const testDate = new Date(newDate);
       const newRetestDate = new Date(testDate);
@@ -39,6 +38,8 @@ export const HeaderSection = ({
       // Format the date to YYYY-MM-DD for the input
       const formattedRetestDate = newRetestDate.toISOString().split('T')[0];
       onRetestDateChange(formattedRetestDate);
+    } else {
+      onRetestDateChange('');
     }
   };
 
@@ -51,7 +52,7 @@ export const HeaderSection = ({
         id="date"
         label="Test Date"
         type="date"
-        value={date}
+        value={date || ''}
         onChange={(e) => handleDateChange(e.target.value)}
         showCalendar
       />
@@ -66,7 +67,7 @@ export const HeaderSection = ({
         id="retestDate"
         label="Retest Date"
         type="date"
-        value={retestDate}
+        value={retestDate || ''}
         onChange={(e) => onRetestDateChange(e.target.value)}
         showCalendar
       />
