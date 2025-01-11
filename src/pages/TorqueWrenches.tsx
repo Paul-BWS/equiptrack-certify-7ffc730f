@@ -6,28 +6,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { TorqueReadingsModal } from "@/components/TorqueReadingsModal";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
-
-// Sample data - in a real app, this would come from your backend
-const sampleEquipment = [
-  {
-    id: "1",
-    name: "Torque Wrench A",
-    serialNumber: "TW-001",
-    customerName: "TorcPro Industries",
-    model: "TP-100",
-    lastServiceDate: "2023-01-15",
-    nextServiceDue: "2024-01-15",
-  },
-  {
-    id: "2",
-    name: "Torque Wrench B",
-    serialNumber: "TW-002",
-    customerName: "TorcPro Solutions",
-    model: "TP-200",
-    lastServiceDate: "2023-02-20",
-    nextServiceDue: "2024-02-20",
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 
 const TorqueWrenches = () => {
   const navigate = useNavigate();
@@ -35,6 +16,53 @@ const TorqueWrenches = () => {
   const isMobile = useIsMobile();
   const [showReadingsModal, setShowReadingsModal] = useState(false);
   const [selectedEquipmentId, setSelectedEquipmentId] = useState<string | null>(null);
+
+  const { data: equipment = [], isLoading } = useQuery({
+    queryKey: ['equipment', customerId],
+    queryFn: async () => {
+      console.log('Fetching equipment for customer:', customerId);
+      const { data, error } = await supabase
+        .from('equipment')
+        .select('*')
+        .eq('company_id', customerId);
+
+      if (error) {
+        console.error('Error fetching equipment:', error);
+        toast.error("Failed to load equipment data");
+        throw error;
+      }
+
+      console.log('Fetched equipment:', data);
+      return data.map(item => ({
+        id: item.id,
+        name: item.name,
+        serialNumber: item.serial_number,
+        customerName: "", // We'll need to fetch this separately if needed
+        model: item.model,
+        lastServiceDate: item.last_service_date,
+        nextServiceDue: item.next_service_due
+      }));
+    },
+    meta: {
+      onError: (error: Error) => {
+        console.error('Query error:', error);
+        toast.error("Could not load equipment data. Please try again later.");
+      }
+    }
+  });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <main className="container mx-auto py-8">
+          <div className="flex justify-center items-center h-48">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -61,7 +89,7 @@ const TorqueWrenches = () => {
           </div>
           
           <EquipmentList
-            equipment={sampleEquipment}
+            equipment={equipment}
             onGenerateCertificate={(id) => {
               setSelectedEquipmentId(id);
               setShowReadingsModal(true);
