@@ -33,7 +33,7 @@ export const TorqueReadingsModal = ({
 }: TorqueReadingsModalProps) => {
   const [readings, setReadings] = useState({
     certNumber: "",
-    date: "",
+    date: new Date().toISOString().split('T')[0],
     retestDate: "",
     model: "",
     serialNumber: "",
@@ -57,12 +57,13 @@ export const TorqueReadingsModal = ({
     ],
   });
 
-  const { data: equipmentData } = useQuery({
+  const { data: equipmentData, isLoading } = useQuery({
     queryKey: ['equipment', equipmentId],
     queryFn: async () => {
       if (!equipmentId) return null;
       
-      // Fetch both equipment and its latest service record
+      console.log('Fetching equipment data for ID:', equipmentId);
+      
       const [equipmentResult, serviceResult] = await Promise.all([
         supabase
           .from('equipment')
@@ -75,7 +76,7 @@ export const TorqueReadingsModal = ({
           .eq('equipment_id', equipmentId)
           .order('service_date', { ascending: false })
           .limit(1)
-          .maybeSingle() // Changed from single() to maybeSingle()
+          .maybeSingle()
       ]);
 
       if (equipmentResult.error) {
@@ -84,10 +85,12 @@ export const TorqueReadingsModal = ({
         throw equipmentResult.error;
       }
 
-      // Return combined data
+      console.log('Fetched equipment data:', equipmentResult.data);
+      console.log('Fetched service record:', serviceResult.data);
+
       return {
-        ...equipmentResult.data,
-        lastService: serviceResult.data // This will be null if no service records exist
+        equipment: equipmentResult.data,
+        lastService: serviceResult.data
       };
     },
     enabled: !!equipmentId && open,
@@ -101,26 +104,32 @@ export const TorqueReadingsModal = ({
     if (open) {
       setReadings(prev => ({
         ...prev,
-        certNumber: generateCertificateNumber()
+        certNumber: generateCertificateNumber(),
+        date: new Date().toISOString().split('T')[0]
       }));
     }
   }, [open]);
 
   useEffect(() => {
     if (equipmentData) {
+      const { equipment, lastService } = equipmentData;
+      console.log('Updating readings with equipment data:', equipment);
+      console.log('Last service data:', lastService);
+      
       setReadings(prev => ({
         ...prev,
-        model: equipmentData.model || '',
-        serialNumber: equipmentData.serial_number || '',
-        date: new Date().toISOString().split('T')[0], // Today's date
-        min: equipmentData.min_torque?.toString() || '',
-        max: equipmentData.max_torque?.toString() || '',
-        units: equipmentData.units || 'nm',
-        // If there's last service data, use its readings
-        ...(equipmentData.lastService && {
-          readings: equipmentData.lastService.readings || prev.readings,
-          definitiveReadings: equipmentData.lastService.definitive_readings || prev.definitiveReadings,
-          notes: equipmentData.lastService.notes || '',
+        model: equipment.model || '',
+        serialNumber: equipment.serial_number || '',
+        min: equipment.min_torque?.toString() || '',
+        max: equipment.max_torque?.toString() || '',
+        units: equipment.units || 'nm',
+        // If there's last service data, use its values
+        ...(lastService && {
+          engineer: lastService.technician || '',
+          readings: lastService.readings || prev.readings,
+          definitiveReadings: lastService.definitive_readings || prev.definitiveReadings,
+          notes: lastService.notes || '',
+          retestDate: lastService.next_service_date || ''
         })
       }));
     }
@@ -197,6 +206,18 @@ export const TorqueReadingsModal = ({
       definitiveReadings: newDefinitiveReadings
     });
   };
+
+  if (isLoading) {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent>
+          <div className="flex justify-center items-center h-48">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   return (
     <>
