@@ -21,6 +21,8 @@ export interface TorqueWrench {
   definitive_readings: Reading[];
   cert_number: string;
   status: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface Certificate {
