@@ -1,3 +1,9 @@
+export interface Reading {
+  target: string;
+  actual: string;
+  deviation: string;
+}
+
 export interface TorqueWrench {
   id: string;
   company_id: string;
@@ -11,16 +17,8 @@ export interface TorqueWrench {
   engineer: string;
   result: string;
   notes: string;
-  readings: Array<{
-    target: string;
-    actual: string;
-    deviation: string;
-  }>;
-  definitive_readings: Array<{
-    target: string;
-    actual: string;
-    deviation: string;
-  }>;
+  readings: Reading[];
+  definitive_readings: Reading[];
   cert_number: string;
   status: string;
 }

@@ -1,11 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Equipment } from "@/types/equipment";
+import { TorqueWrench } from "@/types/equipment";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
 interface EquipmentServiceListProps {
-  equipment: Equipment[];
+  equipment: TorqueWrench[];
   companyId: string;
 }
 
@@ -27,7 +27,7 @@ export const EquipmentServiceList = ({ equipment, companyId }: EquipmentServiceL
               className="flex items-center justify-between p-4 rounded-lg border bg-[#F9F9F9]"
             >
               <div>
-                <h3 className="font-medium text-sm">{item.name}</h3>
+                <h3 className="font-medium text-sm">{item.model}</h3>
                 <p className="text-xs text-[#B3B3B3]">
                   Next Service: {item.next_service_due}
                 </p>
