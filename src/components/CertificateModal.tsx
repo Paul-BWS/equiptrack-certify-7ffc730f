@@ -4,6 +4,7 @@ import { Mail, Printer, X } from "lucide-react";
 import { CertificateTemplate } from "./CertificateTemplate";
 import { Certificate, Equipment, ServiceRecord } from "@/types/equipment";
 import { toast } from "sonner";
+import { getOrganizationSettings } from "@/utils/settings";
 
 interface CertificateModalProps {
   open: boolean;
@@ -35,8 +36,23 @@ export const CertificateModal = ({
 
   const handleEmail = () => {
     const sentOn = updateSentOn();
-    // This would be connected to your email service
-    toast.success(`Certificate emailed at ${new Date(sentOn).toLocaleString()}`);
+    const settings = getOrganizationSettings();
+    
+    // Prepare email content
+    const subject = `Certificate for ${equipment.name} - ${certificate.certificateNumber}`;
+    const body = `Please find attached the certificate for:\n\n` +
+      `Equipment: ${equipment.name}\n` +
+      `Certificate Number: ${certificate.certificateNumber}\n` +
+      `Date: ${new Date(certificate.date).toLocaleDateString()}\n\n` +
+      `Best regards,\n${settings.organizationName}`;
+
+    // Create mailto URL
+    const mailtoUrl = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+    // Open default email client
+    window.location.href = mailtoUrl;
+    
+    toast.success(`Email client opened at ${new Date(sentOn).toLocaleString()}`);
   };
 
   const handleClose = () => {
