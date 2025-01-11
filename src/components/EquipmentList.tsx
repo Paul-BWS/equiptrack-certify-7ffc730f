@@ -1,4 +1,3 @@
-import { Equipment } from "@/types/equipment";
 import {
   Table,
   TableBody,
@@ -8,12 +7,20 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { CircleArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface EquipmentListProps {
-  equipment: Equipment[];
-  onGenerateCertificate: (equipmentId: string) => void;
+  equipment: Array<{
+    id: string;
+    name: string;
+    serialNumber: string;
+    manufacturer: string;
+    model: string;
+    lastServiceDate: string;
+    nextServiceDue: string;
+  }>;
+  onGenerateCertificate: (id: string) => void;
 }
 
 export const EquipmentList = ({
@@ -27,28 +34,40 @@ export const EquipmentList = ({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="hidden md:table-cell">Name</TableHead>
-            <TableHead>Serial</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead className="hidden sm:table-cell">Retest</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead>Equipment Name</TableHead>
+            {!isMobile && (
+              <>
+                <TableHead>Serial Number</TableHead>
+                <TableHead>Manufacturer</TableHead>
+                <TableHead>Model</TableHead>
+              </>
+            )}
+            <TableHead>Last Service</TableHead>
+            <TableHead>Next Service</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {equipment.map((item) => (
             <TableRow key={item.id}>
-              <TableCell className="hidden md:table-cell font-medium">{item.name}</TableCell>
-              <TableCell>{item.serialNumber}</TableCell>
+              <TableCell className="font-medium">{item.name}</TableCell>
+              {!isMobile && (
+                <>
+                  <TableCell>{item.serialNumber}</TableCell>
+                  <TableCell>{item.manufacturer}</TableCell>
+                  <TableCell>{item.model}</TableCell>
+                </>
+              )}
               <TableCell>{item.lastServiceDate}</TableCell>
-              <TableCell className="hidden sm:table-cell">{item.nextServiceDue}</TableCell>
-              <TableCell>
+              <TableCell>{item.nextServiceDue}</TableCell>
+              <TableCell className="text-right">
                 <Button
                   variant="ghost"
-                  size="sm"
+                  size="icon"
                   onClick={() => onGenerateCertificate(item.id)}
-                  className="hover:bg-transparent p-0"
+                  className="rounded-full bg-primary hover:bg-primary/90"
                 >
-                  <CircleArrowRight className="h-5 w-5 text-[#1D4ED8]" strokeWidth={2.5} />
+                  <ArrowRight className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
                 </Button>
               </TableCell>
             </TableRow>

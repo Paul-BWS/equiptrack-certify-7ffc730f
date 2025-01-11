@@ -1,11 +1,33 @@
-import { useState } from "react";
 import { Navigation } from "@/components/Navigation";
 import { EquipmentList } from "@/components/EquipmentList";
 import { Button } from "@/components/ui/button";
-import { CirclePlus, CircleArrowLeft } from "lucide-react";
+import { Grid, Plus } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { TorqueReadingsModal } from "@/components/TorqueReadingsModal";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useState } from "react";
+
+// Sample data - in a real app, this would come from your backend
+const sampleEquipment = [
+  {
+    id: "1",
+    name: "Torque Wrench A",
+    serialNumber: "TW-001",
+    manufacturer: "TorcPro",
+    model: "TP-100",
+    lastServiceDate: "2023-01-15",
+    nextServiceDue: "2024-01-15",
+  },
+  {
+    id: "2",
+    name: "Torque Wrench B",
+    serialNumber: "TW-002",
+    manufacturer: "TorcPro",
+    model: "TP-200",
+    lastServiceDate: "2023-02-20",
+    nextServiceDue: "2024-02-20",
+  },
+];
 
 const TorqueWrenches = () => {
   const navigate = useNavigate();
@@ -14,64 +36,45 @@ const TorqueWrenches = () => {
   const [showReadingsModal, setShowReadingsModal] = useState(false);
   const [selectedEquipmentId, setSelectedEquipmentId] = useState<string | null>(null);
 
-  // Sample data - replace with actual data fetching
-  const equipment = [
-    {
-      id: "1",
-      name: "Silver (red handle)",
-      serialNumber: "TW01",
-      lastServiceDate: "08/01/2025",
-      nextServiceDue: "07/01/2026",
-      manufacturer: "Torqueleader",
-      model: "34TSRL",
-      purchaseDate: "01/01/2024",
-    },
-  ];
-
-  const handleGenerateCertificate = (equipmentId: string) => {
-    setSelectedEquipmentId(equipmentId);
-    setShowReadingsModal(true);
-  };
-
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
-      
-      <main className="container mx-auto py-8 px-4">
-        <div className="mb-8">
+      <main className="container mx-auto py-8">
+        <div className="space-y-6">
           <div className="flex flex-row justify-between items-center gap-4 mb-6">
             <Button
               variant="outline"
+              size="icon"
               onClick={() => navigate(`/customers/${customerId}/equipment`)}
-              className="gap-2"
+              className="rounded-full bg-primary hover:bg-primary/90"
             >
-              <CircleArrowLeft className="h-5 w-5 text-[#1D4ED8]" strokeWidth={2.5} />
+              <Grid className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
             </Button>
             
             <Button 
+              size="icon"
               onClick={() => setShowReadingsModal(true)}
-              className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90"
+              className="rounded-full bg-primary hover:bg-primary/90"
             >
-              <CirclePlus className="h-5 w-5" strokeWidth={2.5} />
+              <Plus className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
             </Button>
           </div>
           
-          <h1 className="text-3xl font-bold text-foreground mb-2">
-            Torque Wrenches
-          </h1>
+          <EquipmentList
+            equipment={sampleEquipment}
+            onGenerateCertificate={(id) => {
+              setSelectedEquipmentId(id);
+              setShowReadingsModal(true);
+            }}
+          />
         </div>
-
-        <EquipmentList 
-          equipment={equipment}
-          onGenerateCertificate={handleGenerateCertificate}
-        />
-
-        <TorqueReadingsModal
-          open={showReadingsModal}
-          onOpenChange={setShowReadingsModal}
-          equipmentId={selectedEquipmentId}
-        />
       </main>
+
+      <TorqueReadingsModal
+        open={showReadingsModal}
+        onOpenChange={setShowReadingsModal}
+        equipmentId={selectedEquipmentId}
+      />
     </div>
   );
 };
