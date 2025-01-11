@@ -32,3 +32,16 @@ export interface Certificate {
   issue_date: string;
   expiry_date: string;
 }
+
+export interface ServiceRecord {
+  id: string;
+  torque_wrench_id: string;
+  service_date: string;
+  service_type: string;
+  technician: string;
+  notes: string;
+  next_service_date: string;
+}
+
+// Alias for backward compatibility
+export type Equipment = TorqueWrench;
