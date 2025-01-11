@@ -32,8 +32,8 @@ export const prepareEquipmentData = (readings: any, equipmentId: string) => {
     model: readings.model,
     serial_number: readings.serialNumber,
     purchase_date: new Date().toISOString(),
-    last_service: readings.date,
-    next_service: readings.retestDate
+    last_service_date: readings.date,
+    next_service_due: readings.retestDate
   };
 };
 
