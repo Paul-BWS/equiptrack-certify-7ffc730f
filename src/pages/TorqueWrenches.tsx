@@ -24,8 +24,7 @@ const TorqueWrenches = () => {
       const { data, error } = await supabase
         .from('equipment')
         .select('*')
-        .eq('company_id', customerId)
-        .eq('type', 'torque-wrench'); // Add this line to filter by type
+        .eq('company_id', customerId);
 
       if (error) {
         console.error('Error fetching equipment:', error);
@@ -36,12 +35,12 @@ const TorqueWrenches = () => {
       console.log('Fetched equipment:', data);
       return data.map(item => ({
         id: item.id,
-        name: item.name,
-        serialNumber: item.serial_number,
+        name: item.name || 'Unnamed Equipment',
+        serialNumber: item.serial_number || '',
         customerName: "", // We'll need to fetch this separately if needed
-        model: item.model,
-        lastServiceDate: item.last_service_date,
-        nextServiceDue: item.next_service_due
+        model: item.model || '',
+        lastServiceDate: item.last_service_date || '',
+        nextServiceDue: item.next_service_due || ''
       }));
     },
     meta: {
