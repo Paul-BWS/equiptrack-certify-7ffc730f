@@ -15,6 +15,10 @@ export const CustomerList = ({ customers }: CustomerListProps) => {
     window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
   };
 
+  const handleCustomerClick = (customerId: string) => {
+    navigate(`/customers/${customerId}`);
+  };
+
   return (
     <div className="space-y-4">
       {customers.map((customer) => (
@@ -58,7 +62,7 @@ export const CustomerList = ({ customers }: CustomerListProps) => {
             variant="ghost"
             size="icon"
             className="rounded-full bg-primary hover:bg-primary/90 h-10 w-10 p-0"
-            onClick={() => navigate(`/customers/${customer.id}`)}
+            onClick={() => handleCustomerClick(customer.id)}
           >
             <ArrowRight className="h-4 w-4 text-primary-foreground" />
           </Button>
