@@ -8,6 +8,7 @@ import { EquipmentSection } from "./torque-readings/EquipmentSection";
 import { MeasurementsSection } from "./torque-readings/MeasurementsSection";
 import { CertificateModal } from "./CertificateModal";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { toast } from "sonner";
 
 interface TorqueReadingsModalProps {
   open: boolean;
@@ -29,6 +30,10 @@ const calculateDeviation = (target: string, actual: string): string => {
   if (isNaN(targetNum) || isNaN(actualNum) || targetNum === 0) return "";
   const deviation = ((actualNum - targetNum) / targetNum) * 100;
   return deviation.toFixed(2);
+};
+
+const validateReadings = (readings: Array<{ target: string; actual: string; deviation: string }>) => {
+  return readings.every(reading => reading.target && reading.actual);
 };
 
 export const TorqueReadingsModal = ({
@@ -74,8 +79,41 @@ export const TorqueReadingsModal = ({
     }
   }, [open]);
 
+  const validateForm = () => {
+    const requiredFields = {
+      date: "Test Date",
+      retestDate: "Retest Date",
+      model: "Model",
+      serialNumber: "Serial Number",
+      engineer: "Engineer",
+      min: "Min",
+      max: "Max",
+      units: "Units",
+      notes: "Notes"
+    };
+
+    for (const [field, label] of Object.entries(requiredFields)) {
+      if (!readings[field as keyof typeof readings]) {
+        toast.error(`${label} is required`);
+        return false;
+      }
+    }
+
+    if (!validateReadings(readings.readings)) {
+      toast.error("All readings (target and actual) must be filled");
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
     console.log("Form submitted:", readings);
     setShowCertificate(true);
   };

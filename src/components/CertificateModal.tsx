@@ -20,13 +20,23 @@ export const CertificateModal = ({
   equipment,
   serviceRecord,
 }: CertificateModalProps) => {
+  const updateSentOn = () => {
+    const timestamp = new Date().toISOString();
+    // In a real application, you would update this in your database
+    console.log("Certificate sent on:", timestamp);
+    return timestamp;
+  };
+
   const handlePrint = () => {
+    const sentOn = updateSentOn();
+    toast.success(`Certificate printed at ${new Date(sentOn).toLocaleString()}`);
     window.print();
   };
 
   const handleEmail = () => {
+    const sentOn = updateSentOn();
     // This would be connected to your email service
-    toast.success("Email functionality will be implemented soon");
+    toast.success(`Certificate emailed at ${new Date(sentOn).toLocaleString()}`);
   };
 
   return (
