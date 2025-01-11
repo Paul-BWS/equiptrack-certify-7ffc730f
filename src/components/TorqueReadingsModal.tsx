@@ -8,6 +8,7 @@ import { useTorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
 import { useTorqueWrenchSubmit } from "@/hooks/useTorqueWrenchSubmit";
 import { validateForm } from "@/utils/torqueReadingsValidation";
 import { TorqueWrench } from "@/types/equipment";
+import { prepareCertificateData } from "@/utils/certificateDataPreparation";
 
 interface TorqueReadingsModalProps {
   open: boolean;

@@ -1,13 +1,8 @@
 import { useState, useEffect } from "react";
 import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
+import { Reading } from "@/types/equipment";
 
-interface Reading {
-  target: string;
-  actual: string;
-  deviation: string;
-}
-
-interface TorqueReadingsForm {
+export interface TorqueReadingsForm {
   certNumber: string;
   date: string;
   retestDate: string;
