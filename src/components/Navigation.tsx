@@ -34,7 +34,7 @@ export const Navigation = () => {
               <span>Dashboard</span>
             </Link>
             <Link
-              to="/customers"
+              to="/"
               className="text-white hover:text-accent flex items-center gap-2"
             >
               <Users size={20} />
@@ -69,7 +69,7 @@ export const Navigation = () => {
               <span>Dashboard</span>
             </Link>
             <Link
-              to="/customers"
+              to="/"
               className="text-white hover:text-accent flex items-center gap-2"
               onClick={() => setIsMenuOpen(false)}
             >
