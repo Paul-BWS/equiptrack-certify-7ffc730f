@@ -59,6 +59,43 @@ export default function Settings() {
                 placeholder="Enter organization name"
               />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="address">Address</Label>
+              <Input
+                id="address"
+                value={settings.address}
+                onChange={(e) => setSettings(prev => ({ ...prev, address: e.target.value }))}
+                placeholder="Enter company address"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="telephone">Telephone</Label>
+              <Input
+                id="telephone"
+                value={settings.telephone}
+                onChange={(e) => setSettings(prev => ({ ...prev, telephone: e.target.value }))}
+                placeholder="Enter telephone number"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                value={settings.email}
+                onChange={(e) => setSettings(prev => ({ ...prev, email: e.target.value }))}
+                placeholder="Enter company email"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="website">Website</Label>
+              <Input
+                id="website"
+                value={settings.website}
+                onChange={(e) => setSettings(prev => ({ ...prev, website: e.target.value }))}
+                placeholder="Enter company website"
+              />
+            </div>
           </CardContent>
         </Card>
 
