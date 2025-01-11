@@ -1,5 +1,6 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 interface FormFieldProps {
   id: string;
@@ -23,19 +24,37 @@ export const FormField = ({
   readOnly,
   className,
   showCalendar,
-}: FormFieldProps) => (
-  <div className="space-y-2">
-    <Label htmlFor={id} className="text-[#C8C8C9] text-sm">{label}</Label>
-    <div className="relative">
-      <Input
-        id={id}
-        type={showCalendar ? "date" : type}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        readOnly={readOnly}
-        className={`text-sm bg-[#F9F9F9] placeholder:text-[#CCCCCC] ${className}`}
-      />
+}: FormFieldProps) => {
+  const [dateInputType, setDateInputType] = useState(showCalendar ? "text" : type);
+
+  const handleFocus = () => {
+    if (showCalendar) {
+      setDateInputType("date");
+    }
+  };
+
+  const handleBlur = () => {
+    if (showCalendar && !value) {
+      setDateInputType("text");
+    }
+  };
+
+  return (
+    <div className="space-y-2">
+      <Label htmlFor={id} className="text-[#C8C8C9] text-sm">{label}</Label>
+      <div className="relative">
+        <Input
+          id={id}
+          type={dateInputType}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          readOnly={readOnly}
+          className={`text-sm bg-[#F9F9F9] placeholder:text-[#CCCCCC] ${className}`}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
+      </div>
     </div>
-  </div>
-);
+  );
+};
