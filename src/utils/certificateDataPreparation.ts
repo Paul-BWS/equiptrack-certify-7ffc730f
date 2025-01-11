@@ -13,20 +13,20 @@ export const calculateDeviation = (target: string, actual: string): string => {
   return deviation.toFixed(2);
 };
 
-export const prepareCertificateData = (readings: any, equipmentId: string) => {
+export const prepareCertificateData = (readings: any, equipmentId: string | null) => {
   return {
     id: `cert-${readings.certNumber}`,
     service_record_id: `sr-${readings.certNumber}`,
-    equipment_id: equipmentId || 'unknown',
+    equipment_id: equipmentId || undefined,
     certification_number: readings.certNumber,
     issue_date: readings.date,
     expiry_date: readings.retestDate
   };
 };
 
-export const prepareEquipmentData = (readings: any, equipmentId: string) => {
+export const prepareEquipmentData = (readings: any, equipmentId: string | null) => {
   return {
-    id: equipmentId || 'unknown',
+    id: equipmentId || undefined,
     name: `Torque Wrench ${readings.model}`,
     manufacturer: 'Unknown',
     model: readings.model,
@@ -37,10 +37,10 @@ export const prepareEquipmentData = (readings: any, equipmentId: string) => {
   };
 };
 
-export const prepareServiceRecordData = (readings: any, equipmentId: string) => {
+export const prepareServiceRecordData = (readings: any, equipmentId: string | null) => {
   return {
     id: `sr-${readings.certNumber}`,
-    equipment_id: equipmentId || 'unknown',
+    equipment_id: equipmentId || undefined,
     date: readings.date,
     type: 'calibration' as const,
     technician: readings.engineer,
