@@ -34,7 +34,7 @@ export const FormField = ({
         onChange={onChange}
         placeholder={placeholder}
         readOnly={readOnly}
-        className={`text-sm bg-[#F9F9F9] ${className}`}
+        className={`text-sm bg-[#F9F9F9] placeholder:text-[#E5E5E5] ${className}`}
       />
     </div>
   </div>
