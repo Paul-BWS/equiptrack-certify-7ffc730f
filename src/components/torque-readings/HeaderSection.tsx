@@ -30,7 +30,7 @@ export const HeaderSection = ({
   const handleDateChange = (newDate: string) => {
     onDateChange(newDate);
     
-    // If a date is selected, automatically set retest date to 364 days later
+    // Only set retest date if a date is selected
     if (newDate) {
       const testDate = new Date(newDate);
       const newRetestDate = new Date(testDate);
