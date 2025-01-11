@@ -37,16 +37,13 @@ export const useTorqueWrenchSubmit = (
     }
 
     console.log('Current session:', session);
-    console.log('User ID:', session.user?.id);
-    console.log('Company ID:', torqueWrenchData.company_id);
-
+    
     setIsSaving(true);
     try {
       console.log('Saving torque wrench with data:', torqueWrenchData);
       
       const dataToSave = {
         ...torqueWrenchData,
-        user_id: session.user.id, // Add user_id from session
         readings: JSON.stringify(torqueWrenchData.readings),
         definitive_readings: JSON.stringify(torqueWrenchData.definitive_readings)
       };
