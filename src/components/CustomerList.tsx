@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Customer } from "@/types/customer";
-import { ArrowRight, Mail, Phone, Eye } from "lucide-react";
+import { ArrowRight, Mail, Phone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface CustomerListProps {
@@ -35,12 +35,12 @@ export const CustomerList = ({ customers }: CustomerListProps) => {
             </div>
           </div>
           <Button
-            variant="outline"
+            variant="ghost"
             size="icon"
-            className="bg-primary hover:bg-primary/90 ml-4"
+            className="rounded-full bg-primary hover:bg-primary/90 h-10 w-10 p-0"
             onClick={() => navigate(`/customers/${customer.id}`)}
           >
-            <Eye className="h-4 w-4 text-primary-foreground" />
+            <ArrowRight className="h-4 w-4 text-primary-foreground" />
           </Button>
         </div>
       ))}

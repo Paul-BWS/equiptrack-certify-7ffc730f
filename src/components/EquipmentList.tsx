@@ -65,9 +65,9 @@ export const EquipmentList = ({
                   variant="ghost"
                   size="icon"
                   onClick={() => onGenerateCertificate(item.id)}
-                  className="rounded-full bg-primary hover:bg-primary/90"
+                  className="rounded-full bg-primary hover:bg-primary/90 h-10 w-10 p-0"
                 >
-                  <ArrowRight className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
+                  <ArrowRight className="h-4 w-4 text-primary-foreground" />
                 </Button>
               </TableCell>
             </TableRow>
