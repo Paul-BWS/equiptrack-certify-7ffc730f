@@ -74,6 +74,9 @@ export const useTorqueWrenchSubmit = (
 
       if (result.error) {
         console.error('Database operation error:', result.error);
+        if (result.error.code === '42501') {
+          throw new Error('You do not have permission to perform this action. Please check if you have access to this company.');
+        }
         throw result.error;
       }
 
@@ -94,8 +97,8 @@ export const useTorqueWrenchSubmit = (
       onSuccess();
     } catch (error: any) {
       console.error('Error saving data:', error);
-      if (error.code === '42501') {
-        toast.error("Permission denied. Please check your access rights.");
+      if (error.message.includes('permission')) {
+        toast.error(error.message);
       } else if (error.code === '22P02') {
         toast.error("Invalid ID format");
       } else {
