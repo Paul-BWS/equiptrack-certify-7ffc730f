@@ -4,6 +4,13 @@ import { Button } from "@/components/ui/button";
 import { FormField } from "./torque-readings/FormField";
 import { ReadingsSection } from "./torque-readings/ReadingsSection";
 import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface TorqueReadingsModalProps {
   open: boolean;
@@ -158,13 +165,23 @@ export const TorqueReadingsModal = ({
               value={readings.units}
               onChange={(e) => setReadings({ ...readings, units: e.target.value })}
             />
-            <FormField
-              id="result"
-              label="RESULT"
-              value={readings.result}
-              readOnly
-              className="text-green-500 font-medium"
-            />
+            <div className="space-y-2">
+              <label htmlFor="result" className="text-[#C8C8C9] text-sm">RESULT</label>
+              <Select
+                value={readings.result}
+                onValueChange={(value) => setReadings({ ...readings, result: value })}
+              >
+                <SelectTrigger id="result" className={`text-sm ${
+                  readings.result === 'PASS' ? 'text-green-500' : 'text-red-500'
+                }`}>
+                  <SelectValue placeholder="Select result" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="PASS" className="text-green-500">PASS</SelectItem>
+                  <SelectItem value="FAIL" className="text-red-500">FAIL</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="space-y-4">
