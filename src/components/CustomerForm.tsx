@@ -31,6 +31,9 @@ export const CustomerForm = () => {
 
   const { mutate: createCompany, isPending } = useMutation({
     mutationFn: async (data: CompanyFormData) => {
+      if (!data.useSeparateBillingAddress) {
+        data.billingaddress = data.address;
+      }
       return await companyService.createCompany(data);
     },
     onSuccess: () => {
