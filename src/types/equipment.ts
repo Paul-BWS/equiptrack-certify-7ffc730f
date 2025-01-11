@@ -1,29 +1,29 @@
 export interface Equipment {
   id: string;
   name: string;
-  serialNumber: string;
+  serial_number: string;
   manufacturer: string;
   model: string;
-  purchaseDate: string;
-  lastServiceDate: string;
-  nextServiceDue: string;
+  purchase_date: string;
+  last_service: string;
+  next_service: string;
 }
 
 export interface ServiceRecord {
   id: string;
-  equipmentId: string;
+  equipment_id: string;
   date: string;
   type: 'service' | 'calibration';
   technician: string;
   notes: string;
-  nextDueDate: string;
+  next_due_date: string;
 }
 
 export interface Certificate {
   id: string;
-  serviceRecordId: string;
-  equipmentId: string;
-  issueDate: string;
-  expiryDate: string;
-  certificationNumber: string;
+  service_record_id: string;
+  equipment_id: string;
+  certification_number: string;
+  issue_date: string;
+  expiry_date: string;
 }

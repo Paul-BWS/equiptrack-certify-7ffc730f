@@ -23,15 +23,15 @@ export const CertificateModal = ({
   const handlePrint = () => {
     const timestamp = new Date().toISOString();
     console.log("Certificate printed on:", timestamp);
-    toast.success(`Certificate ${certificate.certificationNumber} printed at ${new Date(timestamp).toLocaleString()}`);
+    toast.success(`Certificate ${certificate.certification_number} printed at ${new Date(timestamp).toLocaleString()}`);
     window.print();
   };
 
   const handleEmail = () => {
     // Simulate email sending without modifying dates
-    console.log("Simulating email send for certificate:", certificate.certificationNumber);
-    toast.success(`Email sent successfully for certificate ${certificate.certificationNumber}`, {
-      description: `To: ${equipment.name} (${equipment.serialNumber})`,
+    console.log("Simulating email send for certificate:", certificate.certification_number);
+    toast.success(`Email sent successfully for certificate ${certificate.certification_number}`, {
+      description: `To: ${equipment.name} (${equipment.serial_number})`,
     });
   };
 
