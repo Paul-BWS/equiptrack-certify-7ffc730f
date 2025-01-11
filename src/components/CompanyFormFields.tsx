@@ -86,7 +86,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
       {watchUseSeparateBillingAddress && (
         <FormField
           control={form.control}
-          name="billingAddress"
+          name="billing_address"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Billing Address</FormLabel>

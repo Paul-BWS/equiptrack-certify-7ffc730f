@@ -6,7 +6,7 @@ export const companySchema = z.object({
   industry: z.string().min(1, "Industry is required"),
   address: z.string().min(1, "Site address is required"),
   useSeparateBillingAddress: z.boolean().default(false),
-  billingAddress: z.string().min(1, "Billing address is required").optional(),
+  billing_address: z.string().min(1, "Billing address is required").optional(),
   notes: z.string(),
 });
 
