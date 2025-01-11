@@ -24,6 +24,27 @@ const Index = () => {
     },
   });
 
+  const { data: companies = [], isLoading: isLoadingCompanies } = useQuery({
+    queryKey: ['companies'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('companies')
+        .select('*');
+      
+      if (error) {
+        throw error;
+      }
+      
+      return data;
+    },
+    enabled: !!session,
+    meta: {
+      onError: (error: Error) => {
+        console.error('Error fetching companies:', error);
+      }
+    }
+  });
+
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -100,27 +121,6 @@ const Index = () => {
       </div>
     );
   }
-
-  // If signed in, show the regular content
-  const { data: companies = [], isLoading: isLoadingCompanies } = useQuery({
-    queryKey: ['companies'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('companies')
-        .select('*');
-      
-      if (error) {
-        throw error;
-      }
-      
-      return data;
-    },
-    meta: {
-      onError: (error: Error) => {
-        console.error('Error fetching companies:', error);
-      }
-    }
-  });
 
   const filteredCompanies = companies.filter((company) =>
     company.name.toLowerCase().includes(searchQuery.toLowerCase())
