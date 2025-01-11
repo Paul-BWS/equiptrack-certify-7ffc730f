@@ -41,7 +41,7 @@ const TorqueWrenches = () => {
       
       <main className="container mx-auto py-8 px-4">
         <div className="mb-8">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div className="flex flex-row justify-between items-center gap-4 mb-6">
             <Button
               variant="outline"
               onClick={() => navigate(-1)}
