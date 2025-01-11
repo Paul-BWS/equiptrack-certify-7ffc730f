@@ -13,7 +13,7 @@ import { toast } from "sonner";
 interface ServiceRecord {
   id: string;
   service_date: string;
-  next_service_due: string;
+  next_service_date: string;
 }
 
 interface EquipmentWithServices {
@@ -62,7 +62,7 @@ const TorqueWrenches = () => {
           serial_number,
           service_records (
             service_date,
-            next_service_due
+            next_service_date
           )
         `)
         .eq('company_id', customerId)
@@ -79,7 +79,7 @@ const TorqueWrenches = () => {
       return (equipmentData as EquipmentWithServices[]).map(item => {
         const latestService = item.service_records?.[0] || {
           service_date: '',
-          next_service_due: ''
+          next_service_date: ''
         };
         
         return {
@@ -87,7 +87,7 @@ const TorqueWrenches = () => {
           model: item.model || '',
           serialNumber: item.serial_number || '',
           lastServiceDate: latestService.service_date || '',
-          nextServiceDue: latestService.next_service_due || ''
+          nextServiceDue: latestService.next_service_date || ''
         };
       });
     },
