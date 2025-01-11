@@ -19,6 +19,7 @@ export const HeaderSection = ({
 }: HeaderSectionProps) => {
   const isMobile = useIsMobile();
   
+  // Calculate status based on retest date
   const calculateStatus = () => {
     if (!retestDate) return "ACTIVE";
     const today = new Date();
@@ -26,16 +27,16 @@ export const HeaderSection = ({
     return today <= retestDateObj ? "ACTIVE" : "INACTIVE";
   };
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedDate = e.target.value;
-    onDateChange(selectedDate);
+  const handleDateChange = (newDate: string) => {
+    onDateChange(newDate);
     
-    if (selectedDate) {
-      const testDate = new Date(selectedDate);
+    // If a date is selected, automatically set retest date to 364 days later
+    if (newDate) {
+      const testDate = new Date(newDate);
       const newRetestDate = new Date(testDate);
-      newRetestDate.setFullYear(testDate.getFullYear() + 1);
-      newRetestDate.setDate(newRetestDate.getDate() - 1);
+      newRetestDate.setDate(testDate.getDate() + 364);
       
+      // Format the date to YYYY-MM-DD for the input
       const formattedRetestDate = newRetestDate.toISOString().split('T')[0];
       onRetestDateChange(formattedRetestDate);
     }
@@ -51,7 +52,8 @@ export const HeaderSection = ({
         label="Test Date"
         type="date"
         value={date}
-        onChange={handleDateChange}
+        onChange={(e) => handleDateChange(e.target.value)}
+        showCalendar
       />
       <FormField
         id="status"
@@ -65,7 +67,8 @@ export const HeaderSection = ({
         label="Retest Date"
         type="date"
         value={retestDate}
-        readOnly
+        onChange={(e) => onRetestDateChange(e.target.value)}
+        showCalendar
       />
       <FormField
         id="certNumber"

@@ -35,7 +35,8 @@ export const CertificateModal = ({
 
   const handleEmail = () => {
     const sentOn = updateSentOn();
-    toast.success(`Certificate sent at ${new Date(sentOn).toLocaleString()}`);
+    // This would be connected to your email service
+    toast.success(`Certificate emailed at ${new Date(sentOn).toLocaleString()}`);
   };
 
   const handleClose = () => {
