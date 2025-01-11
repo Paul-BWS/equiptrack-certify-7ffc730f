@@ -37,24 +37,33 @@ const CustomerDashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  console.log("Customer ID from params:", customerId);
+
   const { data: company, isLoading: isLoadingCompany, error: companyError } = useQuery({
     queryKey: ['company', customerId],
     queryFn: async () => {
+      console.log("Fetching company data for ID:", customerId);
       const { data, error } = await supabase
         .from('companies')
         .select()
         .eq('id', customerId)
         .single();
       
-      if (error) throw error;
+      if (error) {
+        console.error("Supabase error fetching company:", error);
+        throw error;
+      }
       if (!data) {
+        console.error("No company data found for ID:", customerId);
         throw new Error('Company not found');
       }
       
+      console.log("Company data retrieved:", data);
       return data;
     },
     meta: {
-      onError: () => {
+      onError: (error: Error) => {
+        console.error("Query error:", error);
         toast({
           title: "Error",
           description: "Could not load company details. Please try again later.",
@@ -67,18 +76,24 @@ const CustomerDashboard = () => {
   const { data: contacts, isLoading: isLoadingContacts, error: contactsError } = useQuery({
     queryKey: ['contacts', customerId],
     queryFn: async () => {
+      console.log("Fetching contacts for company ID:", customerId);
       const { data, error } = await supabase
         .from('contacts')
         .select()
         .eq('company_id', customerId)
         .order('is_primary', { ascending: false });
       
-      if (error) throw error;
+      if (error) {
+        console.error("Supabase error fetching contacts:", error);
+        throw error;
+      }
+      console.log("Contacts retrieved:", data);
       return data;
     },
     enabled: !!company,
     meta: {
-      onError: () => {
+      onError: (error: Error) => {
+        console.error("Query error:", error);
         toast({
           title: "Error",
           description: "Could not load contacts. Please try again later.",
@@ -102,6 +117,7 @@ const CustomerDashboard = () => {
   }
 
   if (companyError || !company) {
+    console.error("Rendering error state. Error:", companyError);
     return (
       <div className="min-h-screen bg-background">
         <Navigation />
