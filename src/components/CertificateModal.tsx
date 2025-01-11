@@ -52,7 +52,7 @@ export const CertificateModal = ({
         expiry_date: new Date(certificate.expiry_date).toISOString()
       };
 
-      console.log('Saving certificate with data:', certificateData);
+      console.log('Attempting to save certificate with data:', certificateData);
 
       const { data, error } = await supabase
         .from('certificates')
@@ -61,8 +61,8 @@ export const CertificateModal = ({
         .single();
 
       if (error) {
-        console.error('Error saving certificate:', error);
-        throw error;
+        console.error('Database error:', error);
+        throw new Error(error.message);
       }
 
       console.log("Certificate saved successfully:", data);
@@ -70,7 +70,7 @@ export const CertificateModal = ({
         description: `To: ${equipment.model} (${equipment.serial_number})`,
       });
     } catch (error: any) {
-      console.error('Error handling email:', error);
+      console.error('Error in handleEmail:', error);
       toast.error(error.message || "Failed to send certificate email");
     }
   };
