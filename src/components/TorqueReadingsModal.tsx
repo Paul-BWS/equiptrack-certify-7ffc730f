@@ -9,6 +9,8 @@ import { MeasurementsSection } from "./torque-readings/MeasurementsSection";
 import { CertificateModal } from "./CertificateModal";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { validateForm } from "@/utils/torqueReadingsValidation";
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 import {
   generateCertificateNumber,
   calculateDeviation,
@@ -55,6 +57,7 @@ export const TorqueReadingsModal = ({
   });
 
   const [showCertificate, setShowCertificate] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const isMobile = useIsMobile();
   
   useEffect(() => {
@@ -65,6 +68,48 @@ export const TorqueReadingsModal = ({
       }));
     }
   }, [open]);
+
+  const handleSave = async () => {
+    if (!validateForm(readings)) {
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const equipment = prepareEquipmentData(readings, equipmentId);
+      const serviceRecord = prepareServiceRecordData(readings, equipmentId);
+      const certificate = prepareCertificateData(readings, equipmentId);
+
+      // Save equipment data
+      const { error: equipmentError } = await supabase
+        .from('equipment')
+        .upsert([equipment]);
+
+      if (equipmentError) throw equipmentError;
+
+      // Save service record
+      const { error: serviceError } = await supabase
+        .from('service_records')
+        .insert([serviceRecord]);
+
+      if (serviceError) throw serviceError;
+
+      // Save certificate
+      const { error: certError } = await supabase
+        .from('certificates')
+        .insert([certificate]);
+
+      if (certError) throw certError;
+
+      toast.success("Torque wrench data saved successfully");
+      onOpenChange(false);
+    } catch (error) {
+      console.error('Error saving data:', error);
+      toast.error("Failed to save torque wrench data");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -158,7 +203,15 @@ export const TorqueReadingsModal = ({
             />
 
             {!isMobile && (
-              <div className="flex justify-end">
+              <div className="flex justify-end gap-4">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={handleSave}
+                  disabled={isSaving}
+                >
+                  {isSaving ? "Saving..." : "Save"}
+                </Button>
                 <Button type="submit">Generate Certificate</Button>
               </div>
             )}
