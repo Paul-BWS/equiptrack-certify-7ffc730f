@@ -15,12 +15,12 @@ const Equipment = () => {
       <main className="container mx-auto py-8">
         <div className="mb-8">
           <Button
-            variant="outline"
-            className="mb-4"
+            variant="ghost"
+            size="icon"
+            className="rounded-full bg-primary hover:bg-primary/90 h-10 w-10 p-0 mb-4"
             onClick={() => navigate(`/customers/${customerId}`)}
           >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Customer
+            <ArrowLeft className="h-4 w-4 text-primary-foreground" />
           </Button>
           
           <h1 className="text-3xl font-bold text-foreground mb-2">
