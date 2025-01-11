@@ -17,8 +17,7 @@ const Index = () => {
         .select('*');
       
       if (error) {
-        console.error('Error fetching customers:', error);
-        return [];
+        throw error;
       }
       
       return data as Customer[];
