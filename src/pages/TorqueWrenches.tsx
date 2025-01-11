@@ -42,14 +42,18 @@ const TorqueWrenches = () => {
             <Button
               variant="outline"
               onClick={() => navigate(-1)}
+              className="gap-2"
             >
-              <Grid className="h-5 w-5 text-primary" strokeWidth={2.5} />
-              {!isMobile && <span className="ml-2">Back to Equipment</span>}
+              <Grid className="h-5 w-5 text-[#1D4ED8]" strokeWidth={2.5} />
+              {!isMobile && "Back to Equipment"}
             </Button>
             
-            <Button onClick={() => setShowReadingsModal(true)}>
-              <Plus className="h-6 w-6 text-primary" strokeWidth={2.5} />
-              {!isMobile && <span className="ml-2">Add Torque</span>}
+            <Button 
+              onClick={() => setShowReadingsModal(true)}
+              className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 gap-2"
+            >
+              <Plus className="h-5 w-5" strokeWidth={2.5} />
+              {!isMobile && "Add Torque"}
             </Button>
           </div>
           

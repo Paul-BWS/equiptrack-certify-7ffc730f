@@ -43,11 +43,12 @@ export const EquipmentList = ({
               <TableCell className="hidden sm:table-cell">{item.nextServiceDue}</TableCell>
               <TableCell>
                 <Button
-                  variant="outline"
+                  variant="ghost"
                   size="sm"
                   onClick={() => onGenerateCertificate(item.id)}
+                  className="hover:bg-transparent p-0"
                 >
-                  <Pen className="h-4 w-4 text-primary" strokeWidth={2.5} />
+                  <Pen className="h-5 w-5 text-[#1D4ED8]" strokeWidth={2.5} />
                   {!isMobile && <span className="ml-2">Edit</span>}
                 </Button>
               </TableCell>
