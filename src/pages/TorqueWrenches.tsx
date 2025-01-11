@@ -10,6 +10,19 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 
+interface ServiceRecord {
+  id: string;
+  service_date: string;
+  next_service_date: string;
+}
+
+interface EquipmentWithServices {
+  id: string;
+  model: string;
+  serial_number: string;
+  service_records: ServiceRecord[];
+}
+
 const TorqueWrenches = () => {
   const navigate = useNavigate();
   const { customerId } = useParams();
@@ -41,7 +54,6 @@ const TorqueWrenches = () => {
     queryFn: async () => {
       console.log('Fetching equipment for customer:', customerId);
       
-      // First get equipment
       const { data: equipmentData, error: equipmentError } = await supabase
         .from('equipment')
         .select(`
@@ -50,7 +62,7 @@ const TorqueWrenches = () => {
           serial_number,
           service_records (
             service_date,
-            retest_date
+            next_service_date
           )
         `)
         .eq('company_id', customerId)
@@ -64,16 +76,18 @@ const TorqueWrenches = () => {
 
       console.log('Fetched equipment:', equipmentData);
       
-      return equipmentData.map(item => {
-        // Get the most recent service record
-        const latestService = item.service_records?.[0] || {};
+      return (equipmentData as EquipmentWithServices[]).map(item => {
+        const latestService = item.service_records?.[0] || {
+          service_date: '',
+          next_service_date: ''
+        };
         
         return {
           id: item.id,
           model: item.model || '',
           serialNumber: item.serial_number || '',
           lastServiceDate: latestService.service_date || '',
-          nextServiceDue: latestService.retest_date || ''
+          nextServiceDue: latestService.next_service_date || ''
         };
       });
     },
