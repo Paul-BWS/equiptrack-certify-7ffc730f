@@ -34,9 +34,12 @@ export const CertificateModal = ({
       if (!equipment.id) {
         throw new Error('Equipment ID is required');
       }
-      if (!certificate.certification_number) {
-        throw new Error('Certificate number is required');
+      
+      // Ensure certification number exists and is not empty
+      if (!certificate.certification_number?.trim()) {
+        throw new Error('Certificate number is required and cannot be empty');
       }
+      
       if (!certificate.issue_date) {
         throw new Error('Issue date is required');
       }
@@ -47,7 +50,7 @@ export const CertificateModal = ({
       const certificateData = {
         id: crypto.randomUUID(),
         torque_wrench_id: equipment.id,
-        certification_number: certificate.certification_number,
+        certification_number: certificate.certification_number.trim(),
         issue_date: new Date(certificate.issue_date).toISOString(),
         expiry_date: new Date(certificate.expiry_date).toISOString()
       };
