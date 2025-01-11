@@ -75,7 +75,7 @@ export const TorqueReadingsModal = ({
           .eq('equipment_id', equipmentId)
           .order('service_date', { ascending: false })
           .limit(1)
-          .single()
+          .maybeSingle() // Changed from single() to maybeSingle()
       ]);
 
       if (equipmentResult.error) {
@@ -87,7 +87,7 @@ export const TorqueReadingsModal = ({
       // Return combined data
       return {
         ...equipmentResult.data,
-        lastService: serviceResult.data
+        lastService: serviceResult.data // This will be null if no service records exist
       };
     },
     enabled: !!equipmentId && open,
