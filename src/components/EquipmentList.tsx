@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Pen } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface EquipmentListProps {
   equipment: Equipment[];
@@ -19,12 +20,14 @@ export const EquipmentList = ({
   equipment,
   onGenerateCertificate,
 }: EquipmentListProps) => {
+  const isMobile = useIsMobile();
+
   return (
     <div className="rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Name</TableHead>
+            <TableHead className="hidden md:table-cell">Name</TableHead>
             <TableHead>Serial</TableHead>
             <TableHead>Date</TableHead>
             <TableHead className="hidden sm:table-cell">Retest</TableHead>
@@ -34,7 +37,7 @@ export const EquipmentList = ({
         <TableBody>
           {equipment.map((item) => (
             <TableRow key={item.id}>
-              <TableCell className="font-medium">{item.name}</TableCell>
+              <TableCell className="hidden md:table-cell font-medium">{item.name}</TableCell>
               <TableCell>{item.serialNumber}</TableCell>
               <TableCell>{item.lastServiceDate}</TableCell>
               <TableCell className="hidden sm:table-cell">{item.nextServiceDue}</TableCell>
@@ -44,8 +47,8 @@ export const EquipmentList = ({
                   size="sm"
                   onClick={() => onGenerateCertificate(item.id)}
                 >
-                  <Pen className="mr-2 h-4 w-4" />
-                  Edit
+                  <Pen className="h-4 w-4" strokeWidth={2.5} />
+                  {!isMobile && <span className="ml-2">Edit</span>}
                 </Button>
               </TableCell>
             </TableRow>
