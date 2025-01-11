@@ -4,6 +4,7 @@ import { Mail, Printer, X } from "lucide-react";
 import { CertificateTemplate } from "./CertificateTemplate";
 import { Certificate, TorqueWrench, ServiceRecord } from "@/types/equipment";
 import { toast } from "sonner";
+import { supabase } from "@/lib/supabase";
 
 interface CertificateModalProps {
   open: boolean;
@@ -27,12 +28,33 @@ export const CertificateModal = ({
     window.print();
   };
 
-  const handleEmail = () => {
-    // Simulate email sending without modifying dates
-    console.log("Simulating email send for certificate:", certificate.certification_number);
-    toast.success(`Email sent successfully for certificate ${certificate.certification_number}`, {
-      description: `To: ${equipment.model} (${equipment.serial_number})`,
-    });
+  const handleEmail = async () => {
+    try {
+      // Save certificate to database before sending email
+      const { error } = await supabase
+        .from('certificates')
+        .insert([
+          {
+            torque_wrench_id: equipment.id,
+            certification_number: certificate.certification_number,
+            issue_date: certificate.issue_date,
+            expiry_date: certificate.expiry_date
+          }
+        ]);
+
+      if (error) {
+        console.error('Error saving certificate:', error);
+        throw error;
+      }
+
+      console.log("Simulating email send for certificate:", certificate.certification_number);
+      toast.success(`Email sent successfully for certificate ${certificate.certification_number}`, {
+        description: `To: ${equipment.model} (${equipment.serial_number})`,
+      });
+    } catch (error) {
+      console.error('Error handling email:', error);
+      toast.error("Failed to send certificate email");
+    }
   };
 
   const handleClose = () => {
