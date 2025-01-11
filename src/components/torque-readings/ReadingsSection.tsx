@@ -27,21 +27,21 @@ export const ReadingsSection = ({
           value={reading.target}
           onChange={onChange ? (e) => onChange(index, "target", e.target.value) : undefined}
           placeholder="Target"
-          className="text-sm bg-[#F9F9F9]"
+          className="text-sm bg-[#F9F9F9] placeholder:text-[#CCCCCC]"
           readOnly={readOnly}
         />
         <Input
           value={reading.actual}
           onChange={onChange ? (e) => onChange(index, "actual", e.target.value) : undefined}
           placeholder="Actual"
-          className="text-sm bg-[#F9F9F9]"
+          className="text-sm bg-[#F9F9F9] placeholder:text-[#CCCCCC]"
           readOnly={readOnly}
         />
         <Input
           value={reading.deviation}
           onChange={onChange ? (e) => onChange(index, "deviation", e.target.value) : undefined}
           placeholder="Deviation"
-          className="text-sm bg-[#F9F9F9]"
+          className="text-sm bg-[#F9F9F9] placeholder:text-[#CCCCCC]"
           readOnly={readOnly}
         />
       </div>
