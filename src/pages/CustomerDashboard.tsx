@@ -13,6 +13,10 @@ const sampleCustomer: Customer = {
   email: "contact@acme.com",
   phone: "123-456-7890",
   address: "123 Main St, City, Country",
+  company: "Acme Corporation",
+  website: "https://www.acme.com",
+  notes: "Leading manufacturer of innovative products",
+  industry: "Manufacturing",
 };
 
 const sampleUpcomingService: Equipment[] = [
@@ -133,3 +137,4 @@ const CustomerDashboard = () => {
 };
 
 export default CustomerDashboard;
+
