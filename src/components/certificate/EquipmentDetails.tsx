@@ -21,11 +21,11 @@ export const EquipmentDetails = ({ equipment, serviceRecord }: EquipmentDetailsP
       <div className="space-y-3">
         <div>
           <h2 className="text-xs font-semibold text-gray-500 uppercase">Calibration Date</h2>
-          <p className="text-sm font-medium">{serviceRecord.date}</p>
+          <p className="text-sm font-medium">{serviceRecord.service_date}</p>
         </div>
         <div>
           <h2 className="text-xs font-semibold text-gray-500 uppercase">Next Due Date</h2>
-          <p className="text-sm font-medium">{serviceRecord.next_due_date}</p>
+          <p className="text-sm font-medium">{serviceRecord.next_service_date}</p>
         </div>
       </div>
     </div>
