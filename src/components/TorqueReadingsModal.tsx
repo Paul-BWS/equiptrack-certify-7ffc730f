@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { FormField } from "./torque-readings/FormField";
 import { ReadingsSection } from "./torque-readings/ReadingsSection";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface TorqueReadingsModalProps {
   open: boolean;
@@ -15,6 +16,7 @@ export const TorqueReadingsModal = ({
   onOpenChange,
   equipmentId,
 }: TorqueReadingsModalProps) => {
+  const isMobile = useIsMobile();
   const [readings, setReadings] = useState({
     certNumber: "",
     date: "",
@@ -56,14 +58,7 @@ export const TorqueReadingsModal = ({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-4 gap-4">
-            <FormField
-              id="certNumber"
-              label="Certificate Number"
-              value={readings.certNumber}
-              onChange={(e) => setReadings({ ...readings, certNumber: e.target.value })}
-              placeholder="BWS13009"
-            />
+          <div className={`grid ${isMobile ? 'grid-cols-1 gap-4' : 'grid-cols-4 gap-4'}`}>
             <FormField
               id="date"
               label="Test Date"
@@ -71,6 +66,13 @@ export const TorqueReadingsModal = ({
               value={readings.date}
               onChange={(e) => setReadings({ ...readings, date: e.target.value })}
               showCalendar
+            />
+            <FormField
+              id="status"
+              label="Status"
+              value={readings.status}
+              readOnly
+              className="text-green-500 font-medium"
             />
             <FormField
               id="retestDate"
@@ -81,15 +83,15 @@ export const TorqueReadingsModal = ({
               showCalendar
             />
             <FormField
-              id="status"
-              label="Status"
-              value={readings.status}
-              readOnly
-              className="text-green-500 font-medium"
+              id="certNumber"
+              label="Certificate Number"
+              value={readings.certNumber}
+              onChange={(e) => setReadings({ ...readings, certNumber: e.target.value })}
+              placeholder="BWS13009"
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}>
             <FormField
               id="model"
               label="Model"
@@ -106,7 +108,7 @@ export const TorqueReadingsModal = ({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}>
             <FormField
               id="engineer"
               label="Engineer"
@@ -123,7 +125,7 @@ export const TorqueReadingsModal = ({
             />
           </div>
 
-          <div className="grid grid-cols-4 gap-4">
+          <div className={`grid ${isMobile ? 'grid-cols-2' : 'grid-cols-4'} gap-4`}>
             <FormField
               id="min"
               label="MIN"
@@ -156,7 +158,7 @@ export const TorqueReadingsModal = ({
           </div>
 
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-8">
+            <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-8`}>
               <ReadingsSection
                 title="AS FOUND"
                 readings={readings.readings}
