@@ -8,33 +8,20 @@ import { EquipmentSection } from "./torque-readings/EquipmentSection";
 import { MeasurementsSection } from "./torque-readings/MeasurementsSection";
 import { CertificateModal } from "./CertificateModal";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { toast } from "sonner";
+import { validateForm } from "@/utils/torqueReadingsValidation";
+import {
+  generateCertificateNumber,
+  calculateDeviation,
+  prepareCertificateData,
+  prepareEquipmentData,
+  prepareServiceRecordData
+} from "@/utils/certificateDataPreparation";
 
 interface TorqueReadingsModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   equipmentId: string | null;
 }
-
-const generateCertificateNumber = () => {
-  const prefix = 'BWS';
-  const randomNum = Math.floor(10000 + Math.random() * 90000);
-  return `${prefix}${randomNum}`;
-};
-
-// Calculate deviation percentage
-const calculateDeviation = (target: string, actual: string): string => {
-  if (!target || !actual) return "";
-  const targetNum = parseFloat(target);
-  const actualNum = parseFloat(actual);
-  if (isNaN(targetNum) || isNaN(actualNum) || targetNum === 0) return "";
-  const deviation = ((actualNum - targetNum) / targetNum) * 100;
-  return deviation.toFixed(2);
-};
-
-const validateReadings = (readings: Array<{ target: string; actual: string; deviation: string }>) => {
-  return readings.every(reading => reading.target && reading.actual);
-};
 
 export const TorqueReadingsModal = ({
   open,
@@ -79,37 +66,10 @@ export const TorqueReadingsModal = ({
     }
   }, [open]);
 
-  const validateForm = () => {
-    const requiredFields = {
-      date: "Test Date",
-      retestDate: "Retest Date",
-      model: "Model",
-      serialNumber: "Serial Number",
-      engineer: "Engineer",
-      min: "Min",
-      max: "Max",
-      units: "Units"
-    };
-
-    for (const [field, label] of Object.entries(requiredFields)) {
-      if (!readings[field as keyof typeof readings]) {
-        toast.error(`${label} is required`);
-        return false;
-      }
-    }
-
-    if (!validateReadings(readings.readings)) {
-      toast.error("All readings (target and actual) must be filled");
-      return false;
-    }
-
-    return true;
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateForm()) {
+    if (!validateForm(readings)) {
       return;
     }
 
@@ -121,14 +81,12 @@ export const TorqueReadingsModal = ({
     const newReadings = [...readings.readings];
     newReadings[index] = { ...newReadings[index], [field]: value };
 
-    // Calculate deviation if both target and actual are present
     if (field === 'target' || field === 'actual') {
       const target = field === 'target' ? value : newReadings[index].target;
       const actual = field === 'actual' ? value : newReadings[index].actual;
       newReadings[index].deviation = calculateDeviation(target, actual);
     }
 
-    // Copy to definitive readings
     const newDefinitiveReadings = [...newReadings];
 
     setReadings({ 
@@ -136,39 +94,6 @@ export const TorqueReadingsModal = ({
       readings: newReadings,
       definitiveReadings: newDefinitiveReadings
     });
-  };
-
-  // Create certificate data from readings with all required properties
-  const certificateData = {
-    id: `cert-${readings.certNumber}`,
-    serviceRecordId: `sr-${readings.certNumber}`,
-    equipmentId: equipmentId || 'unknown',
-    certificationNumber: readings.certNumber,
-    issueDate: readings.date,
-    expiryDate: readings.retestDate
-  };
-
-  // Create equipment data with all required properties
-  const equipmentData = {
-    id: equipmentId || 'unknown',
-    name: `Torque Wrench ${readings.model}`,
-    manufacturer: 'Unknown',
-    model: readings.model,
-    serialNumber: readings.serialNumber,
-    purchaseDate: new Date().toISOString(),
-    lastServiceDate: readings.date,
-    nextServiceDue: readings.retestDate
-  };
-
-  // Create service record data with all required properties
-  const serviceRecordData = {
-    id: `sr-${readings.certNumber}`,
-    equipmentId: equipmentId || 'unknown',
-    date: readings.date,
-    type: 'calibration' as const,
-    technician: readings.engineer,
-    notes: readings.notes,
-    nextDueDate: readings.retestDate
   };
 
   return (
@@ -244,9 +169,9 @@ export const TorqueReadingsModal = ({
       <CertificateModal
         open={showCertificate}
         onOpenChange={setShowCertificate}
-        certificate={certificateData}
-        equipment={equipmentData}
-        serviceRecord={serviceRecordData}
+        certificate={prepareCertificateData(readings, equipmentId)}
+        equipment={prepareEquipmentData(readings, equipmentId)}
+        serviceRecord={prepareServiceRecordData(readings, equipmentId)}
       />
     </>
   );
