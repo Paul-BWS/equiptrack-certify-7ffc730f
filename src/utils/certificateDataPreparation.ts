@@ -16,11 +16,11 @@ export const calculateDeviation = (target: string, actual: string): string => {
 export const prepareCertificateData = (readings: any, equipmentId: string) => {
   return {
     id: `cert-${readings.certNumber}`,
-    serviceRecordId: `sr-${readings.certNumber}`,
-    equipmentId: equipmentId || 'unknown',
-    certificationNumber: readings.certNumber,
-    issueDate: readings.date,
-    expiryDate: readings.retestDate
+    service_record_id: `sr-${readings.certNumber}`,
+    equipment_id: equipmentId || 'unknown',
+    certification_number: readings.certNumber,
+    issue_date: readings.date,
+    expiry_date: readings.retestDate
   };
 };
 
@@ -30,21 +30,21 @@ export const prepareEquipmentData = (readings: any, equipmentId: string) => {
     name: `Torque Wrench ${readings.model}`,
     manufacturer: 'Unknown',
     model: readings.model,
-    serialNumber: readings.serialNumber,
-    purchaseDate: new Date().toISOString(),
-    lastServiceDate: readings.date,
-    nextServiceDue: readings.retestDate
+    serial_number: readings.serialNumber,
+    purchase_date: new Date().toISOString(),
+    last_service: readings.date,
+    next_service: readings.retestDate
   };
 };
 
 export const prepareServiceRecordData = (readings: any, equipmentId: string) => {
   return {
     id: `sr-${readings.certNumber}`,
-    equipmentId: equipmentId || 'unknown',
+    equipment_id: equipmentId || 'unknown',
     date: readings.date,
     type: 'calibration' as const,
     technician: readings.engineer,
     notes: readings.notes,
-    nextDueDate: readings.retestDate
+    next_due_date: readings.retestDate
   };
 };
