@@ -42,8 +42,8 @@ export const CompanyEditForm = ({ company }: CompanyEditFormProps) => {
       industry: company.industry,
       website: company.website,
       address: company.address,
-      useSeparateBillingAddress: company.useSeparateBillingAddress,
-      billingaddress: company.billingaddress,
+      useSeparateBillingAddress: company.billingaddress !== company.address,
+      billingaddress: company.billingaddress || company.address,
       notes: company.notes,
     },
   });
@@ -51,8 +51,12 @@ export const CompanyEditForm = ({ company }: CompanyEditFormProps) => {
   const { mutate: updateCompany, isPending } = useMutation({
     mutationFn: async (data: CompanyFormData) => {
       const companyData = {
-        ...data,
+        name: data.name,
+        industry: data.industry,
+        website: data.website,
+        address: data.address,
         billingaddress: data.useSeparateBillingAddress ? data.billingaddress : data.address,
+        notes: data.notes,
       };
       
       const { data: updatedCompany, error } = await supabase
@@ -209,4 +213,4 @@ export const CompanyEditForm = ({ company }: CompanyEditFormProps) => {
       </DialogContent>
     </Dialog>
   );
-};
+});
