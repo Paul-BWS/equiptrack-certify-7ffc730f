@@ -41,8 +41,8 @@ export const CertificateModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[210mm] min-h-[297mm] p-8 bg-white">
-        <div className="flex justify-end gap-4 mb-4">
+      <DialogContent className="max-w-[95vw] h-[90vh] p-4 overflow-auto bg-white">
+        <div className="flex justify-end gap-4 mb-4 sticky top-0 bg-white z-10 p-2">
           <Button
             variant="outline"
             size="icon"
@@ -61,11 +61,15 @@ export const CertificateModal = ({
           </Button>
         </div>
         
-        <CertificateTemplate
-          certificate={certificate}
-          equipment={equipment}
-          serviceRecord={serviceRecord}
-        />
+        <div className="flex justify-center">
+          <div className="w-full max-w-4xl transform scale-[0.85] origin-top">
+            <CertificateTemplate
+              certificate={certificate}
+              equipment={equipment}
+              serviceRecord={serviceRecord}
+            />
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );
