@@ -3,14 +3,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { FormField } from "./torque-readings/FormField";
 import { ReadingsSection } from "./torque-readings/ReadingsSection";
-import { useIsMobile } from "@/hooks/use-mobile";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { HeaderSection } from "./torque-readings/HeaderSection";
+import { EquipmentSection } from "./torque-readings/EquipmentSection";
+import { MeasurementsSection } from "./torque-readings/MeasurementsSection";
 
 interface TorqueReadingsModalProps {
   open: boolean;
@@ -29,7 +24,6 @@ export const TorqueReadingsModal = ({
   onOpenChange,
   equipmentId,
 }: TorqueReadingsModalProps) => {
-  const isMobile = useIsMobile();
   const [readings, setReadings] = useState({
     certNumber: "",
     date: "",
@@ -80,112 +74,38 @@ export const TorqueReadingsModal = ({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className={`grid ${isMobile ? 'grid-cols-1 gap-4' : 'grid-cols-4 gap-4'}`}>
-            <FormField
-              id="date"
-              label="Test Date"
-              type="date"
-              value={readings.date}
-              onChange={(e) => setReadings({ ...readings, date: e.target.value })}
-              showCalendar
-            />
-            <FormField
-              id="status"
-              label="Status"
-              value={readings.status}
-              readOnly
-              className="text-green-500 font-medium"
-            />
-            <FormField
-              id="retestDate"
-              label="Retest Date"
-              type="date"
-              value={readings.retestDate}
-              onChange={(e) => setReadings({ ...readings, retestDate: e.target.value })}
-              showCalendar
-            />
-            <FormField
-              id="certNumber"
-              label="Certificate Number"
-              value={readings.certNumber}
-              onChange={(e) => setReadings({ ...readings, certNumber: e.target.value })}
-              readOnly
-            />
-          </div>
+          <HeaderSection
+            date={readings.date}
+            status={readings.status}
+            retestDate={readings.retestDate}
+            certNumber={readings.certNumber}
+            onDateChange={(value) => setReadings({ ...readings, date: value })}
+            onRetestDateChange={(value) => setReadings({ ...readings, retestDate: value })}
+          />
 
-          <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}>
-            <FormField
-              id="model"
-              label="Model"
-              value={readings.model}
-              onChange={(e) => setReadings({ ...readings, model: e.target.value })}
-            />
-            <FormField
-              id="serialNumber"
-              label="Serial Number"
-              value={readings.serialNumber}
-              onChange={(e) => setReadings({ ...readings, serialNumber: e.target.value })}
-            />
-          </div>
+          <EquipmentSection
+            model={readings.model}
+            serialNumber={readings.serialNumber}
+            engineer={readings.engineer}
+            sentOn={readings.sentOn}
+            onModelChange={(value) => setReadings({ ...readings, model: value })}
+            onSerialNumberChange={(value) => setReadings({ ...readings, serialNumber: value })}
+            onEngineerChange={(value) => setReadings({ ...readings, engineer: value })}
+          />
 
-          <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}>
-            <FormField
-              id="engineer"
-              label="Engineer"
-              value={readings.engineer}
-              onChange={(e) => setReadings({ ...readings, engineer: e.target.value })}
-            />
-            <FormField
-              id="sentOn"
-              label="Sent On"
-              value={readings.sentOn}
-              readOnly
-              className="bg-gray-100"
-            />
-          </div>
-
-          <div className={`grid ${isMobile ? 'grid-cols-2' : 'grid-cols-4'} gap-4`}>
-            <FormField
-              id="min"
-              label="MIN"
-              type="number"
-              value={readings.min}
-              onChange={(e) => setReadings({ ...readings, min: e.target.value })}
-            />
-            <FormField
-              id="max"
-              label="MAX"
-              type="number"
-              value={readings.max}
-              onChange={(e) => setReadings({ ...readings, max: e.target.value })}
-            />
-            <FormField
-              id="units"
-              label="UNITS"
-              value={readings.units}
-              onChange={(e) => setReadings({ ...readings, units: e.target.value })}
-            />
-            <div className="space-y-2">
-              <label htmlFor="result" className="text-[#C8C8C9] text-sm">RESULT</label>
-              <Select
-                value={readings.result}
-                onValueChange={(value) => setReadings({ ...readings, result: value })}
-              >
-                <SelectTrigger id="result" className={`text-sm ${
-                  readings.result === 'PASS' ? 'text-green-500' : 'text-red-500'
-                }`}>
-                  <SelectValue placeholder="Select result" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="PASS" className="text-green-500">PASS</SelectItem>
-                  <SelectItem value="FAIL" className="text-red-500">FAIL</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+          <MeasurementsSection
+            min={readings.min}
+            max={readings.max}
+            units={readings.units}
+            result={readings.result}
+            onMinChange={(value) => setReadings({ ...readings, min: value })}
+            onMaxChange={(value) => setReadings({ ...readings, max: value })}
+            onUnitsChange={(value) => setReadings({ ...readings, units: value })}
+            onResultChange={(value) => setReadings({ ...readings, result: value })}
+          />
 
           <div className="space-y-4">
-            <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-8`}>
+            <div className="grid grid-cols-2 gap-8">
               <ReadingsSection
                 title="AS FOUND"
                 readings={readings.readings}
