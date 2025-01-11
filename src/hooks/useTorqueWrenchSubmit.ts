@@ -21,9 +21,23 @@ export const useTorqueWrenchSubmit = (
       return;
     }
 
-    // Add authentication check
-    const { data: { session } } = await supabase.auth.getSession();
+    // Check authentication status first
+    const { data: { session }, error: authError } = await supabase.auth.getSession();
+    
+    if (authError) {
+      console.error('Authentication error:', authError);
+      toast.error("Authentication error. Please sign in again.");
+      return;
+    }
+
+    if (!session) {
+      console.error('No active session found');
+      toast.error("Please sign in to save equipment data");
+      return;
+    }
+
     console.log('Current session:', session);
+    console.log('User ID:', session.user?.id);
     console.log('Company ID:', torqueWrenchData.company_id);
 
     setIsSaving(true);
@@ -32,6 +46,7 @@ export const useTorqueWrenchSubmit = (
       
       const dataToSave = {
         ...torqueWrenchData,
+        user_id: session.user.id, // Add user_id from session
         readings: JSON.stringify(torqueWrenchData.readings),
         definitive_readings: JSON.stringify(torqueWrenchData.definitive_readings)
       };
@@ -56,7 +71,7 @@ export const useTorqueWrenchSubmit = (
       }
 
       if (result.error) {
-        console.error('Error saving torque wrench:', result.error);
+        console.error('Database operation error:', result.error);
         throw result.error;
       }
 
@@ -73,6 +88,7 @@ export const useTorqueWrenchSubmit = (
         throw certError;
       }
 
+      toast.success("Equipment data saved successfully");
       onSuccess();
     } catch (error: any) {
       console.error('Error saving data:', error);
