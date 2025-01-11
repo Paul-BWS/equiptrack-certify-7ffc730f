@@ -42,7 +42,7 @@ const TorqueWrenches = () => {
       console.log('Fetching torque wrenches for customer:', customerId);
       
       const { data: equipmentData, error } = await supabase
-        .from('equipment')
+        .from('torque_wrench')  // Changed from 'equipment' to 'torque_wrench'
         .select('*')
         .eq('company_id', customerId)
         .order('created_at', { ascending: false });
