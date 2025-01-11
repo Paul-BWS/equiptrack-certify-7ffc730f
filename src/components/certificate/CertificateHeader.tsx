@@ -11,11 +11,10 @@ export const CertificateHeader = ({ certificate }: CertificateHeaderProps) => {
   return (
     <div className="flex justify-between items-center mb-6 border-b pb-4">
       <div className="flex items-center gap-4">
-        <img src={settings.logo} alt="Company Logo" className="h-12 w-auto" />
+        <img src={settings.logo} alt="Company Logo" className="h-16 w-auto" />
         <div>
-          <h1 className="text-lg font-bold text-primary">CALIBRATION CERTIFICATE</h1>
-          <p className="text-xs text-gray-600">{settings.organizationName}</p>
-          <p className="text-xs text-gray-600">ISO 9001:2015 Certified</p>
+          <h1 className="text-xl font-bold text-primary">CALIBRATION CERTIFICATE</h1>
+          <p className="text-xs text-gray-600">BS EN ISO 6789:2017</p>
         </div>
       </div>
       <div className="text-right">
