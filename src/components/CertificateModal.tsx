@@ -30,13 +30,6 @@ export const CertificateModal = ({
 
   const handleEmail = async () => {
     try {
-      console.log('Saving certificate with data:', {
-        torque_wrench_id: equipment.id,
-        certification_number: certificate.certification_number,
-        issue_date: certificate.issue_date,
-        expiry_date: certificate.expiry_date
-      });
-
       // Validate required fields
       if (!equipment.id) {
         throw new Error('Equipment ID is required');
@@ -51,17 +44,21 @@ export const CertificateModal = ({
         throw new Error('Expiry date is required');
       }
 
-      // Save certificate to database before sending email
+      const certificateData = {
+        id: crypto.randomUUID(),
+        torque_wrench_id: equipment.id,
+        certification_number: certificate.certification_number,
+        issue_date: new Date(certificate.issue_date).toISOString(),
+        expiry_date: new Date(certificate.expiry_date).toISOString()
+      };
+
+      console.log('Saving certificate with data:', certificateData);
+
       const { data, error } = await supabase
         .from('certificates')
-        .insert([{
-          id: crypto.randomUUID(), // Ensure unique ID
-          torque_wrench_id: equipment.id,
-          certification_number: certificate.certification_number,
-          issue_date: new Date(certificate.issue_date).toISOString(),
-          expiry_date: new Date(certificate.expiry_date).toISOString()
-        }])
-        .select();
+        .insert([certificateData])
+        .select('*')
+        .single();
 
       if (error) {
         console.error('Error saving certificate:', error);
