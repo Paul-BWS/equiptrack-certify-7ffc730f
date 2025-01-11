@@ -98,7 +98,12 @@ const TorqueWrenches = () => {
                 >
                   <Grid className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
                 </Button>
-                <h1 className="text-2xl font-bold">Torque Wrenches</h1>
+                {customerData && (
+                  <h1 className="text-3xl font-bold">
+                    {customerData.name}
+                  </h1>
+                )}
+                <h2 className="text-xl font-semibold">Torque Wrenches</h2>
               </div>
               
               <Button 
@@ -109,17 +114,6 @@ const TorqueWrenches = () => {
                 <Plus className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
               </Button>
             </div>
-            
-            {customerData && (
-              <div className="bg-muted p-4 rounded-lg">
-                <h2 className="text-lg font-semibold text-muted-foreground">
-                  Customer: {customerData.name}
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  {customerData.address}
-                </p>
-              </div>
-            )}
           </div>
           
           <EquipmentList
