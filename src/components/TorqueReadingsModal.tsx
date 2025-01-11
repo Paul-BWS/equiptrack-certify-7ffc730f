@@ -71,24 +71,37 @@ export const TorqueReadingsModal = ({
     setReadings({ ...readings, readings: newReadings });
   };
 
-  // Create certificate data from readings
+  // Create certificate data from readings with all required properties
   const certificateData = {
+    id: `cert-${readings.certNumber}`,
+    serviceRecordId: `sr-${readings.certNumber}`,
+    equipmentId: equipmentId || 'unknown',
     certificationNumber: readings.certNumber,
-    // Add other certificate fields as needed
+    issueDate: readings.date,
+    expiryDate: readings.retestDate
   };
 
+  // Create equipment data with all required properties
   const equipmentData = {
+    id: equipmentId || 'unknown',
+    name: `Torque Wrench ${readings.model}`,
+    manufacturer: 'Unknown',
     model: readings.model,
     serialNumber: readings.serialNumber,
-    // Add other equipment fields as needed
+    purchaseDate: new Date().toISOString(),
+    lastServiceDate: readings.date,
+    nextServiceDue: readings.retestDate
   };
 
+  // Create service record data with all required properties
   const serviceRecordData = {
+    id: `sr-${readings.certNumber}`,
+    equipmentId: equipmentId || 'unknown',
     date: readings.date,
-    nextDueDate: readings.retestDate,
+    type: 'calibration',
     technician: readings.engineer,
     notes: readings.notes,
-    // Add other service record fields as needed
+    nextDueDate: readings.retestDate
   };
 
   return (
@@ -104,6 +117,7 @@ export const TorqueReadingsModal = ({
               date={readings.date}
               retestDate={readings.retestDate}
               certNumber={readings.certNumber}
+              status={readings.status}
               onDateChange={(value) => setReadings({ ...readings, date: value })}
               onRetestDateChange={(value) => setReadings({ ...readings, retestDate: value })}
             />
