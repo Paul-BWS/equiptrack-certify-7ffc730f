@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { CompanyEditForm } from "@/components/CompanyEditForm";
 import { ContactForm } from "@/components/ContactForm";
+import { useToast } from "@/components/ui/use-toast";
 
 const sampleUpcomingService: Equipment[] = [
   {
@@ -37,32 +38,54 @@ const sampleUpcomingService: Equipment[] = [
 const CustomerDashboard = () => {
   const { customerId } = useParams();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const { data: company, isLoading: isLoadingCompany } = useQuery({
+  const { data: company, isLoading: isLoadingCompany, error: companyError } = useQuery({
     queryKey: ['company', customerId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('companies')
-        .select('*')
+        .select()
         .eq('id', customerId)
-        .single();
+        .limit(1);
       
       if (error) throw error;
-      return data as Company;
+      if (!data || data.length === 0) {
+        throw new Error('Company not found');
+      }
+      
+      return data[0] as Company;
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Could not load company details. Please try again later.",
+        variant: "destructive",
+      });
+      console.error('Error fetching company:', error);
     }
   });
 
-  const { data: contacts, isLoading: isLoadingContacts } = useQuery({
+  const { data: contacts, isLoading: isLoadingContacts, error: contactsError } = useQuery({
     queryKey: ['contacts', customerId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('contacts')
-        .select('*')
+        .select()
         .eq('company_id', customerId)
         .order('is_primary', { ascending: false });
       
       if (error) throw error;
       return data as Contact[];
+    },
+    enabled: !!company,
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Could not load contacts. Please try again later.",
+        variant: "destructive",
+      });
+      console.error('Error fetching contacts:', error);
     }
   });
 
@@ -79,20 +102,21 @@ const CustomerDashboard = () => {
     );
   }
 
-  if (!company) {
+  if (companyError || !company) {
     return (
       <div className="min-h-screen bg-background">
         <Navigation />
         <main className="container mx-auto py-8">
-          <div className="text-center">
+          <div className="text-center space-y-4">
             <h2 className="text-xl font-semibold">Company not found</h2>
+            <Button onClick={() => navigate('/')}>
+              Return to Dashboard
+            </Button>
           </div>
         </main>
       </div>
     );
   }
-
-  const primaryContact = contacts?.find(contact => contact.is_primary);
 
   return (
     <div className="min-h-screen bg-background">
@@ -264,6 +288,3 @@ const CustomerDashboard = () => {
       </main>
     </div>
   );
-};
-
-export default CustomerDashboard;
