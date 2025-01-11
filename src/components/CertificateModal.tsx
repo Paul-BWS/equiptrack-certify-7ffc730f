@@ -30,6 +30,20 @@ export const CertificateModal = ({
 
   const handleEmail = async () => {
     try {
+      // Validate required fields
+      if (!equipment.id) {
+        throw new Error('Equipment ID is required');
+      }
+      if (!certificate.certification_number) {
+        throw new Error('Certificate number is required');
+      }
+      if (!certificate.issue_date) {
+        throw new Error('Issue date is required');
+      }
+      if (!certificate.expiry_date) {
+        throw new Error('Expiry date is required');
+      }
+
       // Save certificate to database before sending email
       const { error } = await supabase
         .from('certificates')
@@ -51,9 +65,9 @@ export const CertificateModal = ({
       toast.success(`Email sent successfully for certificate ${certificate.certification_number}`, {
         description: `To: ${equipment.model} (${equipment.serial_number})`,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error handling email:', error);
-      toast.error("Failed to send certificate email");
+      toast.error(error.message || "Failed to send certificate email");
     }
   };
 
