@@ -107,6 +107,29 @@ export const TorqueReadingsModal = ({
       return;
     }
 
+    const pathSegments = window.location.pathname.split('/');
+    const companyIdIndex = pathSegments.indexOf('customers') + 1;
+    const companyId = pathSegments[companyIdIndex];
+
+    const torqueWrenchData: TorqueWrench = {
+      id: equipmentId || undefined,
+      company_id: companyId,
+      model: readings.model,
+      serial_number: readings.serialNumber,
+      min_torque: parseFloat(readings.min),
+      max_torque: parseFloat(readings.max),
+      units: readings.units,
+      last_service_date: readings.date,
+      next_service_due: readings.retestDate,
+      engineer: readings.engineer,
+      result: readings.result,
+      notes: readings.notes,
+      readings: readings.readings,
+      definitive_readings: readings.definitiveReadings,
+      cert_number: readings.certNumber,
+      status: readings.status
+    };
+
     console.log("Form submitted:", readings);
     setShowCertificate(true);
   };
@@ -212,7 +235,7 @@ export const TorqueReadingsModal = ({
         open={showCertificate}
         onOpenChange={setShowCertificate}
         certificate={prepareCertificateData(readings, equipmentId)}
-        equipment={readings}
+        equipment={torqueWrenchData}
         serviceRecord={null}
       />
     </>
