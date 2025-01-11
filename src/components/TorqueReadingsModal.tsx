@@ -103,7 +103,12 @@ export const TorqueReadingsModal = ({
       newReadings[index].deviation = calculateDeviation(target, actual);
     }
 
-    const newDefinitiveReadings = [...newReadings];
+    // Copy the updated readings to definitiveReadings
+    const newDefinitiveReadings = newReadings.map(reading => ({
+      target: reading.target,
+      actual: reading.actual,
+      deviation: reading.deviation
+    }));
 
     setReadings({ 
       ...readings, 
