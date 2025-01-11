@@ -1,24 +1,19 @@
-import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { FormField } from "./torque-readings/FormField";
-import { ReadingsSection } from "./torque-readings/ReadingsSection";
 import { HeaderSection } from "./torque-readings/HeaderSection";
 import { EquipmentSection } from "./torque-readings/EquipmentSection";
 import { MeasurementsSection } from "./torque-readings/MeasurementsSection";
+import { ReadingsSection } from "./torque-readings/ReadingsSection";
+import { FormField } from "./torque-readings/FormField";
 import { CertificateModal } from "./CertificateModal";
+import { LoadingState } from "./torque-readings/LoadingState";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useEquipmentData } from "@/hooks/useEquipmentData";
+import { useTorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
 import { validateForm } from "@/utils/torqueReadingsValidation";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
-import { useQuery } from "@tanstack/react-query";
-import {
-  generateCertificateNumber,
-  calculateDeviation,
-  prepareCertificateData,
-  prepareEquipmentData,
-  prepareServiceRecordData
-} from "@/utils/certificateDataPreparation";
+import { prepareCertificateData, prepareEquipmentData, prepareServiceRecordData } from "@/utils/certificateDataPreparation";
 
 interface TorqueReadingsModalProps {
   open: boolean;
@@ -31,85 +26,15 @@ export const TorqueReadingsModal = ({
   onOpenChange,
   equipmentId,
 }: TorqueReadingsModalProps) => {
-  const [readings, setReadings] = useState({
-    certNumber: "",
-    date: new Date().toISOString().split('T')[0],
-    retestDate: "",
-    model: "",
-    serialNumber: "",
-    engineer: "",
-    min: "",
-    max: "",
-    units: "nm",
-    status: "ACTIVE",
-    sentOn: "",
-    result: "PASS",
-    notes: "",
-    readings: [
-      { target: "", actual: "", deviation: "" },
-      { target: "", actual: "", deviation: "" },
-      { target: "", actual: "", deviation: "" },
-    ],
-    definitiveReadings: [
-      { target: "", actual: "", deviation: "" },
-      { target: "", actual: "", deviation: "" },
-      { target: "", actual: "", deviation: "" },
-    ],
-  });
-
-  const { data: equipment, isLoading } = useQuery({
-    queryKey: ['equipment', equipmentId],
-    queryFn: async () => {
-      if (!equipmentId) return null;
-      
-      console.log('Fetching equipment data for ID:', equipmentId);
-      
-      const { data, error } = await supabase
-        .from('equipment')
-        .select('*')
-        .eq('id', equipmentId)
-        .single();
-
-      if (error) {
-        console.error('Error fetching equipment:', error);
-        toast.error("Failed to load equipment data");
-        throw error;
-      }
-
-      console.log('Fetched equipment data:', data);
-      return data;
-    },
-    enabled: !!equipmentId && open,
-  });
-
+  const { data: equipment, isLoading } = useEquipmentData(equipmentId, open);
+  const { readings, setReadings } = useTorqueReadingsForm(equipment, open);
   const [showCertificate, setShowCertificate] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const isMobile = useIsMobile();
-  
-  useEffect(() => {
-    if (open) {
-      setReadings(prev => ({
-        ...prev,
-        certNumber: generateCertificateNumber(),
-        date: new Date().toISOString().split('T')[0]
-      }));
-    }
-  }, [open]);
 
-  useEffect(() => {
-    if (equipment) {
-      console.log('Updating readings with equipment data:', equipment);
-      
-      setReadings(prev => ({
-        ...prev,
-        model: equipment.model || '',
-        serialNumber: equipment.serial_number || '',
-        min: equipment.min_torque?.toString() || '',
-        max: equipment.max_torque?.toString() || '',
-        units: equipment.units || 'nm',
-      }));
-    }
-  }, [equipment]);
+  if (isLoading) {
+    return <LoadingState open={open} onOpenChange={onOpenChange} />;
+  }
 
   const handleSave = async () => {
     if (!validateForm(readings)) {
@@ -122,21 +47,18 @@ export const TorqueReadingsModal = ({
       const serviceRecord = prepareServiceRecordData(readings, equipmentId);
       const certificate = prepareCertificateData(readings, equipmentId);
 
-      // Save equipment data
       const { error: equipmentError } = await supabase
         .from('equipment')
         .upsert([equipment]);
 
       if (equipmentError) throw equipmentError;
 
-      // Save service record
       const { error: serviceError } = await supabase
         .from('service_records')
         .insert([serviceRecord]);
 
       if (serviceError) throw serviceError;
 
-      // Save certificate
       const { error: certError } = await supabase
         .from('certificates')
         .insert([certificate]);
@@ -182,18 +104,6 @@ export const TorqueReadingsModal = ({
       definitiveReadings: newDefinitiveReadings
     });
   };
-
-  if (isLoading) {
-    return (
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent>
-          <div className="flex justify-center items-center h-48">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-          </div>
-        </DialogContent>
-      </Dialog>
-    );
-  }
 
   return (
     <>
