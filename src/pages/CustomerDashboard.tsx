@@ -17,8 +17,8 @@ const sampleUpcomingService = [
     manufacturer: "TorcPro",
     model: "TP-100",
     purchase_date: "2023-01-15",
-    last_service: "2023-06-15",
-    next_service: "2024-06-15",
+    last_service_date: "2023-06-15",
+    next_service_due: "2024-06-15",
   },
   {
     id: "2",
@@ -27,8 +27,8 @@ const sampleUpcomingService = [
     manufacturer: "PressureTech",
     model: "PT-200",
     purchase_date: "2023-02-20",
-    last_service: "2023-07-20",
-    next_service: "2024-05-20",
+    last_service_date: "2023-07-20",
+    next_service_due: "2024-05-20",
   },
 ];
 
