@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Customer } from "@/types/customer";
+import { Customer, CustomerFormData } from "@/types/customer";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Pencil } from "lucide-react";
@@ -20,15 +20,13 @@ const customerSchema = z.object({
   email: z.string().email("Invalid email address"),
   phone: z.string().min(1, "Phone number is required"),
   address: z.string().min(1, "Site address is required"),
-  useSeparateBillingAddress: z.boolean().default(false),
-  billingAddress: z.string().min(1, "Billing address is required").optional(),
+  useSeparateBillingAddress: z.boolean(),
+  billingAddress: z.string().optional(),
   company: z.string().min(1, "Company name is required"),
   website: z.string().url("Invalid website URL").or(z.string().length(0)),
   notes: z.string(),
   industry: z.string().min(1, "Industry is required"),
-});
-
-type CustomerFormData = z.infer<typeof customerSchema>;
+}) satisfies z.ZodType<CustomerFormData>;
 
 interface CustomerEditFormProps {
   customer: Customer;
