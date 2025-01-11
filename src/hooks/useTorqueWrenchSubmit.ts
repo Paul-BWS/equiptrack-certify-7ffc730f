@@ -21,6 +21,11 @@ export const useTorqueWrenchSubmit = (
       return;
     }
 
+    // Add authentication check
+    const { data: { session } } = await supabase.auth.getSession();
+    console.log('Current session:', session);
+    console.log('Company ID:', torqueWrenchData.company_id);
+
     setIsSaving(true);
     try {
       console.log('Saving torque wrench with data:', torqueWrenchData);
