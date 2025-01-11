@@ -57,10 +57,10 @@ export const prepareServiceRecordData = (readings: any, equipmentId: string | nu
   return {
     id: generateUUID(),
     equipment_id: equipmentId || undefined,
-    date: readings.date,
-    type: 'calibration' as const,
+    service_date: readings.date, // Updated from date to service_date
+    service_type: 'calibration', // Updated from type to service_type
     technician: readings.engineer,
     notes: readings.notes,
-    next_due_date: readings.retestDate
+    next_service_date: readings.retestDate // Updated from next_due_date to next_service_date
   };
 };
