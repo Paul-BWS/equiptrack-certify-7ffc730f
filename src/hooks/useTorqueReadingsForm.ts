@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
 import { Reading } from "@/types/equipment";
 
 export interface TorqueReadingsForm {
@@ -48,18 +47,8 @@ export const useTorqueReadingsForm = (equipment: any, isOpen: boolean) => {
   });
 
   useEffect(() => {
-    if (isOpen) {
-      setReadings(prev => ({
-        ...prev,
-        certNumber: generateCertificateNumber(),
-        date: new Date().toISOString().split('T')[0]
-      }));
-    }
-  }, [isOpen]);
-
-  useEffect(() => {
     if (equipment) {
-      console.log('Updating readings with equipment data:', equipment);
+      console.log('Loading equipment data:', equipment);
       
       setReadings(prev => ({
         ...prev,
@@ -68,6 +57,15 @@ export const useTorqueReadingsForm = (equipment: any, isOpen: boolean) => {
         min: equipment.min_torque?.toString() || '',
         max: equipment.max_torque?.toString() || '',
         units: equipment.units || 'nm',
+        date: equipment.last_service_date || new Date().toISOString().split('T')[0],
+        retestDate: equipment.next_service_due || '',
+        engineer: equipment.engineer || '',
+        result: equipment.result || 'PASS',
+        notes: equipment.notes || '',
+        readings: equipment.readings?.length ? equipment.readings : prev.readings,
+        definitiveReadings: equipment.definitive_readings?.length ? equipment.definitive_readings : prev.definitiveReadings,
+        certNumber: equipment.cert_number || '',
+        status: equipment.status || 'ACTIVE'
       }));
     }
   }, [equipment]);
