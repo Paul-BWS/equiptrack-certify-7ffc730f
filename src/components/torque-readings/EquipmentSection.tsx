@@ -1,5 +1,12 @@
-import { FormField } from "../torque-readings/FormField";
+import { FormField } from "./FormField";
 import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface EquipmentSectionProps {
   model: string;
@@ -10,6 +17,20 @@ interface EquipmentSectionProps {
   onSerialNumberChange: (value: string) => void;
   onEngineerChange: (value: string) => void;
 }
+
+// This would ideally come from an API or database
+const ENGINEERS = [
+  "John Smith",
+  "Sarah Johnson",
+  "Michael Brown",
+  "Emma Wilson",
+  "James Davis",
+  "Lisa Anderson",
+  "Robert Taylor",
+  "Patricia Martinez",
+  "David Thompson",
+  "Jennifer Garcia"
+];
 
 export const EquipmentSection = ({
   model,
@@ -40,12 +61,26 @@ export const EquipmentSection = ({
       </div>
 
       <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}>
-        <FormField
-          id="engineer"
-          label="Engineer"
-          value={engineer}
-          onChange={(e) => onEngineerChange(e.target.value)}
-        />
+        <div className="space-y-2">
+          <label htmlFor="engineer" className="text-sm font-medium">
+            Engineer
+          </label>
+          <Select
+            value={engineer}
+            onValueChange={onEngineerChange}
+          >
+            <SelectTrigger id="engineer" className="w-full">
+              <SelectValue placeholder="Select an engineer" />
+            </SelectTrigger>
+            <SelectContent>
+              {ENGINEERS.map((eng) => (
+                <SelectItem key={eng} value={eng}>
+                  {eng}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         <FormField
           id="sentOn"
           label="Sent On"
