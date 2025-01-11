@@ -11,30 +11,38 @@ export const useTorqueWrenchSubmit = (
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = async (torqueWrenchData: TorqueWrench) => {
-    if (!torqueWrenchData) return;
+    if (!torqueWrenchData) {
+      toast.error("Invalid torque wrench data");
+      return;
+    }
 
     setIsSaving(true);
     try {
-      // First, check if the record exists
-      const { data: existingData, error: fetchError } = await supabase
-        .from('torque_wrench')
-        .select('id')
-        .eq('id', equipmentId)
-        .single();
-
-      if (fetchError && fetchError.code !== 'PGRST116') {
-        throw fetchError;
-      }
-
       let torqueWrenchError;
-      if (existingData) {
-        // Update existing record
-        const { error } = await supabase
+
+      if (equipmentId) {
+        // Check if the record exists
+        const { data: existingData, error: fetchError } = await supabase
           .from('torque_wrench')
-          .update(torqueWrenchData)
-          .eq('id', equipmentId);
-        torqueWrenchError = error;
-      } else {
+          .select('id')
+          .eq('id', equipmentId)
+          .single();
+
+        if (fetchError && fetchError.code !== 'PGRST116') {
+          throw fetchError;
+        }
+
+        if (existingData) {
+          // Update existing record
+          const { error } = await supabase
+            .from('torque_wrench')
+            .update(torqueWrenchData)
+            .eq('id', equipmentId);
+          torqueWrenchError = error;
+        }
+      }
+      
+      if (!equipmentId || !torqueWrenchError) {
         // Insert new record
         const { error } = await supabase
           .from('torque_wrench')
@@ -63,6 +71,8 @@ export const useTorqueWrenchSubmit = (
       console.error('Error saving data:', error);
       if (error.code === '42501') {
         toast.error("Permission denied. Please check your access rights.");
+      } else if (error.code === '22P02') {
+        toast.error("Invalid ID format");
       } else {
         toast.error("Failed to save torque wrench data");
       }
