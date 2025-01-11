@@ -30,11 +30,6 @@ const TorqueWrenches = () => {
     setShowReadingsModal(true);
   };
 
-  const handleEdit = (equipmentId: string) => {
-    // TODO: Implement edit functionality
-    console.log("Edit equipment:", equipmentId);
-  };
-
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -64,7 +59,6 @@ const TorqueWrenches = () => {
         <EquipmentList 
           equipment={equipment}
           onGenerateCertificate={handleGenerateCertificate}
-          onEdit={handleEdit}
         />
 
         <TorqueReadingsModal
