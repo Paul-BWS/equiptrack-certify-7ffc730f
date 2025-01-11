@@ -29,7 +29,7 @@ export const FormField = ({
     <div className="relative">
       <Input
         id={id}
-        type={type}
+        type={showCalendar ? "date" : type}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
