@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Customer } from "@/types/customer";
-import { ArrowRight, Mail, Phone } from "lucide-react";
+import { ArrowRight, Mail, Phone, MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface CustomerListProps {
@@ -32,6 +32,12 @@ export const CustomerList = ({ customers }: CustomerListProps) => {
                 </div>
                 <span className="text-gray-600">{customer.phone}</span>
               </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="bg-blue-50 p-2 rounded-lg">
+                <MapPin className="h-5 w-5 text-primary" />
+              </div>
+              <span className="text-gray-600">{customer.address}</span>
             </div>
           </div>
           <Button
