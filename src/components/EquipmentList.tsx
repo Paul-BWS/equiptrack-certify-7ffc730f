@@ -29,7 +29,7 @@ export const EquipmentList = ({
             <TableHead>Name</TableHead>
             <TableHead>Serial</TableHead>
             <TableHead>Date</TableHead>
-            <TableHead>Retest</TableHead>
+            <TableHead className="hidden sm:table-cell">Retest</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -39,7 +39,7 @@ export const EquipmentList = ({
               <TableCell className="font-medium">{item.name}</TableCell>
               <TableCell>{item.serialNumber}</TableCell>
               <TableCell>{item.lastServiceDate}</TableCell>
-              <TableCell>{item.nextServiceDue}</TableCell>
+              <TableCell className="hidden sm:table-cell">{item.nextServiceDue}</TableCell>
               <TableCell>
                 <div className="flex space-x-2">
                   <Button
