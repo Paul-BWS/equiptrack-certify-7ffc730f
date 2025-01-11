@@ -26,7 +26,7 @@ const customerSchema = z.object({
   website: z.string().url("Invalid website URL").or(z.string().length(0)),
   notes: z.string(),
   industry: z.string().min(1, "Industry is required"),
-}) satisfies z.ZodType<CustomerFormData>;
+}) as z.ZodType<CustomerFormData>;
 
 interface CustomerEditFormProps {
   customer: Customer;
