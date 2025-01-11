@@ -11,6 +11,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { validateForm } from "@/utils/torqueReadingsValidation";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
 import {
   generateCertificateNumber,
   calculateDeviation,
@@ -56,6 +57,28 @@ export const TorqueReadingsModal = ({
     ],
   });
 
+  const { data: equipmentData } = useQuery({
+    queryKey: ['equipment', equipmentId],
+    queryFn: async () => {
+      if (!equipmentId) return null;
+      
+      const { data, error } = await supabase
+        .from('equipment')
+        .select('*')
+        .eq('id', equipmentId)
+        .single();
+
+      if (error) {
+        console.error('Error fetching equipment:', error);
+        toast.error("Failed to load equipment data");
+        throw error;
+      }
+
+      return data;
+    },
+    enabled: !!equipmentId && open,
+  });
+
   const [showCertificate, setShowCertificate] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const isMobile = useIsMobile();
@@ -68,6 +91,16 @@ export const TorqueReadingsModal = ({
       }));
     }
   }, [open]);
+
+  useEffect(() => {
+    if (equipmentData) {
+      setReadings(prev => ({
+        ...prev,
+        model: equipmentData.model || '',
+        serialNumber: equipmentData.serial_number || '',
+      }));
+    }
+  }, [equipmentData]);
 
   const handleSave = async () => {
     if (!validateForm(readings)) {
