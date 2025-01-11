@@ -46,8 +46,7 @@ export const useTorqueWrenchSubmit = (
       const dataToSave = {
         ...torqueWrenchData,
         readings: JSON.stringify(torqueWrenchData.readings),
-        definitive_readings: JSON.stringify(torqueWrenchData.definitive_readings),
-        created_by: session.user.id // Add created_by field for RLS
+        definitive_readings: JSON.stringify(torqueWrenchData.definitive_readings)
       };
 
       let result;
@@ -80,10 +79,7 @@ export const useTorqueWrenchSubmit = (
       const certificate = prepareCertificateData(torqueWrenchData, equipmentId);
       const { error: certError } = await supabase
         .from('certificates')
-        .insert([{
-          ...certificate,
-          created_by: session.user.id // Add created_by field for certificates table
-        }]);
+        .insert([certificate]);
 
       if (certError) {
         console.error('Error saving certificate:', certError);
