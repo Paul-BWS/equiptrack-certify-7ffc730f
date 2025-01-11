@@ -19,17 +19,16 @@ export const ReadingsSection = ({
   onChange,
   readOnly,
 }: ReadingsSectionProps) => {
-  // Ensure readings is always an array with at least 3 items
-  const readingsArray = Array.isArray(readings) ? readings : [];
-  const paddedReadings = [...readingsArray];
-  while (paddedReadings.length < 3) {
-    paddedReadings.push({ target: "", actual: "", deviation: "" });
+  // Ensure readings is always an array with exactly 3 items
+  const readingsArray = Array.isArray(readings) ? readings.slice(0, 3) : [];
+  while (readingsArray.length < 3) {
+    readingsArray.push({ target: "", actual: "", deviation: "" });
   }
 
   return (
     <div>
       <h3 className="font-semibold mb-4">{title}</h3>
-      {paddedReadings.map((reading, index) => (
+      {readingsArray.map((reading, index) => (
         <div key={`${title}-${index}`} className="grid grid-cols-3 gap-2 mb-2">
           <Input
             value={reading.target}
