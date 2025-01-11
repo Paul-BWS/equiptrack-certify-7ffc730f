@@ -16,7 +16,7 @@ const Index = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const { data: session } = useQuery({
+  const { data: session, isLoading: isSessionLoading } = useQuery({
     queryKey: ['session'],
     queryFn: async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -29,15 +29,17 @@ const Index = () => {
     setIsLoading(true);
     
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
         toast.error(error.message);
-      } else {
+      } else if (data.session) {
         toast.success("Successfully signed in!");
+        // Force a refresh of the session query
+        window.location.reload();
       }
     } catch (error) {
       console.error("Sign in error:", error);
@@ -46,6 +48,15 @@ const Index = () => {
       setIsLoading(false);
     }
   };
+
+  // Show loading state while checking session
+  if (isSessionLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   // If not signed in, show login form
   if (!session) {
