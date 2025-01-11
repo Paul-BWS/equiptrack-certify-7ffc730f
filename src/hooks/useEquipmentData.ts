@@ -11,11 +11,11 @@ export const useEquipmentData = (equipmentId: string | null, isEnabled: boolean)
       
       console.log('Fetching torque wrench data for ID:', equipmentId);
       
-      const { data, error } = await supabase
+      const { data, error, status } = await supabase
         .from('torque_wrench')
         .select('*')
         .eq('id', equipmentId)
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error('Error fetching torque wrench:', error);
@@ -23,9 +23,20 @@ export const useEquipmentData = (equipmentId: string | null, isEnabled: boolean)
         throw error;
       }
 
+      if (!data) {
+        console.log('No torque wrench found with ID:', equipmentId);
+        return null;
+      }
+
       console.log('Fetched torque wrench data:', data);
       return data as TorqueWrench;
     },
     enabled: !!equipmentId && isEnabled,
+    meta: {
+      onError: (error: Error) => {
+        console.error('Query error:', error);
+        toast.error("Could not load torque wrench data. Please try again later.");
+      }
+    }
   });
 };
