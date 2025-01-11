@@ -88,8 +88,7 @@ export const TorqueReadingsModal = ({
       engineer: "Engineer",
       min: "Min",
       max: "Max",
-      units: "Units",
-      notes: "Notes"
+      units: "Units"
     };
 
     for (const [field, label] of Object.entries(requiredFields)) {
