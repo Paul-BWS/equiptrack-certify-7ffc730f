@@ -20,7 +20,7 @@ const companySchema = z.object({
   website: z.string().url("Invalid website URL").or(z.string().length(0)),
   address: z.string().min(1, "Site address is required"),
   useSeparateBillingAddress: z.boolean().default(false),
-  billingAddress: z.string().min(1, "Billing address is required").optional(),
+  billingaddress: z.string().min(1, "Billing address is required").optional(),
   notes: z.string(),
 });
 
@@ -43,7 +43,7 @@ export const CompanyEditForm = ({ company }: CompanyEditFormProps) => {
       website: company.website,
       address: company.address,
       useSeparateBillingAddress: company.useSeparateBillingAddress,
-      billingAddress: company.billingAddress,
+      billingaddress: company.billingaddress,
       notes: company.notes,
     },
   });
@@ -52,7 +52,7 @@ export const CompanyEditForm = ({ company }: CompanyEditFormProps) => {
     mutationFn: async (data: CompanyFormData) => {
       const companyData = {
         ...data,
-        billingAddress: data.useSeparateBillingAddress ? data.billingAddress : data.address,
+        billingaddress: data.useSeparateBillingAddress ? data.billingaddress : data.address,
       };
       
       const { data: updatedCompany, error } = await supabase
@@ -172,7 +172,7 @@ export const CompanyEditForm = ({ company }: CompanyEditFormProps) => {
             {form.watch("useSeparateBillingAddress") && (
               <FormField
                 control={form.control}
-                name="billingAddress"
+                name="billingaddress"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Billing Address</FormLabel>

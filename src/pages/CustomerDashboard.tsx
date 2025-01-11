@@ -189,7 +189,7 @@ const CustomerDashboard = () => {
                   {company.useSeparateBillingAddress && (
                     <div>
                       <h3 className="text-xs text-[#B3B3B3] mb-1">Billing Address</h3>
-                      <p className="text-sm">{company.billing_address}</p>
+                      <p className="text-sm">{company.billingaddress}</p>
                     </div>
                   )}
                   {company.notes && (
