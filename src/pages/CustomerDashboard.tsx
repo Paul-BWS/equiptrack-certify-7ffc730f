@@ -288,3 +288,6 @@ const CustomerDashboard = () => {
       </main>
     </div>
   );
+};
+
+export default CustomerDashboard;
