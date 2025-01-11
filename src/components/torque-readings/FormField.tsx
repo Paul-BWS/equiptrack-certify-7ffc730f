@@ -35,12 +35,16 @@ export const FormField = ({
         onChange={onChange}
         placeholder={placeholder}
         readOnly={readOnly}
-        className={`text-sm bg-[#F9F9F9] ${className}`}
+        className={`text-sm bg-[#F9F9F9] ${showCalendar ? 'pr-10' : ''} ${className}`}
       />
       {showCalendar && (
-        <div className="absolute right-3 top-2.5">
+        <button 
+          type="button"
+          className="absolute right-3 top-1/2 -translate-y-1/2"
+          onClick={() => document.getElementById(id)?.showPicker()}
+        >
           <Calendar className="h-4 w-4 text-muted-foreground" strokeWidth={2.5} />
-        </div>
+        </button>
       )}
     </div>
   </div>
