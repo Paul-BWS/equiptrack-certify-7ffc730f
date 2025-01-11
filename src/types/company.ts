@@ -5,7 +5,7 @@ export interface Company {
   website: string;
   address: string;
   useSeparateBillingAddress: boolean;
-  billingAddress: string;
+  billing_address: string;
   notes: string;
   created_at: string;
 }

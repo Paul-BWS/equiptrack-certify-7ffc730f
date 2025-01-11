@@ -47,14 +47,14 @@ const CustomerDashboard = () => {
         .from('companies')
         .select()
         .eq('id', customerId)
-        .limit(1);
+        .single();
       
       if (error) throw error;
-      if (!data || data.length === 0) {
+      if (!data) {
         throw new Error('Company not found');
       }
       
-      return data[0] as Company;
+      return data as Company;
     },
     meta: {
       onError: () => {
@@ -189,7 +189,7 @@ const CustomerDashboard = () => {
                   {company.useSeparateBillingAddress && (
                     <div>
                       <h3 className="text-xs text-[#B3B3B3] mb-1">Billing Address</h3>
-                      <p className="text-sm">{company.billingAddress}</p>
+                      <p className="text-sm">{company.billing_address}</p>
                     </div>
                   )}
                   {company.notes && (
