@@ -57,41 +57,27 @@ export const TorqueReadingsModal = ({
     ],
   });
 
-  const { data: equipmentData, isLoading } = useQuery({
+  const { data: equipment, isLoading } = useQuery({
     queryKey: ['equipment', equipmentId],
     queryFn: async () => {
       if (!equipmentId) return null;
       
       console.log('Fetching equipment data for ID:', equipmentId);
       
-      const [equipmentResult, serviceResult] = await Promise.all([
-        supabase
-          .from('equipment')
-          .select('*')
-          .eq('id', equipmentId)
-          .single(),
-        supabase
-          .from('service_records')
-          .select('*')
-          .eq('equipment_id', equipmentId)
-          .order('service_date', { ascending: false })
-          .limit(1)
-          .maybeSingle()
-      ]);
+      const { data, error } = await supabase
+        .from('equipment')
+        .select('*')
+        .eq('id', equipmentId)
+        .single();
 
-      if (equipmentResult.error) {
-        console.error('Error fetching equipment:', equipmentResult.error);
+      if (error) {
+        console.error('Error fetching equipment:', error);
         toast.error("Failed to load equipment data");
-        throw equipmentResult.error;
+        throw error;
       }
 
-      console.log('Fetched equipment data:', equipmentResult.data);
-      console.log('Fetched service record:', serviceResult.data);
-
-      return {
-        equipment: equipmentResult.data,
-        lastService: serviceResult.data
-      };
+      console.log('Fetched equipment data:', data);
+      return data;
     },
     enabled: !!equipmentId && open,
   });
@@ -111,10 +97,8 @@ export const TorqueReadingsModal = ({
   }, [open]);
 
   useEffect(() => {
-    if (equipmentData) {
-      const { equipment, lastService } = equipmentData;
+    if (equipment) {
       console.log('Updating readings with equipment data:', equipment);
-      console.log('Last service data:', lastService);
       
       setReadings(prev => ({
         ...prev,
@@ -123,17 +107,9 @@ export const TorqueReadingsModal = ({
         min: equipment.min_torque?.toString() || '',
         max: equipment.max_torque?.toString() || '',
         units: equipment.units || 'nm',
-        // If there's last service data, use its values
-        ...(lastService && {
-          engineer: lastService.technician || '',
-          readings: lastService.readings || prev.readings,
-          definitiveReadings: lastService.definitive_readings || prev.definitiveReadings,
-          notes: lastService.notes || '',
-          retestDate: lastService.next_service_date || ''
-        })
       }));
     }
-  }, [equipmentData]);
+  }, [equipment]);
 
   const handleSave = async () => {
     if (!validateForm(readings)) {
