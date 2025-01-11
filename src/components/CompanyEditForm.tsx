@@ -213,4 +213,4 @@ export const CompanyEditForm = ({ company }: CompanyEditFormProps) => {
       </DialogContent>
     </Dialog>
   );
-});
+};
