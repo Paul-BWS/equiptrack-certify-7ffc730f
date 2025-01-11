@@ -27,21 +27,6 @@ export const HeaderSection = ({
     return today <= retestDateObj ? "ACTIVE" : "INACTIVE";
   };
 
-  const handleDateChange = (newDate: string) => {
-    onDateChange(newDate);
-    
-    // Only set retest date if a date is selected
-    if (newDate) {
-      const testDate = new Date(newDate);
-      const newRetestDate = new Date(testDate);
-      newRetestDate.setDate(testDate.getDate() + 364);
-      
-      // Format the date to YYYY-MM-DD for the input
-      const formattedRetestDate = newRetestDate.toISOString().split('T')[0];
-      onRetestDateChange(formattedRetestDate);
-    }
-  };
-
   const status = calculateStatus();
   const statusColor = status === "ACTIVE" ? "text-green-500" : "text-red-500";
   
@@ -53,7 +38,7 @@ export const HeaderSection = ({
           id="date"
           type="date"
           value={date}
-          onChange={(e) => handleDateChange(e.target.value)}
+          onChange={(e) => onDateChange(e.target.value)}
           className="flex h-10 w-full rounded-md border border-input bg-[#F9F9F9] px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-[#CCCCCC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         />
       </div>
