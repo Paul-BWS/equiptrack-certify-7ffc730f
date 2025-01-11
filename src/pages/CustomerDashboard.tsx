@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Grid, Mail, Phone, ArrowRight, Globe, Building2, Factory, UserPlus } from "lucide-react";
+import { Users, Grid, Mail, Phone, ArrowRight, Globe, Building2, Factory, UserPlus, Pencil } from "lucide-react";
 import { Company } from "@/types/company";
 import { Contact } from "@/types/contact";
 import { Equipment } from "@/types/equipment";
@@ -180,9 +180,7 @@ const CustomerDashboard = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-2xl font-bold">Contacts</CardTitle>
-              <Button variant="outline" size="icon">
-                <UserPlus className="h-4 w-4" />
-              </Button>
+              <ContactForm companyId={customerId!} />
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -212,6 +210,15 @@ const CustomerDashboard = () => {
                           {contact.phone}
                         </p>
                       </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="rounded-full"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 ))}
