@@ -9,7 +9,7 @@ export const companyService = {
       industry: data.industry,
       website: data.website,
       address: data.address,
-      billing_address: data.useSeparateBillingAddress ? data.billing_address : data.address,
+      billingaddress: data.useSeparateBillingAddress ? data.billingaddress : data.address,
       notes: data.notes,
     };
     

@@ -24,7 +24,7 @@ export const CustomerForm = () => {
       industry: "",
       address: "",
       useSeparateBillingAddress: false,
-      billing_address: "",
+      billingaddress: "",
       notes: "",
     },
   });
