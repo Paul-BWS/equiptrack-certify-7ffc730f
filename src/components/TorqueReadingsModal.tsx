@@ -9,7 +9,7 @@ import { TorqueWrench, ServiceRecord } from "@/types/equipment";
 import { prepareCertificateData } from "@/utils/certificateDataPreparation";
 import { toast } from "sonner";
 import { CertificateModal } from "./CertificateModal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface TorqueReadingsModalProps {
   open: boolean;
@@ -26,6 +26,16 @@ export const TorqueReadingsModal = ({
   const { readings, setReadings } = useTorqueReadingsForm(equipment, open);
   const [showCertificate, setShowCertificate] = useState(false);
   
+  useEffect(() => {
+    // Generate certificate number for new torque wrench
+    if (!equipmentId && open) {
+      const timestamp = new Date().getTime();
+      const randomNum = Math.floor(Math.random() * 1000);
+      const newCertNumber = `BWS-${timestamp}-${randomNum}`;
+      setReadings(prev => ({ ...prev, certNumber: newCertNumber }));
+    }
+  }, [equipmentId, open, setReadings]);
+
   const { handleSave: submitData, isSaving } = useTorqueWrenchSubmit(equipmentId, () => {
     onOpenChange(false);
     toast.success("Torque wrench data saved successfully");
