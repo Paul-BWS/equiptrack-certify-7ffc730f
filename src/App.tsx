@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Equipment from "./pages/Equipment";
 import TorqueWrenches from "./pages/TorqueWrenches";
 import CustomerDashboard from "./pages/CustomerDashboard";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="/customers/:customerId" element={<CustomerDashboard />} />
           <Route
             path="/customers/:customerId/equipment"
