@@ -31,7 +31,7 @@ export const TorqueReadingsModal = ({
   onOpenChange,
   equipmentId,
 }: TorqueReadingsModalProps) => {
-  const { data: equipment, isLoading } = useEquipmentData(equipmentId, open);
+  const { data: equipment, isLoading, error } = useEquipmentData(equipmentId, open);
   const { readings, setReadings } = useTorqueReadingsForm(equipment, open);
   const [showCertificate, setShowCertificate] = useState(false);
   
@@ -39,6 +39,11 @@ export const TorqueReadingsModal = ({
     onOpenChange(false);
     toast.success("Torque wrench data saved successfully");
   });
+
+  if (error) {
+    toast.error("Failed to load equipment data");
+    return null;
+  }
 
   if (isLoading) {
     return <LoadingState open={open} onOpenChange={onOpenChange} />;
