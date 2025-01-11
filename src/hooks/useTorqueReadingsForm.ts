@@ -19,6 +19,12 @@ export interface TorqueReadingsForm {
   definitiveReadings: Reading[];
 }
 
+const defaultReadings = [
+  { target: "", actual: "", deviation: "" },
+  { target: "", actual: "", deviation: "" },
+  { target: "", actual: "", deviation: "" }
+];
+
 export const useTorqueReadingsForm = (equipment: any, isOpen: boolean) => {
   const [readings, setReadings] = useState<TorqueReadingsForm>({
     certNumber: "",
@@ -34,22 +40,20 @@ export const useTorqueReadingsForm = (equipment: any, isOpen: boolean) => {
     sentOn: "",
     result: "PASS",
     notes: "",
-    readings: [
-      { target: "", actual: "", deviation: "" },
-      { target: "", actual: "", deviation: "" },
-      { target: "", actual: "", deviation: "" },
-    ],
-    definitiveReadings: [
-      { target: "", actual: "", deviation: "" },
-      { target: "", actual: "", deviation: "" },
-      { target: "", actual: "", deviation: "" },
-    ],
+    readings: [...defaultReadings],
+    definitiveReadings: [...defaultReadings],
   });
 
   useEffect(() => {
     if (equipment) {
       console.log('Loading equipment data:', equipment);
       
+      const equipmentReadings = equipment.readings?.length ? 
+        equipment.readings : defaultReadings;
+      
+      const equipmentDefinitiveReadings = equipment.definitive_readings?.length ? 
+        equipment.definitive_readings : equipmentReadings;
+
       setReadings(prev => ({
         ...prev,
         model: equipment.model || '',
@@ -62,8 +66,8 @@ export const useTorqueReadingsForm = (equipment: any, isOpen: boolean) => {
         engineer: equipment.engineer || '',
         result: equipment.result || 'PASS',
         notes: equipment.notes || '',
-        readings: equipment.readings?.length ? equipment.readings : prev.readings,
-        definitiveReadings: equipment.definitive_readings?.length ? equipment.definitive_readings : prev.definitiveReadings,
+        readings: equipmentReadings,
+        definitiveReadings: equipmentDefinitiveReadings,
         certNumber: equipment.cert_number || '',
         status: equipment.status || 'ACTIVE'
       }));
