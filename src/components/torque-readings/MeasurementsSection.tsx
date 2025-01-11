@@ -47,12 +47,21 @@ export const MeasurementsSection = ({
         value={max}
         onChange={(e) => onMaxChange(e.target.value)}
       />
-      <FormField
-        id="units"
-        label="Units"
-        value={units}
-        onChange={(e) => onUnitsChange(e.target.value)}
-      />
+      <div className="space-y-2">
+        <label htmlFor="units" className="text-[#C8C8C9] text-sm">Units</label>
+        <Select
+          value={units}
+          onValueChange={onUnitsChange}
+        >
+          <SelectTrigger id="units" className="text-sm bg-[#F9F9F9]">
+            <SelectValue placeholder="Select units" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="nm">Nm</SelectItem>
+            <SelectItem value="ft-lb">ft-lb</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
       <div className="space-y-2">
         <label htmlFor="result" className="text-[#C8C8C9] text-sm">Result</label>
         <Select
