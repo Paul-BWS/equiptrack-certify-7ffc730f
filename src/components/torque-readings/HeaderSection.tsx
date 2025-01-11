@@ -12,13 +12,23 @@ interface HeaderSectionProps {
 
 export const HeaderSection = ({
   date,
-  status,
   retestDate,
   certNumber,
   onDateChange,
   onRetestDateChange,
 }: HeaderSectionProps) => {
   const isMobile = useIsMobile();
+  
+  // Calculate status based on retest date
+  const calculateStatus = () => {
+    if (!retestDate) return "ACTIVE";
+    const today = new Date();
+    const retestDateObj = new Date(retestDate);
+    return today <= retestDateObj ? "ACTIVE" : "INACTIVE";
+  };
+
+  const status = calculateStatus();
+  const statusColor = status === "ACTIVE" ? "text-green-500" : "text-red-500";
   
   return (
     <div className={`grid ${isMobile ? 'grid-cols-1 gap-4' : 'grid-cols-4 gap-4'}`}>
@@ -35,7 +45,7 @@ export const HeaderSection = ({
         label="Status"
         value={status}
         readOnly
-        className="text-green-500 font-medium"
+        className={`font-medium ${statusColor}`}
       />
       <FormField
         id="retestDate"
