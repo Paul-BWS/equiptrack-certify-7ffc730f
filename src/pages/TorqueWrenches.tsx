@@ -17,6 +17,25 @@ const TorqueWrenches = () => {
   const [showReadingsModal, setShowReadingsModal] = useState(false);
   const [selectedEquipmentId, setSelectedEquipmentId] = useState<string | null>(null);
 
+  const { data: customerData } = useQuery({
+    queryKey: ['customer', customerId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('companies')
+        .select('*')
+        .eq('id', customerId)
+        .single();
+
+      if (error) {
+        console.error('Error fetching customer:', error);
+        toast.error("Failed to load customer data");
+        throw error;
+      }
+
+      return data;
+    }
+  });
+
   const { data: equipment = [], isLoading } = useQuery({
     queryKey: ['equipment', customerId],
     queryFn: async () => {
@@ -37,7 +56,6 @@ const TorqueWrenches = () => {
         id: item.id,
         name: item.name || 'Unnamed Equipment',
         serialNumber: item.serial_number || '',
-        customerName: "", // We'll need to fetch this separately if needed
         model: item.model || '',
         lastServiceDate: item.last_service_date || '',
         nextServiceDue: item.next_service_due || ''
@@ -69,26 +87,39 @@ const TorqueWrenches = () => {
       <Navigation />
       <main className="container mx-auto py-8">
         <div className="space-y-6">
-          <div className="flex flex-row justify-between items-center gap-4 mb-6">
-            <div className="flex flex-col gap-2">
-              <Button
-                variant="outline"
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-row justify-between items-center">
+              <div className="flex flex-col gap-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => navigate(`/customers/${customerId}/equipment`)}
+                  className="rounded-full bg-primary hover:bg-primary/90 w-10"
+                >
+                  <Grid className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
+                </Button>
+                <h1 className="text-2xl font-bold">Torque Wrenches</h1>
+              </div>
+              
+              <Button 
                 size="icon"
-                onClick={() => navigate(`/customers/${customerId}/equipment`)}
+                onClick={() => setShowReadingsModal(true)}
                 className="rounded-full bg-primary hover:bg-primary/90"
               >
-                <Grid className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
+                <Plus className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
               </Button>
-              <h1 className="text-2xl font-bold">Torque Wrenches</h1>
             </div>
             
-            <Button 
-              size="icon"
-              onClick={() => setShowReadingsModal(true)}
-              className="rounded-full bg-primary hover:bg-primary/90"
-            >
-              <Plus className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
-            </Button>
+            {customerData && (
+              <div className="bg-muted p-4 rounded-lg">
+                <h2 className="text-lg font-semibold text-muted-foreground">
+                  Customer: {customerData.name}
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {customerData.address}
+                </p>
+              </div>
+            )}
           </div>
           
           <EquipmentList
