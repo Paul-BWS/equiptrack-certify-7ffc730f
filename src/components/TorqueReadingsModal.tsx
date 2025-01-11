@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { CertificateModal } from "./CertificateModal";
 import { LoadingState } from "./torque-readings/LoadingState";
@@ -8,6 +9,7 @@ import { useTorqueWrenchSubmit } from "@/hooks/useTorqueWrenchSubmit";
 import { validateForm } from "@/utils/torqueReadingsValidation";
 import { TorqueWrench, ServiceRecord } from "@/types/equipment";
 import { prepareCertificateData } from "@/utils/certificateDataPreparation";
+import { toast } from "sonner";
 
 interface TorqueReadingsModalProps {
   open: boolean;
@@ -33,7 +35,10 @@ export const TorqueReadingsModal = ({
   const { readings, setReadings } = useTorqueReadingsForm(equipment, open);
   const [showCertificate, setShowCertificate] = useState(false);
   
-  const { handleSave: submitData, isSaving } = useTorqueWrenchSubmit(equipmentId, () => onOpenChange(false));
+  const { handleSave: submitData, isSaving } = useTorqueWrenchSubmit(equipmentId, () => {
+    onOpenChange(false);
+    toast.success("Torque wrench data saved successfully");
+  });
 
   if (isLoading) {
     return <LoadingState open={open} onOpenChange={onOpenChange} />;
@@ -102,6 +107,19 @@ export const TorqueReadingsModal = ({
     });
   };
 
+  const handleSave = async () => {
+    if (!validateForm(readings)) {
+      return;
+    }
+    
+    try {
+      await submitData(torqueWrenchData);
+    } catch (error) {
+      console.error('Error saving torque wrench data:', error);
+      toast.error("Failed to save torque wrench data");
+    }
+  };
+
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
@@ -114,7 +132,7 @@ export const TorqueReadingsModal = ({
             readings={readings}
             setReadings={setReadings}
             handleSubmit={handleSubmit}
-            handleSave={() => submitData(torqueWrenchData)}
+            handleSave={handleSave}
             isSaving={isSaving}
             handleReadingChange={handleReadingChange}
           />
