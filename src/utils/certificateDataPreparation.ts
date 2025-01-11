@@ -33,7 +33,6 @@ export const prepareCertificateData = (readings: any, equipmentId: string | null
 };
 
 export const prepareEquipmentData = (readings: any, equipmentId: string | null) => {
-  // Extract company_id from the URL path
   const pathSegments = window.location.pathname.split('/');
   const companyIdIndex = pathSegments.indexOf('customers') + 1;
   const companyId = pathSegments[companyIdIndex];
@@ -57,10 +56,10 @@ export const prepareServiceRecordData = (readings: any, equipmentId: string | nu
   return {
     id: generateUUID(),
     equipment_id: equipmentId || undefined,
-    service_date: readings.date, // Updated from date to service_date
-    service_type: 'calibration', // Updated from type to service_type
+    service_date: readings.date,
+    service_type: 'calibration',
     technician: readings.engineer,
     notes: readings.notes,
-    next_service_date: readings.retestDate // Updated from next_due_date to next_service_date
+    retest_date: readings.retestDate
   };
 };
