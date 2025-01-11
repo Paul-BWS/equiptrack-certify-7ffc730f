@@ -15,24 +15,58 @@ export const useTorqueWrenchSubmit = (
 
     setIsSaving(true);
     try {
-      const { error: torqueWrenchError } = await supabase
+      // First, check if the record exists
+      const { data: existingData, error: fetchError } = await supabase
         .from('torque_wrench')
-        .upsert([torqueWrenchData]);
+        .select('id')
+        .eq('id', equipmentId)
+        .single();
 
-      if (torqueWrenchError) throw torqueWrenchError;
+      if (fetchError && fetchError.code !== 'PGRST116') {
+        throw fetchError;
+      }
 
+      let torqueWrenchError;
+      if (existingData) {
+        // Update existing record
+        const { error } = await supabase
+          .from('torque_wrench')
+          .update(torqueWrenchData)
+          .eq('id', equipmentId);
+        torqueWrenchError = error;
+      } else {
+        // Insert new record
+        const { error } = await supabase
+          .from('torque_wrench')
+          .insert([torqueWrenchData]);
+        torqueWrenchError = error;
+      }
+
+      if (torqueWrenchError) {
+        console.error('Error saving torque wrench:', torqueWrenchError);
+        throw torqueWrenchError;
+      }
+
+      // Only proceed with certificate if torque wrench was saved successfully
       const certificate = prepareCertificateData(torqueWrenchData, equipmentId);
       const { error: certError } = await supabase
         .from('certificates')
         .insert([certificate]);
 
-      if (certError) throw certError;
+      if (certError) {
+        console.error('Error saving certificate:', certError);
+        throw certError;
+      }
 
-      toast.success("Torque wrench data saved successfully");
       onSuccess();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving data:', error);
-      toast.error("Failed to save torque wrench data");
+      if (error.code === '42501') {
+        toast.error("Permission denied. Please check your access rights.");
+      } else {
+        toast.error("Failed to save torque wrench data");
+      }
+      throw error;
     } finally {
       setIsSaving(false);
     }
