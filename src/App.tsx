@@ -8,6 +8,7 @@ import Equipment from "./pages/Equipment";
 import TorqueWrenches from "./pages/TorqueWrenches";
 import CustomerDashboard from "./pages/CustomerDashboard";
 import Settings from "./pages/Settings";
+import AllEquipment from "./pages/AllEquipment";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/all-equipment" element={<AllEquipment />} />
             <Route path="/customers/:customerId" element={<CustomerDashboard />} />
             <Route
               path="/customers/:customerId/equipment"

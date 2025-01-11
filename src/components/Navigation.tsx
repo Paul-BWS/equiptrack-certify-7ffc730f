@@ -41,7 +41,7 @@ export const Navigation = () => {
               <span>Customers</span>
             </Link>
             <Link
-              to="/equipment"
+              to="/all-equipment"
               className="text-white hover:text-accent flex items-center gap-2"
             >
               <ClipboardList size={20} />
@@ -77,7 +77,7 @@ export const Navigation = () => {
               <span>Customers</span>
             </Link>
             <Link
-              to="/equipment"
+              to="/all-equipment"
               className="text-white hover:text-accent flex items-center gap-2"
               onClick={() => setIsMenuOpen(false)}
             >
