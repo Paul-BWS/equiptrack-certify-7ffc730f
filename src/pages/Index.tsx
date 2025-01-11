@@ -3,30 +3,34 @@ import { Navigation } from "@/components/Navigation";
 import { CustomerSearch } from "@/components/CustomerSearch";
 import { CustomerList } from "@/components/CustomerList";
 import { CustomerForm } from "@/components/CustomerForm";
-import { Customer } from "@/types/customer";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { data: customers = [], isLoading } = useQuery({
-    queryKey: ['customers'],
+  const { data: companies = [], isLoading } = useQuery({
+    queryKey: ['companies'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('customers')
+        .from('companies')
         .select('*');
       
       if (error) {
         throw error;
       }
       
-      return data as Customer[];
+      return data;
+    },
+    meta: {
+      onError: (error: Error) => {
+        console.error('Error fetching companies:', error);
+      }
     }
   });
 
-  const filteredCustomers = customers.filter((customer) =>
-    customer.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredCompanies = companies.filter((company) =>
+    company.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -38,9 +42,9 @@ const Index = () => {
           <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                Customers
+                Companies
               </h1>
-              <p className="text-gray-500">Manage your customer relationships</p>
+              <p className="text-gray-500">Manage your company relationships</p>
             </div>
             <CustomerForm />
           </div>
@@ -54,7 +58,7 @@ const Index = () => {
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
             </div>
           ) : (
-            <CustomerList customers={filteredCustomers} />
+            <CustomerList customers={filteredCompanies} />
           )}
         </div>
       </main>

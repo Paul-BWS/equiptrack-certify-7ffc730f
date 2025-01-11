@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
-import { Customer } from "@/types/customer";
+import { Company } from "@/types/company";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
@@ -14,71 +14,57 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { supabase } from "@/lib/supabase";
 
-const customerSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().min(1, "Phone number is required"),
+const companySchema = z.object({
+  name: z.string().min(1, "Company name is required"),
+  website: z.string().url("Invalid website URL").or(z.string().length(0)),
+  industry: z.string().min(1, "Industry is required"),
   address: z.string().min(1, "Site address is required"),
   useSeparateBillingAddress: z.boolean().default(false),
   billingAddress: z.string().min(1, "Billing address is required").optional(),
-  company: z.string().min(1, "Company name is required"),
-  website: z.string().url("Invalid website URL").or(z.string().length(0)),
   notes: z.string(),
-  industry: z.string().min(1, "Industry is required"),
-}).refine((data) => {
-  if (data.useSeparateBillingAddress && !data.billingAddress) {
-    return false;
-  }
-  return true;
-}, {
-  message: "Billing address is required when using separate billing address",
-  path: ["billingAddress"],
 });
 
-type CustomerFormData = z.infer<typeof customerSchema>;
+type CompanyFormData = z.infer<typeof companySchema>;
 
 export const CustomerForm = () => {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const form = useForm<CustomerFormData>({
-    resolver: zodResolver(customerSchema),
+  const form = useForm<CompanyFormData>({
+    resolver: zodResolver(companySchema),
     defaultValues: {
       name: "",
-      email: "",
-      phone: "",
+      website: "",
+      industry: "",
       address: "",
       useSeparateBillingAddress: false,
       billingAddress: "",
-      company: "",
-      website: "",
       notes: "",
-      industry: "",
     },
   });
 
-  const { mutate: createCustomer, isPending } = useMutation({
-    mutationFn: async (data: CustomerFormData) => {
-      const customerData = {
+  const { mutate: createCompany, isPending } = useMutation({
+    mutationFn: async (data: CompanyFormData) => {
+      const companyData = {
         ...data,
         billingAddress: data.useSeparateBillingAddress ? data.billingAddress : data.address,
       };
       
-      const { data: customer, error } = await supabase
-        .from("customers")
-        .insert([customerData])
+      const { data: company, error } = await supabase
+        .from("companies")
+        .insert([companyData])
         .select()
         .single();
 
       if (error) throw error;
-      return customer as Customer;
+      return company as Company;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["customers"] });
+      queryClient.invalidateQueries({ queryKey: ["companies"] });
       toast({
         title: "Success",
-        description: "Customer has been created successfully",
+        description: "Company has been created successfully",
       });
       form.reset();
       setOpen(false);
@@ -86,15 +72,15 @@ export const CustomerForm = () => {
     onError: (error) => {
       toast({
         title: "Error",
-        description: "Failed to create customer. Please try again.",
+        description: "Failed to create company. Please try again.",
         variant: "destructive",
       });
-      console.error("Error creating customer:", error);
+      console.error("Error creating company:", error);
     },
   });
 
-  const onSubmit = (data: CustomerFormData) => {
-    createCustomer(data);
+  const onSubmit = (data: CompanyFormData) => {
+    createCompany(data);
   };
 
   const watchUseSeparateBillingAddress = form.watch("useSeparateBillingAddress");
@@ -104,31 +90,18 @@ export const CustomerForm = () => {
       <DialogTrigger asChild>
         <Button className="gap-2">
           <Plus className="h-4 w-4" />
-          New Customer
+          New Company
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New Customer</DialogTitle>
+          <DialogTitle>Add New Company</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Contact Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter contact name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="company"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Company Name</FormLabel>
@@ -154,32 +127,6 @@ export const CustomerForm = () => {
             />
             <FormField
               control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input type="email" placeholder="Enter email address" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter phone number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="website"
               render={({ field }) => (
                 <FormItem>
@@ -191,7 +138,6 @@ export const CustomerForm = () => {
                 </FormItem>
               )}
             />
-            
             <FormField
               control={form.control}
               name="address"
@@ -205,7 +151,6 @@ export const CustomerForm = () => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="useSeparateBillingAddress"
@@ -223,7 +168,6 @@ export const CustomerForm = () => {
                 </FormItem>
               )}
             />
-
             {watchUseSeparateBillingAddress && (
               <FormField
                 control={form.control}
@@ -239,7 +183,6 @@ export const CustomerForm = () => {
                 )}
               />
             )}
-
             <FormField
               control={form.control}
               name="notes"
@@ -257,9 +200,8 @@ export const CustomerForm = () => {
                 </FormItem>
               )}
             />
-            
             <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending ? "Creating..." : "Create Customer"}
+              {isPending ? "Creating..." : "Create Company"}
             </Button>
           </form>
         </Form>

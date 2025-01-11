@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { Customer } from "@/types/customer";
-import { ArrowRight, Mail, Phone, MapPin } from "lucide-react";
+import { Company } from "@/types/company";
+import { ArrowRight, Globe, MapPin, Building2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface CustomerListProps {
-  customers: Customer[];
+  customers: Company[];
 }
 
 export const CustomerList = ({ customers }: CustomerListProps) => {
@@ -21,40 +21,49 @@ export const CustomerList = ({ customers }: CustomerListProps) => {
 
   return (
     <div className="space-y-4">
-      {customers.map((customer) => (
+      {customers.map((company) => (
         <div
-          key={customer.id}
+          key={company.id}
           className="flex items-center justify-between p-6 rounded-xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-all duration-200"
         >
           <div className="space-y-3">
-            <h3 className="text-xl font-semibold text-gray-900">{customer.name}</h3>
+            <h3 className="text-xl font-semibold text-gray-900">{company.name}</h3>
             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
               <div className="flex items-center gap-3">
                 <div className="bg-blue-50 p-2 rounded-lg">
-                  <Mail className="h-5 w-5 text-primary" />
+                  <Building2 className="h-5 w-5 text-primary" />
                 </div>
-                <span className="text-gray-600">{customer.email}</span>
+                <span className="text-gray-600">{company.industry}</span>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="bg-blue-50 p-2 rounded-lg">
-                  <Phone className="h-5 w-5 text-primary" />
+              {company.website && (
+                <div className="flex items-center gap-3">
+                  <div className="bg-blue-50 p-2 rounded-lg">
+                    <Globe className="h-5 w-5 text-primary" />
+                  </div>
+                  <a 
+                    href={company.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-600 hover:text-primary"
+                  >
+                    {company.website}
+                  </a>
                 </div>
-                <span className="text-gray-600">{customer.phone}</span>
-              </div>
+              )}
             </div>
             <div className="flex items-center gap-3">
               <div 
                 className="bg-blue-50 p-2 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors"
-                onClick={() => openInGoogleMaps(customer.address)}
+                onClick={() => openInGoogleMaps(company.address)}
                 title="Open in Google Maps"
               >
                 <MapPin className="h-5 w-5 text-primary" />
               </div>
               <span 
                 className="text-gray-600 cursor-pointer hover:text-primary"
-                onClick={() => openInGoogleMaps(customer.address)}
+                onClick={() => openInGoogleMaps(company.address)}
               >
-                {customer.address}
+                {company.address}
               </span>
             </div>
           </div>
@@ -62,7 +71,7 @@ export const CustomerList = ({ customers }: CustomerListProps) => {
             variant="ghost"
             size="icon"
             className="rounded-full bg-primary hover:bg-primary/90 h-10 w-10 p-0"
-            onClick={() => handleCustomerClick(customer.id)}
+            onClick={() => handleCustomerClick(company.id)}
           >
             <ArrowRight className="h-4 w-4 text-primary-foreground" />
           </Button>
