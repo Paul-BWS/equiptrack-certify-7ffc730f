@@ -27,7 +27,8 @@ export const HeaderSection = ({
     return today <= retestDateObj ? "ACTIVE" : "INACTIVE";
   };
 
-  const handleDateChange = (newDate: string) => {
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newDate = e.target.value;
     onDateChange(newDate);
     
     if (newDate) {
@@ -35,7 +36,6 @@ export const HeaderSection = ({
       const newRetestDate = new Date(testDate);
       newRetestDate.setDate(testDate.getDate() + 364);
       
-      // Format the date to YYYY-MM-DD for the input
       const formattedRetestDate = newRetestDate.toISOString().split('T')[0];
       onRetestDateChange(formattedRetestDate);
     } else {
@@ -53,7 +53,7 @@ export const HeaderSection = ({
         label="Test Date"
         type="date"
         value={date || ''}
-        onChange={(e) => handleDateChange(e.target.value)}
+        onChange={handleDateChange}
         showCalendar
       />
       <FormField
