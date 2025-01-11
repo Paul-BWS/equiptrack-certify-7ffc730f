@@ -15,7 +15,7 @@ interface EquipmentListProps {
     id: string;
     name: string;
     serialNumber: string;
-    manufacturer: string;
+    customerName: string;
     model: string;
     lastServiceDate: string;
     nextServiceDue: string;
@@ -38,7 +38,7 @@ export const EquipmentList = ({
             {!isMobile && (
               <>
                 <TableHead>Serial Number</TableHead>
-                <TableHead>Manufacturer</TableHead>
+                <TableHead>Customer</TableHead>
                 <TableHead>Model</TableHead>
               </>
             )}
@@ -54,7 +54,7 @@ export const EquipmentList = ({
               {!isMobile && (
                 <>
                   <TableCell>{item.serialNumber}</TableCell>
-                  <TableCell>{item.manufacturer}</TableCell>
+                  <TableCell>{item.customerName}</TableCell>
                   <TableCell>{item.model}</TableCell>
                 </>
               )}

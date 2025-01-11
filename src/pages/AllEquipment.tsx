@@ -15,7 +15,7 @@ const sampleEquipment = [
     id: "1",
     name: "Torque Wrench XL",
     serialNumber: "TW-001",
-    manufacturer: "TorcPro",
+    customerName: "ABC Industries",
     model: "TP-100",
     lastServiceDate: "2023-06-15",
     nextServiceDue: "2024-06-15",
@@ -24,7 +24,7 @@ const sampleEquipment = [
     id: "2",
     name: "Pressure Gauge",
     serialNumber: "PG-002",
-    manufacturer: "PressureTech",
+    customerName: "XYZ Corporation",
     model: "PT-200",
     lastServiceDate: "2023-07-20",
     nextServiceDue: "2024-05-20",
@@ -37,7 +37,7 @@ const AllEquipment = () => {
   const [date, setDate] = useState<Date>();
 
   const filteredEquipment = sampleEquipment.filter((equipment) => {
-    const matchesCompany = equipment.manufacturer
+    const matchesCompany = equipment.customerName
       .toLowerCase()
       .includes(searchCompany.toLowerCase());
     const matchesType = equipment.name
