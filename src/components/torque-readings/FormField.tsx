@@ -35,10 +35,10 @@ export const FormField = ({
         onChange={onChange}
         placeholder={placeholder}
         readOnly={readOnly}
-        className={`text-sm bg-[#F9F9F9] ${className}`}
+        className={`text-sm bg-[#F9F9F9] ${showCalendar ? 'pr-10' : ''} ${className}`}
       />
       {showCalendar && (
-        <Calendar className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground" />
+        <Calendar className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground pointer-events-none" strokeWidth={2.5} />
       )}
     </div>
   </div>
