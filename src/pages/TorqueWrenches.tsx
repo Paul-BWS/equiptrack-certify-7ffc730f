@@ -41,26 +41,24 @@ const TorqueWrenches = () => {
       
       <main className="container mx-auto py-8 px-4">
         <div className="mb-8">
-          <Button
-            variant="outline"
-            className="mb-4"
-            onClick={() => navigate(-1)}
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Equipment
-          </Button>
-          
-          <div className="flex justify-between items-center mb-6">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground mb-2">
-                Torque Wrenches
-              </h1>
-            </div>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+            <Button
+              variant="outline"
+              onClick={() => navigate(-1)}
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Equipment
+            </Button>
+            
             <Button onClick={() => setShowReadingsModal(true)}>
               <Plus className="mr-2 h-4 w-4" />
               Add Torque
             </Button>
           </div>
+          
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            Torque Wrenches
+          </h1>
         </div>
 
         <EquipmentList 
