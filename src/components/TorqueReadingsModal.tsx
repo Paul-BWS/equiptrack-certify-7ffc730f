@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { CertificateModal } from "./CertificateModal";
 import { LoadingState } from "./torque-readings/LoadingState";
@@ -7,7 +6,7 @@ import { useEquipmentData } from "@/hooks/useEquipmentData";
 import { useTorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
 import { useTorqueWrenchSubmit } from "@/hooks/useTorqueWrenchSubmit";
 import { validateForm } from "@/utils/torqueReadingsValidation";
-import { TorqueWrench } from "@/types/equipment";
+import { TorqueWrench, ServiceRecord } from "@/types/equipment";
 import { prepareCertificateData } from "@/utils/certificateDataPreparation";
 
 interface TorqueReadingsModalProps {
@@ -61,6 +60,16 @@ export const TorqueReadingsModal = ({
     definitive_readings: readings.definitiveReadings,
     cert_number: readings.certNumber,
     status: readings.status
+  };
+
+  const defaultServiceRecord: ServiceRecord = {
+    id: "",
+    torque_wrench_id: equipmentId || "",
+    service_date: readings.date,
+    service_type: "Calibration",
+    technician: readings.engineer,
+    notes: readings.notes || "",
+    next_service_date: readings.retestDate
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -117,7 +126,7 @@ export const TorqueReadingsModal = ({
         onOpenChange={setShowCertificate}
         certificate={prepareCertificateData(readings, equipmentId)}
         equipment={torqueWrenchData}
-        serviceRecord={null}
+        serviceRecord={defaultServiceRecord}
       />
     </>
   );
