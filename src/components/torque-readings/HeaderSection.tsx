@@ -19,7 +19,6 @@ export const HeaderSection = ({
 }: HeaderSectionProps) => {
   const isMobile = useIsMobile();
   
-  // Calculate status based on retest date
   const calculateStatus = () => {
     if (!retestDate) return "ACTIVE";
     const today = new Date();
@@ -52,7 +51,7 @@ export const HeaderSection = ({
         id="date"
         label="Test Date"
         type="date"
-        value={date || ''}
+        value={date}
         onChange={handleDateChange}
         showCalendar
       />
@@ -67,7 +66,7 @@ export const HeaderSection = ({
         id="retestDate"
         label="Retest Date"
         type="date"
-        value={retestDate || ''}
+        value={retestDate}
         onChange={(e) => onRetestDateChange(e.target.value)}
         showCalendar
       />
