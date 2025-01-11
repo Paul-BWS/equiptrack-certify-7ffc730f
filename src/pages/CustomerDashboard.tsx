@@ -2,11 +2,12 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Grid, Mail, Phone, ArrowRight } from "lucide-react";
+import { Users, Grid, Mail, Phone, ArrowRight, Globe, Building2, Factory } from "lucide-react";
 import { Customer } from "@/types/customer";
 import { Equipment } from "@/types/equipment";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { CustomerEditForm } from "@/components/CustomerEditForm";
 
 const sampleUpcomingService: Equipment[] = [
   {
@@ -102,32 +103,83 @@ const CustomerDashboard = () => {
         </div>
 
         <div className="space-y-6">
-          {/* Customer Details Card */}
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-2xl font-bold">
                 {customer.name}
               </CardTitle>
+              <CustomerEditForm customer={customer} />
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <h3 className="text-xs text-[#B3B3B3] mb-1">Email</h3>
-                  <p className="text-sm">{customer.email}</p>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-xs text-[#B3B3B3] mb-1 flex items-center gap-2">
+                      <Building2 className="h-4 w-4" />
+                      Company
+                    </h3>
+                    <p className="text-sm">{customer.company}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-xs text-[#B3B3B3] mb-1 flex items-center gap-2">
+                      <Factory className="h-4 w-4" />
+                      Industry
+                    </h3>
+                    <p className="text-sm">{customer.industry}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-xs text-[#B3B3B3] mb-1 flex items-center gap-2">
+                      <Mail className="h-4 w-4" />
+                      Email
+                    </h3>
+                    <p className="text-sm">{customer.email}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-xs text-[#B3B3B3] mb-1 flex items-center gap-2">
+                      <Phone className="h-4 w-4" />
+                      Phone
+                    </h3>
+                    <p className="text-sm">{customer.phone}</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xs text-[#B3B3B3] mb-1">Phone</h3>
-                  <p className="text-sm">{customer.phone}</p>
-                </div>
-                <div className="md:col-span-2">
-                  <h3 className="text-xs text-[#B3B3B3] mb-1">Address</h3>
-                  <p className="text-sm">{customer.address}</p>
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-xs text-[#B3B3B3] mb-1">Site Address</h3>
+                    <p className="text-sm">{customer.address}</p>
+                  </div>
+                  {customer.useSeparateBillingAddress && (
+                    <div>
+                      <h3 className="text-xs text-[#B3B3B3] mb-1">Billing Address</h3>
+                      <p className="text-sm">{customer.billingAddress}</p>
+                    </div>
+                  )}
+                  {customer.website && (
+                    <div>
+                      <h3 className="text-xs text-[#B3B3B3] mb-1 flex items-center gap-2">
+                        <Globe className="h-4 w-4" />
+                        Website
+                      </h3>
+                      <a 
+                        href={customer.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-primary hover:underline"
+                      >
+                        {customer.website}
+                      </a>
+                    </div>
+                  )}
+                  {customer.notes && (
+                    <div>
+                      <h3 className="text-xs text-[#B3B3B3] mb-1">Notes</h3>
+                      <p className="text-sm whitespace-pre-wrap">{customer.notes}</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Upcoming Service Card */}
           <Card>
             <CardHeader>
               <CardTitle className="text-2xl font-bold">
