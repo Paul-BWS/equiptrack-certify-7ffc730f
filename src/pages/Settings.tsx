@@ -5,9 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getOrganizationSettings, updateOrganizationSettings } from "@/utils/settings";
+import { X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function Settings() {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [settings, setSettings] = useState(getOrganizationSettings());
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +45,17 @@ export default function Settings() {
 
   return (
     <div className="container mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-6">Organization Settings</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Organization Settings</h1>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate('/')}
+          className="hover:bg-gray-100"
+        >
+          <X className="h-6 w-6" />
+        </Button>
+      </div>
       
       <div className="grid gap-6">
         <Card>
