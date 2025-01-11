@@ -19,6 +19,7 @@ const sampleUpcomingService = [
     purchase_date: "2023-01-15",
     last_service_date: "2023-06-15",
     next_service_due: "2024-06-15",
+    company_id: "56cb3b5c-2bf0-4118-964a-bc30319614e2"
   },
   {
     id: "2",
@@ -29,6 +30,7 @@ const sampleUpcomingService = [
     purchase_date: "2023-02-20",
     last_service_date: "2023-07-20",
     next_service_due: "2024-05-20",
+    company_id: "56cb3b5c-2bf0-4118-964a-bc30319614e2"
   },
 ];
 
