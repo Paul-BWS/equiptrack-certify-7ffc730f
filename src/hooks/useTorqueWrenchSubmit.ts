@@ -21,7 +21,6 @@ export const useTorqueWrenchSubmit = (
       return;
     }
 
-    // Check authentication status first
     const { data: { session }, error: authError } = await supabase.auth.getSession();
     
     if (authError) {
@@ -43,19 +42,23 @@ export const useTorqueWrenchSubmit = (
     try {
       console.log('Saving torque wrench with data:', torqueWrenchData);
       
+      const now = new Date().toISOString();
       const dataToSave = {
         ...torqueWrenchData,
         readings: JSON.stringify(torqueWrenchData.readings),
-        definitive_readings: JSON.stringify(torqueWrenchData.definitive_readings)
+        definitive_readings: JSON.stringify(torqueWrenchData.definitive_readings),
+        updated_at: now,
+        created_at: equipmentId ? undefined : now // Only set created_at for new records
       };
 
       let result;
       
       if (equipmentId) {
         console.log('Updating existing torque wrench:', equipmentId);
+        const { created_at, ...updateData } = dataToSave; // Remove created_at from update
         result = await supabase
           .from('torque_wrench')
-          .update(dataToSave)
+          .update(updateData)
           .eq('id', equipmentId)
           .select()
           .single();
