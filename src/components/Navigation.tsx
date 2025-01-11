@@ -1,18 +1,32 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ClipboardList, Settings, LayoutDashboard, Menu, Users } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
 
 export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+  const path = location.pathname;
+
+  // Function to get the current section name
+  const getCurrentSection = () => {
+    if (path.includes('torque-wrenches')) return 'Torque Wrenches';
+    if (path.includes('equipment')) return 'Equipment';
+    if (path.includes('settings')) return 'Settings';
+    return 'Dashboard';
+  };
 
   return (
     <nav className="bg-primary p-4">
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
-          <Link to="/" className="text-white text-xl font-bold">
-            EquipService
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link to="/" className="text-white text-xl font-bold">
+              EquipService
+            </Link>
+            <span className="text-white/80 hidden md:inline">|</span>
+            <span className="text-white hidden md:inline">{getCurrentSection()}</span>
+          </div>
           
           {/* Mobile burger menu */}
           <Button

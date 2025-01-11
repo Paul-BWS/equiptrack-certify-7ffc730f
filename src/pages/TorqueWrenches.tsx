@@ -88,8 +88,8 @@ const TorqueWrenches = () => {
       <main className="container mx-auto py-8">
         <div className="space-y-6">
           <div className="flex flex-col gap-4">
-            <div className="flex flex-row justify-between items-center">
-              <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
                 <Button
                   variant="outline"
                   size="icon"
@@ -98,22 +98,22 @@ const TorqueWrenches = () => {
                 >
                   <Grid className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
                 </Button>
-                {customerData && (
-                  <h1 className="text-3xl font-bold">
-                    {customerData.name}
-                  </h1>
-                )}
-                <h2 className="text-xl font-semibold">Torque Wrenches</h2>
+                <Button 
+                  size="icon"
+                  onClick={() => setShowReadingsModal(true)}
+                  className="rounded-full bg-primary hover:bg-primary/90"
+                >
+                  <Plus className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
+                </Button>
               </div>
-              
-              <Button 
-                size="icon"
-                onClick={() => setShowReadingsModal(true)}
-                className="rounded-full bg-primary hover:bg-primary/90"
-              >
-                <Plus className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
-              </Button>
             </div>
+            {customerData && (
+              <div className="flex flex-col gap-1">
+                <h1 className="text-3xl font-bold">
+                  {customerData.name}
+                </h1>
+              </div>
+            )}
           </div>
           
           <EquipmentList
