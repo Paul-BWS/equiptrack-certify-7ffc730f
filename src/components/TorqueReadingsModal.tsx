@@ -62,19 +62,33 @@ export const TorqueReadingsModal = ({
     queryFn: async () => {
       if (!equipmentId) return null;
       
-      const { data, error } = await supabase
-        .from('equipment')
-        .select('*')
-        .eq('id', equipmentId)
-        .single();
+      // Fetch both equipment and its latest service record
+      const [equipmentResult, serviceResult] = await Promise.all([
+        supabase
+          .from('equipment')
+          .select('*')
+          .eq('id', equipmentId)
+          .single(),
+        supabase
+          .from('service_records')
+          .select('*')
+          .eq('equipment_id', equipmentId)
+          .order('service_date', { ascending: false })
+          .limit(1)
+          .single()
+      ]);
 
-      if (error) {
-        console.error('Error fetching equipment:', error);
+      if (equipmentResult.error) {
+        console.error('Error fetching equipment:', equipmentResult.error);
         toast.error("Failed to load equipment data");
-        throw error;
+        throw equipmentResult.error;
       }
 
-      return data;
+      // Return combined data
+      return {
+        ...equipmentResult.data,
+        lastService: serviceResult.data
+      };
     },
     enabled: !!equipmentId && open,
   });
@@ -98,6 +112,16 @@ export const TorqueReadingsModal = ({
         ...prev,
         model: equipmentData.model || '',
         serialNumber: equipmentData.serial_number || '',
+        date: new Date().toISOString().split('T')[0], // Today's date
+        min: equipmentData.min_torque?.toString() || '',
+        max: equipmentData.max_torque?.toString() || '',
+        units: equipmentData.units || 'nm',
+        // If there's last service data, use its readings
+        ...(equipmentData.lastService && {
+          readings: equipmentData.lastService.readings || prev.readings,
+          definitiveReadings: equipmentData.lastService.definitive_readings || prev.definitiveReadings,
+          notes: equipmentData.lastService.notes || '',
+        })
       }));
     }
   }, [equipmentData]);
