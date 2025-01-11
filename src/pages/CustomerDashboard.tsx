@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Grid, Mail, Phone, Eye } from "lucide-react";
+import { Users, Grid, Mail, Phone, ArrowRight } from "lucide-react";
 import { Customer } from "@/types/customer";
 import { Equipment } from "@/types/equipment";
 
@@ -112,14 +112,14 @@ const CustomerDashboard = () => {
                       </p>
                     </div>
                     <Button
-                      variant="outline"
-                      size="sm"
-                      className="bg-primary hover:bg-primary/90"
+                      variant="ghost"
+                      size="icon"
+                      className="rounded-full bg-primary hover:bg-primary/90 h-10 w-10 p-0"
                       onClick={() =>
                         navigate(`/customers/${customerId}/equipment`)
                       }
                     >
-                      <Grid className="h-4 w-4 text-primary-foreground" />
+                      <ArrowRight className="h-4 w-4 text-primary-foreground" />
                     </Button>
                   </div>
                 ))}
