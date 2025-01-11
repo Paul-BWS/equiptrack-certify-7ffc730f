@@ -1,12 +1,21 @@
 import { toast } from "sonner";
 import { TorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
+import { Reading } from "@/types/equipment";
 
-export const validateReadings = (readings: Array<{ target: string; actual: string }>) => {
+export const validateReadings = (readings: Array<Reading>) => {
   if (!Array.isArray(readings)) {
     console.error('Readings is not an array:', readings);
     return false;
   }
-  return readings.every(reading => reading.target && reading.actual);
+
+  // Check if all readings have both target and actual values filled
+  const hasEmptyValues = readings.some(reading => {
+    const target = reading.target?.trim() || '';
+    const actual = reading.actual?.trim() || '';
+    return target === '' || actual === '';
+  });
+
+  return !hasEmptyValues;
 };
 
 export const validateForm = (formData: TorqueReadingsForm): boolean => {
