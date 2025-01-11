@@ -22,21 +22,26 @@ export const ReadingsHandler = ({
     const newReadings = [...readings.readings];
     newReadings[index] = { ...newReadings[index], [field]: value };
 
+    // Calculate deviation when either target or actual changes
     if (field === 'target' || field === 'actual') {
       const target = field === 'target' ? value : newReadings[index].target;
       const actual = field === 'actual' ? value : newReadings[index].actual;
-      newReadings[index].deviation = calculateDeviation(target, actual);
+      
+      if (target && actual) {
+        newReadings[index].deviation = calculateDeviation(target, actual);
+      }
     }
 
-    // Copy the updated readings to definitiveReadings
+    // Update definitive readings to match the new readings
     const newDefinitiveReadings = newReadings.map(reading => ({
       target: reading.target,
       actual: reading.actual,
       deviation: reading.deviation
     }));
 
-    setReadings({ 
-      ...readings, 
+    // Update both readings and definitiveReadings
+    setReadings({
+      ...readings,
       readings: newReadings,
       definitiveReadings: newDefinitiveReadings
     });

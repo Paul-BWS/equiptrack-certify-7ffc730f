@@ -19,19 +19,17 @@ export const ReadingsSection = ({
   onChange,
   readOnly,
 }: ReadingsSectionProps) => {
-  console.log('ReadingsSection received readings:', readings);
-  
-  // Ensure readings is always an array
+  // Ensure readings is always an array with at least 3 items
   const readingsArray = Array.isArray(readings) ? readings : [];
-  
-  if (readingsArray.length === 0) {
-    console.warn(`ReadingsSection: No readings provided for ${title}`);
+  const paddedReadings = [...readingsArray];
+  while (paddedReadings.length < 3) {
+    paddedReadings.push({ target: "", actual: "", deviation: "" });
   }
 
   return (
     <div>
       <h3 className="font-semibold mb-4">{title}</h3>
-      {readingsArray.map((reading, index) => (
+      {paddedReadings.map((reading, index) => (
         <div key={`${title}-${index}`} className="grid grid-cols-3 gap-2 mb-2">
           <Input
             value={reading.target}
@@ -49,10 +47,9 @@ export const ReadingsSection = ({
           />
           <Input
             value={reading.deviation}
-            onChange={onChange ? (e) => onChange(index, "deviation", e.target.value) : undefined}
             placeholder="Deviation"
             className="text-sm bg-[#F9F9F9] placeholder:text-[#CCCCCC]"
-            readOnly={readOnly}
+            readOnly
           />
         </div>
       ))}
