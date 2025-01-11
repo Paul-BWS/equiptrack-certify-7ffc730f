@@ -10,6 +10,11 @@ interface CustomerListProps {
 export const CustomerList = ({ customers }: CustomerListProps) => {
   const navigate = useNavigate();
 
+  const openInGoogleMaps = (address: string) => {
+    const encodedAddress = encodeURIComponent(address);
+    window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
+  };
+
   return (
     <div className="space-y-4">
       {customers.map((customer) => (
@@ -34,10 +39,19 @@ export const CustomerList = ({ customers }: CustomerListProps) => {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="bg-blue-50 p-2 rounded-lg">
+              <div 
+                className="bg-blue-50 p-2 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors"
+                onClick={() => openInGoogleMaps(customer.address)}
+                title="Open in Google Maps"
+              >
                 <MapPin className="h-5 w-5 text-primary" />
               </div>
-              <span className="text-gray-600">{customer.address}</span>
+              <span 
+                className="text-gray-600 cursor-pointer hover:text-primary"
+                onClick={() => openInGoogleMaps(customer.address)}
+              >
+                {customer.address}
+              </span>
             </div>
           </div>
           <Button
