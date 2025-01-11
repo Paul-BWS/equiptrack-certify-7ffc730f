@@ -1,6 +1,5 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Calendar } from "lucide-react";
 
 interface FormFieldProps {
   id: string;
@@ -23,7 +22,6 @@ export const FormField = ({
   type = "text",
   readOnly,
   className,
-  showCalendar,
 }: FormFieldProps) => (
   <div className="space-y-2">
     <Label htmlFor={id} className="text-[#C8C8C9] text-sm">{label}</Label>
@@ -37,17 +35,6 @@ export const FormField = ({
         readOnly={readOnly}
         className={`text-sm bg-[#F9F9F9] ${className}`}
       />
-      {showCalendar && (
-        <div 
-          className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
-          onClick={() => {
-            const input = document.getElementById(id) as HTMLInputElement;
-            if (input) input.showPicker();
-          }}
-        >
-          <Calendar className="h-4 w-4 text-muted-foreground" strokeWidth={2.5} />
-        </div>
-      )}
     </div>
   </div>
 );
