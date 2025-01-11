@@ -1,8 +1,6 @@
-import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { CertificateModal } from "./CertificateModal";
 import { LoadingState } from "./torque-readings/LoadingState";
-import { TorqueReadingsContent } from "./torque-readings/TorqueReadingsContent";
+import { ReadingsHandler } from "./torque-readings/ReadingsHandler";
 import { useEquipmentData } from "@/hooks/useEquipmentData";
 import { useTorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
 import { useTorqueWrenchSubmit } from "@/hooks/useTorqueWrenchSubmit";
@@ -10,21 +8,14 @@ import { validateForm } from "@/utils/torqueReadingsValidation";
 import { TorqueWrench, ServiceRecord } from "@/types/equipment";
 import { prepareCertificateData } from "@/utils/certificateDataPreparation";
 import { toast } from "sonner";
+import { CertificateModal } from "./CertificateModal";
+import { useState } from "react";
 
 interface TorqueReadingsModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   equipmentId: string | null;
 }
-
-const calculateDeviation = (target: string, actual: string): string => {
-  if (!target || !actual) return "";
-  const targetNum = parseFloat(target);
-  const actualNum = parseFloat(actual);
-  if (isNaN(targetNum) || isNaN(actualNum) || targetNum === 0) return "";
-  const deviation = ((actualNum - targetNum) / targetNum) * 100;
-  return deviation.toFixed(2);
-};
 
 export const TorqueReadingsModal = ({
   open,
@@ -93,30 +84,6 @@ export const TorqueReadingsModal = ({
     setShowCertificate(true);
   };
 
-  const handleReadingChange = (index: number, field: string, value: string) => {
-    const newReadings = [...readings.readings];
-    newReadings[index] = { ...newReadings[index], [field]: value };
-
-    if (field === 'target' || field === 'actual') {
-      const target = field === 'target' ? value : newReadings[index].target;
-      const actual = field === 'actual' ? value : newReadings[index].actual;
-      newReadings[index].deviation = calculateDeviation(target, actual);
-    }
-
-    // Copy the updated readings to definitiveReadings
-    const newDefinitiveReadings = newReadings.map(reading => ({
-      target: reading.target,
-      actual: reading.actual,
-      deviation: reading.deviation
-    }));
-
-    setReadings({ 
-      ...readings, 
-      readings: newReadings,
-      definitiveReadings: newDefinitiveReadings
-    });
-  };
-
   const handleSave = async () => {
     if (!validateForm(readings)) {
       return;
@@ -138,13 +105,12 @@ export const TorqueReadingsModal = ({
             <DialogTitle>Torque Wrench Readings</DialogTitle>
           </DialogHeader>
 
-          <TorqueReadingsContent
+          <ReadingsHandler
             readings={readings}
             setReadings={setReadings}
             handleSubmit={handleSubmit}
             handleSave={handleSave}
             isSaving={isSaving}
-            handleReadingChange={handleReadingChange}
           />
         </DialogContent>
       </Dialog>
