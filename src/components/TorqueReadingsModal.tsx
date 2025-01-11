@@ -98,7 +98,7 @@ export const TorqueReadingsModal = ({
     id: `sr-${readings.certNumber}`,
     equipmentId: equipmentId || 'unknown',
     date: readings.date,
-    type: 'calibration',
+    type: 'calibration' as const, // Explicitly type as 'calibration'
     technician: readings.engineer,
     notes: readings.notes,
     nextDueDate: readings.retestDate
