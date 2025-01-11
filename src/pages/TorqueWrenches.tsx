@@ -40,25 +40,42 @@ const TorqueWrenches = () => {
     queryKey: ['equipment', customerId],
     queryFn: async () => {
       console.log('Fetching equipment for customer:', customerId);
-      const { data, error } = await supabase
+      
+      // First get equipment
+      const { data: equipmentData, error: equipmentError } = await supabase
         .from('equipment')
-        .select('*')
-        .eq('company_id', customerId);
+        .select(`
+          id,
+          model,
+          serial_number,
+          service_records (
+            service_date,
+            retest_date
+          )
+        `)
+        .eq('company_id', customerId)
+        .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('Error fetching equipment:', error);
+      if (equipmentError) {
+        console.error('Error fetching equipment:', equipmentError);
         toast.error("Failed to load equipment data");
-        throw error;
+        throw equipmentError;
       }
 
-      console.log('Fetched equipment:', data);
-      return data.map(item => ({
-        id: item.id,
-        model: item.model || '',
-        serialNumber: item.serial_number || '',
-        lastServiceDate: item.last_service_date || '',
-        nextServiceDue: item.next_service_due || ''
-      }));
+      console.log('Fetched equipment:', equipmentData);
+      
+      return equipmentData.map(item => {
+        // Get the most recent service record
+        const latestService = item.service_records?.[0] || {};
+        
+        return {
+          id: item.id,
+          model: item.model || '',
+          serialNumber: item.serial_number || '',
+          lastServiceDate: latestService.service_date || '',
+          nextServiceDue: latestService.retest_date || ''
+        };
+      });
     },
     meta: {
       onError: (error: Error) => {
