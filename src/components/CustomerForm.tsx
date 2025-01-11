@@ -50,8 +50,10 @@ export const CustomerForm = () => {
     },
   });
 
-  const onSubmit = async (data: CompanyFormData) => {
-    createCompany(data);
+  const onSubmit = (data: CompanyFormData) => {
+    if (!isPending) {
+      createCompany(data);
+    }
   };
 
   return (
