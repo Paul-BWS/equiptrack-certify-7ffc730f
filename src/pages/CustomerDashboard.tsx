@@ -56,13 +56,14 @@ const CustomerDashboard = () => {
       
       return data[0] as Company;
     },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: "Could not load company details. Please try again later.",
-        variant: "destructive",
-      });
-      console.error('Error fetching company:', error);
+    meta: {
+      onError: () => {
+        toast({
+          title: "Error",
+          description: "Could not load company details. Please try again later.",
+          variant: "destructive",
+        });
+      }
     }
   });
 
@@ -79,13 +80,14 @@ const CustomerDashboard = () => {
       return data as Contact[];
     },
     enabled: !!company,
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: "Could not load contacts. Please try again later.",
-        variant: "destructive",
-      });
-      console.error('Error fetching contacts:', error);
+    meta: {
+      onError: () => {
+        toast({
+          title: "Error",
+          description: "Could not load contacts. Please try again later.",
+          variant: "destructive",
+        });
+      }
     }
   });
 
