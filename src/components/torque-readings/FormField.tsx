@@ -29,12 +29,12 @@ export const FormField = ({
     <div className="relative">
       <Input
         id={id}
-        type={type}
+        type={showCalendar ? "date" : type}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
         readOnly={readOnly}
-        className={`text-sm bg-[#F9F9F9] ${className}`}
+        className={`text-sm bg-[#F9F9F9] w-40 ${className}`}
       />
     </div>
   </div>
