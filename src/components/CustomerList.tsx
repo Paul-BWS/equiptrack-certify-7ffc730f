@@ -21,11 +21,23 @@ export const CustomerList = ({ customers }: CustomerListProps) => {
             <h3 className="font-medium">{customer.name}</h3>
             <div className="flex items-center space-x-4">
               <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-primary" />
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8 bg-primary hover:bg-primary/90"
+                >
+                  <Mail className="h-4 w-4 text-primary-foreground" />
+                </Button>
                 <span className="text-sm text-muted-foreground">{customer.email}</span>
               </div>
               <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-primary" />
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8 bg-primary hover:bg-primary/90"
+                >
+                  <Phone className="h-4 w-4 text-primary-foreground" />
+                </Button>
                 <span className="text-sm text-muted-foreground">{customer.phone}</span>
               </div>
             </div>
@@ -33,9 +45,10 @@ export const CustomerList = ({ customers }: CustomerListProps) => {
           <Button
             variant="outline"
             size="icon"
+            className="bg-primary hover:bg-primary/90"
             onClick={() => navigate(`/customers/${customer.id}`)}
           >
-            <Eye className="h-4 w-4 text-primary" />
+            <Eye className="h-4 w-4 text-primary-foreground" />
           </Button>
         </div>
       ))}

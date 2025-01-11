@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, ArrowRight } from "lucide-react";
+import { Users, ArrowRight, Mail, Phone, Eye } from "lucide-react";
 import { Customer } from "@/types/customer";
 import { Equipment } from "@/types/equipment";
 
@@ -49,10 +49,10 @@ const CustomerDashboard = () => {
         <Button
           variant="outline"
           size="icon"
-          className="mb-6"
+          className="mb-6 bg-primary hover:bg-primary/90"
           onClick={() => navigate('/')}
         >
-          <Users className="h-4 w-4 text-primary" />
+          <Users className="h-4 w-4 text-primary-foreground" />
         </Button>
 
         <div className="space-y-6">
@@ -81,7 +81,7 @@ const CustomerDashboard = () => {
               <div className="pt-4">
                 <Button
                   onClick={() => navigate(`/customers/${customerId}/equipment`)}
-                  className="w-full md:w-auto"
+                  className="w-full md:w-auto bg-primary hover:bg-primary/90"
                 >
                   View All Equipment
                   <ArrowRight className="ml-2 h-4 w-4 text-primary-foreground" />
@@ -113,11 +113,12 @@ const CustomerDashboard = () => {
                     <Button
                       variant="outline"
                       size="sm"
+                      className="bg-primary hover:bg-primary/90"
                       onClick={() =>
                         navigate(`/customers/${customerId}/equipment`)
                       }
                     >
-                      <ArrowRight className="h-4 w-4" />
+                      <ArrowRight className="h-4 w-4 text-primary-foreground" />
                     </Button>
                   </div>
                 ))}
