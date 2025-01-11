@@ -31,23 +31,26 @@ const Index = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50">
       <Navigation />
       
-      <main className="container mx-auto py-8">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">
-              Customers
-            </h1>
+      <main className="container mx-auto py-8 px-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                Customers
+              </h1>
+              <p className="text-gray-500">Manage your customer relationships</p>
+            </div>
           </div>
-        </div>
 
-        <div className="mb-6">
-          <CustomerSearch onSearch={setSearchQuery} />
-        </div>
+          <div className="mb-8">
+            <CustomerSearch onSearch={setSearchQuery} />
+          </div>
 
-        <CustomerList customers={filteredCustomers} />
+          <CustomerList customers={filteredCustomers} />
+        </div>
       </main>
     </div>
   );
