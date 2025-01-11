@@ -49,7 +49,6 @@ export const EquipmentList = ({
                   className="hover:bg-transparent p-0"
                 >
                   <Pen className="h-5 w-5 text-[#1D4ED8]" strokeWidth={2.5} />
-                  {!isMobile && <span className="ml-2">Edit</span>}
                 </Button>
               </TableCell>
             </TableRow>

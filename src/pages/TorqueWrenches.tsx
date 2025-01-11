@@ -45,15 +45,13 @@ const TorqueWrenches = () => {
               className="gap-2"
             >
               <Grid className="h-5 w-5 text-[#1D4ED8]" strokeWidth={2.5} />
-              {!isMobile && "Back to Equipment"}
             </Button>
             
             <Button 
               onClick={() => setShowReadingsModal(true)}
-              className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90 gap-2"
+              className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90"
             >
               <Plus className="h-5 w-5" strokeWidth={2.5} />
-              {!isMobile && "Add Torque"}
             </Button>
           </div>
           
