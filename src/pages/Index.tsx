@@ -23,12 +23,18 @@ const sampleCustomers: Customer[] = [
 ];
 
 const Index = () => {
+  console.log("Index component rendering");
   const [customers, setCustomers] = useState<Customer[]>(sampleCustomers);
   const [searchQuery, setSearchQuery] = useState("");
+
+  console.log("Current customers:", customers);
+  console.log("Current search query:", searchQuery);
 
   const filteredCustomers = customers.filter((customer) =>
     customer.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  console.log("Filtered customers:", filteredCustomers);
 
   return (
     <div className="min-h-screen bg-gray-50">
