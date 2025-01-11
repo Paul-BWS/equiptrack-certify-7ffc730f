@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Pen } from "lucide-react";
+import { CircleArrowRight } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface EquipmentListProps {
@@ -48,7 +48,7 @@ export const EquipmentList = ({
                   onClick={() => onGenerateCertificate(item.id)}
                   className="hover:bg-transparent p-0"
                 >
-                  <Pen className="h-5 w-5 text-[#1D4ED8]" strokeWidth={2.5} />
+                  <CircleArrowRight className="h-5 w-5 text-[#1D4ED8]" strokeWidth={2.5} />
                 </Button>
               </TableCell>
             </TableRow>

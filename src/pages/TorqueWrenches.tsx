@@ -2,13 +2,14 @@ import { useState } from "react";
 import { Navigation } from "@/components/Navigation";
 import { EquipmentList } from "@/components/EquipmentList";
 import { Button } from "@/components/ui/button";
-import { Plus, Grid } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { CirclePlus, CircleArrowLeft } from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
 import { TorqueReadingsModal } from "@/components/TorqueReadingsModal";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const TorqueWrenches = () => {
   const navigate = useNavigate();
+  const { customerId } = useParams();
   const isMobile = useIsMobile();
   const [showReadingsModal, setShowReadingsModal] = useState(false);
   const [selectedEquipmentId, setSelectedEquipmentId] = useState<string | null>(null);
@@ -41,17 +42,17 @@ const TorqueWrenches = () => {
           <div className="flex flex-row justify-between items-center gap-4 mb-6">
             <Button
               variant="outline"
-              onClick={() => navigate(-1)}
+              onClick={() => navigate(`/customers/${customerId}/equipment`)}
               className="gap-2"
             >
-              <Grid className="h-5 w-5 text-[#1D4ED8]" strokeWidth={2.5} />
+              <CircleArrowLeft className="h-5 w-5 text-[#1D4ED8]" strokeWidth={2.5} />
             </Button>
             
             <Button 
               onClick={() => setShowReadingsModal(true)}
               className="bg-[#1D4ED8] hover:bg-[#1D4ED8]/90"
             >
-              <Plus className="h-5 w-5" strokeWidth={2.5} />
+              <CirclePlus className="h-5 w-5" strokeWidth={2.5} />
             </Button>
           </div>
           
