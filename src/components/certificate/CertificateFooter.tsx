@@ -10,15 +10,20 @@ export const CertificateFooter = ({ serviceRecord }: CertificateFooterProps) => 
   
   return (
     <>
-      <div className="mt-6 flex justify-end items-center gap-4 border-t pt-4">
-        <img 
-          src={settings.digitalSignature} 
-          alt="Digital Signature" 
-          className="h-12 w-auto"
-        />
-        <div className="text-right">
-          <p className="text-xs font-medium">Paul Jones</p>
-          <p className="text-xs text-gray-600">Authorized Signatory</p>
+      <div className="mt-6 flex justify-between items-center gap-4 border-t pt-4">
+        <div className="text-left">
+          <p className="text-xs text-gray-600">{settings.address}</p>
+        </div>
+        <div className="flex items-center gap-4">
+          <img 
+            src={settings.digitalSignature} 
+            alt="Digital Signature" 
+            className="h-12 w-auto"
+          />
+          <div className="text-right">
+            <p className="text-xs font-medium">Paul Jones</p>
+            <p className="text-xs text-gray-600">Authorized Signatory</p>
+          </div>
         </div>
       </div>
 
