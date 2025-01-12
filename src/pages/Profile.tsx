@@ -14,6 +14,7 @@ import { ProfileForm } from "@/components/profile/ProfileForm";
 
 const Profile = () => {
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [companies, setCompanies] = useState<Company[]>([]);
   const [selectedCompany, setSelectedCompany] = useState("");
 
@@ -25,6 +26,7 @@ const Profile = () => {
         if (!session?.user) return;
 
         setEmail(session.user.email || "");
+        setName(session.user.user_metadata?.name || "");
 
         const { data: userCompanies, error: companiesError } = await supabase
           .from("companies")
@@ -64,6 +66,13 @@ const Profile = () => {
         toast.error("No active session found");
         return;
       }
+
+      // Update user metadata with name
+      const { error: updateError } = await supabase.auth.updateUser({
+        data: { name }
+      });
+
+      if (updateError) throw updateError;
 
       const { error: deleteError } = await supabase
         .from("user_companies")
@@ -105,6 +114,8 @@ const Profile = () => {
             <CardContent>
               <ProfileForm
                 email={email}
+                name={name}
+                onNameChange={setName}
                 companies={companies}
                 selectedCompany={selectedCompany}
                 onCompanyChange={setSelectedCompany}

@@ -6,6 +6,8 @@ import { Company } from "@/types/company";
 
 interface ProfileFormProps {
   email: string;
+  name: string;
+  onNameChange: (value: string) => void;
   companies: Company[];
   selectedCompany: string;
   onCompanyChange: (value: string) => void;
@@ -14,6 +16,8 @@ interface ProfileFormProps {
 
 export const ProfileForm = ({
   email,
+  name,
+  onNameChange,
   companies,
   selectedCompany,
   onCompanyChange,
@@ -21,6 +25,16 @@ export const ProfileForm = ({
 }: ProfileFormProps) => {
   return (
     <div className="space-y-6">
+      <div className="space-y-2">
+        <Label htmlFor="name">Name</Label>
+        <Input
+          type="text"
+          id="name"
+          value={name}
+          onChange={(e) => onNameChange(e.target.value)}
+          placeholder="Enter your name"
+        />
+      </div>
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
         <Input
