@@ -11,6 +11,7 @@ import { FormActions } from "./torque-readings/form-sections/FormActions";
 import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
 import { useTorqueWrenchSubmit } from "@/hooks/useTorqueWrenchSubmit";
 import { validateForm } from "@/utils/torqueReadingsValidation";
+import { supabase } from "@/lib/supabase";
 
 interface TorqueReadingsModalProps {
   open: boolean;
@@ -46,6 +47,34 @@ export const TorqueReadingsModal = ({
   if (isLoading) {
     return <LoadingState open={open} onOpenChange={onOpenChange} />;
   }
+
+  const handleDelete = async () => {
+    if (!equipmentId) return;
+
+    try {
+      // First delete associated certificates
+      const { error: certError } = await supabase
+        .from('certificates')
+        .delete()
+        .eq('torque_wrench_id', equipmentId);
+
+      if (certError) throw certError;
+
+      // Then delete the torque wrench
+      const { error: deleteError } = await supabase
+        .from('torque_wrench')
+        .delete()
+        .eq('id', equipmentId);
+
+      if (deleteError) throw deleteError;
+
+      toast.success("Torque wrench deleted successfully");
+      onOpenChange(false);
+    } catch (error) {
+      console.error('Error deleting torque wrench:', error);
+      toast.error("Failed to delete torque wrench");
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -119,8 +148,10 @@ export const TorqueReadingsModal = ({
           />
 
           <FormActions
-            onClose={() => onOpenChange(false)}
+            onClose={onOpenChange}
             isSaving={isSaving}
+            onDelete={handleDelete}
+            equipmentId={equipmentId}
           />
         </form>
       </DialogContent>
