@@ -30,7 +30,7 @@ export const HeaderSection = ({
   return (
     <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
       <div className="grid grid-cols-1 gap-4">
-        <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-4'} gap-4`}>
+        <div className={`grid ${isMobile ? 'grid-cols-2' : 'grid-cols-4'} gap-4`}>
           <div className="space-y-2 w-full">
             <label className="text-sm text-[#C8C8C9]">Test Date</label>
             <div className="relative w-full">
