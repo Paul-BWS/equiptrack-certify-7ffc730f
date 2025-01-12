@@ -10,7 +10,7 @@ import { validateForm } from "@/utils/torqueReadingsValidation";
 import { TorqueWrench, ServiceRecord } from "@/types/equipment";
 import { toast } from "sonner";
 import { CertificateModal } from "./CertificateModal";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useCallback } from "react";
 
 interface TorqueReadingsModalProps {
   open: boolean;
@@ -71,16 +71,7 @@ export const TorqueReadingsModal = ({
     next_service_date: readings.retestDate
   }), [equipmentId, readings]);
 
-  if (error) {
-    toast.error("Failed to load equipment data");
-    return null;
-  }
-
-  if (isLoading) {
-    return <LoadingState open={open} onOpenChange={onOpenChange} />;
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!validateForm(readings)) {
@@ -94,7 +85,16 @@ export const TorqueReadingsModal = ({
     } catch (error) {
       console.error('Error submitting form:', error);
     }
-  };
+  }, [readings, submitData, torqueWrenchData]);
+
+  if (error) {
+    toast.error("Failed to load equipment data");
+    return null;
+  }
+
+  if (isLoading) {
+    return <LoadingState open={open} onOpenChange={onOpenChange} />;
+  }
 
   return (
     <>
