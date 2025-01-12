@@ -1,23 +1,13 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
-import { CalendarIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
+import { HeaderSection } from "./tyre-gauge-readings/HeaderSection";
+import { BasicDetails } from "./tyre-gauge-readings/BasicDetails";
+import { MeasurementsSection } from "./tyre-gauge-readings/MeasurementsSection";
+import { ReadingsSection } from "./tyre-gauge-readings/ReadingsSection";
 
 interface TyreGaugeReadingsModalProps {
   open: boolean;
@@ -30,14 +20,6 @@ interface Reading {
   reading: string;
   deviation: string;
 }
-
-const ENGINEERS = [
-  "Paul Jones",
-  "Connor Hill",
-  "Tom Hannon",
-  "Mark Allen",
-  "Dominic Jones"
-];
 
 export const TyreGaugeReadingsModal = ({
   open,
@@ -54,7 +36,6 @@ export const TyreGaugeReadingsModal = ({
   const [min, setMin] = useState("");
   const [max, setMax] = useState("");
   const [units, setUnits] = useState("psi");
-  const [result, setResult] = useState("PASS");
   const [status, setStatus] = useState("ACTIVE");
   const [notes, setNotes] = useState("");
   const [readings, setReadings] = useState<Reading[]>([
@@ -73,15 +54,6 @@ export const TyreGaugeReadingsModal = ({
     }
   }, [equipmentId]);
 
-  const calculateDeviation = (setting: string, reading: string): string => {
-    if (!setting || !reading) return "";
-    const settingValue = parseFloat(setting);
-    const readingValue = parseFloat(reading);
-    if (isNaN(settingValue) || isNaN(readingValue) || settingValue === 0) return "";
-    const deviation = ((readingValue - settingValue) / settingValue) * 100;
-    return deviation.toFixed(2);
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
@@ -99,7 +71,6 @@ export const TyreGaugeReadingsModal = ({
           min_pressure: min,
           max_pressure: max,
           units: units,
-          result: result,
           status: status,
           notes: notes,
           readings: readings,
@@ -128,217 +99,41 @@ export const TyreGaugeReadingsModal = ({
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="certNumber" className="text-sm text-[#C8C8C9]">Certificate Number</Label>
-                <Input
-                  id="certNumber"
-                  value={certNumber}
-                  onChange={(e) => setCertNumber(e.target.value)}
-                  placeholder="e.g. BWS10099"
-                  className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
-                  readOnly
-                />
-              </div>
+          <HeaderSection
+            certNumber={certNumber}
+            date={date}
+            retestDate={retestDate}
+            status={status}
+            onDateChange={setDate}
+            onRetestDateChange={setRetestDate}
+            onStatusChange={setStatus}
+          />
+          
+          <BasicDetails
+            model={model}
+            serialNumber={serialNumber}
+            engineer={engineer}
+            onModelChange={setModel}
+            onSerialNumberChange={setSerialNumber}
+            onEngineerChange={setEngineer}
+          />
+          
+          <MeasurementsSection
+            min={min}
+            max={max}
+            units={units}
+            onMinChange={setMin}
+            onMaxChange={setMax}
+            onUnitsChange={setUnits}
+          />
 
-              <div className="space-y-2">
-                <Label className="text-sm text-[#C8C8C9]">Date</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "w-full justify-start text-left font-normal h-12 bg-white border-gray-200",
-                        !date && "text-[#C8C8C9]"
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {date ? format(date, "PPP") : <span>Pick a date</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-sm text-[#C8C8C9]">Retest Date</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "w-full justify-start text-left font-normal h-12 bg-white border-gray-200",
-                        !retestDate && "text-[#C8C8C9]"
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {retestDate ? format(retestDate, "PPP") : <span>Pick a date</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={retestDate}
-                      onSelect={setRetestDate}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="status" className="text-sm text-[#C8C8C9]">Status</Label>
-                <Select value={status} onValueChange={setStatus}>
-                  <SelectTrigger className="h-12 bg-white border-gray-200">
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ACTIVE">Active</SelectItem>
-                    <SelectItem value="INACTIVE">Inactive</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="model" className="text-sm text-[#C8C8C9]">Model</Label>
-                <Input
-                  id="model"
-                  value={model}
-                  onChange={(e) => setModel(e.target.value)}
-                  placeholder="e.g. Halfords"
-                  className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="serialNumber" className="text-sm text-[#C8C8C9]">Serial Number</Label>
-                <Input
-                  id="serialNumber"
-                  value={serialNumber}
-                  onChange={(e) => setSerialNumber(e.target.value)}
-                  placeholder="e.g. QAR 127"
-                  className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="engineer" className="text-sm text-[#C8C8C9]">Engineer</Label>
-                <Select value={engineer} onValueChange={setEngineer}>
-                  <SelectTrigger className="h-12 bg-white border-gray-200">
-                    <SelectValue placeholder="Select an engineer" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {ENGINEERS.map((eng) => (
-                      <SelectItem key={eng} value={eng}>
-                        {eng}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="min" className="text-sm text-[#C8C8C9]">Minimum</Label>
-                <Input
-                  id="min"
-                  value={min}
-                  onChange={(e) => setMin(e.target.value)}
-                  type="number"
-                  placeholder="Min pressure"
-                  className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="max" className="text-sm text-[#C8C8C9]">Maximum</Label>
-                <Input
-                  id="max"
-                  value={max}
-                  onChange={(e) => setMax(e.target.value)}
-                  type="number"
-                  placeholder="Max pressure"
-                  className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="units" className="text-sm text-[#C8C8C9]">Units</Label>
-                <Select value={units} onValueChange={setUnits}>
-                  <SelectTrigger className="h-12 bg-white border-gray-200">
-                    <SelectValue placeholder="Select units" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="psi">PSI</SelectItem>
-                    <SelectItem value="bar">BAR</SelectItem>
-                    <SelectItem value="kpa">kPa</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
-            <h3 className="text-lg font-semibold mb-4">Readings</h3>
-            <div className="space-y-6">
-              {readings.map((reading, index) => (
-                <div key={index} className="grid grid-cols-3 gap-6">
-                  <div className="space-y-2">
-                    <Label className="text-sm text-[#C8C8C9]">Setting {index + 1}</Label>
-                    <Input
-                      value={reading.setting}
-                      onChange={(e) => {
-                        const newReadings = [...readings];
-                        newReadings[index].setting = e.target.value;
-                        newReadings[index].deviation = calculateDeviation(e.target.value, reading.reading);
-                        setReadings(newReadings);
-                      }}
-                      className="h-12 bg-white border-gray-200"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-sm text-[#C8C8C9]">Reading {index + 1}</Label>
-                    <Input
-                      value={reading.reading}
-                      onChange={(e) => {
-                        const newReadings = [...readings];
-                        newReadings[index].reading = e.target.value;
-                        newReadings[index].deviation = calculateDeviation(reading.setting, e.target.value);
-                        setReadings(newReadings);
-                      }}
-                      className="h-12 bg-white border-gray-200"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-sm text-[#C8C8C9]">Deviation {index + 1}</Label>
-                    <Input
-                      value={reading.deviation ? `${reading.deviation}%` : ""}
-                      className="h-12 bg-[#F9F9F9] border-gray-200"
-                      readOnly
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <ReadingsSection
+            readings={readings}
+            onReadingsChange={setReadings}
+          />
 
           <div className="space-y-2">
-            <Label htmlFor="notes" className="text-sm text-[#C8C8C9]">Notes</Label>
+            <label htmlFor="notes" className="text-sm text-[#C8C8C9]">Notes</label>
             <textarea
               id="notes"
               value={notes}
