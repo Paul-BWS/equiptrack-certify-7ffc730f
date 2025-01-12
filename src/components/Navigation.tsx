@@ -11,6 +11,7 @@ export const Navigation = () => {
   // Function to get the current section name
   const getCurrentSection = () => {
     if (path.includes('torque-wrenches')) return 'Torque Wrenches';
+    if (path.includes('tyre-gauges')) return 'Tyre Gauge';
     if (path.includes('equipment')) return 'Equipment';
     if (path.includes('settings')) return 'Settings';
     return 'Dashboard';
