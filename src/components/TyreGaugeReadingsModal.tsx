@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { CalendarIcon } from "lucide-react";
@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
 
 interface TyreGaugeReadingsModalProps {
   open: boolean;
@@ -29,6 +30,14 @@ interface Reading {
   reading: string;
   deviation: string;
 }
+
+const ENGINEERS = [
+  "Paul Jones",
+  "Connor Hill",
+  "Tom Hannon",
+  "Mark Allen",
+  "Dominic Jones"
+];
 
 export const TyreGaugeReadingsModal = ({
   open,
@@ -46,11 +55,23 @@ export const TyreGaugeReadingsModal = ({
   const [max, setMax] = useState("");
   const [units, setUnits] = useState("psi");
   const [result, setResult] = useState("PASS");
+  const [status, setStatus] = useState("ACTIVE");
   const [notes, setNotes] = useState("");
   const [readings, setReadings] = useState<Reading[]>([
     { setting: "", reading: "", deviation: "" },
     { setting: "", reading: "", deviation: "" },
   ]);
+
+  useEffect(() => {
+    if (!equipmentId) {
+      setCertNumber(generateCertificateNumber());
+      setDate(new Date());
+      // Set retest date to one year from now
+      const nextYear = new Date();
+      nextYear.setFullYear(nextYear.getFullYear() + 1);
+      setRetestDate(nextYear);
+    }
+  }, [equipmentId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,6 +91,7 @@ export const TyreGaugeReadingsModal = ({
           max_pressure: max,
           units: units,
           result: result,
+          status: status,
           notes: notes,
           readings: readings,
         })
@@ -106,7 +128,8 @@ export const TyreGaugeReadingsModal = ({
                   value={certNumber}
                   onChange={(e) => setCertNumber(e.target.value)}
                   placeholder="e.g. BWS10099"
-                  className="h-12 bg-white border-gray-200"
+                  className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
+                  readOnly
                 />
               </div>
 
@@ -118,7 +141,7 @@ export const TyreGaugeReadingsModal = ({
                       variant="outline"
                       className={cn(
                         "w-full justify-start text-left font-normal h-12 bg-white border-gray-200",
-                        !date && "text-muted-foreground"
+                        !date && "text-[#C8C8C9]"
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
@@ -135,6 +158,45 @@ export const TyreGaugeReadingsModal = ({
                   </PopoverContent>
                 </Popover>
               </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm text-[#C8C8C9]">Retest Date</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal h-12 bg-white border-gray-200",
+                        !retestDate && "text-[#C8C8C9]"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {retestDate ? format(retestDate, "PPP") : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={retestDate}
+                      onSelect={setRetestDate}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="status" className="text-sm text-[#C8C8C9]">Status</Label>
+                <Select value={status} onValueChange={setStatus}>
+                  <SelectTrigger className="h-12 bg-white border-gray-200">
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ACTIVE">Active</SelectItem>
+                    <SelectItem value="INACTIVE">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
 
@@ -147,7 +209,7 @@ export const TyreGaugeReadingsModal = ({
                   value={model}
                   onChange={(e) => setModel(e.target.value)}
                   placeholder="e.g. Halfords"
-                  className="h-12 bg-white border-gray-200"
+                  className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
                 />
               </div>
 
@@ -158,19 +220,24 @@ export const TyreGaugeReadingsModal = ({
                   value={serialNumber}
                   onChange={(e) => setSerialNumber(e.target.value)}
                   placeholder="e.g. QAR 127"
-                  className="h-12 bg-white border-gray-200"
+                  className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
                 />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="engineer" className="text-sm text-[#C8C8C9]">Engineer</Label>
-                <Input
-                  id="engineer"
-                  value={engineer}
-                  onChange={(e) => setEngineer(e.target.value)}
-                  placeholder="Engineer name"
-                  className="h-12 bg-white border-gray-200"
-                />
+                <Select value={engineer} onValueChange={setEngineer}>
+                  <SelectTrigger className="h-12 bg-white border-gray-200">
+                    <SelectValue placeholder="Select an engineer" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ENGINEERS.map((eng) => (
+                      <SelectItem key={eng} value={eng}>
+                        {eng}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>
@@ -185,7 +252,7 @@ export const TyreGaugeReadingsModal = ({
                   onChange={(e) => setMin(e.target.value)}
                   type="number"
                   placeholder="Min pressure"
-                  className="h-12 bg-white border-gray-200"
+                  className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
                 />
               </div>
 
@@ -197,7 +264,7 @@ export const TyreGaugeReadingsModal = ({
                   onChange={(e) => setMax(e.target.value)}
                   type="number"
                   placeholder="Max pressure"
-                  className="h-12 bg-white border-gray-200"
+                  className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
                 />
               </div>
 
@@ -218,7 +285,7 @@ export const TyreGaugeReadingsModal = ({
           </div>
 
           <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
-            <Label className="text-sm text-[#C8C8C9]">Readings</Label>
+            <h3 className="text-lg font-semibold mb-4">Readings</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {readings.map((reading, index) => (
                 <div key={index} className="space-y-4 p-4 border rounded-lg bg-white">
@@ -232,7 +299,7 @@ export const TyreGaugeReadingsModal = ({
                         setReadings(newReadings);
                       }}
                       placeholder={`Set${index + 1}`}
-                      className="h-12 bg-white border-gray-200"
+                      className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
                     />
                   </div>
                   <div className="space-y-2">
@@ -245,7 +312,7 @@ export const TyreGaugeReadingsModal = ({
                         setReadings(newReadings);
                       }}
                       placeholder={`Read${index + 1}`}
-                      className="h-12 bg-white border-gray-200"
+                      className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
                     />
                   </div>
                   <div className="space-y-2">
@@ -258,7 +325,7 @@ export const TyreGaugeReadingsModal = ({
                         setReadings(newReadings);
                       }}
                       placeholder="Deviation"
-                      className="h-12 bg-[#F9F9F9] border-gray-200"
+                      className="h-12 bg-[#F9F9F9] border-gray-200 placeholder:text-[#C8C8C9]"
                       readOnly
                     />
                   </div>
@@ -273,7 +340,7 @@ export const TyreGaugeReadingsModal = ({
               id="notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full min-h-[100px] p-2 border rounded-md border-gray-200 bg-white"
+              className="w-full min-h-[100px] p-2 border rounded-md border-gray-200 bg-white placeholder:text-[#C8C8C9]"
               placeholder="Add any additional notes here..."
             />
           </div>
