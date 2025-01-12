@@ -38,6 +38,7 @@ export const TyreGaugeReadingsModal = ({
     status,
     notes,
     readings,
+    definitiveReadings,
     setDate,
     setRetestDate,
     setModel,
@@ -49,6 +50,7 @@ export const TyreGaugeReadingsModal = ({
     setStatus,
     setNotes,
     setReadings,
+    setDefinitiveReadings,
   } = useTyreGaugeForm(equipmentId);
 
   const handleDelete = async () => {
@@ -87,7 +89,7 @@ export const TyreGaugeReadingsModal = ({
         status: status,
         notes: notes,
         readings: readings,
-        definitive_readings: readings, // Copy as found readings to definitive initially
+        definitive_readings: definitiveReadings, // Use separate definitive readings
       };
 
       if (equipmentId) {
@@ -159,9 +161,9 @@ export const TyreGaugeReadingsModal = ({
 
           <ReadingsSection
             readings={readings}
-            definitiveReadings={readings}
+            definitiveReadings={definitiveReadings}
             onReadingsChange={setReadings}
-            onDefinitiveReadingsChange={setReadings}
+            onDefinitiveReadingsChange={setDefinitiveReadings}
           />
 
           <NotesSection

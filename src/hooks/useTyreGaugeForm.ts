@@ -20,6 +20,10 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
     { target: "", actual: "", deviation: "" },
     { target: "", actual: "", deviation: "" },
   ]);
+  const [definitiveReadings, setDefinitiveReadings] = useState<Reading[]>([
+    { target: "", actual: "", deviation: "" },
+    { target: "", actual: "", deviation: "" },
+  ]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -39,6 +43,10 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
         setStatus("ACTIVE");
         setNotes("");
         setReadings([
+          { target: "", actual: "", deviation: "" },
+          { target: "", actual: "", deviation: "" },
+        ]);
+        setDefinitiveReadings([
           { target: "", actual: "", deviation: "" },
           { target: "", actual: "", deviation: "" },
         ]);
@@ -73,6 +81,10 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
           { target: "", actual: "", deviation: "" },
           { target: "", actual: "", deviation: "" },
         ]);
+        setDefinitiveReadings(data.definitive_readings || [
+          { target: "", actual: "", deviation: "" },
+          { target: "", actual: "", deviation: "" },
+        ]);
       }
     };
 
@@ -94,6 +106,7 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
     status,
     notes,
     readings,
+    definitiveReadings,
     setDate,
     setRetestDate,
     setModel,
@@ -105,5 +118,6 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
     setStatus,
     setNotes,
     setReadings,
+    setDefinitiveReadings,
   };
 };
