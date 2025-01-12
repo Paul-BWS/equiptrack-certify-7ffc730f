@@ -42,8 +42,14 @@ export const TyreGaugeCertificateTemplate = ({
         />
 
         <div className="grid grid-cols-2 gap-4">
-          <ReadingsSection title="As Found" readings={equipment?.readings || []} />
-          <ReadingsSection title="Definitive" readings={equipment?.definitive_readings || []} />
+          <ReadingsSection 
+            title="As Found" 
+            readings={equipment?.readings || []} 
+          />
+          <ReadingsSection 
+            title="Definitive" 
+            readings={equipment?.definitive_readings || []} 
+          />
         </div>
 
         <div className="bg-gray-50 p-3 rounded-lg">
