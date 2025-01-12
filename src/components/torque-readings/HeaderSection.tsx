@@ -1,4 +1,5 @@
 import { useIsMobile } from "@/hooks/use-mobile";
+import { addDays } from "date-fns";
 
 interface HeaderSectionProps {
   date: string;
@@ -25,6 +26,17 @@ export const HeaderSection = ({
     return today <= retestDateObj ? "ACTIVE" : "INACTIVE";
   };
 
+  const handleDateChange = (newDate: string) => {
+    onDateChange(newDate);
+    
+    // Calculate retest date (364 days from test date)
+    if (newDate) {
+      const testDate = new Date(newDate);
+      const newRetestDate = addDays(testDate, 364);
+      onRetestDateChange(newRetestDate.toISOString().split('T')[0]);
+    }
+  };
+
   const status = calculateStatus();
   
   return (
@@ -37,7 +49,7 @@ export const HeaderSection = ({
               <input
                 type="date"
                 value={date}
-                onChange={(e) => onDateChange(e.target.value)}
+                onChange={(e) => handleDateChange(e.target.value)}
                 className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               />
             </div>
