@@ -13,7 +13,10 @@ export const FormInitializer = ({ equipmentId, open, setReadings }: FormInitiali
       const timestamp = new Date().getTime();
       const randomNum = Math.floor(Math.random() * 1000);
       const newCertNumber = `BWS-${timestamp}-${randomNum}`;
-      setReadings(prev => ({ ...prev, certNumber: newCertNumber }));
+      setReadings((prev: TorqueReadingsForm) => ({
+        ...prev,
+        certNumber: newCertNumber
+      }));
     }
   }, [equipmentId, open, setReadings]);
 
