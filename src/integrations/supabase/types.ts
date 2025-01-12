@@ -52,6 +52,7 @@ export type Database = {
           address: string
           billingaddress: string | null
           created_at: string
+          group_id: string | null
           id: string
           industry: string
           name: string
@@ -63,6 +64,7 @@ export type Database = {
           address: string
           billingaddress?: string | null
           created_at?: string
+          group_id?: string | null
           id?: string
           industry: string
           name: string
@@ -74,12 +76,39 @@ export type Database = {
           address?: string
           billingaddress?: string | null
           created_at?: string
+          group_id?: string | null
           id?: string
           industry?: string
           name?: string
           notes?: string | null
           useseparatebillingaddress?: boolean | null
           website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "companies_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "company_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      company_groups: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
         }
         Relationships: []
       }
@@ -335,6 +364,35 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      user_company_groups: {
+        Row: {
+          created_at: string
+          group_id: string | null
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          group_id?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          group_id?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_company_groups_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "company_groups"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
