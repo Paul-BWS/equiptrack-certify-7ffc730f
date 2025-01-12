@@ -5,10 +5,12 @@ import { UserMenu } from "./navigation/UserMenu";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export const Navigation = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
@@ -35,7 +37,11 @@ export const Navigation = () => {
         </Link>
         <div className="ml-auto flex items-center space-x-4">
           <DesktopNav />
-          <MobileNav />
+          <MobileNav 
+            isOpen={isMobileMenuOpen}
+            onClose={() => setIsMobileMenuOpen(false)}
+            onSignOut={handleSignOut}
+          />
           <UserMenu onSignOut={handleSignOut} />
         </div>
       </div>
