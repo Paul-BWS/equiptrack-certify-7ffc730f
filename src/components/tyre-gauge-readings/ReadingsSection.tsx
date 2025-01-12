@@ -9,11 +9,31 @@ interface ReadingsSectionProps {
 export const ReadingsSection = ({ readings, onReadingsChange }: ReadingsSectionProps) => {
   const handleReadingChange = (index: number, field: keyof Reading, value: string) => {
     const newReadings = [...readings];
+    // Ensure the array has enough elements
+    while (newReadings.length <= index) {
+      newReadings.push({ target: "", actual: "", deviation: "" });
+    }
     newReadings[index] = {
       ...newReadings[index],
       [field]: value,
+      // Calculate deviation when either target or actual changes
+      deviation: field === 'target' || field === 'actual' ? calculateDeviation(
+        field === 'target' ? value : newReadings[index].target,
+        field === 'actual' ? value : newReadings[index].actual
+      ) : newReadings[index].deviation
     };
     onReadingsChange(newReadings);
+  };
+
+  const calculateDeviation = (target: string, actual: string) => {
+    const targetNum = parseFloat(target);
+    const actualNum = parseFloat(actual);
+    
+    if (!isNaN(targetNum) && !isNaN(actualNum) && targetNum !== 0) {
+      const deviation = ((actualNum - targetNum) / targetNum) * 100;
+      return deviation.toFixed(2);
+    }
+    return "";
   };
 
   // Ensure we always have exactly 4 readings (2 for AS FOUND, 2 for DEFINITIVE)
