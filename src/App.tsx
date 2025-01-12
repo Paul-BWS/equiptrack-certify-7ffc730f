@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import Index from "./pages/Index";
 import Equipment from "./pages/Equipment";
 import TorqueWrenches from "./pages/TorqueWrenches";
+import TyreGauges from "./pages/TyreGauges";
 import CustomerDashboard from "./pages/CustomerDashboard";
 import Settings from "./pages/Settings";
 import AllEquipment from "./pages/AllEquipment";
@@ -56,6 +57,10 @@ function App() {
             <Route
               path="/customers/:customerId/equipment/torque-wrenches"
               element={<TorqueWrenches />}
+            />
+            <Route
+              path="/customers/:customerId/equipment/tyre-gauges"
+              element={<TyreGauges />}
             />
           </Routes>
         </BrowserRouter>
