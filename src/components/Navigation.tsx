@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ClipboardList, Settings, LayoutDashboard, Menu, Users, LogOut } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
@@ -9,6 +9,7 @@ import { toast } from "sonner";
 export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const path = location.pathname;
 
   const { data: session } = useQuery({
@@ -25,7 +26,7 @@ export const Navigation = () => {
       toast.error("Error signing out");
     } else {
       toast.success("Signed out successfully");
-      window.location.reload();
+      navigate('/');
     }
   };
 
