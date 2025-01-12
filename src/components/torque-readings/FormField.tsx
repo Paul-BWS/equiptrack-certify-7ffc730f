@@ -50,7 +50,7 @@ export const FormField = ({
           onChange={onChange}
           placeholder={placeholder}
           readOnly={readOnly}
-          className={`text-sm bg-[#F9F9F9] placeholder:text-[#CCCCCC] ${className}`}
+          className={`text-sm bg-white border-gray-200 placeholder:text-[#CCCCCC] ${className}`}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />

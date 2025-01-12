@@ -85,7 +85,7 @@ export const HeaderSection = ({
               type="text"
               value={certNumber}
               readOnly
-              className="flex h-12 w-full rounded-md border border-gray-200 bg-[#F9F9F9] px-3 py-2 text-sm"
+              className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
             />
           </div>
         </div>
