@@ -32,6 +32,7 @@ export const FormActions = ({
             <Button
               type="button"
               variant="destructive"
+              size="lg"
               className="bg-red-500 hover:bg-red-600 text-white"
             >
               Delete
@@ -56,6 +57,7 @@ export const FormActions = ({
       <Button
         type="button"
         variant="outline"
+        size="lg"
         onClick={onCancel}
         className="bg-white hover:bg-gray-50 border-gray-200"
       >
@@ -63,6 +65,7 @@ export const FormActions = ({
       </Button>
       <Button
         type="submit"
+        size="lg"
         disabled={isSaving}
         className="bg-primary hover:bg-primary/90 text-white"
       >
