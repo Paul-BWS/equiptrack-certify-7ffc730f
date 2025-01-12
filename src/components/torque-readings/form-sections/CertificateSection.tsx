@@ -6,7 +6,6 @@ interface CertificateSectionProps {
     date: string;
     retestDate: string;
     certNumber: string;
-    notes: string;
     result: string;
   };
   onChange: (field: string, value: string) => void;
@@ -59,19 +58,6 @@ export const CertificateSection = ({ formData, onChange }: CertificateSectionPro
             </SelectContent>
           </Select>
         </div>
-      </div>
-
-      <div className="space-y-2">
-        <label htmlFor="notes" className="text-sm text-[#C8C8C9]">
-          Notes
-        </label>
-        <textarea
-          id="notes"
-          value={formData.notes}
-          onChange={(e) => onChange("notes", e.target.value)}
-          className="w-full min-h-[100px] p-2 text-sm bg-[#F9F9F9] border rounded-md resize-none"
-          placeholder="Enter any additional notes..."
-        />
       </div>
     </div>
   );
