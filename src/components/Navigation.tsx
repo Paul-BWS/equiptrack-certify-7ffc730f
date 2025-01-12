@@ -1,12 +1,36 @@
-import { Link, useLocation } from "react-router-dom";
-import { ClipboardList, Settings, LayoutDashboard, Menu, Users } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ClipboardList, Settings, LayoutDashboard, Menu, Users, LogOut, User } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 
 export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const path = location.pathname;
+
+  const handleSignOut = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      toast.success("Successfully signed out");
+      navigate("/");
+    } catch (error) {
+      console.error("Error signing out:", error);
+      toast.error("Error signing out");
+    }
+  };
 
   // Function to get the current section name
   const getCurrentSection = () => {
@@ -29,46 +53,83 @@ export const Navigation = () => {
             <span className="text-white">{getCurrentSection()}</span>
           </div>
           
-          {/* Mobile burger menu */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden text-white hover:text-accent"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <Menu className="h-6 w-6" />
-          </Button>
+          <div className="flex items-center gap-4">
+            {/* Desktop navigation */}
+            <div className="hidden md:flex gap-4">
+              <Link
+                to="/"
+                className="text-white hover:text-accent flex items-center gap-2"
+              >
+                <LayoutDashboard size={20} />
+                <span>Dashboard</span>
+              </Link>
+              <Link
+                to="/"
+                className="text-white hover:text-accent flex items-center gap-2"
+              >
+                <Users size={20} />
+                <span>Customers</span>
+              </Link>
+              <Link
+                to="/all-equipment"
+                className="text-white hover:text-accent flex items-center gap-2"
+              >
+                <ClipboardList size={20} />
+                <span>Equipment</span>
+              </Link>
+              <Link
+                to="/settings"
+                className="text-white hover:text-accent flex items-center gap-2"
+              >
+                <Settings size={20} />
+                <span>Settings</span>
+              </Link>
+            </div>
 
-          {/* Desktop navigation */}
-          <div className="hidden md:flex gap-4">
-            <Link
-              to="/"
-              className="text-white hover:text-accent flex items-center gap-2"
+            {/* Profile Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback>AF</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">User</p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      user@example.com
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Settings</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Mobile burger menu */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden text-white hover:text-accent"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              <LayoutDashboard size={20} />
-              <span>Dashboard</span>
-            </Link>
-            <Link
-              to="/"
-              className="text-white hover:text-accent flex items-center gap-2"
-            >
-              <Users size={20} />
-              <span>Customers</span>
-            </Link>
-            <Link
-              to="/all-equipment"
-              className="text-white hover:text-accent flex items-center gap-2"
-            >
-              <ClipboardList size={20} />
-              <span>Equipment</span>
-            </Link>
-            <Link
-              to="/settings"
-              className="text-white hover:text-accent flex items-center gap-2"
-            >
-              <Settings size={20} />
-              <span>Settings</span>
-            </Link>
+              <Menu className="h-6 w-6" />
+            </Button>
           </div>
         </div>
 
@@ -107,6 +168,14 @@ export const Navigation = () => {
               <Settings size={20} />
               <span>Settings</span>
             </Link>
+            <Button
+              variant="ghost"
+              className="text-white hover:text-accent flex items-center gap-2 justify-start p-0"
+              onClick={handleSignOut}
+            >
+              <LogOut size={20} />
+              <span>Log out</span>
+            </Button>
           </div>
         )}
       </div>
