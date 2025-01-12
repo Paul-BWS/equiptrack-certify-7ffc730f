@@ -28,7 +28,8 @@ export const TorqueReadingsForm = ({ equipment, onClose }: TorqueReadingsFormPro
     notes: equipment?.notes || "",
     status: equipment?.status || "ACTIVE",
     result: equipment?.result || "PASS",
-    certNumber: equipment?.cert_number || `BWS-${Date.now()}-${Math.floor(Math.random() * 1000)}`
+    certNumber: equipment?.cert_number || `BWS-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+    sentOn: equipment?.last_service_date || new Date().toISOString().split('T')[0] // Added missing sentOn property
   });
 
   const { handleSave, isSaving } = useTorqueWrenchSubmit(equipment?.id || null, () => {
