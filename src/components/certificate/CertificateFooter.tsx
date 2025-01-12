@@ -17,7 +17,7 @@ export const CertificateFooter = ({ serviceRecord }: CertificateFooterProps) => 
           className="h-12 w-auto"
         />
         <div className="text-right">
-          <p className="text-xs font-medium">{serviceRecord.technician}</p>
+          <p className="text-xs font-medium">Paul Jones</p>
           <p className="text-xs text-gray-600">Authorized Signatory</p>
         </div>
       </div>
