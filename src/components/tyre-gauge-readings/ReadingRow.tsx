@@ -10,28 +10,32 @@ interface ReadingRowProps {
 
 export const ReadingRow = ({ reading, index, onReadingChange }: ReadingRowProps) => {
   useEffect(() => {
-    // Calculate deviation when target or actual changes
-    const targetNum = parseFloat(reading.target);
-    const actualNum = parseFloat(reading.actual);
-    
-    if (!isNaN(targetNum) && !isNaN(actualNum) && targetNum !== 0) {
-      const deviation = ((actualNum - targetNum) / targetNum * 100).toFixed(2);
-      onReadingChange(index, 'deviation', `${deviation}%`);
-    } else {
-      onReadingChange(index, 'deviation', '');
-    }
+    // Calculate deviation whenever target or actual changes
+    const calculateDeviation = () => {
+      const targetNum = parseFloat(reading.target);
+      const actualNum = parseFloat(reading.actual);
+      
+      if (!isNaN(targetNum) && !isNaN(actualNum) && targetNum !== 0) {
+        const deviation = ((actualNum - targetNum) / targetNum * 100).toFixed(2);
+        onReadingChange(index, 'deviation', `${deviation}%`);
+      } else {
+        onReadingChange(index, 'deviation', '');
+      }
+    };
+
+    calculateDeviation();
   }, [reading.target, reading.actual, index, onReadingChange]);
 
   return (
     <React.Fragment>
       <Input
-        type="text"
+        type="number"
         value={reading.target}
         onChange={(e) => onReadingChange(index, 'target', e.target.value)}
         className="border rounded p-2"
       />
       <Input
-        type="text"
+        type="number"
         value={reading.actual}
         onChange={(e) => onReadingChange(index, 'actual', e.target.value)}
         className="border rounded p-2"
