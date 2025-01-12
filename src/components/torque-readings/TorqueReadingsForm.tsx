@@ -92,16 +92,6 @@ export const TorqueReadingsForm = ({ equipment, onClose }: TorqueReadingsFormPro
         onChange={(field, value) => setFormData(prev => ({ ...prev, [field]: value }))}
       />
 
-      <div className="space-y-2">
-        <label className="text-sm text-[#C8C8C9]">Notes</label>
-        <textarea
-          value={formData.notes}
-          onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
-          className="w-full min-h-[100px] p-2 text-sm bg-[#F9F9F9] border rounded-md resize-none"
-          placeholder="Enter any additional notes..."
-        />
-      </div>
-
       <div className="flex justify-end gap-4">
         <Button
           type="button"
