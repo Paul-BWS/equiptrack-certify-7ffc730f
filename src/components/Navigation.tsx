@@ -23,17 +23,27 @@ export const Navigation = () => {
   }, [navigate]);
 
   const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        toast({
+          title: "Error signing out",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Signed out successfully",
+          description: "You have been signed out of your account",
+        });
+        navigate('/');
+      }
+    } catch (err) {
+      console.error("Error during sign out:", err);
       toast({
-        title: "Error signing out",
-        description: error.message,
+        title: "Error",
+        description: "An unexpected error occurred while signing out",
         variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Signed out successfully",
-        description: "You have been signed out of your account",
       });
     }
   };
