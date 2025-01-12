@@ -87,10 +87,10 @@ export const TyreGaugeReadingsModal = ({
         status: status,
         notes: notes,
         readings: readings,
+        definitive_readings: readings, // Copy as found readings to definitive initially
       };
 
       if (equipmentId) {
-        // Update existing tyre gauge
         const { error } = await supabase
           .from('tyre_gauges')
           .update(tyreGaugeData)
@@ -98,7 +98,6 @@ export const TyreGaugeReadingsModal = ({
 
         if (error) throw error;
       } else {
-        // Create new tyre gauge
         const { error } = await supabase
           .from('tyre_gauges')
           .insert([{
@@ -160,7 +159,9 @@ export const TyreGaugeReadingsModal = ({
 
           <ReadingsSection
             readings={readings}
+            definitiveReadings={readings}
             onReadingsChange={setReadings}
+            onDefinitiveReadingsChange={setReadings}
           />
 
           <NotesSection
