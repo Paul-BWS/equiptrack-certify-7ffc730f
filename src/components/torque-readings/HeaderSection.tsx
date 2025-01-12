@@ -1,5 +1,10 @@
 import { useIsMobile } from "@/hooks/use-mobile";
-import { addDays } from "date-fns";
+import { Button } from "@/components/ui/button";
+import { CalendarIcon } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 
 interface HeaderSectionProps {
   date: string;
@@ -26,33 +31,36 @@ export const HeaderSection = ({
     return today <= retestDateObj ? "ACTIVE" : "INACTIVE";
   };
 
-  const handleDateChange = (newDate: string) => {
-    onDateChange(newDate);
-    
-    // Calculate retest date (364 days from test date)
-    if (newDate) {
-      const testDate = new Date(newDate);
-      const newRetestDate = addDays(testDate, 364);
-      onRetestDateChange(newRetestDate.toISOString().split('T')[0]);
-    }
-  };
-
   const status = calculateStatus();
   
   return (
     <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
       <div className="grid grid-cols-1 gap-4">
         <div className={`grid ${isMobile ? 'grid-cols-2' : 'grid-cols-4'} gap-4`}>
-          <div className="space-y-2 w-full">
+          <div className="space-y-2">
             <label className="text-sm text-[#C8C8C9]">Test Date</label>
-            <div className="relative w-full">
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => handleDateChange(e.target.value)}
-                className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              />
-            </div>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full justify-start text-left font-normal h-12 bg-white border-gray-200",
+                    !date && "text-[#C8C8C9]"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {date ? format(new Date(date), "PPP") : <span>Pick a date</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar
+                  mode="single"
+                  selected={date ? new Date(date) : undefined}
+                  onSelect={(newDate) => onDateChange(newDate ? newDate.toISOString().split('T')[0] : '')}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
           </div>
 
           <div className="space-y-2">
@@ -69,14 +77,28 @@ export const HeaderSection = ({
 
           <div className="space-y-2">
             <label className="text-sm text-[#C8C8C9]">Retest Date</label>
-            <div className="relative w-full">
-              <input
-                type="date"
-                value={retestDate}
-                onChange={(e) => onRetestDateChange(e.target.value)}
-                className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              />
-            </div>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full justify-start text-left font-normal h-12 bg-white border-gray-200",
+                    !retestDate && "text-[#C8C8C9]"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {retestDate ? format(new Date(retestDate), "PPP") : <span>Pick a date</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar
+                  mode="single"
+                  selected={retestDate ? new Date(retestDate) : undefined}
+                  onSelect={(newDate) => onRetestDateChange(newDate ? newDate.toISOString().split('T')[0] : '')}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
           </div>
 
           <div className="space-y-2">
