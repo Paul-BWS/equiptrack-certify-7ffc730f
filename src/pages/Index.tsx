@@ -9,15 +9,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LogIn, User, Users } from "lucide-react";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [loginType, setLoginType] = useState<"bws" | "steer">("bws");
 
   const { data: session, isLoading: isSessionLoading } = useQuery({
     queryKey: ['session'],
@@ -32,8 +29,7 @@ const Index = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('companies')
-        .select('*')
-        .eq('id', session?.user?.user_metadata?.company_id);
+        .select('*');
       
       if (error) {
         throw error;
@@ -57,18 +53,13 @@ const Index = () => {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
-        options: {
-          data: {
-            role: loginType,
-            company_id: loginType === 'steer' ? 'steer-automotive-group' : undefined
-          }
-        }
       });
 
       if (error) {
         toast.error(error.message);
       } else if (data.session) {
-        toast.success(`Successfully signed in as ${loginType === 'bws' ? 'BWS Staff' : 'Steer Automotive Group'} user!`);
+        toast.success("Successfully signed in!");
+        // Force a refresh of the session query
         window.location.reload();
       }
     } catch (error) {
@@ -79,6 +70,7 @@ const Index = () => {
     }
   };
 
+  // Show loading state while checking session
   if (isSessionLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -87,6 +79,7 @@ const Index = () => {
     );
   }
 
+  // If not signed in, show login form
   if (!session) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -94,100 +87,34 @@ const Index = () => {
         <main className="container mx-auto py-8 px-4">
           <div className="max-w-md mx-auto">
             <Card className="p-6">
-              <Tabs defaultValue="bws" onValueChange={(value) => setLoginType(value as "bws" | "steer")}>
-                <TabsList className="grid w-full grid-cols-2 mb-6">
-                  <TabsTrigger value="bws" className="flex items-center gap-2">
-                    <User className="h-4 w-4" />
-                    BWS Staff
-                  </TabsTrigger>
-                  <TabsTrigger value="steer" className="flex items-center gap-2">
-                    <Users className="h-4 w-4" />
-                    Steer Group
-                  </TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="bws">
-                  <form onSubmit={handleSignIn} className="space-y-4">
-                    <h2 className="text-xl font-semibold text-center mb-4">BWS Staff Login</h2>
-                    <div>
-                      <Input
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                      />
-                    </div>
-                    <Button
-                      type="submit"
-                      className="w-full"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? (
-                        "Signing in..."
-                      ) : (
-                        <span className="flex items-center gap-2">
-                          <LogIn className="h-4 w-4" />
-                          Sign In
-                        </span>
-                      )}
-                    </Button>
-                  </form>
-                </TabsContent>
-
-                <TabsContent value="steer">
-                  <form onSubmit={handleSignIn} className="space-y-4">
-                    <div className="flex justify-center mb-6">
-                      <img 
-                        src="/steer-logo.png" 
-                        alt="Steer Automotive Group" 
-                        className="h-12 object-contain"
-                      />
-                    </div>
-                    <div>
-                      <Input
-                        type="email"
-                        placeholder="Steer Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                      />
-                    </div>
-                    <Button
-                      type="submit"
-                      className="w-full"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? (
-                        "Signing in..."
-                      ) : (
-                        <span className="flex items-center gap-2">
-                          <LogIn className="h-4 w-4" />
-                          Sign In to Steer Portal
-                        </span>
-                      )}
-                    </Button>
-                  </form>
-                </TabsContent>
-              </Tabs>
+              <h1 className="text-2xl font-bold text-center mb-6">Sign In</h1>
+              <form onSubmit={handleSignIn} className="space-y-4">
+                <div>
+                  <Input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <Input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Signing in..." : "Sign In"}
+                </Button>
+              </form>
             </Card>
           </div>
         </main>
@@ -195,13 +122,9 @@ const Index = () => {
     );
   }
 
-  // Filter companies based on user role
-  const filteredCompanies = companies.filter((company) => {
-    if (session.user.user_metadata.role === 'steer') {
-      return company.id === 'steer-automotive-group';
-    }
-    return company.name.toLowerCase().includes(searchQuery.toLowerCase());
-  });
+  const filteredCompanies = companies.filter((company) =>
+    company.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -212,22 +135,16 @@ const Index = () => {
           <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                {session.user.user_metadata.role === 'steer' ? 'Steer Automotive Group Portal' : 'Companies'}
+                Companies
               </h1>
-              <p className="text-gray-500">
-                {session.user.user_metadata.role === 'steer' 
-                  ? 'View and manage your certificates' 
-                  : 'Manage your company relationships'}
-              </p>
+              <p className="text-gray-500">Manage your company relationships</p>
             </div>
-            {session.user.user_metadata.role !== 'steer' && <CustomerForm />}
+            <CustomerForm />
           </div>
 
-          {session.user.user_metadata.role !== 'steer' && (
-            <div className="mb-8">
-              <CustomerSearch onSearch={setSearchQuery} />
-            </div>
-          )}
+          <div className="mb-8">
+            <CustomerSearch onSearch={setSearchQuery} />
+          </div>
 
           {isLoadingCompanies ? (
             <div className="flex justify-center items-center h-48">
