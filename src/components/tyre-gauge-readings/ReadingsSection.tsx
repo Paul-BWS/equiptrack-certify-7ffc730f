@@ -1,78 +1,48 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-
-interface Reading {
-  setting: string;
-  reading: string;
-  deviation: string;
-}
+import { Reading } from "@/types/tyreGauge";
 
 interface ReadingsSectionProps {
   readings: Reading[];
   onReadingsChange: (readings: Reading[]) => void;
 }
 
-export const ReadingsSection = ({
-  readings,
-  onReadingsChange,
-}: ReadingsSectionProps) => {
-  const calculateDeviation = (setting: string, reading: string): string => {
-    if (!setting || !reading) return "";
-    const settingValue = parseFloat(setting);
-    const readingValue = parseFloat(reading);
-    if (isNaN(settingValue) || isNaN(readingValue) || settingValue === 0) return "";
-    const deviation = ((readingValue - settingValue) / settingValue) * 100;
-    return deviation.toFixed(2);
-  };
-
+export const ReadingsSection = ({ readings, onReadingsChange }: ReadingsSectionProps) => {
   const handleReadingChange = (index: number, field: keyof Reading, value: string) => {
     const newReadings = [...readings];
     newReadings[index] = {
       ...newReadings[index],
       [field]: value,
     };
-
-    if (field === 'setting' || field === 'reading') {
-      newReadings[index].deviation = calculateDeviation(
-        field === 'setting' ? value : newReadings[index].setting,
-        field === 'reading' ? value : newReadings[index].reading
-      );
-    }
-
     onReadingsChange(newReadings);
   };
 
   return (
-    <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
-      <h3 className="text-lg font-semibold mb-4">Readings</h3>
-      <div className="space-y-6">
+    <div className="space-y-4">
+      <h3 className="text-lg font-medium">Readings</h3>
+      <div className="grid grid-cols-3 gap-4">
+        <div className="font-medium">Target</div>
+        <div className="font-medium">Actual</div>
+        <div className="font-medium">Deviation</div>
         {readings.map((reading, index) => (
-          <div key={index} className="grid grid-cols-3 gap-6">
-            <div className="space-y-2">
-              <Label className="text-sm text-[#C8C8C9]">Setting {index + 1}</Label>
-              <Input
-                value={reading.setting}
-                onChange={(e) => handleReadingChange(index, 'setting', e.target.value)}
-                className="h-12 bg-white border-gray-200"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-sm text-[#C8C8C9]">Reading {index + 1}</Label>
-              <Input
-                value={reading.reading}
-                onChange={(e) => handleReadingChange(index, 'reading', e.target.value)}
-                className="h-12 bg-white border-gray-200"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label className="text-sm text-[#C8C8C9]">Deviation {index + 1}</Label>
-              <Input
-                value={reading.deviation ? `${reading.deviation}%` : ""}
-                className="h-12 bg-[#F9F9F9] border-gray-200"
-                readOnly
-              />
-            </div>
-          </div>
+          <React.Fragment key={index}>
+            <input
+              type="text"
+              value={reading.target}
+              onChange={(e) => handleReadingChange(index, 'target', e.target.value)}
+              className="border rounded p-2"
+            />
+            <input
+              type="text"
+              value={reading.actual}
+              onChange={(e) => handleReadingChange(index, 'actual', e.target.value)}
+              className="border rounded p-2"
+            />
+            <input
+              type="text"
+              value={reading.deviation}
+              onChange={(e) => handleReadingChange(index, 'deviation', e.target.value)}
+              className="border rounded p-2"
+            />
+          </React.Fragment>
         ))}
       </div>
     </div>

@@ -8,6 +8,7 @@ import { ReadingsSection } from "./tyre-gauge-readings/ReadingsSection";
 import { NotesSection } from "./tyre-gauge-readings/NotesSection";
 import { FormActions } from "./tyre-gauge-readings/FormActions";
 import { useTyreGaugeForm } from "@/hooks/useTyreGaugeForm";
+import { useParams } from "react-router-dom";
 
 interface TyreGaugeReadingsModalProps {
   open: boolean;
@@ -20,6 +21,7 @@ export const TyreGaugeReadingsModal = ({
   onOpenChange,
   equipmentId,
 }: TyreGaugeReadingsModalProps) => {
+  const { customerId } = useParams();
   const {
     isSaving,
     setIsSaving,
@@ -53,31 +55,47 @@ export const TyreGaugeReadingsModal = ({
     setIsSaving(true);
     
     try {
-      const { error } = await supabase
-        .from('tyre_gauges')
-        .update({
-          cert_number: certNumber,
-          last_service_date: date?.toISOString(),
-          next_service_due: retestDate?.toISOString(),
-          model: model,
-          serial_number: serialNumber,
-          engineer: engineer,
-          min_pressure: min,
-          max_pressure: max,
-          units: units,
-          status: status,
-          notes: notes,
-          readings: readings,
-        })
-        .eq('id', equipmentId);
+      const tyreGaugeData = {
+        cert_number: certNumber,
+        last_service_date: date?.toISOString(),
+        next_service_due: retestDate?.toISOString(),
+        model: model,
+        serial_number: serialNumber,
+        engineer: engineer,
+        min_pressure: min,
+        max_pressure: max,
+        units: units,
+        status: status,
+        notes: notes,
+        readings: readings,
+      };
 
-      if (error) throw error;
+      if (equipmentId) {
+        // Update existing tyre gauge
+        const { error } = await supabase
+          .from('tyre_gauges')
+          .update(tyreGaugeData)
+          .eq('id', equipmentId);
+
+        if (error) throw error;
+      } else {
+        // Create new tyre gauge
+        const { error } = await supabase
+          .from('tyre_gauges')
+          .insert([{
+            ...tyreGaugeData,
+            company_id: customerId,
+          }]);
+
+        if (error) throw error;
+      }
       
-      toast.success("Tyre gauge data saved successfully");
+      toast.success(equipmentId ? "Tyre gauge updated successfully" : "New tyre gauge created successfully");
       onOpenChange(false);
+      window.location.reload(); // Refresh to show the new/updated tyre gauge
     } catch (error) {
       console.error('Error saving data:', error);
-      toast.error("Failed to save tyre gauge data");
+      toast.error(equipmentId ? "Failed to update tyre gauge" : "Failed to create new tyre gauge");
     } finally {
       setIsSaving(false);
     }
@@ -88,7 +106,7 @@ export const TyreGaugeReadingsModal = ({
       <DialogContent className="sm:max-w-[800px] lg:max-w-[1000px] max-h-[90vh] overflow-y-auto bg-white p-0">
         <DialogHeader className="p-6 border-b">
           <DialogTitle className="text-xl font-semibold">
-            Tyre Gauge Readings
+            {equipmentId ? 'Edit Tyre Gauge' : 'New Tyre Gauge'}
           </DialogTitle>
         </DialogHeader>
         
