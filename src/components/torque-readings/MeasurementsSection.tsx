@@ -32,29 +32,33 @@ export const MeasurementsSection = ({
   const isMobile = useIsMobile();
 
   return (
-    <div className={`grid ${isMobile ? 'grid-cols-2' : 'grid-cols-4'} gap-4`}>
-      <FormField
-        id="min"
-        label="Min"
-        type="number"
-        value={min}
-        onChange={(e) => onMinChange(e.target.value)}
-      />
-      <FormField
-        id="max"
-        label="Max"
-        type="number"
-        value={max}
-        onChange={(e) => onMaxChange(e.target.value)}
-      />
+    <div className={`grid ${isMobile ? 'grid-cols-2' : 'grid-cols-4'} gap-6`}>
       <div className="space-y-2">
-        <label htmlFor="units" className="text-[#C8C8C9] text-sm">Units</label>
+        <label className="text-sm text-gray-400">Min</label>
+        <input
+          type="number"
+          value={min}
+          onChange={(e) => onMinChange(e.target.value)}
+          className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
+        />
+      </div>
+      <div className="space-y-2">
+        <label className="text-sm text-gray-400">Max</label>
+        <input
+          type="number"
+          value={max}
+          onChange={(e) => onMaxChange(e.target.value)}
+          className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
+        />
+      </div>
+      <div className="space-y-2">
+        <label className="text-sm text-gray-400">Units</label>
         <Select
           value={units}
           onValueChange={onUnitsChange}
         >
-          <SelectTrigger id="units" className="text-sm bg-[#F9F9F9]">
-            <SelectValue placeholder="Select units" />
+          <SelectTrigger className="h-12 bg-white border-gray-200">
+            <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="nm">Nm</SelectItem>
@@ -63,15 +67,15 @@ export const MeasurementsSection = ({
         </Select>
       </div>
       <div className="space-y-2">
-        <label htmlFor="result" className="text-[#C8C8C9] text-sm">Result</label>
+        <label className="text-sm text-gray-400">Result</label>
         <Select
           value={result}
           onValueChange={onResultChange}
         >
-          <SelectTrigger id="result" className={`text-sm ${
+          <SelectTrigger className={`h-12 bg-white border-gray-200 ${
             result === 'PASS' ? 'text-green-500' : 'text-red-500'
           }`}>
-            <SelectValue placeholder="Select result" />
+            <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="PASS" className="text-green-500">PASS</SelectItem>

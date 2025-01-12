@@ -18,7 +18,6 @@ interface EquipmentSectionProps {
   onEngineerChange: (value: string) => void;
 }
 
-// This would ideally come from an API or database
 const ENGINEERS = [
   "John Smith",
   "Sarah Johnson",
@@ -45,31 +44,33 @@ export const EquipmentSection = ({
 
   return (
     <>
-      <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}>
-        <FormField
-          id="model"
-          label="Model"
-          value={model}
-          onChange={(e) => onModelChange(e.target.value)}
-        />
-        <FormField
-          id="serialNumber"
-          label="Serial Number"
-          value={serialNumber}
-          onChange={(e) => onSerialNumberChange(e.target.value)}
-        />
+      <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-6 mb-6`}>
+        <div className="space-y-2">
+          <label className="text-sm text-gray-400">Model</label>
+          <input
+            value={model}
+            onChange={(e) => onModelChange(e.target.value)}
+            className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm text-gray-400">Serial Number</label>
+          <input
+            value={serialNumber}
+            onChange={(e) => onSerialNumberChange(e.target.value)}
+            className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
+          />
+        </div>
       </div>
 
-      <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}>
+      <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-6`}>
         <div className="space-y-2">
-          <label htmlFor="engineer" className="text-sm font-medium">
-            Engineer
-          </label>
+          <label className="text-sm text-gray-400">Engineer</label>
           <Select
             value={engineer}
             onValueChange={onEngineerChange}
           >
-            <SelectTrigger id="engineer" className="w-full">
+            <SelectTrigger className="h-12 bg-white border-gray-200">
               <SelectValue placeholder="Select an engineer" />
             </SelectTrigger>
             <SelectContent>
@@ -81,13 +82,14 @@ export const EquipmentSection = ({
             </SelectContent>
           </Select>
         </div>
-        <FormField
-          id="sentOn"
-          label="Sent On"
-          value={sentOn}
-          readOnly
-          className="bg-gray-100"
-        />
+        <div className="space-y-2">
+          <label className="text-sm text-gray-400">Sent On</label>
+          <input
+            value={sentOn}
+            readOnly
+            className="flex h-12 w-full rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm"
+          />
+        </div>
       </div>
     </>
   );

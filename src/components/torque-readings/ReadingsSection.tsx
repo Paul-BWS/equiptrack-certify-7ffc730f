@@ -29,25 +29,25 @@ export const ReadingsSection = ({
     <div>
       <h3 className="font-semibold mb-4 text-black">{title}</h3>
       {readingsArray.map((reading, index) => (
-        <div key={`${title}-${index}`} className="grid grid-cols-3 gap-2 mb-3">
+        <div key={`${title}-${index}`} className="grid grid-cols-3 gap-4 mb-4">
           <Input
             value={reading.target}
             onChange={onChange ? (e) => onChange(index, "target", e.target.value) : undefined}
             placeholder="Target"
-            className="text-sm bg-[#F9F9F9] placeholder:text-[#CCCCCC]"
+            className="h-12 bg-white border-gray-200"
             readOnly={readOnly}
           />
           <Input
             value={reading.actual}
             onChange={onChange ? (e) => onChange(index, "actual", e.target.value) : undefined}
             placeholder="Actual"
-            className="text-sm bg-[#F9F9F9] placeholder:text-[#CCCCCC]"
+            className="h-12 bg-white border-gray-200"
             readOnly={readOnly}
           />
           <Input
             value={reading.deviation}
             placeholder="Deviation"
-            className="text-sm bg-[#F9F9F9] placeholder:text-[#CCCCCC]"
+            className="h-12 bg-gray-50 border-gray-200"
             readOnly
           />
         </div>

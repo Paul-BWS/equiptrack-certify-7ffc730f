@@ -74,34 +74,32 @@ export const TorqueReadingsContent = ({
       </div>
 
       <div className="space-y-2">
-        <label className="text-[#C8C8C9] text-sm">Notes</label>
+        <label className="text-sm text-gray-400">Notes</label>
         <textarea
           value={readings.notes}
           onChange={(e) => setReadings({ ...readings, notes: e.target.value })}
-          className="w-full min-h-[100px] rounded-md border border-input bg-[#F9F9F9] px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full min-h-[100px] rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           placeholder="Enter any additional notes..."
         />
       </div>
 
-      {!isMobile && (
-        <div className="flex justify-end gap-4 mt-8">
-          <Button 
-            type="button" 
-            variant="outline" 
-            onClick={handleSave}
-            disabled={isSaving}
-            className="bg-white hover:bg-gray-50"
-          >
-            {isSaving ? "Saving..." : "Save"}
-          </Button>
-          <Button 
-            type="submit"
-            className="bg-[#4F46E5] hover:bg-[#4338CA] text-white"
-          >
-            Generate Certificate
-          </Button>
-        </div>
-      )}
+      <div className="flex justify-end gap-4 mt-8">
+        <Button 
+          type="button" 
+          variant="outline" 
+          onClick={handleSave}
+          disabled={isSaving}
+          className="bg-white hover:bg-gray-50 border-gray-200"
+        >
+          {isSaving ? "Saving..." : "Save"}
+        </Button>
+        <Button 
+          type="submit"
+          className="bg-blue-600 hover:bg-blue-700 text-white"
+        >
+          Generate Certificate
+        </Button>
+      </div>
     </form>
   );
 };
