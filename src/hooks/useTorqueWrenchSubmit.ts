@@ -3,12 +3,14 @@ import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { TorqueWrench } from "@/types/equipment";
 import { prepareCertificateData } from "@/utils/certificateDataPreparation";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const useTorqueWrenchSubmit = (
   equipmentId: string | null,
   onSuccess: () => void
 ) => {
   const [isSaving, setIsSaving] = useState(false);
+  const queryClient = useQueryClient();
 
   const handleSave = async (torqueWrenchData: TorqueWrench) => {
     if (!torqueWrenchData) {
@@ -45,7 +47,7 @@ export const useTorqueWrenchSubmit = (
       const now = new Date().toISOString();
       const dataToSave = {
         ...torqueWrenchData,
-        id: equipmentId || crypto.randomUUID(), // Generate UUID for new records
+        id: equipmentId || crypto.randomUUID(),
         readings: JSON.stringify(torqueWrenchData.readings),
         definitive_readings: JSON.stringify(torqueWrenchData.definitive_readings),
         notes: torqueWrenchData.notes || null,
@@ -75,24 +77,28 @@ export const useTorqueWrenchSubmit = (
 
       if (result.error) {
         console.error('Database operation error:', result.error);
-        if (result.error.code === '42501') {
-          throw new Error('You do not have permission to perform this action. Please check if you have access to this company.');
-        }
         throw result.error;
       }
 
       console.log('Successfully saved torque wrench:', result.data);
 
-      // Save certificate data
-      const certificate = prepareCertificateData(torqueWrenchData, equipmentId);
-      const { error: certError } = await supabase
-        .from('certificates')
-        .insert([certificate]);
+      // Save certificate data only if it's a new record
+      if (!equipmentId) {
+        const certificate = prepareCertificateData(torqueWrenchData, result.data.id);
+        const { error: certError } = await supabase
+          .from('certificates')
+          .insert([certificate]);
 
-      if (certError) {
-        console.error('Error saving certificate:', certError);
-        throw certError;
+        if (certError) {
+          console.error('Error saving certificate:', certError);
+          throw certError;
+        }
       }
+
+      // Invalidate queries to refresh the list
+      await queryClient.invalidateQueries({
+        queryKey: ['equipment', torqueWrenchData.company_id, 'torque-wrenches']
+      });
 
       toast.success("Equipment data saved successfully");
       onSuccess();

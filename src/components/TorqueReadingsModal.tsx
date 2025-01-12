@@ -23,8 +23,14 @@ export const TorqueReadingsModal = ({
   equipmentId,
 }: TorqueReadingsModalProps) => {
   const { data: equipment, isLoading, error } = useEquipmentData(equipmentId, open);
-  const { readings, setReadings } = useTorqueReadingsForm(equipment, open);
+  const { readings, setReadings, resetForm } = useTorqueReadingsForm(equipment, open);
   const [showCertificate, setShowCertificate] = useState(false);
+  
+  useEffect(() => {
+    if (!open) {
+      resetForm();
+    }
+  }, [open, resetForm]);
   
   useEffect(() => {
     // Generate certificate number for new torque wrench
@@ -83,27 +89,20 @@ export const TorqueReadingsModal = ({
     next_service_date: readings.retestDate
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!validateForm(readings)) {
       return;
     }
 
-    console.log("Form submitted:", readings);
-    setShowCertificate(true);
-  };
-
-  const handleSave = async () => {
-    if (!validateForm(readings)) {
-      return;
-    }
-    
     try {
       await submitData(torqueWrenchData);
+      console.log("Form submitted:", readings);
+      setShowCertificate(true);
     } catch (error) {
-      console.error('Error saving torque wrench data:', error);
-      toast.error("Failed to save torque wrench data");
+      console.error('Error submitting form:', error);
+      // Don't show error toast here as it's handled in submitData
     }
   };
 
@@ -119,7 +118,7 @@ export const TorqueReadingsModal = ({
             readings={readings}
             setReadings={setReadings}
             handleSubmit={handleSubmit}
-            handleSave={handleSave}
+            handleSave={submitData}
             isSaving={isSaving}
           />
         </DialogContent>

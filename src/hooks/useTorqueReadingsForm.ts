@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Reading } from "@/types/equipment";
 
 export interface TorqueReadingsForm {
@@ -25,34 +25,45 @@ const defaultReadings = [
   { target: "", actual: "", deviation: "" }
 ];
 
+const initialFormState: TorqueReadingsForm = {
+  certNumber: "",
+  date: new Date().toISOString().split('T')[0],
+  retestDate: "",
+  model: "",
+  serialNumber: "",
+  engineer: "",
+  min: "",
+  max: "",
+  units: "nm",
+  status: "ACTIVE",
+  sentOn: "",
+  result: "PASS",
+  notes: "",
+  readings: [...defaultReadings],
+  definitiveReadings: [...defaultReadings],
+};
+
 export const useTorqueReadingsForm = (equipment: any, isOpen: boolean) => {
-  const [readings, setReadings] = useState<TorqueReadingsForm>({
-    certNumber: "",
-    date: new Date().toISOString().split('T')[0],
-    retestDate: "",
-    model: "",
-    serialNumber: "",
-    engineer: "",
-    min: "",
-    max: "",
-    units: "nm",
-    status: "ACTIVE",
-    sentOn: "",
-    result: "PASS",
-    notes: "",
-    readings: [...defaultReadings],
-    definitiveReadings: [...defaultReadings],
-  });
+  const [readings, setReadings] = useState<TorqueReadingsForm>({ ...initialFormState });
+
+  const parseReadings = (readingsStr: string | Reading[]) => {
+    if (typeof readingsStr === 'string') {
+      try {
+        return JSON.parse(readingsStr);
+      } catch (e) {
+        console.error('Error parsing readings:', e);
+        return defaultReadings;
+      }
+    }
+    return readingsStr || defaultReadings;
+  };
 
   useEffect(() => {
     if (equipment) {
       console.log('Loading equipment data:', equipment);
       
-      const equipmentReadings = equipment.readings?.length ? 
-        equipment.readings : defaultReadings;
-      
-      const equipmentDefinitiveReadings = equipment.definitive_readings?.length ? 
-        equipment.definitive_readings : equipmentReadings;
+      const equipmentReadings = parseReadings(equipment.readings);
+      const equipmentDefinitiveReadings = parseReadings(equipment.definitive_readings);
 
       setReadings(prev => ({
         ...prev,
@@ -74,5 +85,9 @@ export const useTorqueReadingsForm = (equipment: any, isOpen: boolean) => {
     }
   }, [equipment]);
 
-  return { readings, setReadings };
+  const resetForm = useCallback(() => {
+    setReadings({ ...initialFormState });
+  }, []);
+
+  return { readings, setReadings, resetForm };
 };
