@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
 
 interface FormActionsProps {
   onClose: () => void;
@@ -17,9 +16,7 @@ export const FormActions = ({ onClose, isSaving, onDelete, equipmentId }: FormAc
           variant="destructive"
           size="lg"
           onClick={onDelete}
-          className="gap-2"
         >
-          <Trash2 className="h-4 w-4" />
           Delete
         </Button>
       )}
