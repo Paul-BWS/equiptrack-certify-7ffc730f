@@ -9,18 +9,19 @@ interface ReadingsSectionProps {
 export const ReadingsSection = ({ readings, onReadingsChange }: ReadingsSectionProps) => {
   const handleReadingChange = (index: number, field: keyof Reading, value: string) => {
     const newReadings = [...readings];
-    // Ensure we have at least 4 readings
+    
+    // Ensure we have all 4 readings initialized
     while (newReadings.length < 4) {
       newReadings.push({ target: "", actual: "", deviation: "" });
     }
-    
-    // Update only the specific field that changed
+
+    // Create a new reading object with the updated field
     newReadings[index] = {
       ...newReadings[index],
       [field]: value
     };
 
-    // Calculate deviation only if both target and actual exist
+    // Calculate deviation if both target and actual exist
     if ((field === 'target' || field === 'actual') && newReadings[index].target && newReadings[index].actual) {
       const targetNum = parseFloat(newReadings[index].target);
       const actualNum = parseFloat(newReadings[index].actual);
@@ -34,7 +35,7 @@ export const ReadingsSection = ({ readings, onReadingsChange }: ReadingsSectionP
     onReadingsChange(newReadings);
   };
 
-  // Ensure we always have exactly 4 readings (2 for AS FOUND, 2 for DEFINITIVE)
+  // Initialize readings array if empty
   const displayReadings = readings.length < 4 ? [
     ...readings,
     ...Array(4 - readings.length).fill({ target: "", actual: "", deviation: "" })
@@ -54,22 +55,22 @@ export const ReadingsSection = ({ readings, onReadingsChange }: ReadingsSectionP
                     <div className="space-y-2">
                       <label className="text-sm text-[#C8C8C9]">Target</label>
                       <Input
-                        type="number"
+                        type="text"
                         inputMode="decimal"
                         value={displayReadings[readingIndex]?.target || ''}
                         onChange={(e) => handleReadingChange(readingIndex, 'target', e.target.value)}
-                        className="h-12 bg-white border-gray-200 touch-manipulation"
+                        className="h-12 bg-white border-gray-200"
                         placeholder="Enter target"
                       />
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm text-[#C8C8C9]">Actual</label>
                       <Input
-                        type="number"
+                        type="text"
                         inputMode="decimal"
                         value={displayReadings[readingIndex]?.actual || ''}
                         onChange={(e) => handleReadingChange(readingIndex, 'actual', e.target.value)}
-                        className="h-12 bg-white border-gray-200 touch-manipulation"
+                        className="h-12 bg-white border-gray-200"
                         placeholder="Enter actual"
                       />
                     </div>
