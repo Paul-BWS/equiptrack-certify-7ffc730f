@@ -21,7 +21,7 @@ export const TyreGaugeCertificateTemplate = ({
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "";
     try {
-      return format(parseISO(dateString), "yyyy-MM-dd'T'HH:mm:ss.SSXXX");
+      return format(parseISO(dateString), "dd/MM/yyyy");
     } catch (error) {
       console.error('Error formatting date:', error);
       return dateString;
