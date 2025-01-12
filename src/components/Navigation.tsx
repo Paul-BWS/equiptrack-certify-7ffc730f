@@ -38,6 +38,7 @@ export const Navigation = () => {
     if (path.includes('tyre-gauges')) return 'Tyre Gauge';
     if (path.includes('equipment')) return 'Equipment';
     if (path.includes('settings')) return 'Settings';
+    if (path.includes('profile')) return 'Profile';
     return 'Dashboard';
   };
 
@@ -91,7 +92,7 @@ export const Navigation = () => {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                   <Avatar className="h-8 w-8">
-                    <AvatarFallback>AF</AvatarFallback>
+                    <AvatarFallback>U</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
@@ -105,11 +106,11 @@ export const Navigation = () => {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/profile')}>
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/settings')}>
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Settings</span>
                 </DropdownMenuItem>
