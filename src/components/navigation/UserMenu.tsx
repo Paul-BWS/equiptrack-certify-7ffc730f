@@ -10,6 +10,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 interface UserMenuProps {
   onSignOut: () => void;
@@ -17,22 +19,60 @@ interface UserMenuProps {
 
 export const UserMenu = ({ onSignOut }: UserMenuProps) => {
   const navigate = useNavigate();
+  const [userDetails, setUserDetails] = useState<{
+    name: string;
+    email: string;
+    initials: string;
+  }>({
+    name: "",
+    email: "",
+    initials: "U",
+  });
+
+  useEffect(() => {
+    const getUserDetails = async () => {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      
+      if (error) {
+        console.error("Error fetching user session:", error);
+        return;
+      }
+
+      if (session?.user) {
+        const email = session.user.email || "";
+        const name = session.user.user_metadata?.full_name || email.split('@')[0];
+        const initials = name
+          .split(' ')
+          .map(n => n[0])
+          .join('')
+          .toUpperCase();
+
+        setUserDetails({
+          name,
+          email,
+          initials,
+        });
+      }
+    };
+
+    getUserDetails();
+  }, []);
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarFallback>U</AvatarFallback>
+            <AvatarFallback>{userDetails.initials}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">User</p>
+            <p className="text-sm font-medium leading-none">{userDetails.name}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              user@example.com
+              {userDetails.email}
             </p>
           </div>
         </DropdownMenuLabel>
