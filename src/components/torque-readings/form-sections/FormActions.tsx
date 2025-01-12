@@ -15,6 +15,7 @@ export const FormActions = ({ onClose, isSaving, onDelete, equipmentId }: FormAc
         <Button
           type="button"
           variant="destructive"
+          size="lg"
           onClick={onDelete}
           className="gap-2"
         >
@@ -23,7 +24,16 @@ export const FormActions = ({ onClose, isSaving, onDelete, equipmentId }: FormAc
         </Button>
       )}
       <Button
+        type="button"
+        variant="outline"
+        size="lg"
+        onClick={onClose}
+      >
+        Cancel
+      </Button>
+      <Button
         type="submit"
+        size="lg"
         disabled={isSaving}
       >
         {isSaving ? "Saving..." : "Save"}
