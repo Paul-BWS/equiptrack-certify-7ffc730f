@@ -11,6 +11,7 @@ import { ArrowRight, Trash2 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
+import { format, parseISO } from "date-fns";
 
 interface EquipmentListProps {
   equipment: Array<{
@@ -47,6 +48,15 @@ export const EquipmentList = ({
     }
   };
 
+  const formatDate = (dateString: string) => {
+    try {
+      return format(parseISO(dateString), 'dd/MM/yyyy');
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return dateString; // Return original string if parsing fails
+    }
+  };
+
   return (
     <div className="rounded-md border">
       <Table>
@@ -68,8 +78,8 @@ export const EquipmentList = ({
             >
               <TableCell>{item.model}</TableCell>
               <TableCell>{item.serialNumber}</TableCell>
-              <TableCell>{item.lastServiceDate}</TableCell>
-              {!isMobile && <TableCell>{item.nextServiceDue}</TableCell>}
+              <TableCell>{formatDate(item.lastServiceDate)}</TableCell>
+              {!isMobile && <TableCell>{formatDate(item.nextServiceDue)}</TableCell>}
               {!isMobile && (
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
