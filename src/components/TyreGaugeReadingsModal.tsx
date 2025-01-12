@@ -286,9 +286,9 @@ export const TyreGaugeReadingsModal = ({
 
           <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
             <h3 className="text-lg font-semibold mb-4">Readings</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-6">
               {readings.map((reading, index) => (
-                <div key={index} className="space-y-4 p-4 border rounded-lg bg-white">
+                <div key={index} className="grid grid-cols-3 gap-6">
                   <div className="space-y-2">
                     <Label className="text-sm text-[#C8C8C9]">Setting {index + 1}</Label>
                     <Input
@@ -298,8 +298,7 @@ export const TyreGaugeReadingsModal = ({
                         newReadings[index].setting = e.target.value;
                         setReadings(newReadings);
                       }}
-                      placeholder={`Set${index + 1}`}
-                      className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
+                      className="h-12 bg-white border-gray-200"
                     />
                   </div>
                   <div className="space-y-2">
@@ -311,8 +310,7 @@ export const TyreGaugeReadingsModal = ({
                         newReadings[index].reading = e.target.value;
                         setReadings(newReadings);
                       }}
-                      placeholder={`Read${index + 1}`}
-                      className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
+                      className="h-12 bg-white border-gray-200"
                     />
                   </div>
                   <div className="space-y-2">
@@ -324,8 +322,7 @@ export const TyreGaugeReadingsModal = ({
                         newReadings[index].deviation = e.target.value;
                         setReadings(newReadings);
                       }}
-                      placeholder="Deviation"
-                      className="h-12 bg-[#F9F9F9] border-gray-200 placeholder:text-[#C8C8C9]"
+                      className="h-12 bg-[#F9F9F9] border-gray-200"
                       readOnly
                     />
                   </div>
