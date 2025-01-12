@@ -25,8 +25,8 @@ export const Navigation = () => {
             <Link to="/" className="text-white text-xl font-bold">
               EquipService
             </Link>
-            <span className="text-white/80 hidden md:inline">|</span>
-            <span className="text-white hidden md:inline">{getCurrentSection()}</span>
+            <span className="text-white/80">|</span>
+            <span className="text-white">{getCurrentSection()}</span>
           </div>
           
           {/* Mobile burger menu */}
