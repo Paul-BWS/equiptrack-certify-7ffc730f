@@ -37,8 +37,6 @@ const TorqueWrenches = () => {
   const { data: torqueWrenches = [], isLoading } = useQuery({
     queryKey: ['equipment', customerId, 'torque-wrenches'],
     queryFn: async () => {
-      console.log('Fetching torque wrenches for customer:', customerId);
-      
       const { data: equipmentData, error } = await supabase
         .from('torque_wrench')
         .select('*')
@@ -78,30 +76,28 @@ const TorqueWrenches = () => {
     enabled: !!selectedEquipmentId && showCertificateModal
   });
 
-  const { data: serviceRecord } = useQuery({
-    queryKey: ['service-record', selectedEquipmentId],
+  const { data: latestCertificate } = useQuery({
+    queryKey: ['certificate', selectedEquipmentId],
     queryFn: async () => {
       if (!selectedEquipmentId) return null;
       
       const { data, error } = await supabase
-        .from('service_records')
+        .from('certificates')
         .select('*')
         .eq('torque_wrench_id', selectedEquipmentId)
-        .order('service_date', { ascending: false })
+        .order('issue_date', { ascending: false })
         .limit(1)
         .single();
 
       if (error) {
-        // If no service record exists, return a default one
+        // If no certificate exists, return a default one
         if (error.code === 'PGRST116') {
           return {
             id: crypto.randomUUID(),
             torque_wrench_id: selectedEquipmentId,
-            service_date: new Date().toISOString(),
-            service_type: 'calibration',
-            technician: 'Default Technician',
-            notes: '',
-            next_service_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
+            issue_date: new Date().toISOString(),
+            certification_number: `BWS-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+            expiry_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
           };
         }
         throw error;
@@ -154,6 +150,7 @@ const TorqueWrenches = () => {
             torqueWrenches={torqueWrenches}
             onNewTorqueWrench={handleNewTorqueWrench}
             onGenerateCertificate={handleGenerateCertificate}
+            onViewReadings={handleViewReadings}
           />
         </div>
       </main>
@@ -168,7 +165,7 @@ const TorqueWrenches = () => {
         <CertificateModal
           open={showCertificateModal}
           onOpenChange={setShowCertificateModal}
-          certificate={{
+          certificate={latestCertificate || {
             id: "",
             torque_wrench_id: selectedEquipmentId,
             certification_number: `BWS-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
@@ -176,14 +173,14 @@ const TorqueWrenches = () => {
             expiry_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
           }}
           equipment={selectedEquipment}
-          serviceRecord={serviceRecord || {
+          serviceRecord={{
             id: crypto.randomUUID(),
             torque_wrench_id: selectedEquipmentId,
             service_date: new Date().toISOString(),
             service_type: 'calibration',
-            technician: 'Default Technician',
-            notes: '',
-            next_service_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
+            technician: selectedEquipment.engineer || 'Default Technician',
+            notes: selectedEquipment.notes || '',
+            next_service_date: selectedEquipment.next_service_due || new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
           }}
         />
       )}
