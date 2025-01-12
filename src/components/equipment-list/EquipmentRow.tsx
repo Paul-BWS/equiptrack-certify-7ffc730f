@@ -34,10 +34,18 @@ export const EquipmentRow = ({
     }
   };
 
+  const handleRowClick = (e: React.MouseEvent) => {
+    if (isMobile) {
+      e.preventDefault();
+      e.stopPropagation();
+      onViewReadings();
+    }
+  };
+
   return (
     <TableRow 
       className={isMobile ? "cursor-pointer hover:bg-muted/60" : ""}
-      onClick={isMobile ? onViewReadings : undefined}
+      onClick={handleRowClick}
     >
       <TableCell>{model}</TableCell>
       <TableCell>{serialNumber}</TableCell>
