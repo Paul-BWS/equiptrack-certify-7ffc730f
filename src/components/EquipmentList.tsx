@@ -30,11 +30,13 @@ interface EquipmentListProps {
     nextServiceDue: string;
   }>;
   onGenerateCertificate: (id: string) => void;
+  onViewReadings: (id: string) => void;
 }
 
 export const EquipmentList = ({
   equipment,
   onGenerateCertificate,
+  onViewReadings,
 }: EquipmentListProps) => {
   const isMobile = useIsMobile();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -91,6 +93,7 @@ export const EquipmentList = ({
                 isMobile={isMobile}
                 onGenerateCertificate={() => onGenerateCertificate(item.id)}
                 onDelete={() => onDeleteClick(item.id)}
+                onViewReadings={() => onViewReadings(item.id)}
               />
             ))}
           </TableBody>
