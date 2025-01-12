@@ -148,7 +148,7 @@ export const TorqueReadingsModal = ({
           />
 
           <FormActions
-            onClose={onOpenChange}
+            onClose={() => onOpenChange(false)}
             isSaving={isSaving}
             onDelete={handleDelete}
             equipmentId={equipmentId}
