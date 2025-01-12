@@ -41,8 +41,10 @@ export const TyreGaugeCertificateTemplate = ({
           result={equipment?.result}
         />
 
-        <ReadingsSection title="As Found" readings={equipment?.readings || []} />
-        <ReadingsSection title="Definitive" readings={equipment?.definitive_readings || []} />
+        <div className="grid grid-cols-2 gap-4">
+          <ReadingsSection title="As Found" readings={equipment?.readings || []} />
+          <ReadingsSection title="Definitive" readings={equipment?.definitive_readings || []} />
+        </div>
 
         <div className="bg-gray-50 p-3 rounded-lg">
           <h2 className="text-sm font-semibold mb-1 text-primary">Equipment and Standards Used</h2>
