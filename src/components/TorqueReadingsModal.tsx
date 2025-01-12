@@ -10,7 +10,7 @@ import { validateForm } from "@/utils/torqueReadingsValidation";
 import { TorqueWrench, ServiceRecord } from "@/types/equipment";
 import { toast } from "sonner";
 import { CertificateModal } from "./CertificateModal";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 interface TorqueReadingsModalProps {
   open: boolean;
@@ -38,20 +38,11 @@ export const TorqueReadingsModal = ({
     toast.success("Torque wrench data saved successfully");
   });
 
-  if (error) {
-    toast.error("Failed to load equipment data");
-    return null;
-  }
-
-  if (isLoading) {
-    return <LoadingState open={open} onOpenChange={onOpenChange} />;
-  }
-
   const pathSegments = window.location.pathname.split('/');
   const companyIdIndex = pathSegments.indexOf('customers') + 1;
   const companyId = pathSegments[companyIdIndex];
 
-  const torqueWrenchData: TorqueWrench = {
+  const torqueWrenchData: TorqueWrench = useMemo(() => ({
     id: equipmentId || undefined,
     company_id: companyId,
     model: readings.model,
@@ -68,9 +59,9 @@ export const TorqueReadingsModal = ({
     definitive_readings: readings.definitiveReadings,
     cert_number: readings.certNumber,
     status: readings.status
-  };
+  }), [equipmentId, companyId, readings]);
 
-  const defaultServiceRecord: ServiceRecord = {
+  const defaultServiceRecord: ServiceRecord = useMemo(() => ({
     id: "",
     torque_wrench_id: equipmentId || "",
     service_date: readings.date,
@@ -78,7 +69,16 @@ export const TorqueReadingsModal = ({
     technician: readings.engineer,
     notes: readings.notes || "",
     next_service_date: readings.retestDate
-  };
+  }), [equipmentId, readings]);
+
+  if (error) {
+    toast.error("Failed to load equipment data");
+    return null;
+  }
+
+  if (isLoading) {
+    return <LoadingState open={open} onOpenChange={onOpenChange} />;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,7 +90,7 @@ export const TorqueReadingsModal = ({
     try {
       await submitData(torqueWrenchData);
       console.log("Form submitted:", readings);
-      generateCertificate(torqueWrenchData, defaultServiceRecord);
+      setShowCertificate(true);
     } catch (error) {
       console.error('Error submitting form:', error);
     }
