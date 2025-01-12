@@ -1,4 +1,4 @@
-import { FormField } from "../torque-readings/FormField";
+import { FormField } from "./FormField";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Select,
@@ -32,7 +32,7 @@ export const MeasurementsSection = ({
   const isMobile = useIsMobile();
 
   return (
-    <div className={`grid ${isMobile ? 'grid-cols-2' : 'grid-cols-4'} gap-6`}>
+    <div className={`grid ${isMobile ? 'grid-cols-2' : 'grid-cols-4'} gap-6 mb-8`}>
       <div className="space-y-2">
         <label className="text-sm text-gray-400">Min</label>
         <input
