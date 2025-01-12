@@ -1,6 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { Company } from "@/types/company";
-import { ArrowRight, Globe, MapPin, Building2 } from "lucide-react";
+import { Globe, MapPin, Building2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface CustomerListProps {
@@ -24,10 +23,15 @@ export const CustomerList = ({ customers }: CustomerListProps) => {
       {customers.map((company) => (
         <div
           key={company.id}
-          className="flex items-center justify-between p-6 rounded-xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-all duration-200"
+          className="p-6 rounded-xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-all duration-200"
         >
           <div className="space-y-3">
-            <h3 className="text-xl font-semibold text-gray-900">{company.name}</h3>
+            <button
+              onClick={() => handleCustomerClick(company.id)}
+              className="text-xl font-semibold text-gray-900 hover:text-primary transition-colors text-left w-full"
+            >
+              {company.name}
+            </button>
             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
               <div className="flex items-center gap-3">
                 <div className="bg-blue-50 p-2 rounded-lg">
@@ -67,14 +71,6 @@ export const CustomerList = ({ customers }: CustomerListProps) => {
               </span>
             </div>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full bg-primary hover:bg-primary/90 h-10 w-10 p-0"
-            onClick={() => handleCustomerClick(company.id)}
-          >
-            <ArrowRight className="h-4 w-4 text-primary-foreground" />
-          </Button>
         </div>
       ))}
     </div>
