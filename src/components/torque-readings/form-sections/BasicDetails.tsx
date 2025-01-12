@@ -28,7 +28,7 @@ const ENGINEERS = [
 
 export const BasicDetails = ({ formData, onChange }: BasicDetailsProps) => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormField
           id="model"
@@ -53,7 +53,7 @@ export const BasicDetails = ({ formData, onChange }: BasicDetailsProps) => {
             value={formData.engineer}
             onValueChange={(value) => onChange("engineer", value)}
           >
-            <SelectTrigger id="engineer">
+            <SelectTrigger id="engineer" className="h-12 bg-white border-gray-200">
               <SelectValue placeholder="Select an engineer" />
             </SelectTrigger>
             <SelectContent>
@@ -90,7 +90,7 @@ export const BasicDetails = ({ formData, onChange }: BasicDetailsProps) => {
             value={formData.units}
             onValueChange={(value) => onChange("units", value)}
           >
-            <SelectTrigger id="units">
+            <SelectTrigger id="units" className="h-12 bg-white border-gray-200">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

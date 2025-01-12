@@ -17,7 +17,6 @@ export const ReadingsSection = ({
   const parseReadings = (readingsData: Reading[] | string): Reading[] => {
     if (typeof readingsData === 'string') {
       try {
-        // Handle double-stringified JSON
         const parsed = JSON.parse(readingsData);
         if (typeof parsed === 'string') {
           return JSON.parse(parsed);
@@ -48,7 +47,6 @@ export const ReadingsSection = ({
     readingsArray[index] = reading;
     onChange(isDefinitive ? "definitiveReadings" : "readings", readingsArray);
 
-    // If this is an initial reading change, update definitive readings
     if (!isDefinitive) {
       const definitiveArray = parseReadings(definitiveReadings);
       definitiveArray[index] = { ...reading };
@@ -61,7 +59,7 @@ export const ReadingsSection = ({
     const title = isDefinitive ? "Definitive Readings" : "Initial Readings";
 
     return (
-      <div className="space-y-4">
+      <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
         <h3 className="text-lg font-semibold">{title}</h3>
         {currentReadings.map((reading, index) => (
           <div key={index} className="grid grid-cols-3 gap-4">

@@ -5,8 +5,8 @@ interface NotesSectionProps {
 
 export const NotesSection = ({ notes, onChange }: NotesSectionProps) => {
   return (
-    <div className="space-y-2">
-      <label className="text-sm text-gray-500">Notes</label>
+    <div className="space-y-2 bg-[#F9F9F9] p-6 rounded-lg">
+      <label className="text-sm text-[#C8C8C9]">Notes</label>
       <textarea
         value={notes}
         onChange={(e) => onChange(e.target.value)}
