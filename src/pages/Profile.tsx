@@ -86,7 +86,7 @@ const Profile = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       <main className="container mx-auto py-8">
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-2xl mx-auto relative">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-4">
@@ -120,10 +120,10 @@ const Profile = () => {
               <div className="space-y-2">
                 <Label htmlFor="company">Company</Label>
                 <Select value={selectedCompany} onValueChange={setSelectedCompany}>
-                  <SelectTrigger>
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select a company" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent position="popper" className="w-full z-50 bg-white">
                     {companies.map((company) => (
                       <SelectItem key={company.id} value={company.id}>
                         {company.name}
@@ -132,7 +132,7 @@ const Profile = () => {
                   </SelectContent>
                 </Select>
               </div>
-              <Button onClick={updateProfile} className="w-full">
+              <Button onClick={updateProfile} className="w-full mt-6">
                 Update Profile
               </Button>
             </CardContent>
