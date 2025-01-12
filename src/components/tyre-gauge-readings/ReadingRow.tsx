@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Reading } from "@/types/tyreGauge";
 import { Input } from "@/components/ui/input";
 
@@ -9,35 +9,33 @@ interface ReadingRowProps {
 }
 
 export const ReadingRow = ({ reading, index, onReadingChange }: ReadingRowProps) => {
-  useEffect(() => {
-    // Calculate deviation whenever target or actual changes
-    const calculateDeviation = () => {
-      const targetNum = parseFloat(reading.target);
-      const actualNum = parseFloat(reading.actual);
-      
-      if (!isNaN(targetNum) && !isNaN(actualNum) && targetNum !== 0) {
-        const deviation = ((actualNum - targetNum) / targetNum * 100).toFixed(2);
-        onReadingChange(index, 'deviation', `${deviation}%`);
-      } else {
-        onReadingChange(index, 'deviation', '');
-      }
-    };
-
-    calculateDeviation();
-  }, [reading.target, reading.actual, index, onReadingChange]);
+  const handleValueChange = (field: 'target' | 'actual', value: string) => {
+    onReadingChange(index, field, value);
+    
+    // Immediately calculate deviation after value change
+    const targetNum = field === 'target' ? parseFloat(value) : parseFloat(reading.target);
+    const actualNum = field === 'actual' ? parseFloat(value) : parseFloat(reading.actual);
+    
+    if (!isNaN(targetNum) && !isNaN(actualNum) && targetNum !== 0) {
+      const deviation = ((actualNum - targetNum) / targetNum * 100).toFixed(2);
+      onReadingChange(index, 'deviation', `${deviation}%`);
+    } else {
+      onReadingChange(index, 'deviation', '');
+    }
+  };
 
   return (
     <React.Fragment>
       <Input
         type="number"
         value={reading.target}
-        onChange={(e) => onReadingChange(index, 'target', e.target.value)}
+        onChange={(e) => handleValueChange('target', e.target.value)}
         className="border rounded p-2"
       />
       <Input
         type="number"
         value={reading.actual}
-        onChange={(e) => onReadingChange(index, 'actual', e.target.value)}
+        onChange={(e) => handleValueChange('actual', e.target.value)}
         className="border rounded p-2"
       />
       <Input
