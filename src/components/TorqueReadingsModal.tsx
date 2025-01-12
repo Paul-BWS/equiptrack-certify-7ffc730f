@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { HeaderSection } from "./torque-readings/HeaderSection";
 import { useEquipmentData } from "@/hooks/useEquipmentData";
 import { LoadingState } from "./torque-readings/LoadingState";
@@ -8,6 +8,7 @@ import { BasicDetails } from "./torque-readings/form-sections/BasicDetails";
 import { ReadingsSection } from "./torque-readings/form-sections/ReadingsSection";
 import { NotesSection } from "./torque-readings/form-sections/NotesSection";
 import { FormActions } from "./torque-readings/form-sections/FormActions";
+import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
 
 interface TorqueReadingsModalProps {
   open: boolean;
@@ -22,6 +23,14 @@ export const TorqueReadingsModal = ({
 }: TorqueReadingsModalProps) => {
   const { data: equipment, isLoading, error } = useEquipmentData(equipmentId, open);
   const { readings, setReadings } = useTorqueReadingsForm(equipment, open);
+
+  // Generate certificate number for new entries
+  if (!equipmentId && !readings.certNumber) {
+    setReadings(prev => ({
+      ...prev,
+      certNumber: generateCertificateNumber()
+    }));
+  }
 
   if (error) {
     toast.error("Failed to load equipment data");
