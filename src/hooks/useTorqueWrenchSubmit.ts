@@ -47,7 +47,7 @@ export const useTorqueWrenchSubmit = (
       const now = new Date().toISOString();
       const dataToSave = {
         ...torqueWrenchData,
-        id: equipmentId || crypto.randomUUID(),
+        id: equipmentId || undefined, // Let Supabase generate the ID for new records
         readings: JSON.stringify(torqueWrenchData.readings),
         definitive_readings: JSON.stringify(torqueWrenchData.definitive_readings),
         notes: torqueWrenchData.notes || null,
@@ -60,19 +60,25 @@ export const useTorqueWrenchSubmit = (
       if (equipmentId) {
         console.log('Updating existing torque wrench:', equipmentId);
         const { id, created_at, ...updateData } = dataToSave;
-        result = await supabase
+        const { data, error } = await supabase
           .from('torque_wrench')
           .update(updateData)
           .eq('id', equipmentId)
           .select()
           .single();
+          
+        if (error) throw error;
+        result = { data, error: null };
       } else {
         console.log('Creating new torque wrench');
-        result = await supabase
+        const { data, error } = await supabase
           .from('torque_wrench')
           .insert([dataToSave])
           .select()
           .single();
+          
+        if (error) throw error;
+        result = { data, error: null };
       }
 
       if (result.error) {
@@ -83,7 +89,7 @@ export const useTorqueWrenchSubmit = (
       console.log('Successfully saved torque wrench:', result.data);
 
       // Save certificate data only if it's a new record
-      if (!equipmentId) {
+      if (!equipmentId && result.data) {
         const certificate = prepareCertificateData(torqueWrenchData, result.data.id);
         const { error: certError } = await supabase
           .from('certificates')
@@ -104,7 +110,7 @@ export const useTorqueWrenchSubmit = (
       onSuccess();
     } catch (error: any) {
       console.error('Error saving data:', error);
-      if (error.message.includes('permission')) {
+      if (error.message?.includes('permission')) {
         toast.error(error.message);
       } else if (error.code === '22P02') {
         toast.error("Invalid ID format");
