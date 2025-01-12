@@ -3,7 +3,8 @@ import { TorqueWrench } from "@/types/equipment";
 import { BasicDetails } from "./form-sections/BasicDetails";
 import { ReadingsSection } from "./form-sections/ReadingsSection";
 import { CertificateSection } from "./form-sections/CertificateSection";
-import { Button } from "@/components/ui/button";
+import { NotesSection } from "./form-sections/NotesSection";
+import { FormActions } from "./form-sections/FormActions";
 import { useTorqueWrenchSubmit } from "@/hooks/useTorqueWrenchSubmit";
 import { toast } from "sonner";
 import { validateForm } from "@/utils/torqueReadingsValidation";
@@ -92,21 +93,15 @@ export const TorqueReadingsForm = ({ equipment, onClose }: TorqueReadingsFormPro
         onChange={(field, value) => setFormData(prev => ({ ...prev, [field]: value }))}
       />
 
-      <div className="flex justify-end gap-4">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={onClose}
-        >
-          Cancel
-        </Button>
-        <Button
-          type="submit"
-          disabled={isSaving}
-        >
-          {isSaving ? "Saving..." : "Save"}
-        </Button>
-      </div>
+      <NotesSection
+        notes={formData.notes}
+        onChange={(notes) => setFormData(prev => ({ ...prev, notes }))}
+      />
+
+      <FormActions
+        onClose={onClose}
+        isSaving={isSaving}
+      />
     </form>
   );
 };
