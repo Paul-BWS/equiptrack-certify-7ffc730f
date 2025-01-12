@@ -17,7 +17,12 @@ export const ReadingsSection = ({
   const parseReadings = (readingsData: Reading[] | string): Reading[] => {
     if (typeof readingsData === 'string') {
       try {
-        return JSON.parse(readingsData);
+        // Handle double-stringified JSON
+        const parsed = JSON.parse(readingsData);
+        if (typeof parsed === 'string') {
+          return JSON.parse(parsed);
+        }
+        return parsed;
       } catch (e) {
         console.error('Error parsing readings:', e);
         return Array(3).fill({ target: "", actual: "", deviation: "" });
