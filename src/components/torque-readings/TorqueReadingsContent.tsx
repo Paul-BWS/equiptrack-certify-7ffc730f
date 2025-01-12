@@ -26,7 +26,7 @@ export const TorqueReadingsContent = ({
   const isMobile = useIsMobile();
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <HeaderSection
         date={readings.date}
         retestDate={readings.retestDate}
@@ -71,7 +71,7 @@ export const TorqueReadingsContent = ({
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm text-gray-400">Notes</label>
+        <label className="text-sm text-gray-500">Notes</label>
         <textarea
           value={readings.notes}
           onChange={(e) => setReadings({ ...readings, notes: e.target.value })}

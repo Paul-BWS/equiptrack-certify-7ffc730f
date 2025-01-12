@@ -31,10 +31,10 @@ export const MeasurementsSection = ({
   const isMobile = useIsMobile();
 
   return (
-    <div className="space-y-4 bg-gray-50 p-6 rounded-lg mt-6">
+    <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
       <div className={`grid ${isMobile ? 'grid-cols-2' : 'grid-cols-4'} gap-6`}>
         <div className="space-y-2">
-          <label className="text-sm text-gray-500">Min</label>
+          <label className="text-sm text-[#C8C8C9]">Min</label>
           <input
             type="number"
             value={min}
@@ -43,7 +43,7 @@ export const MeasurementsSection = ({
           />
         </div>
         <div className="space-y-2">
-          <label className="text-sm text-gray-500">Max</label>
+          <label className="text-sm text-[#C8C8C9]">Max</label>
           <input
             type="number"
             value={max}
@@ -52,7 +52,7 @@ export const MeasurementsSection = ({
           />
         </div>
         <div className="space-y-2">
-          <label className="text-sm text-gray-500">Units</label>
+          <label className="text-sm text-[#C8C8C9]">Units</label>
           <Select
             value={units}
             onValueChange={onUnitsChange}
@@ -67,7 +67,7 @@ export const MeasurementsSection = ({
           </Select>
         </div>
         <div className="space-y-2">
-          <label className="text-sm text-gray-500">Result</label>
+          <label className="text-sm text-[#C8C8C9]">Result</label>
           <Select
             value={result}
             onValueChange={onResultChange}

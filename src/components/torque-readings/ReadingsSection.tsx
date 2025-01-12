@@ -25,13 +25,13 @@ export const ReadingsSection = ({
   }
 
   return (
-    <div className="bg-gray-50 p-6 rounded-lg">
+    <div className="bg-[#F9F9F9] p-6 rounded-lg">
       <h3 className="font-semibold mb-4 text-gray-900">{title}</h3>
       <div className="space-y-4">
         {readingsArray.map((reading, index) => (
           <div key={`${title}-${index}`} className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
-              <label className="text-sm text-gray-500">Target</label>
+              <label className="text-sm text-[#C8C8C9]">Target</label>
               <Input
                 value={reading.target}
                 onChange={onChange ? (e) => onChange(index, "target", e.target.value) : undefined}
@@ -41,7 +41,7 @@ export const ReadingsSection = ({
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm text-gray-500">Actual</label>
+              <label className="text-sm text-[#C8C8C9]">Actual</label>
               <Input
                 value={reading.actual}
                 onChange={onChange ? (e) => onChange(index, "actual", e.target.value) : undefined}
@@ -51,11 +51,11 @@ export const ReadingsSection = ({
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm text-gray-500">Deviation (%)</label>
+              <label className="text-sm text-[#C8C8C9]">Deviation (%)</label>
               <Input
                 value={reading.deviation}
                 placeholder="Deviation"
-                className="h-12 bg-gray-50 border-gray-200"
+                className="h-12 bg-[#F9F9F9] border-gray-200"
                 readOnly
               />
             </div>

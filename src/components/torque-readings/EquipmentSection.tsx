@@ -42,10 +42,10 @@ export const EquipmentSection = ({
   const isMobile = useIsMobile();
 
   return (
-    <div className="space-y-4 bg-gray-50 p-6 rounded-lg mt-6">
+    <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
       <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-6`}>
         <div className="space-y-2">
-          <label className="text-sm text-gray-500">Model</label>
+          <label className="text-sm text-[#C8C8C9]">Model</label>
           <input
             value={model}
             onChange={(e) => onModelChange(e.target.value)}
@@ -54,7 +54,7 @@ export const EquipmentSection = ({
           />
         </div>
         <div className="space-y-2">
-          <label className="text-sm text-gray-500">Serial Number</label>
+          <label className="text-sm text-[#C8C8C9]">Serial Number</label>
           <input
             value={serialNumber}
             onChange={(e) => onSerialNumberChange(e.target.value)}
@@ -66,7 +66,7 @@ export const EquipmentSection = ({
 
       <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-6`}>
         <div className="space-y-2">
-          <label className="text-sm text-gray-500">Engineer</label>
+          <label className="text-sm text-[#C8C8C9]">Engineer</label>
           <Select
             value={engineer}
             onValueChange={onEngineerChange}
@@ -84,11 +84,11 @@ export const EquipmentSection = ({
           </Select>
         </div>
         <div className="space-y-2">
-          <label className="text-sm text-gray-500">Sent On</label>
+          <label className="text-sm text-[#C8C8C9]">Sent On</label>
           <input
             value={sentOn}
             readOnly
-            className="flex h-12 w-full rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm"
+            className="flex h-12 w-full rounded-md border border-gray-200 bg-[#F9F9F9] px-3 py-2 text-sm"
           />
         </div>
       </div>
