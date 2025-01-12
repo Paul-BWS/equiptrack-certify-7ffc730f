@@ -10,7 +10,6 @@ export const TyreGaugeCertificateTemplate = ({
   equipment,
 }: TyreGaugeCertificateTemplateProps) => {
   const settings = getOrganizationSettings();
-  // Add null checks and default empty arrays
   const readings = equipment?.readings || [];
   const definitiveReadings = equipment?.definitive_readings || [];
 
@@ -80,7 +79,7 @@ export const TyreGaugeCertificateTemplate = ({
         </div>
 
         <div className="bg-gray-50 p-4 rounded-lg">
-          <div className="grid grid-cols-4 gap-4 mb-4">
+          <div className="grid grid-cols-4 gap-4">
             <div>
               <h2 className="text-xs font-semibold text-gray-500 uppercase">Min</h2>
               <p className="text-sm font-medium">{equipment?.min_pressure}</p>
@@ -98,17 +97,19 @@ export const TyreGaugeCertificateTemplate = ({
               <p className="text-sm font-medium text-green-600">{equipment?.result}</p>
             </div>
           </div>
+        </div>
 
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-sm font-semibold mb-3 text-primary">As Found</h2>
-              <div className="space-y-2">
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <h2 className="text-sm font-semibold mb-3 text-primary">As Found</h2>
+          <div className="grid grid-cols-2 gap-6">
+            {[0, 1].map((rowIndex) => (
+              <div key={rowIndex} className="space-y-2">
                 <div className="grid grid-cols-3 gap-4 font-semibold text-gray-600 pb-2 text-xs">
                   <span>Target</span>
                   <span>Actual</span>
                   <span>Deviation</span>
                 </div>
-                {readings.map((reading, index) => (
+                {readings.slice(rowIndex * 2, (rowIndex + 1) * 2).map((reading, index) => (
                   <div key={index} className="grid grid-cols-3 gap-4 py-2 border-t text-xs">
                     <span>{reading.target}</span>
                     <span>{reading.actual}</span>
@@ -116,17 +117,21 @@ export const TyreGaugeCertificateTemplate = ({
                   </div>
                 ))}
               </div>
-            </div>
+            ))}
+          </div>
+        </div>
 
-            <div className="border-t pt-4">
-              <h2 className="text-sm font-semibold mb-3 text-primary">Definitive</h2>
-              <div className="space-y-2">
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <h2 className="text-sm font-semibold mb-3 text-primary">Definitive</h2>
+          <div className="grid grid-cols-2 gap-6">
+            {[0, 1].map((rowIndex) => (
+              <div key={rowIndex} className="space-y-2">
                 <div className="grid grid-cols-3 gap-4 font-semibold text-gray-600 pb-2 text-xs">
                   <span>Target</span>
                   <span>Actual</span>
                   <span>Deviation</span>
                 </div>
-                {definitiveReadings.map((reading, index) => (
+                {definitiveReadings.slice(rowIndex * 2, (rowIndex + 1) * 2).map((reading, index) => (
                   <div key={index} className="grid grid-cols-3 gap-4 py-2 border-t text-xs">
                     <span>{reading.target}</span>
                     <span>{reading.actual}</span>
@@ -134,7 +139,7 @@ export const TyreGaugeCertificateTemplate = ({
                   </div>
                 ))}
               </div>
-            </div>
+            ))}
           </div>
         </div>
 
