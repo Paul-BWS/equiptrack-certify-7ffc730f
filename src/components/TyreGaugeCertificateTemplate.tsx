@@ -99,7 +99,7 @@ export const TyreGaugeCertificateTemplate = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="space-y-6">
             <div>
               <h2 className="text-sm font-semibold mb-3 text-primary">As Found</h2>
               <div className="space-y-2">
@@ -117,7 +117,8 @@ export const TyreGaugeCertificateTemplate = ({
                 ))}
               </div>
             </div>
-            <div>
+
+            <div className="border-t pt-4">
               <h2 className="text-sm font-semibold mb-3 text-primary">Definitive</h2>
               <div className="space-y-2">
                 <div className="grid grid-cols-3 gap-4 font-semibold text-gray-600 pb-2 text-xs">
@@ -144,7 +145,7 @@ export const TyreGaugeCertificateTemplate = ({
 
         <div className="bg-gray-50 p-3 rounded-lg">
           <h2 className="text-sm font-semibold mb-1 text-primary">Notes</h2>
-          <p className="min-h-[40px] whitespace-pre-wrap text-[11px]">{equipment?.notes}</p>
+          <p className="min-h-[40px] whitespace-pre-wrap text-xs">{equipment?.notes}</p>
         </div>
 
         <div className="mt-6 flex justify-end items-center gap-4 border-t pt-4">
