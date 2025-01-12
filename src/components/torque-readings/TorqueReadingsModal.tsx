@@ -1,8 +1,8 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { TorqueWrench } from "@/types/equipment";
-import { TorqueReadingsForm } from "./torque-readings/TorqueReadingsForm";
+import { TorqueReadingsForm } from "./TorqueReadingsForm";
 import { useEquipmentData } from "@/hooks/useEquipmentData";
-import { LoadingState } from "./torque-readings/LoadingState";
+import { LoadingState } from "./LoadingState";
 import { toast } from "sonner";
 
 interface TorqueReadingsModalProps {
