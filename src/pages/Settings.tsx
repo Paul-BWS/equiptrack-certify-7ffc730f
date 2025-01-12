@@ -8,6 +8,8 @@ import { Navigation } from "@/components/Navigation";
 import { getOrganizationSettings, updateOrganizationSettings } from "@/utils/settings";
 import { CompanyInformationForm } from "@/components/settings/CompanyInformationForm";
 import { MediaUploadForm } from "@/components/settings/MediaUploadForm";
+import { StaffManagement } from "@/components/settings/StaffManagement";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Settings() {
   const navigate = useNavigate();
@@ -78,7 +80,7 @@ export default function Settings() {
       <Navigation />
       <div className="container mx-auto py-8">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Organization Settings</h1>
+          <h1 className="text-2xl font-bold">Settings</h1>
           <Button
             variant="ghost"
             size="icon"
@@ -89,14 +91,31 @@ export default function Settings() {
           </Button>
         </div>
         
-        <div className="grid gap-6">
-          <CompanyInformationForm settings={settings} setSettings={setSettings} />
-          <MediaUploadForm settings={settings} setSettings={setSettings} />
+        <Tabs defaultValue="company" className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="company">Company Information</TabsTrigger>
+            <TabsTrigger value="staff">Staff Management</TabsTrigger>
+            <TabsTrigger value="media">Media</TabsTrigger>
+          </TabsList>
 
-          <div className="flex justify-end">
-            <Button onClick={handleSave}>Save Settings</Button>
-          </div>
-        </div>
+          <TabsContent value="company" className="space-y-6">
+            <CompanyInformationForm settings={settings} setSettings={setSettings} />
+            <div className="flex justify-end">
+              <Button onClick={handleSave}>Save Settings</Button>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="staff">
+            <StaffManagement />
+          </TabsContent>
+
+          <TabsContent value="media" className="space-y-6">
+            <MediaUploadForm settings={settings} setSettings={setSettings} />
+            <div className="flex justify-end">
+              <Button onClick={handleSave}>Save Settings</Button>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
