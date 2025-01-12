@@ -7,8 +7,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Trash2 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { toast } from "sonner";
+import { supabase } from "@/lib/supabase";
 
 interface EquipmentListProps {
   equipment: Array<{
@@ -26,6 +28,24 @@ export const EquipmentList = ({
   onGenerateCertificate,
 }: EquipmentListProps) => {
   const isMobile = useIsMobile();
+
+  const handleDelete = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('torque_wrench')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      toast.success("Equipment deleted successfully");
+      // Refresh the page to update the list
+      window.location.reload();
+    } catch (error) {
+      console.error('Error deleting equipment:', error);
+      toast.error("Failed to delete equipment");
+    }
+  };
 
   return (
     <div className="rounded-md border">
@@ -52,14 +72,27 @@ export const EquipmentList = ({
               {!isMobile && <TableCell>{item.nextServiceDue}</TableCell>}
               {!isMobile && (
                 <TableCell className="text-right">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => onGenerateCertificate(item.id)}
-                    className="rounded-full bg-primary hover:bg-primary/90 h-10 w-10 p-0"
-                  >
-                    <ArrowRight className="h-4 w-4 text-primary-foreground" />
-                  </Button>
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(item.id);
+                      }}
+                      className="rounded-full bg-destructive hover:bg-destructive/90 h-10 w-10 p-0"
+                    >
+                      <Trash2 className="h-4 w-4 text-destructive-foreground" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => onGenerateCertificate(item.id)}
+                      className="rounded-full bg-primary hover:bg-primary/90 h-10 w-10 p-0"
+                    >
+                      <ArrowRight className="h-4 w-4 text-primary-foreground" />
+                    </Button>
+                  </div>
                 </TableCell>
               )}
             </TableRow>
