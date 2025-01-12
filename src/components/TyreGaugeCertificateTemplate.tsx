@@ -9,8 +9,13 @@ export const TyreGaugeCertificateTemplate = ({
   equipment,
 }: TyreGaugeCertificateTemplateProps) => {
   const settings = getOrganizationSettings();
+  // Add null checks and default empty arrays
   const readings = equipment?.readings || [];
   const definitiveReadings = equipment?.definitive_readings || [];
+
+  if (!equipment) {
+    return null;
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg border-8 border-double border-gray-200" id="certificate">
