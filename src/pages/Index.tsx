@@ -11,14 +11,21 @@ import { Card } from "@/components/ui/card";
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [authError, setAuthError] = useState<string | null>(null);
 
-  const { data: session, isLoading: isSessionLoading } = useQuery({
+  const { data: session, isLoading: isSessionLoading, error: sessionError } = useQuery({
     queryKey: ['session'],
     queryFn: async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (error) {
+        setAuthError(error.message);
+        return null;
+      }
       return session;
     },
   });
@@ -40,6 +47,7 @@ const Index = () => {
     meta: {
       onError: (error: Error) => {
         console.error('Error fetching companies:', error);
+        toast.error("Failed to load companies");
       }
     }
   });
@@ -48,7 +56,25 @@ const Index = () => {
   if (isSessionLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
+          <p className="mt-2 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state if session check failed
+  if (sessionError || authError) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="w-full max-w-md px-4">
+          <Alert variant="destructive">
+            <AlertDescription>
+              {sessionError?.message || authError || "Authentication error occurred"}
+            </AlertDescription>
+          </Alert>
+        </div>
       </div>
     );
   }
@@ -111,7 +137,7 @@ const Index = () => {
 
           {isLoadingCompanies ? (
             <div className="flex justify-center items-center h-48">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>
           ) : (
             <CustomerList customers={filteredCompanies} />
