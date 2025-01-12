@@ -21,12 +21,18 @@ export const TyreGaugeList = ({
   onGenerateCertificate,
   onViewReadings,
 }: TyreGaugeListProps) => {
+  const handleNewTyreGauge = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onNewTyreGauge();
+  };
+
   if (tyreGauges.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center p-8 text-center border rounded-lg bg-muted/10">
         <p className="text-muted-foreground mb-4">No tyre gauges found for this customer.</p>
         <Button 
-          onClick={onNewTyreGauge}
+          onClick={handleNewTyreGauge}
           className="bg-primary hover:bg-primary/90"
         >
           Add First Tyre Gauge
