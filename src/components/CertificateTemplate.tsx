@@ -35,7 +35,7 @@ export const CertificateTemplate = ({
           <p className="min-h-[40px] whitespace-pre-wrap text-[11px]">{serviceRecord.notes}</p>
         </div>
 
-        <CertificateFooter serviceRecord={serviceRecord} />
+        <CertificateFooter />
       </div>
     </div>
   );
