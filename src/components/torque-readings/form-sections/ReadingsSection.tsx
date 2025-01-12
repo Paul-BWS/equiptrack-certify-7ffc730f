@@ -47,6 +47,13 @@ export const ReadingsSection = ({
 
     readingsArray[index] = reading;
     onChange(isDefinitive ? "definitiveReadings" : "readings", readingsArray);
+
+    // If this is an initial reading change, update definitive readings
+    if (!isDefinitive) {
+      const definitiveArray = parseReadings(definitiveReadings);
+      definitiveArray[index] = { ...reading };
+      onChange("definitiveReadings", definitiveArray);
+    }
   };
 
   const renderReadingsGroup = (isDefinitive: boolean) => {
