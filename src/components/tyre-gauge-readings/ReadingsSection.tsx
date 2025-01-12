@@ -9,31 +9,33 @@ interface ReadingsSectionProps {
 export const ReadingsSection = ({ readings, onReadingsChange }: ReadingsSectionProps) => {
   const handleReadingChange = (index: number, field: keyof Reading, value: string) => {
     const newReadings = [...readings];
-    // Ensure the array has enough elements
-    while (newReadings.length <= index) {
+    // Ensure we have at least 4 readings
+    while (newReadings.length < 4) {
       newReadings.push({ target: "", actual: "", deviation: "" });
     }
+    
     newReadings[index] = {
       ...newReadings[index],
       [field]: value,
-      // Calculate deviation when either target or actual changes
-      deviation: field === 'target' || field === 'actual' ? calculateDeviation(
-        field === 'target' ? value : newReadings[index].target,
-        field === 'actual' ? value : newReadings[index].actual
-      ) : newReadings[index].deviation
     };
-    onReadingsChange(newReadings);
-  };
 
-  const calculateDeviation = (target: string, actual: string) => {
-    const targetNum = parseFloat(target);
-    const actualNum = parseFloat(actual);
-    
-    if (!isNaN(targetNum) && !isNaN(actualNum) && targetNum !== 0) {
-      const deviation = ((actualNum - targetNum) / targetNum) * 100;
-      return deviation.toFixed(2);
+    // Calculate deviation when either target or actual changes
+    if (field === 'target' || field === 'actual') {
+      const target = field === 'target' ? value : newReadings[index].target;
+      const actual = field === 'actual' ? value : newReadings[index].actual;
+      
+      if (target && actual) {
+        const targetNum = parseFloat(target);
+        const actualNum = parseFloat(actual);
+        
+        if (!isNaN(targetNum) && !isNaN(actualNum) && targetNum !== 0) {
+          const deviation = ((actualNum - targetNum) / targetNum) * 100;
+          newReadings[index].deviation = deviation.toFixed(2);
+        }
+      }
     }
-    return "";
+
+    onReadingsChange(newReadings);
   };
 
   // Ensure we always have exactly 4 readings (2 for AS FOUND, 2 for DEFINITIVE)
