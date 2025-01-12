@@ -3,8 +3,8 @@ import { FormField } from "@/components/torque-readings/FormField";
 import { calculateDeviation } from "@/utils/certificateDataPreparation";
 
 interface ReadingsSectionProps {
-  readings: Reading[];
-  definitiveReadings: Reading[];
+  readings: Reading[] | string;
+  definitiveReadings: Reading[] | string;
   onChange: (field: string, value: Reading[]) => void;
 }
 
@@ -13,8 +13,21 @@ export const ReadingsSection = ({
   definitiveReadings,
   onChange
 }: ReadingsSectionProps) => {
+  // Parse readings if they're strings
+  const parseReadings = (readingsData: Reading[] | string): Reading[] => {
+    if (typeof readingsData === 'string') {
+      try {
+        return JSON.parse(readingsData);
+      } catch (e) {
+        console.error('Error parsing readings:', e);
+        return Array(3).fill({ target: "", actual: "", deviation: "" });
+      }
+    }
+    return Array.isArray(readingsData) ? readingsData : Array(3).fill({ target: "", actual: "", deviation: "" });
+  };
+
   const handleReadingChange = (index: number, field: keyof Reading, value: string, isDefinitive: boolean) => {
-    const readingsArray = isDefinitive ? [...definitiveReadings] : [...readings];
+    const readingsArray = isDefinitive ? parseReadings(definitiveReadings) : parseReadings(readings);
     const reading = { ...readingsArray[index] };
 
     if (field === "target" || field === "actual") {
@@ -32,7 +45,7 @@ export const ReadingsSection = ({
   };
 
   const renderReadingsGroup = (isDefinitive: boolean) => {
-    const currentReadings = isDefinitive ? definitiveReadings : readings;
+    const currentReadings = parseReadings(isDefinitive ? definitiveReadings : readings);
     const title = isDefinitive ? "Definitive Readings" : "Initial Readings";
 
     return (
