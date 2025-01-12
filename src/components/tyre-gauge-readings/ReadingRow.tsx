@@ -10,6 +10,7 @@ interface ReadingRowProps {
 
 export const ReadingRow = ({ reading, index, onReadingChange }: ReadingRowProps) => {
   useEffect(() => {
+    // Calculate deviation when target or actual changes
     if (reading.target && reading.actual) {
       const targetNum = parseFloat(reading.target);
       const actualNum = parseFloat(reading.actual);
@@ -26,11 +27,25 @@ export const ReadingRow = ({ reading, index, onReadingChange }: ReadingRowProps)
   }, [reading.target, reading.actual, index, onReadingChange]);
 
   return (
-    <Input
-      type="text"
-      value={reading.target}
-      onChange={(e) => onReadingChange(index, 'target', e.target.value)}
-      className="w-full"
-    />
+    <React.Fragment>
+      <Input
+        type="text"
+        value={reading.target}
+        onChange={(e) => onReadingChange(index, 'target', e.target.value)}
+        className="border rounded p-2"
+      />
+      <Input
+        type="text"
+        value={reading.actual}
+        onChange={(e) => onReadingChange(index, 'actual', e.target.value)}
+        className="border rounded p-2"
+      />
+      <Input
+        type="text"
+        value={reading.deviation}
+        readOnly
+        className="border rounded p-2 bg-gray-50"
+      />
+    </React.Fragment>
   );
 };
