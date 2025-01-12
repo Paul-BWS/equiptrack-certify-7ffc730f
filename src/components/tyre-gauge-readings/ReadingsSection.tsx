@@ -1,3 +1,4 @@
+import React from 'react';
 import { Reading } from "@/types/tyreGauge";
 
 interface ReadingsSectionProps {
