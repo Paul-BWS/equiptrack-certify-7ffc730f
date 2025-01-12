@@ -78,13 +78,6 @@ export const Navigation = () => {
                 <ClipboardList size={20} />
                 <span>Equipment</span>
               </Link>
-              <Link
-                to="/settings"
-                className="text-white hover:text-accent flex items-center gap-2"
-              >
-                <Settings size={20} />
-                <span>Settings</span>
-              </Link>
             </div>
 
             {/* Profile Dropdown */}
@@ -160,14 +153,6 @@ export const Navigation = () => {
             >
               <ClipboardList size={20} />
               <span>Equipment</span>
-            </Link>
-            <Link
-              to="/settings"
-              className="text-white hover:text-accent flex items-center gap-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <Settings size={20} />
-              <span>Settings</span>
             </Link>
             <Button
               variant="ghost"

@@ -20,14 +20,33 @@ export default function Settings() {
       
       if (error) {
         console.error("Auth check error:", error);
-        toast("Authentication error");
+        toast.error("Authentication error");
         navigate('/');
         return;
       }
       
       if (!session) {
         console.log("No active session found");
-        toast("Please sign in to access settings");
+        toast.error("Please sign in to access settings");
+        navigate('/');
+        return;
+      }
+
+      // Check if user belongs to BWS LTD
+      const { data: userData } = await supabase
+        .from('profiles')
+        .select('company_id')
+        .eq('id', session.user.id)
+        .single();
+
+      const { data: companyData } = await supabase
+        .from('companies')
+        .select('name')
+        .eq('id', userData?.company_id)
+        .single();
+
+      if (companyData?.name !== 'BWS LTD') {
+        toast.error("You don't have permission to access settings");
         navigate('/');
         return;
       }
@@ -40,7 +59,7 @@ export default function Settings() {
 
   const handleSave = () => {
     updateOrganizationSettings(settings);
-    toast("Settings saved successfully");
+    toast.success("Settings saved successfully");
   };
 
   if (isLoading) {
