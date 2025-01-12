@@ -61,8 +61,8 @@ export const BasicDetails = ({
         <div className="space-y-2">
           <Label htmlFor="engineer" className="text-sm text-[#C8C8C9]">Engineer</Label>
           <Select value={engineer} onValueChange={onEngineerChange}>
-            <SelectTrigger className="h-12 bg-white border-gray-200">
-              <SelectValue placeholder="Select an engineer" />
+            <SelectTrigger className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]">
+              <SelectValue placeholder="Select an engineer" className="text-[#C8C8C9]" />
             </SelectTrigger>
             <SelectContent>
               {ENGINEERS.map((eng) => (
