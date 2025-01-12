@@ -54,6 +54,7 @@ const Index = () => {
     return <ErrorScreen message={sessionError?.message || authError || "Authentication error occurred"} />;
   }
 
+  // If there's no session, show the authentication screen
   if (!session) {
     return <AuthenticationScreen />;
   }
