@@ -12,7 +12,10 @@ export const AuthenticationScreen = () => {
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth state changed:", event, session?.user?.id);
+      
       if (event === 'SIGNED_IN' && session) {
+        console.log("User signed in, redirecting to home");
         toast({
           title: "Welcome back!",
           description: "You have successfully signed in.",
@@ -20,9 +23,25 @@ export const AuthenticationScreen = () => {
         navigate('/');
       }
       if (event === 'SIGNED_OUT') {
+        console.log("User signed out, staying on auth screen");
         navigate('/');
       }
     });
+
+    // Check if we already have a session
+    const checkExistingSession = async () => {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (error) {
+        console.error("Session check error:", error);
+        return;
+      }
+      if (session) {
+        console.log("Existing session found, redirecting to home");
+        navigate('/');
+      }
+    };
+
+    checkExistingSession();
 
     return () => subscription.unsubscribe();
   }, [navigate, toast]);
