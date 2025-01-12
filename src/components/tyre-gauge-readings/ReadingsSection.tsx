@@ -8,8 +8,14 @@ interface ReadingsSectionProps {
 }
 
 export const ReadingsSection = ({ readings, onReadingsChange }: ReadingsSectionProps) => {
+  // Ensure we always have exactly 2 readings
+  const normalizedReadings = readings.length === 2 ? readings : [
+    { target: "", actual: "", deviation: "" },
+    { target: "", actual: "", deviation: "" }
+  ];
+
   const handleReadingChange = (index: number, field: keyof Reading, value: string) => {
-    const newReadings = [...readings];
+    const newReadings = [...normalizedReadings];
     newReadings[index] = {
       ...newReadings[index],
       [field]: value,
@@ -25,7 +31,7 @@ export const ReadingsSection = ({ readings, onReadingsChange }: ReadingsSectionP
         <div className="font-medium">Actual</div>
         <div className="font-medium">Deviation</div>
         
-        {readings.map((reading, index) => (
+        {normalizedReadings.map((reading, index) => (
           <ReadingRow
             key={index}
             reading={reading}
