@@ -1,4 +1,3 @@
-import { FormField } from "./FormField";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Select,
@@ -43,14 +42,15 @@ export const EquipmentSection = ({
   const isMobile = useIsMobile();
 
   return (
-    <>
-      <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-6 mb-6`}>
+    <div className="space-y-6">
+      <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-6`}>
         <div className="space-y-2">
           <label className="text-sm text-gray-400">Model</label>
           <input
             value={model}
             onChange={(e) => onModelChange(e.target.value)}
             className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
+            placeholder="Enter model"
           />
         </div>
         <div className="space-y-2">
@@ -59,6 +59,7 @@ export const EquipmentSection = ({
             value={serialNumber}
             onChange={(e) => onSerialNumberChange(e.target.value)}
             className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
+            placeholder="Enter serial number"
           />
         </div>
       </div>
@@ -91,6 +92,6 @@ export const EquipmentSection = ({
           />
         </div>
       </div>
-    </>
+    </div>
   );
 };

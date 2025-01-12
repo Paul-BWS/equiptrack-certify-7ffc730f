@@ -1,5 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { TorqueWrench } from "@/types/equipment";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { TorqueReadingsForm } from "./torque-readings/TorqueReadingsForm";
 import { useEquipmentData } from "@/hooks/useEquipmentData";
 import { LoadingState } from "./torque-readings/LoadingState";
@@ -29,12 +28,9 @@ export const TorqueReadingsModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[800px] lg:max-w-[1000px] max-h-[90vh] overflow-y-auto bg-[#FFFFFF]">
+      <DialogContent className="sm:max-w-[800px] lg:max-w-[1000px] max-h-[90vh] overflow-y-auto bg-white">
         <DialogHeader>
-          <DialogTitle>Torque Wrench Readings</DialogTitle>
-          <DialogDescription>
-            View and edit torque wrench readings
-          </DialogDescription>
+          <DialogTitle className="text-xl font-semibold">Torque Wrench Readings</DialogTitle>
         </DialogHeader>
         
         <TorqueReadingsForm
