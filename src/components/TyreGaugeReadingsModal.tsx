@@ -64,7 +64,7 @@ export const TyreGaugeReadingsModal = ({
         .update({
           cert_number: certNumber,
           service_date: date?.toISOString(),
-          retest_date: retestDate?.toISOString(),
+          next_service_due: retestDate?.toISOString(), // Changed from retest_date to next_service_due
           model: model,
           serial_number: serialNumber,
           engineer: engineer,
