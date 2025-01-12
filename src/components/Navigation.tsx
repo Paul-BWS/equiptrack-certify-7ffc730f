@@ -1,18 +1,12 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ClipboardList, Settings, LayoutDashboard, Menu, Users, LogOut, User } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Menu } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import { DesktopNav } from "./navigation/DesktopNav";
+import { MobileNav } from "./navigation/MobileNav";
+import { UserMenu } from "./navigation/UserMenu";
 
 export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -47,73 +41,16 @@ export const Navigation = () => {
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link to="/" className="text-white text-xl font-bold">
+            <a href="/" className="text-white text-xl font-bold">
               EquipService
-            </Link>
+            </a>
             <span className="text-white/80">|</span>
             <span className="text-white">{getCurrentSection()}</span>
           </div>
           
           <div className="flex items-center gap-4">
-            {/* Desktop navigation */}
-            <div className="hidden md:flex gap-4">
-              <Link
-                to="/"
-                className="text-white hover:text-accent flex items-center gap-2"
-              >
-                <LayoutDashboard size={20} />
-                <span>Dashboard</span>
-              </Link>
-              <Link
-                to="/"
-                className="text-white hover:text-accent flex items-center gap-2"
-              >
-                <Users size={20} />
-                <span>Customers</span>
-              </Link>
-              <Link
-                to="/all-equipment"
-                className="text-white hover:text-accent flex items-center gap-2"
-              >
-                <ClipboardList size={20} />
-                <span>Equipment</span>
-              </Link>
-            </div>
-
-            {/* Profile Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback>U</AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">User</p>
-                    <p className="text-xs leading-none text-muted-foreground">
-                      user@example.com
-                    </p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate('/profile')}>
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate('/settings')}>
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignOut}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <DesktopNav />
+            <UserMenu onSignOut={handleSignOut} />
 
             {/* Mobile burger menu */}
             <Button
@@ -127,43 +64,11 @@ export const Navigation = () => {
           </div>
         </div>
 
-        {/* Mobile menu */}
-        {isMenuOpen && (
-          <div className="md:hidden mt-4 flex flex-col gap-4">
-            <Link
-              to="/"
-              className="text-white hover:text-accent flex items-center gap-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <LayoutDashboard size={20} />
-              <span>Dashboard</span>
-            </Link>
-            <Link
-              to="/"
-              className="text-white hover:text-accent flex items-center gap-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <Users size={20} />
-              <span>Customers</span>
-            </Link>
-            <Link
-              to="/all-equipment"
-              className="text-white hover:text-accent flex items-center gap-2"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <ClipboardList size={20} />
-              <span>Equipment</span>
-            </Link>
-            <Button
-              variant="ghost"
-              className="text-white hover:text-accent flex items-center gap-2 justify-start p-0"
-              onClick={handleSignOut}
-            >
-              <LogOut size={20} />
-              <span>Log out</span>
-            </Button>
-          </div>
-        )}
+        <MobileNav 
+          isOpen={isMenuOpen} 
+          onClose={() => setIsMenuOpen(false)}
+          onSignOut={handleSignOut}
+        />
       </div>
     </nav>
   );
