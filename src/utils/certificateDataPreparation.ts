@@ -1,7 +1,8 @@
 export const generateCertificateNumber = () => {
   const prefix = 'BWS';
-  const randomNum = Math.floor(10000 + Math.random() * 90000);
-  return `${prefix}${randomNum}`;
+  const timestamp = Date.now();
+  const randomNum = Math.floor(Math.random() * 1000);
+  return `${prefix}-${timestamp}-${randomNum}`;
 };
 
 export const generateUUID = () => {
@@ -22,12 +23,16 @@ export const calculateDeviation = (target: string, actual: string): string => {
 };
 
 export const prepareCertificateData = (readings: any, equipmentId: string | null) => {
+  if (!readings || !equipmentId) {
+    throw new Error('Invalid data for certificate preparation');
+  }
+
   return {
     id: generateUUID(),
-    torque_wrench_id: equipmentId || generateUUID(),
-    certification_number: readings.certNumber,
-    issue_date: readings.date,
-    expiry_date: readings.retestDate
+    torque_wrench_id: equipmentId,
+    certification_number: readings.certNumber || generateCertificateNumber(),
+    issue_date: readings.date || new Date().toISOString().split('T')[0],
+    expiry_date: readings.retestDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
   };
 };
 
