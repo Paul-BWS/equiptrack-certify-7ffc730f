@@ -20,24 +20,37 @@ const queryClient = new QueryClient();
 function App() {
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      if (error) {
-        console.error("Auth check error:", error);
-        toast.error("Authentication error. Please sign in.");
-        return;
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error("Auth check error:", error);
+          toast.error(error.message);
+          return;
+        }
+        
+        if (!session) {
+          console.log("No active session found");
+          return;
+        }
+        
+        console.log("Active session found:", session.user.id);
+        toast.success("Successfully authenticated");
+      } catch (err) {
+        console.error("Unexpected error during auth check:", err);
+        toast.error("An unexpected error occurred");
       }
-      
-      if (!session) {
-        console.log("No active session found");
-        toast.error("Please sign in to access the application");
-        return;
-      }
-      
-      console.log("Active session found:", session.user.id);
-      toast.success("Successfully authenticated");
     };
 
     checkAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth state changed:", event);
+      if (event === 'SIGNED_OUT') {
+        toast.info("You have been signed out");
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   return (

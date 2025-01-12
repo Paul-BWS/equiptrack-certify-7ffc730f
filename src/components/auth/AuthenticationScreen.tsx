@@ -4,47 +4,71 @@ import { supabase } from "@/lib/supabase";
 import { Card } from "@/components/ui/card";
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
+import { AuthError } from '@supabase/supabase-js';
 
 export const AuthenticationScreen = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("Auth state changed:", event, session?.user?.id);
       
       if (event === 'SIGNED_IN' && session) {
         console.log("User signed in, redirecting to home");
-        toast({
-          title: "Welcome back!",
-          description: "You have successfully signed in.",
-        });
+        toast.success("Welcome back!");
         navigate('/');
       }
       if (event === 'SIGNED_OUT') {
         console.log("User signed out, staying on auth screen");
         navigate('/');
       }
+      if (event === 'USER_UPDATED') {
+        const { error } = await supabase.auth.getSession();
+        if (error) {
+          handleAuthError(error);
+        }
+      }
     });
 
     // Check if we already have a session
     const checkExistingSession = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      if (error) {
-        console.error("Session check error:", error);
-        return;
-      }
-      if (session) {
-        console.log("Existing session found, redirecting to home");
-        navigate('/');
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error("Session check error:", error);
+          handleAuthError(error);
+          return;
+        }
+        if (session) {
+          console.log("Existing session found, redirecting to home");
+          navigate('/');
+        }
+      } catch (err) {
+        console.error("Unexpected error during session check:", err);
+        toast.error("An unexpected error occurred while checking your session");
       }
     };
 
     checkExistingSession();
 
     return () => subscription.unsubscribe();
-  }, [navigate, toast]);
+  }, [navigate]);
+
+  const handleAuthError = (error: AuthError) => {
+    console.error("Auth error:", error);
+    let errorMessage = "An error occurred during authentication";
+    
+    if (error.message.includes("missing email")) {
+      errorMessage = "Please enter your email address";
+    } else if (error.message.includes("invalid credentials")) {
+      errorMessage = "Invalid email or password";
+    } else if (error.message.includes("validation failed")) {
+      errorMessage = "Please check your email and password";
+    }
+    
+    toast.error(errorMessage);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
