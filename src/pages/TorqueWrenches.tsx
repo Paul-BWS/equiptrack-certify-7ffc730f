@@ -51,8 +51,6 @@ const TorqueWrenches = () => {
         throw error;
       }
 
-      console.log('Fetched torque wrenches:', equipmentData);
-      
       return equipmentData.map(wrench => ({
         id: wrench.id,
         model: wrench.model || '',
@@ -60,13 +58,57 @@ const TorqueWrenches = () => {
         lastServiceDate: wrench.last_service_date || '',
         nextServiceDue: wrench.next_service_due || ''
       }));
-    },
-    meta: {
-      onError: (error: Error) => {
-        console.error('Query error:', error);
-        toast.error("Could not load torque wrench data. Please try again later.");
-      }
     }
+  });
+
+  const { data: selectedEquipment } = useQuery({
+    queryKey: ['equipment', selectedEquipmentId],
+    queryFn: async () => {
+      if (!selectedEquipmentId) return null;
+      
+      const { data, error } = await supabase
+        .from('torque_wrench')
+        .select('*')
+        .eq('id', selectedEquipmentId)
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!selectedEquipmentId && showCertificateModal
+  });
+
+  const { data: serviceRecord } = useQuery({
+    queryKey: ['service-record', selectedEquipmentId],
+    queryFn: async () => {
+      if (!selectedEquipmentId) return null;
+      
+      const { data, error } = await supabase
+        .from('service_records')
+        .select('*')
+        .eq('torque_wrench_id', selectedEquipmentId)
+        .order('service_date', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (error) {
+        // If no service record exists, return a default one
+        if (error.code === 'PGRST116') {
+          return {
+            id: crypto.randomUUID(),
+            torque_wrench_id: selectedEquipmentId,
+            service_date: new Date().toISOString(),
+            service_type: 'calibration',
+            technician: 'Default Technician',
+            notes: '',
+            next_service_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
+          };
+        }
+        throw error;
+      }
+      return data;
+    },
+    enabled: !!selectedEquipmentId && showCertificateModal
   });
 
   const handleNewTorqueWrench = () => {
@@ -122,19 +164,27 @@ const TorqueWrenches = () => {
         equipmentId={selectedEquipmentId}
       />
 
-      {selectedEquipmentId && (
+      {selectedEquipmentId && selectedEquipment && (
         <CertificateModal
           open={showCertificateModal}
           onOpenChange={setShowCertificateModal}
           certificate={{
             id: "",
             torque_wrench_id: selectedEquipmentId,
-            certification_number: "",
+            certification_number: `BWS-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
             issue_date: new Date().toISOString(),
-            expiry_date: new Date().toISOString()
+            expiry_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
           }}
-          equipment={{} as any}
-          serviceRecord={{} as any}
+          equipment={selectedEquipment}
+          serviceRecord={serviceRecord || {
+            id: crypto.randomUUID(),
+            torque_wrench_id: selectedEquipmentId,
+            service_date: new Date().toISOString(),
+            service_type: 'calibration',
+            technician: 'Default Technician',
+            notes: '',
+            next_service_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
+          }}
         />
       )}
     </div>
