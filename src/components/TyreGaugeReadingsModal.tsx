@@ -39,6 +39,7 @@ export const TyreGaugeReadingsModal = ({
     notes,
     readings,
     definitiveReadings,
+    result,
     setDate,
     setRetestDate,
     setModel,
@@ -51,6 +52,7 @@ export const TyreGaugeReadingsModal = ({
     setNotes,
     setReadings,
     setDefinitiveReadings,
+    setResult,
   } = useTyreGaugeForm(equipmentId);
 
   const handleDelete = async () => {
@@ -76,11 +78,10 @@ export const TyreGaugeReadingsModal = ({
     setIsSaving(true);
     
     try {
-      // Ensure readings and definitiveReadings are properly formatted
       const formattedReadings = Array.isArray(readings) ? readings : [];
       const formattedDefinitiveReadings = Array.isArray(definitiveReadings) ? definitiveReadings : [];
 
-      console.log('Submitting definitive readings:', formattedDefinitiveReadings); // Debug log
+      console.log('Submitting definitive readings:', formattedDefinitiveReadings);
 
       const tyreGaugeData = {
         cert_number: certNumber,
@@ -95,7 +96,8 @@ export const TyreGaugeReadingsModal = ({
         status: status,
         notes: notes,
         readings: formattedReadings,
-        definitive_readings: formattedDefinitiveReadings, // Ensure this is properly formatted
+        definitive_readings: formattedDefinitiveReadings,
+        result: result,
       };
 
       if (equipmentId) {
@@ -151,9 +153,11 @@ export const TyreGaugeReadingsModal = ({
             model={model}
             serialNumber={serialNumber}
             engineer={engineer}
+            result={result}
             onModelChange={setModel}
             onSerialNumberChange={setSerialNumber}
             onEngineerChange={setEngineer}
+            onResultChange={setResult}
           />
           
           <MeasurementsSection

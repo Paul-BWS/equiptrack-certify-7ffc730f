@@ -20,18 +20,22 @@ interface BasicDetailsProps {
   model: string;
   serialNumber: string;
   engineer: string;
+  result: string;
   onModelChange: (value: string) => void;
   onSerialNumberChange: (value: string) => void;
   onEngineerChange: (value: string) => void;
+  onResultChange: (value: string) => void;
 }
 
 export const BasicDetails = ({
   model,
   serialNumber,
   engineer,
+  result,
   onModelChange,
   onSerialNumberChange,
   onEngineerChange,
+  onResultChange,
 }: BasicDetailsProps) => {
   const handleEngineerChange = (value: string) => {
     onEngineerChange(value);
@@ -85,6 +89,26 @@ export const BasicDetails = ({
                   {eng}
                 </SelectItem>
               ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="result" className="text-sm text-[#C8C8C9]">Result</Label>
+          <Select 
+            value={result} 
+            onValueChange={onResultChange}
+            name="result"
+          >
+            <SelectTrigger 
+              id="result"
+              className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
+            >
+              <SelectValue placeholder="Select result" />
+            </SelectTrigger>
+            <SelectContent position="popper">
+              <SelectItem value="PASS">Pass</SelectItem>
+              <SelectItem value="FAIL">Fail</SelectItem>
             </SelectContent>
           </Select>
         </div>

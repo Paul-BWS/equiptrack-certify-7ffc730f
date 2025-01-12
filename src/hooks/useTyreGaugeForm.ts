@@ -16,6 +16,7 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
   const [units, setUnits] = useState("psi");
   const [status, setStatus] = useState("ACTIVE");
   const [notes, setNotes] = useState("");
+  const [result, setResult] = useState("PASS");
   const [readings, setReadings] = useState<Reading[]>([
     { target: "", actual: "", deviation: "" },
     { target: "", actual: "", deviation: "" },
@@ -28,7 +29,6 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
   useEffect(() => {
     const loadData = async () => {
       if (!equipmentId) {
-        // Initialize form for new tyre gauge
         setCertNumber(generateCertificateNumber());
         setDate(new Date());
         const nextYear = new Date();
@@ -41,6 +41,7 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
         setMax("");
         setUnits("psi");
         setStatus("ACTIVE");
+        setResult("PASS");
         setNotes("");
         setReadings([
           { target: "", actual: "", deviation: "" },
@@ -53,7 +54,6 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
         return;
       }
 
-      // Load existing tyre gauge data
       const { data, error } = await supabase
         .from('tyre_gauges')
         .select('*')
@@ -76,6 +76,7 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
         setMax(data.max_pressure?.toString() || "");
         setUnits(data.units || "psi");
         setStatus(data.status || "ACTIVE");
+        setResult(data.result || "PASS");
         setNotes(data.notes || "");
         setReadings(data.readings || [
           { target: "", actual: "", deviation: "" },
@@ -107,6 +108,7 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
     notes,
     readings,
     definitiveReadings,
+    result,
     setDate,
     setRetestDate,
     setModel,
@@ -119,5 +121,6 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
     setNotes,
     setReadings,
     setDefinitiveReadings,
+    setResult,
   };
 };
