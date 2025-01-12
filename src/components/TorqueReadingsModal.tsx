@@ -9,6 +9,8 @@ import { ReadingsSection } from "./torque-readings/form-sections/ReadingsSection
 import { NotesSection } from "./torque-readings/form-sections/NotesSection";
 import { FormActions } from "./torque-readings/form-sections/FormActions";
 import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
+import { useTorqueWrenchSubmit } from "@/hooks/useTorqueWrenchSubmit";
+import { validateForm } from "@/utils/torqueReadingsValidation";
 
 interface TorqueReadingsModalProps {
   open: boolean;
@@ -23,6 +25,10 @@ export const TorqueReadingsModal = ({
 }: TorqueReadingsModalProps) => {
   const { data: equipment, isLoading, error } = useEquipmentData(equipmentId, open);
   const { readings, setReadings } = useTorqueReadingsForm(equipment, open);
+  const { handleSave, isSaving } = useTorqueWrenchSubmit(equipmentId, () => {
+    toast.success("Torque wrench data saved successfully");
+    onOpenChange(false);
+  });
 
   // Generate certificate number for new entries
   if (!equipmentId && !readings.certNumber) {
@@ -41,6 +47,44 @@ export const TorqueReadingsModal = ({
     return <LoadingState open={open} onOpenChange={onOpenChange} />;
   }
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm(readings)) {
+      return;
+    }
+
+    const pathSegments = window.location.pathname.split('/');
+    const companyIdIndex = pathSegments.indexOf('customers') + 1;
+    const companyId = pathSegments[companyIdIndex];
+
+    const torqueWrenchData = {
+      id: equipmentId,
+      company_id: companyId,
+      model: readings.model,
+      serial_number: readings.serialNumber,
+      min_torque: parseFloat(readings.min),
+      max_torque: parseFloat(readings.max),
+      units: readings.units,
+      last_service_date: readings.date,
+      next_service_due: readings.retestDate,
+      engineer: readings.engineer,
+      result: readings.result,
+      notes: readings.notes,
+      readings: readings.readings,
+      definitive_readings: readings.definitiveReadings,
+      cert_number: readings.certNumber,
+      status: readings.status
+    };
+
+    try {
+      await handleSave(torqueWrenchData);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast.error("Failed to save torque wrench data");
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[800px] lg:max-w-[1000px] max-h-[90vh] overflow-y-auto bg-white p-0">
@@ -48,7 +92,7 @@ export const TorqueReadingsModal = ({
           <DialogTitle className="text-xl font-semibold">Torque Wrench Readings</DialogTitle>
         </DialogHeader>
         
-        <div className="p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <HeaderSection
             date={readings.date}
             status={readings.status}
@@ -76,9 +120,9 @@ export const TorqueReadingsModal = ({
 
           <FormActions
             onClose={() => onOpenChange(false)}
-            isSaving={false}
+            isSaving={isSaving}
           />
-        </div>
+        </form>
       </DialogContent>
     </Dialog>
   );
