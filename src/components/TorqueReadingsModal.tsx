@@ -37,9 +37,6 @@ export const TorqueReadingsModal = ({
       <DialogContent className="sm:max-w-[800px] lg:max-w-[1000px] max-h-[90vh] overflow-y-auto bg-white p-0">
         <DialogHeader className="p-6 border-b">
           <DialogTitle className="text-xl font-semibold">Torque Wrench Readings</DialogTitle>
-          <DialogDescription className="text-sm text-gray-500">
-            Enter the torque wrench readings and details below.
-          </DialogDescription>
         </DialogHeader>
         
         <div className="p-6 space-y-6">
