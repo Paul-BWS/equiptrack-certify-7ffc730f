@@ -49,6 +49,7 @@ export const EquipmentRow = ({
               onDelete(e);
             }}
             onGenerateCertificate={onGenerateCertificate}
+            onViewReadings={onGenerateCertificate}
           />
         </TableCell>
       )}

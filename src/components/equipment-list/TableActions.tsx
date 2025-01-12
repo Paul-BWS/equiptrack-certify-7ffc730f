@@ -4,9 +4,10 @@ import { ArrowRight, Trash2, FileText } from "lucide-react";
 interface TableActionsProps {
   onDelete: (e: React.MouseEvent) => void;
   onGenerateCertificate: () => void;
+  onViewReadings: () => void;
 }
 
-export const TableActions = ({ onDelete, onGenerateCertificate }: TableActionsProps) => {
+export const TableActions = ({ onDelete, onGenerateCertificate, onViewReadings }: TableActionsProps) => {
   return (
     <div className="flex justify-end gap-2">
       <Button
@@ -28,7 +29,7 @@ export const TableActions = ({ onDelete, onGenerateCertificate }: TableActionsPr
       <Button
         variant="ghost"
         size="icon"
-        onClick={onGenerateCertificate}
+        onClick={onViewReadings}
         className="rounded-full bg-primary hover:bg-primary/90 h-10 w-10 p-0"
       >
         <ArrowRight className="h-4 w-4 text-primary-foreground" />
