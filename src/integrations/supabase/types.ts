@@ -177,6 +177,32 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          company_id: string | null
+          created_at: string
+          id: string
+        }
+        Insert: {
+          company_id?: string | null
+          created_at?: string
+          id: string
+        }
+        Update: {
+          company_id?: string | null
+          created_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       service_records: {
         Row: {
           created_at: string

@@ -18,42 +18,67 @@ export default function Settings() {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      
-      if (error) {
-        console.error("Auth check error:", error);
-        toast.error("Authentication error");
-        navigate('/');
-        return;
-      }
-      
-      if (!session) {
-        console.log("No active session found");
-        toast.error("Please sign in to access settings");
-        navigate('/');
-        return;
-      }
+      try {
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError) {
+          console.error("Auth check error:", sessionError);
+          toast.error("Authentication error");
+          navigate('/');
+          return;
+        }
+        
+        if (!session) {
+          console.log("No active session found");
+          toast.error("Please sign in to access settings");
+          navigate('/');
+          return;
+        }
 
-      // Check if user belongs to BWS LTD
-      const { data: userData } = await supabase
-        .from('profiles')
-        .select('company_id')
-        .eq('id', session.user.id)
-        .single();
+        // First get the user's profile to get their company_id
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('company_id')
+          .eq('id', session.user.id)
+          .single();
 
-      const { data: companyData } = await supabase
-        .from('companies')
-        .select('name')
-        .eq('id', userData?.company_id)
-        .single();
+        if (profileError) {
+          console.error("Profile fetch error:", profileError);
+          toast.error("Error fetching user profile");
+          return;
+        }
 
-      if (companyData?.name !== 'BWS LTD') {
-        toast.error("You don't have permission to access settings");
+        if (!profileData?.company_id) {
+          console.log("No company associated with user");
+          toast.error("No company associated with your account");
+          return;
+        }
+
+        // Then get the company details
+        const { data: companyData, error: companyError } = await supabase
+          .from('companies')
+          .select('name')
+          .eq('id', profileData.company_id)
+          .single();
+
+        if (companyError) {
+          console.error("Company fetch error:", companyError);
+          toast.error("Error fetching company details");
+          return;
+        }
+
+        if (companyData?.name !== 'BWS') {
+          toast.error("You don't have permission to access settings");
+          navigate('/');
+          return;
+        }
+        
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Unexpected error:", error);
+        toast.error("An unexpected error occurred");
         navigate('/');
-        return;
       }
-      
-      setIsLoading(false);
     };
 
     checkAuth();
