@@ -33,6 +33,10 @@ export const BasicDetails = ({
   onSerialNumberChange,
   onEngineerChange,
 }: BasicDetailsProps) => {
+  const handleEngineerChange = (value: string) => {
+    onEngineerChange(value);
+  };
+
   return (
     <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -60,13 +64,24 @@ export const BasicDetails = ({
 
         <div className="space-y-2">
           <Label htmlFor="engineer" className="text-sm text-[#C8C8C9]">Engineer</Label>
-          <Select value={engineer} onValueChange={onEngineerChange}>
-            <SelectTrigger className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]">
-              <SelectValue placeholder="Select an engineer" className="text-[#C8C8C9]" />
+          <Select 
+            value={engineer} 
+            onValueChange={handleEngineerChange}
+            name="engineer"
+          >
+            <SelectTrigger 
+              id="engineer"
+              className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
+            >
+              <SelectValue placeholder="Select an engineer" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent position="popper">
               {ENGINEERS.map((eng) => (
-                <SelectItem key={eng} value={eng}>
+                <SelectItem 
+                  key={eng} 
+                  value={eng}
+                  className="cursor-pointer"
+                >
                   {eng}
                 </SelectItem>
               ))}
