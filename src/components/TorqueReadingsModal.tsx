@@ -11,6 +11,20 @@ import { FormActions } from "./torque-readings/form-sections/FormActions";
 import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
 import { useTorqueWrenchSubmit } from "@/hooks/useTorqueWrenchSubmit";
 import { validateForm } from "@/utils/torqueReadingsValidation";
+import { Button } from "./ui/button";
+import { Trash2 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useState } from "react";
 
 interface TorqueReadingsModalProps {
   open: boolean;
@@ -25,6 +39,7 @@ export const TorqueReadingsModal = ({
 }: TorqueReadingsModalProps) => {
   const { data: equipment, isLoading, error } = useEquipmentData(equipmentId, open);
   const { readings, setReadings } = useTorqueReadingsForm(equipment, open);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const { handleSave, isSaving } = useTorqueWrenchSubmit(equipmentId, () => {
     toast.success("Torque wrench data saved successfully");
     onOpenChange(false);
@@ -37,6 +52,41 @@ export const TorqueReadingsModal = ({
       certNumber: generateCertificateNumber()
     }));
   }
+
+  const handleDelete = async () => {
+    if (!equipmentId) return;
+
+    try {
+      // First, delete all certificates associated with this torque wrench
+      const { error: certificatesError } = await supabase
+        .from('certificates')
+        .delete()
+        .eq('torque_wrench_id', equipmentId);
+
+      if (certificatesError) {
+        console.error('Error deleting certificates:', certificatesError);
+        throw certificatesError;
+      }
+
+      // Then delete the torque wrench itself
+      const { error: torqueWrenchError } = await supabase
+        .from('torque_wrench')
+        .delete()
+        .eq('id', equipmentId);
+
+      if (torqueWrenchError) {
+        console.error('Error deleting torque wrench:', torqueWrenchError);
+        throw torqueWrenchError;
+      }
+
+      toast.success("Equipment deleted successfully");
+      onOpenChange(false);
+      window.location.reload();
+    } catch (error: any) {
+      console.error('Error deleting equipment:', error);
+      toast.error("Failed to delete equipment");
+    }
+  };
 
   if (error) {
     toast.error("Failed to load equipment data");
@@ -86,44 +136,79 @@ export const TorqueReadingsModal = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[800px] lg:max-w-[1000px] max-h-[90vh] overflow-y-auto bg-white p-0">
-        <DialogHeader className="p-6 border-b">
-          <DialogTitle className="text-xl font-semibold">Torque Wrench Readings</DialogTitle>
-        </DialogHeader>
-        
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          <HeaderSection
-            date={readings.date}
-            status={readings.status}
-            retestDate={readings.retestDate}
-            certNumber={readings.certNumber}
-            onDateChange={(value) => setReadings({ ...readings, date: value })}
-            onRetestDateChange={(value) => setReadings({ ...readings, retestDate: value })}
-          />
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="sm:max-w-[800px] lg:max-w-[1000px] max-h-[90vh] overflow-y-auto bg-white p-0">
+          <DialogHeader className="p-6 border-b">
+            <div className="flex justify-between items-center">
+              <DialogTitle className="text-xl font-semibold">Torque Wrench Readings</DialogTitle>
+              {equipmentId && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsDeleteDialogOpen(true)}
+                  className="rounded-full bg-destructive hover:bg-destructive/90 h-10 w-10 p-0"
+                >
+                  <Trash2 className="h-4 w-4 text-destructive-foreground" />
+                </Button>
+              )}
+            </div>
+          </DialogHeader>
           
-          <BasicDetails
-            formData={readings}
-            onChange={(field, value) => setReadings(prev => ({ ...prev, [field]: value }))}
-          />
-          
-          <ReadingsSection
-            readings={readings.readings}
-            definitiveReadings={readings.definitiveReadings}
-            onChange={(field, value) => setReadings(prev => ({ ...prev, [field]: value }))}
-          />
+          <form onSubmit={handleSubmit} className="p-6 space-y-6">
+            <HeaderSection
+              date={readings.date}
+              status={readings.status}
+              retestDate={readings.retestDate}
+              certNumber={readings.certNumber}
+              onDateChange={(value) => setReadings({ ...readings, date: value })}
+              onRetestDateChange={(value) => setReadings({ ...readings, retestDate: value })}
+            />
+            
+            <BasicDetails
+              formData={readings}
+              onChange={(field, value) => setReadings(prev => ({ ...prev, [field]: value }))}
+            />
+            
+            <ReadingsSection
+              readings={readings.readings}
+              definitiveReadings={readings.definitiveReadings}
+              onChange={(field, value) => setReadings(prev => ({ ...prev, [field]: value }))}
+            />
 
-          <NotesSection
-            notes={readings.notes}
-            onChange={(notes) => setReadings(prev => ({ ...prev, notes }))}
-          />
+            <NotesSection
+              notes={readings.notes}
+              onChange={(notes) => setReadings(prev => ({ ...prev, notes }))}
+            />
 
-          <FormActions
-            onClose={() => onOpenChange(false)}
-            isSaving={isSaving}
-          />
-        </form>
-      </DialogContent>
-    </Dialog>
+            <FormActions
+              onClose={() => onOpenChange(false)}
+              isSaving={isSaving}
+            />
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the torque wrench
+              and all of its associated certificates.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 };

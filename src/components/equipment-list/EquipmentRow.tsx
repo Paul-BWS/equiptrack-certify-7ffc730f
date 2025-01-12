@@ -1,6 +1,8 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { format, parseISO } from "date-fns";
 import { TableActions } from "./TableActions";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 
 interface EquipmentRowProps {
   id: string;
@@ -36,7 +38,7 @@ export const EquipmentRow = ({
 
   return (
     <TableRow 
-      className={isMobile ? "cursor-pointer hover:bg-muted/60" : ""}
+      className={isMobile ? "relative cursor-pointer hover:bg-muted/60" : ""}
       onClick={isMobile ? onViewReadings : undefined}
     >
       <TableCell>{model}</TableCell>
@@ -53,6 +55,21 @@ export const EquipmentRow = ({
             onGenerateCertificate={onGenerateCertificate}
             onViewReadings={onViewReadings}
           />
+        </TableCell>
+      )}
+      {isMobile && (
+        <TableCell className="absolute right-2 top-1/2 -translate-y-1/2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(e);
+            }}
+            className="rounded-full bg-destructive hover:bg-destructive/90 h-8 w-8 p-0"
+          >
+            <Trash2 className="h-4 w-4 text-destructive-foreground" />
+          </Button>
         </TableCell>
       )}
     </TableRow>
