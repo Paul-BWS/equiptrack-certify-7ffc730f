@@ -33,7 +33,7 @@ export const Navigation = () => {
     if (path.includes('equipment')) return 'Equipment';
     if (path.includes('settings')) return 'Settings';
     if (path.includes('profile')) return 'Profile';
-    return 'Dashboard';
+    return 'Companies';
   };
 
   return (

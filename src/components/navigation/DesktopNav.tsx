@@ -8,15 +8,8 @@ export const DesktopNav = () => {
         to="/"
         className="text-white hover:text-accent flex items-center gap-2"
       >
-        <LayoutDashboard size={20} />
-        <span>Dashboard</span>
-      </Link>
-      <Link
-        to="/"
-        className="text-white hover:text-accent flex items-center gap-2"
-      >
         <Users size={20} />
-        <span>Customers</span>
+        <span>Companies</span>
       </Link>
       <Link
         to="/all-equipment"
