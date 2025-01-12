@@ -1,74 +1,43 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import { Menu } from "lucide-react";
-import { useState } from "react";
-import { Button } from "./ui/button";
-import { supabase } from "@/lib/supabase";
-import { toast } from "sonner";
+import { Link } from "react-router-dom";
 import { DesktopNav } from "./navigation/DesktopNav";
 import { MobileNav } from "./navigation/MobileNav";
 import { UserMenu } from "./navigation/UserMenu";
+import { supabase } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 export const Navigation = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const location = useLocation();
+  const { toast } = useToast();
   const navigate = useNavigate();
-  const path = location.pathname;
 
   const handleSignOut = async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      toast.success("Successfully signed out");
-      navigate("/");
-    } catch (error) {
-      console.error("Error signing out:", error);
-      toast.error("Error signing out");
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast({
+        title: "Error signing out",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Signed out successfully",
+        description: "You have been signed out of your account",
+      });
+      navigate('/');
     }
   };
 
-  // Function to get the current section name
-  const getCurrentSection = () => {
-    if (path.includes('torque-wrenches')) return 'Torque Wrenches';
-    if (path.includes('tyre-gauges')) return 'Tyre Gauge';
-    if (path.includes('equipment')) return 'Equipment';
-    if (path.includes('settings')) return 'Settings';
-    if (path.includes('profile')) return 'Profile';
-    return 'Companies';
-  };
-
   return (
-    <nav className="bg-primary p-4">
-      <div className="container mx-auto">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <a href="/" className="text-white text-xl font-bold">
-              EquipService
-            </a>
-            <span className="text-white/80">|</span>
-            <span className="text-white">{getCurrentSection()}</span>
-          </div>
-          
-          <div className="flex items-center gap-4">
-            <DesktopNav />
-            <UserMenu onSignOut={handleSignOut} />
-
-            {/* Mobile burger menu */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden text-white hover:text-accent"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              <Menu className="h-6 w-6" />
-            </Button>
-          </div>
+    <nav className="border-b">
+      <div className="flex h-16 items-center px-4">
+        <Link to="/" className="font-semibold">
+          EquipService
+        </Link>
+        <div className="ml-auto flex items-center space-x-4">
+          <DesktopNav />
+          <MobileNav />
+          <UserMenu onSignOut={handleSignOut} />
         </div>
-
-        <MobileNav 
-          isOpen={isMenuOpen} 
-          onClose={() => setIsMenuOpen(false)}
-          onSignOut={handleSignOut}
-        />
       </div>
     </nav>
   );
