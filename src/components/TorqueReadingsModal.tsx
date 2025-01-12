@@ -1,15 +1,16 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { LoadingState } from "./torque-readings/LoadingState";
 import { ReadingsHandler } from "./torque-readings/ReadingsHandler";
+import { FormInitializer } from "./torque-readings/FormInitializer";
 import { useEquipmentData } from "@/hooks/useEquipmentData";
 import { useTorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
 import { useTorqueWrenchSubmit } from "@/hooks/useTorqueWrenchSubmit";
+import { useCertificateGeneration } from "@/hooks/useCertificateGeneration";
 import { validateForm } from "@/utils/torqueReadingsValidation";
 import { TorqueWrench, ServiceRecord } from "@/types/equipment";
-import { prepareCertificateData } from "@/utils/certificateDataPreparation";
 import { toast } from "sonner";
 import { CertificateModal } from "./CertificateModal";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 interface TorqueReadingsModalProps {
   open: boolean;
@@ -24,22 +25,13 @@ export const TorqueReadingsModal = ({
 }: TorqueReadingsModalProps) => {
   const { data: equipment, isLoading, error } = useEquipmentData(equipmentId, open);
   const { readings, setReadings, resetForm } = useTorqueReadingsForm(equipment, open);
-  const [showCertificate, setShowCertificate] = useState(false);
+  const { showCertificate, setShowCertificate, generateCertificate } = useCertificateGeneration(equipmentId);
   
   useEffect(() => {
     if (!open) {
       resetForm();
     }
   }, [open, resetForm]);
-  
-  useEffect(() => {
-    if (!equipmentId && open) {
-      const timestamp = new Date().getTime();
-      const randomNum = Math.floor(Math.random() * 1000);
-      const newCertNumber = `BWS-${timestamp}-${randomNum}`;
-      setReadings(prev => ({ ...prev, certNumber: newCertNumber }));
-    }
-  }, [equipmentId, open, setReadings]);
 
   const { handleSave: submitData, isSaving } = useTorqueWrenchSubmit(equipmentId, () => {
     onOpenChange(false);
@@ -98,7 +90,7 @@ export const TorqueReadingsModal = ({
     try {
       await submitData(torqueWrenchData);
       console.log("Form submitted:", readings);
-      setShowCertificate(true);
+      generateCertificate(torqueWrenchData, defaultServiceRecord);
     } catch (error) {
       console.error('Error submitting form:', error);
     }
@@ -111,6 +103,12 @@ export const TorqueReadingsModal = ({
           <DialogHeader>
             <DialogTitle>Torque Wrench Readings</DialogTitle>
           </DialogHeader>
+
+          <FormInitializer 
+            equipmentId={equipmentId}
+            open={open}
+            setReadings={setReadings}
+          />
 
           <ReadingsHandler
             readings={readings}
@@ -125,7 +123,7 @@ export const TorqueReadingsModal = ({
       <CertificateModal
         open={showCertificate}
         onOpenChange={setShowCertificate}
-        certificate={prepareCertificateData(readings, equipmentId)}
+        certificate={generateCertificate(torqueWrenchData, defaultServiceRecord)}
         equipment={torqueWrenchData}
         serviceRecord={defaultServiceRecord}
       />
