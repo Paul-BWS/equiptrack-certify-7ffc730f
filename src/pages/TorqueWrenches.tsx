@@ -1,5 +1,6 @@
 import { Navigation } from "@/components/Navigation";
 import { TorqueReadingsModal } from "@/components/TorqueReadingsModal";
+import { CertificateModal } from "@/components/CertificateModal";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -11,6 +12,7 @@ import { TorqueWrenchList } from "@/components/torque-wrenches/TorqueWrenchList"
 const TorqueWrenches = () => {
   const { customerId } = useParams();
   const [showReadingsModal, setShowReadingsModal] = useState(false);
+  const [showCertificateModal, setShowCertificateModal] = useState(false);
   const [selectedEquipmentId, setSelectedEquipmentId] = useState<string | null>(null);
 
   const { data: customerData } = useQuery({
@@ -72,6 +74,16 @@ const TorqueWrenches = () => {
     setShowReadingsModal(true);
   };
 
+  const handleGenerateCertificate = (id: string) => {
+    setSelectedEquipmentId(id);
+    setShowCertificateModal(true);
+  };
+
+  const handleViewReadings = (id: string) => {
+    setSelectedEquipmentId(id);
+    setShowReadingsModal(true);
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
@@ -99,10 +111,7 @@ const TorqueWrenches = () => {
           <TorqueWrenchList
             torqueWrenches={torqueWrenches}
             onNewTorqueWrench={handleNewTorqueWrench}
-            onGenerateCertificate={(id) => {
-              setSelectedEquipmentId(id);
-              setShowReadingsModal(true);
-            }}
+            onGenerateCertificate={handleGenerateCertificate}
           />
         </div>
       </main>
@@ -112,6 +121,22 @@ const TorqueWrenches = () => {
         onOpenChange={setShowReadingsModal}
         equipmentId={selectedEquipmentId}
       />
+
+      {selectedEquipmentId && (
+        <CertificateModal
+          open={showCertificateModal}
+          onOpenChange={setShowCertificateModal}
+          certificate={{
+            id: "",
+            torque_wrench_id: selectedEquipmentId,
+            certification_number: "",
+            issue_date: new Date().toISOString(),
+            expiry_date: new Date().toISOString()
+          }}
+          equipment={{} as any}
+          serviceRecord={{} as any}
+        />
+      )}
     </div>
   );
 };

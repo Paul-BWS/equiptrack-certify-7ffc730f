@@ -32,10 +32,20 @@ export const EquipmentRow = ({
     }
   };
 
+  const handleViewReadings = () => {
+    // This opens the readings modal
+    onGenerateCertificate();
+  };
+
+  const handleGenerateCertificate = () => {
+    // This will open the certificate modal
+    onGenerateCertificate();
+  };
+
   return (
     <TableRow 
       className={isMobile ? "cursor-pointer hover:bg-muted/60" : ""}
-      onClick={isMobile ? onGenerateCertificate : undefined}
+      onClick={isMobile ? handleViewReadings : undefined}
     >
       <TableCell>{model}</TableCell>
       <TableCell>{serialNumber}</TableCell>
@@ -48,8 +58,8 @@ export const EquipmentRow = ({
               e.stopPropagation();
               onDelete(e);
             }}
-            onGenerateCertificate={onGenerateCertificate}
-            onViewReadings={onGenerateCertificate}
+            onGenerateCertificate={handleGenerateCertificate}
+            onViewReadings={handleViewReadings}
           />
         </TableCell>
       )}
