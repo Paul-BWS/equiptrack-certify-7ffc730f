@@ -31,38 +31,46 @@ export const HeaderSection = ({
   const statusColor = status === "ACTIVE" ? "text-green-500" : "text-red-500";
   
   return (
-    <div className={`grid ${isMobile ? 'grid-cols-1 gap-4' : 'grid-cols-4 gap-4'}`}>
+    <div className={`grid ${isMobile ? 'grid-cols-1 gap-4' : 'grid-cols-4 gap-6'}`}>
       <div className="space-y-2">
-        <label htmlFor="date" className="text-[#C8C8C9] text-sm">Test Date</label>
+        <label className="text-[#C8C8C9] text-sm">Test Date</label>
         <input
-          id="date"
           type="date"
           value={date}
           onChange={(e) => onDateChange(e.target.value)}
-          className="flex h-10 w-full rounded-md border border-input bg-[#F9F9F9] px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-[#CCCCCC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          className="flex h-10 w-full rounded-md border border-input bg-[#F9F9F9] px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         />
       </div>
-      <FormField
-        id="status"
-        label="Status"
-        value={status}
-        readOnly
-        className={`font-medium ${statusColor}`}
-      />
-      <FormField
-        id="retestDate"
-        label="Retest Date"
-        type="date"
-        value={retestDate}
-        onChange={(e) => onRetestDateChange(e.target.value)}
-        showCalendar
-      />
-      <FormField
-        id="certNumber"
-        label="Certificate Number"
-        value={certNumber}
-        readOnly
-      />
+      
+      <div className="space-y-2">
+        <label className="text-[#C8C8C9] text-sm">Status</label>
+        <input
+          type="text"
+          value={status}
+          readOnly
+          className={`flex h-10 w-full rounded-md border border-input bg-[#F9F9F9] px-3 py-2 text-sm font-medium ${statusColor}`}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-[#C8C8C9] text-sm">Retest Date</label>
+        <input
+          type="date"
+          value={retestDate}
+          onChange={(e) => onRetestDateChange(e.target.value)}
+          className="flex h-10 w-full rounded-md border border-input bg-[#F9F9F9] px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-[#C8C8C9] text-sm">Certificate Number</label>
+        <input
+          type="text"
+          value={certNumber}
+          readOnly
+          className="flex h-10 w-full rounded-md border border-input bg-[#F9F9F9] px-3 py-2 text-sm"
+        />
+      </div>
     </div>
   );
 };

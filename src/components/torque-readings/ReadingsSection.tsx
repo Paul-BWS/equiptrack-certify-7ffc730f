@@ -27,9 +27,9 @@ export const ReadingsSection = ({
 
   return (
     <div>
-      <h3 className="font-semibold mb-4">{title}</h3>
+      <h3 className="font-semibold mb-4 text-black">{title}</h3>
       {readingsArray.map((reading, index) => (
-        <div key={`${title}-${index}`} className="grid grid-cols-3 gap-2 mb-2">
+        <div key={`${title}-${index}`} className="grid grid-cols-3 gap-2 mb-3">
           <Input
             value={reading.target}
             onChange={onChange ? (e) => onChange(index, "target", e.target.value) : undefined}
