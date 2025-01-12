@@ -1,6 +1,5 @@
 import React from 'react';
 import { Reading } from "@/types/tyreGauge";
-import { ReadingRow } from "./ReadingRow";
 
 interface ReadingsSectionProps {
   readings: Reading[];
@@ -8,14 +7,8 @@ interface ReadingsSectionProps {
 }
 
 export const ReadingsSection = ({ readings, onReadingsChange }: ReadingsSectionProps) => {
-  // Ensure we always have exactly 2 readings
-  const normalizedReadings = readings.length === 2 ? readings : [
-    { target: "", actual: "", deviation: "" },
-    { target: "", actual: "", deviation: "" }
-  ];
-
   const handleReadingChange = (index: number, field: keyof Reading, value: string) => {
-    const newReadings = [...normalizedReadings];
+    const newReadings = [...readings];
     newReadings[index] = {
       ...newReadings[index],
       [field]: value,
@@ -30,14 +23,27 @@ export const ReadingsSection = ({ readings, onReadingsChange }: ReadingsSectionP
         <div className="font-medium">Target</div>
         <div className="font-medium">Actual</div>
         <div className="font-medium">Deviation</div>
-        
-        {normalizedReadings.map((reading, index) => (
-          <ReadingRow
-            key={index}
-            reading={reading}
-            index={index}
-            onReadingChange={handleReadingChange}
-          />
+        {readings.map((reading, index) => (
+          <React.Fragment key={index}>
+            <input
+              type="text"
+              value={reading.target}
+              onChange={(e) => handleReadingChange(index, 'target', e.target.value)}
+              className="border rounded p-2"
+            />
+            <input
+              type="text"
+              value={reading.actual}
+              onChange={(e) => handleReadingChange(index, 'actual', e.target.value)}
+              className="border rounded p-2"
+            />
+            <input
+              type="text"
+              value={reading.deviation}
+              onChange={(e) => handleReadingChange(index, 'deviation', e.target.value)}
+              className="border rounded p-2"
+            />
+          </React.Fragment>
         ))}
       </div>
     </div>
