@@ -29,7 +29,7 @@ export const TorqueReadingsForm = ({ equipment, onClose }: TorqueReadingsFormPro
     status: equipment?.status || "ACTIVE",
     result: equipment?.result || "PASS",
     certNumber: equipment?.cert_number || `BWS-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-    sentOn: equipment?.last_service_date || new Date().toISOString().split('T')[0] // Added missing sentOn property
+    sentOn: equipment?.last_service_date || new Date().toISOString().split('T')[0]
   });
 
   const { handleSave, isSaving } = useTorqueWrenchSubmit(equipment?.id || null, () => {
@@ -76,6 +76,11 @@ export const TorqueReadingsForm = ({ equipment, onClose }: TorqueReadingsFormPro
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      <CertificateSection
+        formData={formData}
+        onChange={(field, value) => setFormData(prev => ({ ...prev, [field]: value }))}
+      />
+      
       <BasicDetails
         formData={formData}
         onChange={(field, value) => setFormData(prev => ({ ...prev, [field]: value }))}
@@ -84,11 +89,6 @@ export const TorqueReadingsForm = ({ equipment, onClose }: TorqueReadingsFormPro
       <ReadingsSection
         readings={formData.readings}
         definitiveReadings={formData.definitiveReadings}
-        onChange={(field, value) => setFormData(prev => ({ ...prev, [field]: value }))}
-      />
-      
-      <CertificateSection
-        formData={formData}
         onChange={(field, value) => setFormData(prev => ({ ...prev, [field]: value }))}
       />
 
