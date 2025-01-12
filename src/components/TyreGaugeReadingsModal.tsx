@@ -8,7 +8,7 @@ import { ReadingsSection } from "./tyre-gauge-readings/ReadingsSection";
 import { NotesSection } from "./tyre-gauge-readings/NotesSection";
 import { FormActions } from "./tyre-gauge-readings/FormActions";
 import { useTyreGaugeForm } from "@/hooks/useTyreGaugeForm";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 interface TyreGaugeReadingsModalProps {
   open: boolean;
@@ -22,6 +22,7 @@ export const TyreGaugeReadingsModal = ({
   equipmentId,
 }: TyreGaugeReadingsModalProps) => {
   const { customerId } = useParams();
+  const navigate = useNavigate();
   const {
     isSaving,
     setIsSaving,
@@ -49,6 +50,24 @@ export const TyreGaugeReadingsModal = ({
     setNotes,
     setReadings,
   } = useTyreGaugeForm(equipmentId);
+
+  const handleDelete = async () => {
+    try {
+      const { error } = await supabase
+        .from('tyre_gauges')
+        .delete()
+        .eq('id', equipmentId);
+
+      if (error) throw error;
+      
+      toast.success("Tyre gauge deleted successfully");
+      onOpenChange(false);
+      window.location.reload();
+    } catch (error) {
+      console.error('Error deleting tyre gauge:', error);
+      toast.error("Failed to delete tyre gauge");
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,7 +111,7 @@ export const TyreGaugeReadingsModal = ({
       
       toast.success(equipmentId ? "Tyre gauge updated successfully" : "New tyre gauge created successfully");
       onOpenChange(false);
-      window.location.reload(); // Refresh to show the new/updated tyre gauge
+      window.location.reload();
     } catch (error) {
       console.error('Error saving data:', error);
       toast.error(equipmentId ? "Failed to update tyre gauge" : "Failed to create new tyre gauge");
@@ -151,6 +170,8 @@ export const TyreGaugeReadingsModal = ({
 
           <FormActions
             onCancel={() => onOpenChange(false)}
+            onDelete={handleDelete}
+            showDelete={!!equipmentId}
             isSaving={isSaving}
           />
         </form>
