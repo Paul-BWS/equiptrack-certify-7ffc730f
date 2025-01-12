@@ -1,6 +1,7 @@
 import { Reading } from "@/types/tyreGauge";
 import { Input } from "@/components/ui/input";
 import { calculateDeviation } from "@/utils/deviationCalculator";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ReadingsSectionProps {
   readings: Reading[];
@@ -8,6 +9,8 @@ interface ReadingsSectionProps {
 }
 
 export const ReadingsSection = ({ readings, onReadingsChange }: ReadingsSectionProps) => {
+  const isMobile = useIsMobile();
+  
   const handleReadingChange = (index: number, field: keyof Reading, value: string) => {
     const newReadings = [...readings];
     newReadings[index] = {
@@ -35,7 +38,7 @@ export const ReadingsSection = ({ readings, onReadingsChange }: ReadingsSectionP
   ] : readings;
 
   const renderReadingsGroup = (title: string, isDefinitive: boolean) => (
-    <div className="bg-[#F9F9F9] p-6 rounded-lg space-y-4">
+    <div className="bg-[#F9F9F9] p-6 rounded-lg space-y-4 w-full">
       <h3 className="font-semibold mb-4 text-gray-900">{title}</h3>
       <div className="grid grid-cols-3 gap-4 mb-2">
         <div className="font-medium text-sm text-[#C8C8C9]">Target</div>
@@ -74,7 +77,7 @@ export const ReadingsSection = ({ readings, onReadingsChange }: ReadingsSectionP
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 gap-6">
+      <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-6`}>
         {renderReadingsGroup("AS FOUND", false)}
         {renderReadingsGroup("DEFINITIVE", true)}
       </div>
