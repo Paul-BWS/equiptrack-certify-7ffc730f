@@ -17,8 +17,9 @@ export const ReadingRow = ({ reading, index, onReadingChange }: ReadingRowProps)
     const actualNum = field === 'actual' ? parseFloat(value) : parseFloat(reading.actual);
     
     if (!isNaN(targetNum) && !isNaN(actualNum) && targetNum !== 0) {
-      // Calculate the percentage difference between actual and target
-      const deviation = ((actualNum - targetNum) / targetNum * 100).toFixed(2);
+      // Calculate the absolute percentage difference between actual and target
+      const difference = actualNum - targetNum;
+      const deviation = ((difference / targetNum) * 100).toFixed(2);
       onReadingChange(index, 'deviation', `${deviation}%`);
     } else {
       onReadingChange(index, 'deviation', '');
