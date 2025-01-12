@@ -109,6 +109,9 @@ const AllEquipment = () => {
           onGenerateCertificate={(id) => {
             console.log("Generate certificate for:", id);
           }}
+          onViewReadings={(id) => {
+            console.log("View readings for:", id);
+          }}
         />
       </main>
     </div>

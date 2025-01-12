@@ -11,6 +11,7 @@ interface EquipmentRowProps {
   isMobile: boolean;
   onGenerateCertificate: () => void;
   onDelete: (e: React.MouseEvent) => void;
+  onViewReadings: () => void;
 }
 
 export const EquipmentRow = ({
@@ -22,6 +23,7 @@ export const EquipmentRow = ({
   isMobile,
   onGenerateCertificate,
   onDelete,
+  onViewReadings,
 }: EquipmentRowProps) => {
   const formatDate = (dateString: string) => {
     try {
@@ -32,20 +34,10 @@ export const EquipmentRow = ({
     }
   };
 
-  const handleViewReadings = () => {
-    // This opens the readings modal
-    onGenerateCertificate();
-  };
-
-  const handleGenerateCertificate = () => {
-    // This will open the certificate modal
-    onGenerateCertificate();
-  };
-
   return (
     <TableRow 
       className={isMobile ? "cursor-pointer hover:bg-muted/60" : ""}
-      onClick={isMobile ? handleViewReadings : undefined}
+      onClick={isMobile ? onViewReadings : undefined}
     >
       <TableCell>{model}</TableCell>
       <TableCell>{serialNumber}</TableCell>
@@ -58,8 +50,8 @@ export const EquipmentRow = ({
               e.stopPropagation();
               onDelete(e);
             }}
-            onGenerateCertificate={handleGenerateCertificate}
-            onViewReadings={handleViewReadings}
+            onGenerateCertificate={onGenerateCertificate}
+            onViewReadings={onViewReadings}
           />
         </TableCell>
       )}
