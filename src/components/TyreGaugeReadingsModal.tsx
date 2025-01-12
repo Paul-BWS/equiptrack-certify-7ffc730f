@@ -1,13 +1,13 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
-import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
-import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
+import { toast } from "sonner";
 import { HeaderSection } from "./tyre-gauge-readings/HeaderSection";
 import { BasicDetails } from "./tyre-gauge-readings/BasicDetails";
 import { MeasurementsSection } from "./tyre-gauge-readings/MeasurementsSection";
 import { ReadingsSection } from "./tyre-gauge-readings/ReadingsSection";
+import { NotesSection } from "./tyre-gauge-readings/NotesSection";
+import { FormActions } from "./tyre-gauge-readings/FormActions";
+import { useTyreGaugeForm } from "@/hooks/useTyreGaugeForm";
 
 interface TyreGaugeReadingsModalProps {
   open: boolean;
@@ -15,44 +15,38 @@ interface TyreGaugeReadingsModalProps {
   equipmentId: string | null;
 }
 
-interface Reading {
-  setting: string;
-  reading: string;
-  deviation: string;
-}
-
 export const TyreGaugeReadingsModal = ({
   open,
   onOpenChange,
   equipmentId,
 }: TyreGaugeReadingsModalProps) => {
-  const [isSaving, setIsSaving] = useState(false);
-  const [certNumber, setCertNumber] = useState("");
-  const [date, setDate] = useState<Date>();
-  const [retestDate, setRetestDate] = useState<Date>();
-  const [model, setModel] = useState("");
-  const [serialNumber, setSerialNumber] = useState("");
-  const [engineer, setEngineer] = useState("");
-  const [min, setMin] = useState("");
-  const [max, setMax] = useState("");
-  const [units, setUnits] = useState("psi");
-  const [status, setStatus] = useState("ACTIVE");
-  const [notes, setNotes] = useState("");
-  const [readings, setReadings] = useState<Reading[]>([
-    { setting: "", reading: "", deviation: "" },
-    { setting: "", reading: "", deviation: "" },
-  ]);
-
-  useEffect(() => {
-    if (!equipmentId) {
-      setCertNumber(generateCertificateNumber());
-      setDate(new Date());
-      // Set retest date to one year from now
-      const nextYear = new Date();
-      nextYear.setFullYear(nextYear.getFullYear() + 1);
-      setRetestDate(nextYear);
-    }
-  }, [equipmentId]);
+  const {
+    isSaving,
+    setIsSaving,
+    certNumber,
+    date,
+    retestDate,
+    model,
+    serialNumber,
+    engineer,
+    min,
+    max,
+    units,
+    status,
+    notes,
+    readings,
+    setDate,
+    setRetestDate,
+    setModel,
+    setSerialNumber,
+    setEngineer,
+    setMin,
+    setMax,
+    setUnits,
+    setStatus,
+    setNotes,
+    setReadings,
+  } = useTyreGaugeForm(equipmentId);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,34 +126,15 @@ export const TyreGaugeReadingsModal = ({
             onReadingsChange={setReadings}
           />
 
-          <div className="space-y-2">
-            <label htmlFor="notes" className="text-sm text-[#C8C8C9]">Notes</label>
-            <textarea
-              id="notes"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              className="w-full min-h-[100px] p-2 border rounded-md border-gray-200 bg-white placeholder:text-[#C8C8C9]"
-              placeholder="Add any additional notes here..."
-            />
-          </div>
+          <NotesSection
+            notes={notes}
+            onChange={setNotes}
+          />
 
-          <div className="flex justify-end gap-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              className="bg-white hover:bg-gray-50 border-gray-200"
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              disabled={isSaving}
-              className="bg-primary hover:bg-primary/90 text-white"
-            >
-              {isSaving ? "Saving..." : "Save"}
-            </Button>
-          </div>
+          <FormActions
+            onCancel={() => onOpenChange(false)}
+            isSaving={isSaving}
+          />
         </form>
       </DialogContent>
     </Dialog>
