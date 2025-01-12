@@ -33,7 +33,6 @@ export const TorqueReadingsModal = ({
   }, [open, resetForm]);
   
   useEffect(() => {
-    // Generate certificate number for new torque wrench
     if (!equipmentId && open) {
       const timestamp = new Date().getTime();
       const randomNum = Math.floor(Math.random() * 1000);
@@ -102,7 +101,6 @@ export const TorqueReadingsModal = ({
       setShowCertificate(true);
     } catch (error) {
       console.error('Error submitting form:', error);
-      // Don't show error toast here as it's handled in submitData
     }
   };
 
@@ -118,7 +116,7 @@ export const TorqueReadingsModal = ({
             readings={readings}
             setReadings={setReadings}
             handleSubmit={handleSubmit}
-            handleSave={submitData}
+            handleSave={() => submitData(torqueWrenchData)}
             isSaving={isSaving}
           />
         </DialogContent>
