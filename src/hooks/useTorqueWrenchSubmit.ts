@@ -47,50 +47,43 @@ export const useTorqueWrenchSubmit = (
       const now = new Date().toISOString();
       const dataToSave = {
         ...torqueWrenchData,
-        id: equipmentId || undefined, // Let Supabase generate the ID for new records
         readings: JSON.stringify(torqueWrenchData.readings),
         definitive_readings: JSON.stringify(torqueWrenchData.definitive_readings),
         notes: torqueWrenchData.notes || null,
-        updated_at: now,
-        created_at: equipmentId ? undefined : now
+        updated_at: now
       };
 
       let result;
       
       if (equipmentId) {
+        // Update existing record
         console.log('Updating existing torque wrench:', equipmentId);
-        const { id, created_at, ...updateData } = dataToSave;
         const { data, error } = await supabase
           .from('torque_wrench')
-          .update(updateData)
+          .update(dataToSave)
           .eq('id', equipmentId)
           .select()
           .single();
           
         if (error) throw error;
-        result = { data, error: null };
+        result = data;
       } else {
+        // Create new record - remove id field completely
         console.log('Creating new torque wrench');
+        const { id, ...newData } = dataToSave;
         const { data, error } = await supabase
           .from('torque_wrench')
-          .insert([dataToSave])
+          .insert([{ ...newData, created_at: now }])
           .select()
           .single();
           
         if (error) throw error;
-        result = { data, error: null };
+        result = data;
       }
-
-      if (result.error) {
-        console.error('Database operation error:', result.error);
-        throw result.error;
-      }
-
-      console.log('Successfully saved torque wrench:', result.data);
 
       // Save certificate data only if it's a new record
-      if (!equipmentId && result.data) {
-        const certificate = prepareCertificateData(torqueWrenchData, result.data.id);
+      if (!equipmentId && result) {
+        const certificate = prepareCertificateData(torqueWrenchData, result.id);
         const { error: certError } = await supabase
           .from('certificates')
           .insert([certificate]);
