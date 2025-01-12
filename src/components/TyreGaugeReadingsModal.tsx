@@ -76,6 +76,12 @@ export const TyreGaugeReadingsModal = ({
     setIsSaving(true);
     
     try {
+      // Ensure readings and definitiveReadings are properly formatted
+      const formattedReadings = Array.isArray(readings) ? readings : [];
+      const formattedDefinitiveReadings = Array.isArray(definitiveReadings) ? definitiveReadings : [];
+
+      console.log('Submitting definitive readings:', formattedDefinitiveReadings); // Debug log
+
       const tyreGaugeData = {
         cert_number: certNumber,
         last_service_date: date?.toISOString(),
@@ -88,8 +94,8 @@ export const TyreGaugeReadingsModal = ({
         units: units,
         status: status,
         notes: notes,
-        readings: readings,
-        definitive_readings: definitiveReadings, // Use separate definitive readings
+        readings: formattedReadings,
+        definitive_readings: formattedDefinitiveReadings, // Ensure this is properly formatted
       };
 
       if (equipmentId) {
