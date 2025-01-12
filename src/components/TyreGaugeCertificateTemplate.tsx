@@ -1,5 +1,6 @@
 import { TyreGauge } from "@/types/tyreGauge";
 import { getOrganizationSettings } from "@/utils/settings";
+import { format, parseISO } from "date-fns";
 
 interface TyreGaugeCertificateTemplateProps {
   equipment: TyreGauge;
@@ -16,6 +17,16 @@ export const TyreGaugeCertificateTemplate = ({
   if (!equipment) {
     return null;
   }
+
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return "";
+    try {
+      return format(parseISO(dateString), "yyyy-MM-dd'T'HH:mm:ss.SSXXX");
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return dateString;
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg border-8 border-double border-gray-200" id="certificate">
@@ -48,11 +59,11 @@ export const TyreGaugeCertificateTemplate = ({
           <div className="space-y-3">
             <div>
               <h2 className="text-xs font-semibold text-gray-500 uppercase">Calibration Date</h2>
-              <p className="text-sm font-medium">{equipment?.last_service_date}</p>
+              <p className="text-sm font-medium">{formatDate(equipment?.last_service_date)}</p>
             </div>
             <div>
               <h2 className="text-xs font-semibold text-gray-500 uppercase">Next Due Date</h2>
-              <p className="text-sm font-medium">{equipment?.next_service_due}</p>
+              <p className="text-sm font-medium">{formatDate(equipment?.next_service_due)}</p>
             </div>
           </div>
         </div>
