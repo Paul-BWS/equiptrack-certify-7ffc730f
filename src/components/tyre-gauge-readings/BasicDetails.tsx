@@ -7,14 +7,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-const ENGINEERS = [
-  "Paul Jones",
-  "Connor Hill",
-  "Tom Hannon",
-  "Mark Allen",
-  "Dominic Jones"
-];
+import { useStaffMembers } from "@/hooks/useStaffMembers";
+import { Loader2 } from "lucide-react";
 
 interface BasicDetailsProps {
   model: string;
@@ -37,9 +31,7 @@ export const BasicDetails = ({
   onEngineerChange,
   onResultChange,
 }: BasicDetailsProps) => {
-  const handleEngineerChange = (value: string) => {
-    onEngineerChange(value);
-  };
+  const { data: staff, isLoading: isLoadingStaff } = useStaffMembers();
 
   return (
     <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
@@ -70,23 +62,30 @@ export const BasicDetails = ({
           <Label htmlFor="engineer" className="text-sm text-[#C8C8C9]">Engineer</Label>
           <Select 
             value={engineer} 
-            onValueChange={handleEngineerChange}
+            onValueChange={onEngineerChange}
             name="engineer"
           >
             <SelectTrigger 
               id="engineer"
               className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
             >
-              <SelectValue placeholder="Select an engineer" />
+              {isLoadingStaff ? (
+                <div className="flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Loading engineers...</span>
+                </div>
+              ) : (
+                <SelectValue placeholder="Select an engineer" />
+              )}
             </SelectTrigger>
             <SelectContent position="popper">
-              {ENGINEERS.map((eng) => (
+              {staff?.map((engineer) => (
                 <SelectItem 
-                  key={eng} 
-                  value={eng}
+                  key={engineer.id} 
+                  value={engineer.name}
                   className="cursor-pointer"
                 >
-                  {eng}
+                  {engineer.name}
                 </SelectItem>
               ))}
             </SelectContent>

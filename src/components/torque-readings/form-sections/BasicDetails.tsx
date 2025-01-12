@@ -1,5 +1,7 @@
 import { FormField } from "@/components/torque-readings/FormField";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useStaffMembers } from "@/hooks/useStaffMembers";
+import { Loader2 } from "lucide-react";
 
 interface BasicDetailsProps {
   formData: {
@@ -13,20 +15,9 @@ interface BasicDetailsProps {
   onChange: (field: string, value: string) => void;
 }
 
-const ENGINEERS = [
-  "John Smith",
-  "Sarah Johnson",
-  "Michael Brown",
-  "Emma Wilson",
-  "James Davis",
-  "Lisa Anderson",
-  "Robert Taylor",
-  "Patricia Martinez",
-  "David Thompson",
-  "Jennifer Garcia"
-];
-
 export const BasicDetails = ({ formData, onChange }: BasicDetailsProps) => {
+  const { data: staff, isLoading: isLoadingStaff } = useStaffMembers();
+
   return (
     <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -54,12 +45,19 @@ export const BasicDetails = ({ formData, onChange }: BasicDetailsProps) => {
             onValueChange={(value) => onChange("engineer", value)}
           >
             <SelectTrigger id="engineer" className="h-12 bg-white border-gray-200">
-              <SelectValue placeholder="Select an engineer" />
+              {isLoadingStaff ? (
+                <div className="flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Loading engineers...</span>
+                </div>
+              ) : (
+                <SelectValue placeholder="Select an engineer" />
+              )}
             </SelectTrigger>
             <SelectContent>
-              {ENGINEERS.map((eng) => (
-                <SelectItem key={eng} value={eng}>
-                  {eng}
+              {staff?.map((engineer) => (
+                <SelectItem key={engineer.id} value={engineer.name}>
+                  {engineer.name}
                 </SelectItem>
               ))}
             </SelectContent>
