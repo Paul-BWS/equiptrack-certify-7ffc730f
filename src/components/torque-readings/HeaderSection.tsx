@@ -32,17 +32,15 @@ export const HeaderSection = ({
   return (
     <div className={`grid ${isMobile ? 'grid-cols-1 gap-4' : 'grid-cols-4 gap-6'} mb-8`}>
       <div className="space-y-2">
-        <label className="text-sm text-gray-400">Test Date</label>
-        <div className="relative">
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => onDateChange(e.target.value)}
-            className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-          />
-        </div>
+        <label className="text-sm text-gray-400">Certificate Number</label>
+        <input
+          type="text"
+          value={certNumber}
+          readOnly
+          className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
+        />
       </div>
-      
+
       <div className="space-y-2">
         <label className="text-sm text-gray-400">Status</label>
         <input
@@ -54,22 +52,24 @@ export const HeaderSection = ({
       </div>
 
       <div className="space-y-2">
+        <label className="text-sm text-gray-400">Test Date</label>
+        <div className="relative">
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => onDateChange(e.target.value)}
+            className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          />
+        </div>
+      </div>
+
+      <div className="space-y-2">
         <label className="text-sm text-gray-400">Retest Date</label>
         <input
           type="date"
           value={retestDate}
           onChange={(e) => onRetestDateChange(e.target.value)}
           className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <label className="text-sm text-gray-400">Certificate Number</label>
-        <input
-          type="text"
-          value={certNumber}
-          readOnly
-          className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
         />
       </div>
     </div>
