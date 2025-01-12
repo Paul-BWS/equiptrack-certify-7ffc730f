@@ -15,12 +15,13 @@ export const Navigation = () => {
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'SIGNED_OUT') {
-        navigate('/');
+        console.log('User signed out, forcing navigation to root');
+        window.location.href = '/';
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, []);
 
   const handleSignOut = async () => {
     try {
@@ -36,7 +37,8 @@ export const Navigation = () => {
           title: "Signed out successfully",
           description: "You have been signed out of your account",
         });
-        navigate('/');
+        // Force a full page reload to ensure clean state
+        window.location.href = '/';
       }
     } catch (err) {
       console.error("Error during sign out:", err);
