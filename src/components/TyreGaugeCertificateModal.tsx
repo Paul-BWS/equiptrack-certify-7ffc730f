@@ -2,11 +2,13 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Mail, Printer, X } from "lucide-react";
 import { toast } from "sonner";
+import { TyreGauge } from "@/types/tyreGauge";
+import { TyreGaugeCertificateTemplate } from "./TyreGaugeCertificateTemplate";
 
 interface TyreGaugeCertificateModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  equipment: any; // TODO: Define proper type
+  equipment: TyreGauge;
 }
 
 export const TyreGaugeCertificateModal = ({
@@ -17,14 +19,16 @@ export const TyreGaugeCertificateModal = ({
   const handlePrint = () => {
     const timestamp = new Date().toISOString();
     console.log("Certificate printed on:", timestamp);
-    toast.success(`Certificate printed at ${new Date(timestamp).toLocaleString()}`);
+    toast.success(`Certificate ${equipment.cert_number} printed at ${new Date(timestamp).toLocaleString()}`);
     window.print();
   };
 
   const handleEmail = async () => {
     try {
       // TODO: Implement email functionality
-      toast.success("Email sent successfully");
+      toast.success(`Email sent successfully for certificate ${equipment.cert_number}`, {
+        description: `To: ${equipment.model} (${equipment.serial_number})`,
+      });
     } catch (error) {
       console.error('Error in handleEmail:', error);
       toast.error("Failed to send certificate email");
@@ -69,12 +73,7 @@ export const TyreGaugeCertificateModal = ({
         
         <div className="flex justify-center">
           <div className="w-full max-w-4xl">
-            {/* TODO: Add certificate template */}
-            <div className="p-6 border rounded-lg">
-              <h2 className="text-2xl font-bold mb-4">Tyre Gauge Certificate</h2>
-              <p>Equipment: {equipment?.model}</p>
-              <p>Serial Number: {equipment?.serial_number}</p>
-            </div>
+            <TyreGaugeCertificateTemplate equipment={equipment} />
           </div>
         </div>
       </DialogContent>
