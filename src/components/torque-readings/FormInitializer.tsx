@@ -19,7 +19,7 @@ export const FormInitializer = ({ equipmentId, open, setReadings }: FormInitiali
         certNumber: newCertNumber
       }));
     }
-  }, [equipmentId, open, setReadings]);
+  }, [equipmentId, open]); // Add dependency array to prevent infinite loop
 
   return null;
 };
