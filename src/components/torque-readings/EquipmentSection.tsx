@@ -42,10 +42,10 @@ export const EquipmentSection = ({
   const isMobile = useIsMobile();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 bg-gray-50 p-6 rounded-lg mt-6">
       <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-6`}>
         <div className="space-y-2">
-          <label className="text-sm text-gray-400">Model</label>
+          <label className="text-sm text-gray-500">Model</label>
           <input
             value={model}
             onChange={(e) => onModelChange(e.target.value)}
@@ -54,7 +54,7 @@ export const EquipmentSection = ({
           />
         </div>
         <div className="space-y-2">
-          <label className="text-sm text-gray-400">Serial Number</label>
+          <label className="text-sm text-gray-500">Serial Number</label>
           <input
             value={serialNumber}
             onChange={(e) => onSerialNumberChange(e.target.value)}
@@ -66,7 +66,7 @@ export const EquipmentSection = ({
 
       <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-6`}>
         <div className="space-y-2">
-          <label className="text-sm text-gray-400">Engineer</label>
+          <label className="text-sm text-gray-500">Engineer</label>
           <Select
             value={engineer}
             onValueChange={onEngineerChange}
@@ -84,7 +84,7 @@ export const EquipmentSection = ({
           </Select>
         </div>
         <div className="space-y-2">
-          <label className="text-sm text-gray-400">Sent On</label>
+          <label className="text-sm text-gray-500">Sent On</label>
           <input
             value={sentOn}
             readOnly

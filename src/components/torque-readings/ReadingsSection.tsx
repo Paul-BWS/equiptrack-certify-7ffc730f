@@ -25,13 +25,13 @@ export const ReadingsSection = ({
   }
 
   return (
-    <div className="mb-8">
-      <h3 className="font-semibold mb-4 text-black">{title}</h3>
+    <div className="bg-gray-50 p-6 rounded-lg">
+      <h3 className="font-semibold mb-4 text-gray-900">{title}</h3>
       <div className="space-y-4">
         {readingsArray.map((reading, index) => (
           <div key={`${title}-${index}`} className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
-              <label className="text-sm text-gray-400">Target</label>
+              <label className="text-sm text-gray-500">Target</label>
               <Input
                 value={reading.target}
                 onChange={onChange ? (e) => onChange(index, "target", e.target.value) : undefined}
@@ -41,7 +41,7 @@ export const ReadingsSection = ({
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm text-gray-400">Actual</label>
+              <label className="text-sm text-gray-500">Actual</label>
               <Input
                 value={reading.actual}
                 onChange={onChange ? (e) => onChange(index, "actual", e.target.value) : undefined}
@@ -51,7 +51,7 @@ export const ReadingsSection = ({
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm text-gray-400">Deviation (%)</label>
+              <label className="text-sm text-gray-500">Deviation (%)</label>
               <Input
                 value={reading.deviation}
                 placeholder="Deviation"

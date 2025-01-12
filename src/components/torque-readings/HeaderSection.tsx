@@ -28,10 +28,10 @@ export const HeaderSection = ({
   const status = calculateStatus();
   
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 bg-gray-50 p-6 rounded-lg">
       <div className={`grid ${isMobile ? 'grid-cols-1 gap-4' : 'grid-cols-4 gap-6'}`}>
         <div className="space-y-2">
-          <label className="text-sm text-gray-400">Test Date</label>
+          <label className="text-sm text-gray-500">Test Date</label>
           <div className="relative">
             <input
               type="date"
@@ -43,7 +43,7 @@ export const HeaderSection = ({
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm text-gray-400">Status</label>
+          <label className="text-sm text-gray-500">Status</label>
           <input
             type="text"
             value={status}
@@ -55,7 +55,7 @@ export const HeaderSection = ({
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm text-gray-400">Retest Date</label>
+          <label className="text-sm text-gray-500">Retest Date</label>
           <input
             type="date"
             value={retestDate}
@@ -65,7 +65,7 @@ export const HeaderSection = ({
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm text-gray-400">Certificate Number</label>
+          <label className="text-sm text-gray-500">Certificate Number</label>
           <input
             type="text"
             value={certNumber}
