@@ -17,7 +17,8 @@ export const AuthenticationScreen = () => {
       if (event === 'SIGNED_IN' && session) {
         console.log("User signed in, redirecting to home");
         toast.success("Welcome back!");
-        navigate('/');
+        // Force navigation and reload to ensure proper state update
+        window.location.href = '/';
       }
       if (event === 'SIGNED_OUT') {
         console.log("User signed out, staying on auth screen");
@@ -42,7 +43,7 @@ export const AuthenticationScreen = () => {
         }
         if (session) {
           console.log("Existing session found, redirecting to home");
-          navigate('/');
+          window.location.href = '/';
         }
       } catch (err) {
         console.error("Unexpected error during session check:", err);
