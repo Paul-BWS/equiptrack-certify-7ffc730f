@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { TorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
 import { Dispatch, SetStateAction } from "react";
 
@@ -9,17 +9,27 @@ interface FormInitializerProps {
 }
 
 export const FormInitializer = ({ equipmentId, open, setReadings }: FormInitializerProps) => {
+  const hasInitialized = useRef(false);
+
   useEffect(() => {
-    if (!equipmentId && open) {
+    if (!equipmentId && open && !hasInitialized.current) {
       const timestamp = new Date().getTime();
       const randomNum = Math.floor(Math.random() * 1000);
       const newCertNumber = `BWS-${timestamp}-${randomNum}`;
+      
       setReadings(prev => ({
         ...prev,
         certNumber: newCertNumber
       }));
+      
+      hasInitialized.current = true;
     }
-  }, [equipmentId, open]); // Add dependency array to prevent infinite loop
+
+    // Reset the ref when the modal closes
+    if (!open) {
+      hasInitialized.current = false;
+    }
+  }, [equipmentId, open, setReadings]);
 
   return null;
 };
