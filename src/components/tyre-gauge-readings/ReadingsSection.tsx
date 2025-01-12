@@ -38,7 +38,6 @@ export const ReadingsSection = ({ readings, onReadingsChange }: ReadingsSectionP
                   value={displayReadings[groupIndex]?.target || ''}
                   onChange={(e) => handleReadingChange(groupIndex, 'target', e.target.value)}
                   className="h-12 bg-white border-gray-200"
-                  placeholder="Target"
                 />
               </div>
               <div className="space-y-2">
@@ -50,7 +49,6 @@ export const ReadingsSection = ({ readings, onReadingsChange }: ReadingsSectionP
                   value={displayReadings[groupIndex]?.actual || ''}
                   onChange={(e) => handleReadingChange(groupIndex, 'actual', e.target.value)}
                   className="h-12 bg-white border-gray-200"
-                  placeholder="Actual"
                 />
               </div>
               <div className="space-y-2">
@@ -59,7 +57,6 @@ export const ReadingsSection = ({ readings, onReadingsChange }: ReadingsSectionP
                   value={displayReadings[groupIndex]?.deviation || ''}
                   readOnly
                   className="h-12 bg-[#F9F9F9] border-gray-200"
-                  placeholder="Deviation"
                 />
               </div>
             </div>
