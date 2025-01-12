@@ -73,6 +73,15 @@ export const TyreGaugeReadingsModal = ({
     }
   }, [equipmentId]);
 
+  const calculateDeviation = (setting: string, reading: string): string => {
+    if (!setting || !reading) return "";
+    const settingValue = parseFloat(setting);
+    const readingValue = parseFloat(reading);
+    if (isNaN(settingValue) || isNaN(readingValue) || settingValue === 0) return "";
+    const deviation = ((readingValue - settingValue) / settingValue) * 100;
+    return deviation.toFixed(2);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
@@ -296,6 +305,7 @@ export const TyreGaugeReadingsModal = ({
                       onChange={(e) => {
                         const newReadings = [...readings];
                         newReadings[index].setting = e.target.value;
+                        newReadings[index].deviation = calculateDeviation(e.target.value, reading.reading);
                         setReadings(newReadings);
                       }}
                       className="h-12 bg-white border-gray-200"
@@ -308,6 +318,7 @@ export const TyreGaugeReadingsModal = ({
                       onChange={(e) => {
                         const newReadings = [...readings];
                         newReadings[index].reading = e.target.value;
+                        newReadings[index].deviation = calculateDeviation(reading.setting, e.target.value);
                         setReadings(newReadings);
                       }}
                       className="h-12 bg-white border-gray-200"
@@ -316,12 +327,7 @@ export const TyreGaugeReadingsModal = ({
                   <div className="space-y-2">
                     <Label className="text-sm text-[#C8C8C9]">Deviation {index + 1}</Label>
                     <Input
-                      value={reading.deviation}
-                      onChange={(e) => {
-                        const newReadings = [...readings];
-                        newReadings[index].deviation = e.target.value;
-                        setReadings(newReadings);
-                      }}
+                      value={reading.deviation ? `${reading.deviation}%` : ""}
                       className="h-12 bg-[#F9F9F9] border-gray-200"
                       readOnly
                     />
