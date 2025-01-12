@@ -5,12 +5,22 @@ import { UserMenu } from "./navigation/UserMenu";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const Navigation = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_OUT') {
+        navigate('/');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
 
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
@@ -25,7 +35,6 @@ export const Navigation = () => {
         title: "Signed out successfully",
         description: "You have been signed out of your account",
       });
-      navigate('/');
     }
   };
 
