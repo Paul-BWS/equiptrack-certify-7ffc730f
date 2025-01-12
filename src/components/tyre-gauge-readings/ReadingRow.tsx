@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Reading } from "@/types/tyreGauge";
 import { Input } from "@/components/ui/input";
 
@@ -9,6 +9,19 @@ interface ReadingRowProps {
 }
 
 export const ReadingRow = ({ reading, index, onReadingChange }: ReadingRowProps) => {
+  useEffect(() => {
+    // Calculate deviation when target or actual changes
+    if (reading.target && reading.actual) {
+      const targetNum = parseFloat(reading.target);
+      const actualNum = parseFloat(reading.actual);
+      
+      if (!isNaN(targetNum) && !isNaN(actualNum) && targetNum !== 0) {
+        const deviation = ((actualNum - targetNum) / targetNum * 100).toFixed(2);
+        onReadingChange(index, 'deviation', `${deviation}%`);
+      }
+    }
+  }, [reading.target, reading.actual, index, onReadingChange]);
+
   return (
     <React.Fragment>
       <Input
@@ -16,21 +29,18 @@ export const ReadingRow = ({ reading, index, onReadingChange }: ReadingRowProps)
         value={reading.target}
         onChange={(e) => onReadingChange(index, 'target', e.target.value)}
         className="border rounded p-2"
-        placeholder="Target value"
       />
       <Input
         type="text"
         value={reading.actual}
         onChange={(e) => onReadingChange(index, 'actual', e.target.value)}
         className="border rounded p-2"
-        placeholder="Actual value"
       />
       <Input
         type="text"
         value={reading.deviation}
-        onChange={(e) => onReadingChange(index, 'deviation', e.target.value)}
-        className="border rounded p-2"
-        placeholder="Deviation"
+        readOnly
+        className="border rounded p-2 bg-gray-50"
       />
     </React.Fragment>
   );
