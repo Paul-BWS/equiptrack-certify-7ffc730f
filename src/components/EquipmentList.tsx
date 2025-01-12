@@ -44,26 +44,15 @@ export const EquipmentList = ({
 
   const handleDelete = async (id: string) => {
     try {
-      // First, delete all certificates associated with this torque wrench
-      const { error: certificatesError } = await supabase
-        .from('certificates')
-        .delete()
-        .eq('torque_wrench_id', id);
-
-      if (certificatesError) {
-        console.error('Error deleting certificates:', certificatesError);
-        throw certificatesError;
-      }
-
-      // Then delete the torque wrench itself
-      const { error: torqueWrenchError } = await supabase
-        .from('torque_wrench')
+      // Delete the tyre gauge
+      const { error: tyreGaugeError } = await supabase
+        .from('tyre_gauges')
         .delete()
         .eq('id', id);
 
-      if (torqueWrenchError) {
-        console.error('Error deleting torque wrench:', torqueWrenchError);
-        throw torqueWrenchError;
+      if (tyreGaugeError) {
+        console.error('Error deleting tyre gauge:', tyreGaugeError);
+        throw tyreGaugeError;
       }
 
       toast.success("Equipment deleted successfully");
@@ -120,8 +109,7 @@ export const EquipmentList = ({
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the torque wrench
-              and all of its associated certificates.
+              This action cannot be undone. This will permanently delete the tyre gauge.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
