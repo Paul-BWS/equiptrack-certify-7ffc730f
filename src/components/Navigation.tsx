@@ -30,9 +30,9 @@ export const Navigation = () => {
   };
 
   return (
-    <nav className="border-b">
+    <nav className="border-b bg-primary">
       <div className="flex h-16 items-center px-4">
-        <Link to="/" className="font-semibold">
+        <Link to="/" className="text-xl font-semibold text-white">
           EquipService
         </Link>
         <div className="ml-auto flex items-center space-x-4">
