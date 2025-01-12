@@ -13,12 +13,14 @@ interface TorqueWrenchListProps {
   }>;
   onNewTorqueWrench: () => void;
   onGenerateCertificate: (id: string) => void;
+  onViewReadings: (id: string) => void;
 }
 
 export const TorqueWrenchList = ({
   torqueWrenches,
   onNewTorqueWrench,
   onGenerateCertificate,
+  onViewReadings,
 }: TorqueWrenchListProps) => {
   if (torqueWrenches.length === 0) {
     return (
@@ -38,6 +40,7 @@ export const TorqueWrenchList = ({
     <EquipmentList
       equipment={torqueWrenches}
       onGenerateCertificate={onGenerateCertificate}
+      onViewReadings={onViewReadings}
     />
   );
 };

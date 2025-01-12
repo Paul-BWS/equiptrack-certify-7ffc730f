@@ -176,7 +176,7 @@ const TorqueWrenches = () => {
           serviceRecord={{
             id: crypto.randomUUID(),
             torque_wrench_id: selectedEquipmentId,
-            service_date: new Date().toISOString(),
+            service_date: selectedEquipment.last_service_date || new Date().toISOString(),
             service_type: 'calibration',
             technician: selectedEquipment.engineer || 'Default Technician',
             notes: selectedEquipment.notes || '',
