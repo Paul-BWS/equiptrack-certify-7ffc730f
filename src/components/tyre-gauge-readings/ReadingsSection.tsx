@@ -14,24 +14,20 @@ export const ReadingsSection = ({ readings, onReadingsChange }: ReadingsSectionP
       newReadings.push({ target: "", actual: "", deviation: "" });
     }
     
+    // Update only the specific field that changed
     newReadings[index] = {
       ...newReadings[index],
-      [field]: value,
+      [field]: value
     };
 
-    // Calculate deviation when either target or actual changes
-    if (field === 'target' || field === 'actual') {
-      const target = field === 'target' ? value : newReadings[index].target;
-      const actual = field === 'actual' ? value : newReadings[index].actual;
+    // Calculate deviation only if both target and actual exist
+    if ((field === 'target' || field === 'actual') && newReadings[index].target && newReadings[index].actual) {
+      const targetNum = parseFloat(newReadings[index].target);
+      const actualNum = parseFloat(newReadings[index].actual);
       
-      if (target && actual) {
-        const targetNum = parseFloat(target);
-        const actualNum = parseFloat(actual);
-        
-        if (!isNaN(targetNum) && !isNaN(actualNum) && targetNum !== 0) {
-          const deviation = ((actualNum - targetNum) / targetNum) * 100;
-          newReadings[index].deviation = deviation.toFixed(2);
-        }
+      if (!isNaN(targetNum) && !isNaN(actualNum) && targetNum !== 0) {
+        const deviation = ((actualNum - targetNum) / targetNum) * 100;
+        newReadings[index].deviation = deviation.toFixed(2);
       }
     }
 
@@ -40,10 +36,8 @@ export const ReadingsSection = ({ readings, onReadingsChange }: ReadingsSectionP
 
   // Ensure we always have exactly 4 readings (2 for AS FOUND, 2 for DEFINITIVE)
   const displayReadings = readings.length < 4 ? [
-    { target: "", actual: "", deviation: "" },
-    { target: "", actual: "", deviation: "" },
-    { target: "", actual: "", deviation: "" },
-    { target: "", actual: "", deviation: "" }
+    ...readings,
+    ...Array(4 - readings.length).fill({ target: "", actual: "", deviation: "" })
   ] : readings;
 
   return (
@@ -62,10 +56,10 @@ export const ReadingsSection = ({ readings, onReadingsChange }: ReadingsSectionP
                       <Input
                         type="number"
                         inputMode="decimal"
-                        pattern="[0-9]*"
                         value={displayReadings[readingIndex]?.target || ''}
                         onChange={(e) => handleReadingChange(readingIndex, 'target', e.target.value)}
-                        className="h-12 bg-white border-gray-200"
+                        className="h-12 bg-white border-gray-200 touch-manipulation"
+                        placeholder="Enter target"
                       />
                     </div>
                     <div className="space-y-2">
@@ -73,10 +67,10 @@ export const ReadingsSection = ({ readings, onReadingsChange }: ReadingsSectionP
                       <Input
                         type="number"
                         inputMode="decimal"
-                        pattern="[0-9]*"
                         value={displayReadings[readingIndex]?.actual || ''}
                         onChange={(e) => handleReadingChange(readingIndex, 'actual', e.target.value)}
-                        className="h-12 bg-white border-gray-200"
+                        className="h-12 bg-white border-gray-200 touch-manipulation"
+                        placeholder="Enter actual"
                       />
                     </div>
                     <div className="space-y-2">
