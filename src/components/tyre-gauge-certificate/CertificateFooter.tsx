@@ -6,8 +6,17 @@ export const CertificateFooter = () => {
   return (
     <>
       <div className="mt-6 flex justify-between items-center gap-4 border-t pt-4">
-        <div className="text-left">
+        <div className="text-left space-y-1">
+          <p className="text-xs font-medium">BWS LTD</p>
           <p className="text-xs text-gray-600">{settings.address}</p>
+          <a 
+            href="https://www.basicwelding.co.uk" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="text-xs text-primary hover:underline"
+          >
+            www.basicwelding.co.uk
+          </a>
         </div>
         <div className="flex items-center gap-4">
           <img 
