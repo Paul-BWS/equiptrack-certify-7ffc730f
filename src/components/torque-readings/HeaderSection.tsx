@@ -54,14 +54,16 @@ export const HeaderSection = ({
           />
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2 w-full">
           <label className="text-sm text-[#C8C8C9]">Retest Date</label>
-          <input
-            type="date"
-            value={retestDate}
-            onChange={(e) => onRetestDateChange(e.target.value)}
-            className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-          />
+          <div className="relative w-full">
+            <input
+              type="date"
+              value={retestDate}
+              onChange={(e) => onRetestDateChange(e.target.value)}
+              className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            />
+          </div>
         </div>
 
         <div className="space-y-2">
