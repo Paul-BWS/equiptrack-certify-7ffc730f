@@ -32,6 +32,18 @@ export const HeaderSection = ({
   };
 
   const status = calculateStatus();
+
+  const handleDateSelect = (selectedDate: Date | undefined) => {
+    if (selectedDate) {
+      onDateChange(selectedDate.toISOString().split('T')[0]);
+    }
+  };
+
+  const handleRetestDateSelect = (selectedDate: Date | undefined) => {
+    if (selectedDate) {
+      onRetestDateChange(selectedDate.toISOString().split('T')[0]);
+    }
+  };
   
   return (
     <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
@@ -47,16 +59,17 @@ export const HeaderSection = ({
                     "w-full justify-start text-left font-normal h-12 bg-white border-gray-200",
                     !date && "text-[#C8C8C9]"
                   )}
+                  aria-label="Select test date"
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {date ? format(new Date(date), "PPP") : <span>Pick a date</span>}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
+              <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   mode="single"
                   selected={date ? new Date(date) : undefined}
-                  onSelect={(newDate) => onDateChange(newDate ? newDate.toISOString().split('T')[0] : '')}
+                  onSelect={handleDateSelect}
                   initialFocus
                 />
               </PopoverContent>
@@ -85,16 +98,17 @@ export const HeaderSection = ({
                     "w-full justify-start text-left font-normal h-12 bg-white border-gray-200",
                     !retestDate && "text-[#C8C8C9]"
                   )}
+                  aria-label="Select retest date"
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {retestDate ? format(new Date(retestDate), "PPP") : <span>Pick a date</span>}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
+              <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   mode="single"
                   selected={retestDate ? new Date(retestDate) : undefined}
-                  onSelect={(newDate) => onRetestDateChange(newDate ? newDate.toISOString().split('T')[0] : '')}
+                  onSelect={handleRetestDateSelect}
                   initialFocus
                 />
               </PopoverContent>
