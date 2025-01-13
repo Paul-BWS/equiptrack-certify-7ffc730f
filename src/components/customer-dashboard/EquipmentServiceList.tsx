@@ -83,7 +83,7 @@ export const EquipmentServiceList = ({ companyId }: EquipmentServiceListProps) =
       }
 
       toast.success("Service reminder email sent successfully");
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error sending reminder email:', error);
       toast.error("Failed to send reminder email");
     }

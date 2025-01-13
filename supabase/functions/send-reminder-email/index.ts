@@ -1,190 +1,156 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1';
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL')
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
-};
-
-interface Equipment {
-  id: string;
-  model: string;
-  serial_number: string;
-  next_service_due: string;
-  company_id: string;
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-interface Company {
-  id: string;
-  name: string;
-  contacts: Array<{
-    email: string;
-    name: string;
-    is_primary: boolean;
-  }>;
-}
-
-// Function to generate the email HTML template
-const generateEmailTemplate = (companyName: string, equipmentList: Equipment[]) => {
-  const settings = {
-    logo: "/logo.png" // This will be replaced with the actual logo URL from settings
-  };
-
-  return `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #266bec; margin-bottom: 10px;">BWS Calibration Services Ltd</h1>
-        <p style="color: #4b5563; margin: 0;">Unit 1 Tungsten Park</p>
-        <p style="color: #4b5563; margin: 0;">Coventry Road, Hinckley</p>
-        <p style="color: #4b5563; margin: 0;">Leicestershire, LE10 0NB</p>
-      </div>
-
-      <p style="margin-bottom: 20px; color: #374151;">Dear ${companyName},</p>
-      
-      <p style="margin-bottom: 20px; color: #374151;">This email serves as a friendly reminder that the following equipment requires recalibration/retesting soon:</p>
-      
-      <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
-        ${equipmentList.map(item => `
-          <div style="margin-bottom: 20px; color: #4b5563;">
-            <h3 style="margin: 0 0 8px 0; color: #1f2937;">Equipment Details</h3>
-            <p style="margin: 4px 0;">Model: ${item.model}</p>
-            <p style="margin: 4px 0;">Serial Number: ${item.serial_number}</p>
-            <p style="margin: 4px 0;">Next Service Due: ${new Date(item.next_service_due).toLocaleDateString('en-GB')}</p>
-          </div>
-        `).join('')}
-      </div>
-      
-      <p style="margin-bottom: 20px; color: #374151;">Action Required: None - our service coordinator team will be in contact to book your recalibration/retest with our engineers before the expiration date to ensure:</p>
-      <ul style="color: #374151; margin-bottom: 20px;">
-        <li>Continued accuracy of measurements</li>
-        <li>Compliance with quality standards</li>
-        <li>Uninterrupted operational capability</li>
-      </ul>
-
-      <p style="margin-bottom: 20px; color: #374151;">If you have any questions or need assistance, please contact Cathy or Clare on 0161 223 1843.</p>
-
-      <div style="margin-top: 30px;">
-        <p style="margin-bottom: 5px; color: #374151;">Best regards,</p>
-        <p style="margin-top: 0; color: #266bec; font-weight: 600;">Service Department, BWS LTD</p>
-      </div>
-      
-      <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
-        <div style="text-align: center;">
-          <p style="color: #266bec; font-weight: 600; margin-bottom: 15px;">Contact Information</p>
-          <p style="color: #4b5563; margin: 5px 0;">Telephone: +44 (0)1455 245700</p>
-          <p style="color: #4b5563; margin: 5px 0;">Email: calibration@bws-uk.com</p>
-          <p style="color: #4b5563; margin: 5px 0;">Website: www.basicwelding.co.uk</p>
-        </div>
-        
-        <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #6b7280;">
-          <p style="margin: 3px 0;">BWS Calibration Services Ltd | Registered in England & Wales</p>
-          <p style="margin: 3px 0;">Company Registration No: 03334319 | VAT No: GB123456789</p>
-        </div>
-      </div>
-    </div>
-  `;
-};
-
-const handler = async (req: Request): Promise<Response> => {
+serve(async (req) => {
   // Handle CORS preflight requests
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders })
   }
 
   try {
-    const supabase = createClient(supabaseUrl, supabaseKey);
-    
-    // Get equipment due for service in the next 30 days
-    const today = new Date();
-    const thirtyDaysFromNow = new Date();
-    thirtyDaysFromNow.setDate(today.getDate() + 30);
+    const supabase = createClient(
+      SUPABASE_URL!,
+      SUPABASE_SERVICE_ROLE_KEY!
+    )
 
-    // Query both torque wrenches and tyre gauges
-    const [{ data: torqueWrenches }, { data: tyreGauges }] = await Promise.all([
-      supabase
-        .from('torque_wrench')
-        .select('id, model, serial_number, next_service_due, company_id')
-        .gte('next_service_due', today.toISOString())
-        .lte('next_service_due', thirtyDaysFromNow.toISOString()),
-      supabase
-        .from('tyre_gauges')
-        .select('id, model, serial_number, next_service_due, company_id')
-        .gte('next_service_due', today.toISOString())
-        .lte('next_service_due', thirtyDaysFromNow.toISOString())
-    ]);
+    const { companyId } = await req.json()
 
-    const equipment = [...(torqueWrenches || []), ...(tyreGauges || [])];
-    
-    // Group equipment by company
-    const equipmentByCompany: { [key: string]: Equipment[] } = {};
-    equipment.forEach((item) => {
-      if (!equipmentByCompany[item.company_id]) {
-        equipmentByCompany[item.company_id] = [];
-      }
-      equipmentByCompany[item.company_id].push(item);
-    });
+    // Fetch company details
+    const { data: company, error: companyError } = await supabase
+      .from('companies')
+      .select('name')
+      .eq('id', companyId)
+      .single()
 
-    // Get company details and contacts
-    for (const companyId of Object.keys(equipmentByCompany)) {
-      const { data: company } = await supabase
-        .from('companies')
-        .select(`
-          id,
-          name,
-          contacts (
-            email,
-            name,
-            is_primary
-          )
-        `)
-        .eq('id', companyId)
-        .single();
+    if (companyError) throw companyError
 
-      if (company && company.contacts) {
-        // Send email to primary contacts
-        const primaryContacts = company.contacts.filter(
-          (contact) => contact.is_primary
-        );
+    // Fetch contacts for the company
+    const { data: contacts, error: contactsError } = await supabase
+      .from('contacts')
+      .select('email, name')
+      .eq('company_id', companyId)
+      .eq('is_primary', true)
 
-        if (primaryContacts.length > 0) {
-          const emailHtml = generateEmailTemplate(company.name, equipmentByCompany[companyId]);
+    if (contactsError) throw contactsError
 
-          const res = await fetch("https://api.resend.com/emails", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${RESEND_API_KEY}`,
-            },
-            body: JSON.stringify({
-              from: "BWS <calibration@bws-uk.com>",
-              to: primaryContacts.map((contact) => contact.email),
-              subject: "Equipment Calibration Reminder - Upcoming Retest Due",
-              html: emailHtml,
-            }),
-          });
-
-          if (!res.ok) {
-            console.error(`Failed to send email to ${company.name}:`, await res.text());
-          }
-        }
-      }
+    if (!contacts || contacts.length === 0) {
+      throw new Error('No primary contact found for this company')
     }
 
-    return new Response(JSON.stringify({ success: true }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  } catch (error) {
-    console.error("Error in send-reminder-email function:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  }
-};
+    // Fetch equipment due for service
+    const thirtyDaysFromNow = new Date()
+    thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30)
 
-serve(handler);
+    const { data: torqueWrenches, error: torqueError } = await supabase
+      .from('torque_wrench')
+      .select('model, serial_number, next_service_due')
+      .eq('company_id', companyId)
+      .lte('next_service_due', thirtyDaysFromNow.toISOString())
+      .gt('next_service_due', new Date().toISOString())
+
+    if (torqueError) throw torqueError
+
+    const { data: tyreGauges, error: tyreError } = await supabase
+      .from('tyre_gauges')
+      .select('model, serial_number, next_service_due')
+      .eq('company_id', companyId)
+      .lte('next_service_due', thirtyDaysFromNow.toISOString())
+      .gt('next_service_due', new Date().toISOString())
+
+    if (tyreError) throw tyreError
+
+    const equipment = [
+      ...(torqueWrenches || []).map(tw => ({
+        ...tw,
+        type: 'Torque Wrench'
+      })),
+      ...(tyreGauges || []).map(tg => ({
+        ...tg,
+        type: 'Tyre Gauge'
+      }))
+    ].sort((a, b) => new Date(a.next_service_due).getTime() - new Date(b.next_service_due).getTime())
+
+    if (equipment.length === 0) {
+      throw new Error('No equipment due for service in the next 30 days')
+    }
+
+    const equipmentList = equipment.map(item => `
+      <tr>
+        <td style="padding: 8px; border: 1px solid #ddd;">${item.type}</td>
+        <td style="padding: 8px; border: 1px solid #ddd;">${item.model}</td>
+        <td style="padding: 8px; border: 1px solid #ddd;">${item.serial_number}</td>
+        <td style="padding: 8px; border: 1px solid #ddd;">${new Date(item.next_service_due).toLocaleDateString()}</td>
+      </tr>
+    `).join('')
+
+    const emailHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #333;">Equipment Service Reminder</h2>
+        <p>Dear ${contacts[0].name},</p>
+        <p>This is a reminder that the following equipment for ${company.name} is due for service in the next 30 days:</p>
+        
+        <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+          <thead>
+            <tr style="background-color: #f8f9fa;">
+              <th style="padding: 8px; border: 1px solid #ddd;">Type</th>
+              <th style="padding: 8px; border: 1px solid #ddd;">Model</th>
+              <th style="padding: 8px; border: 1px solid #ddd;">Serial Number</th>
+              <th style="padding: 8px; border: 1px solid #ddd;">Service Due</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${equipmentList}
+          </tbody>
+        </table>
+
+        <p style="margin-top: 20px;">Please contact us to schedule your service appointment.</p>
+        
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+          <p style="color: #666; font-size: 14px;">Best regards,<br>BWS Calibration</p>
+        </div>
+      </div>
+    `
+
+    // Send email using Resend
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: 'BWS Calibration <calibration@basicwelding.co.uk>',
+        to: [contacts[0].email],
+        subject: `Equipment Service Reminder - ${company.name}`,
+        html: emailHtml,
+      }),
+    })
+
+    if (!res.ok) {
+      const error = await res.text()
+      throw new Error(`Failed to send email: ${error}`)
+    }
+
+    const data = await res.json()
+
+    return new Response(JSON.stringify(data), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 200,
+    })
+  } catch (error) {
+    console.error('Error in send-reminder-email function:', error)
+    return new Response(JSON.stringify({ error: error.message }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 500,
+    })
+  }
+})
