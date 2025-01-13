@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { format, parseISO, isAfter, subDays } from "date-fns";
+import { format, parseISO, isAfter } from "date-fns";
 
 interface EquipmentServiceListProps {
   companyId: string;
@@ -71,9 +71,9 @@ export const EquipmentServiceList = ({ companyId }: EquipmentServiceListProps) =
 
   if (isLoading) {
     return (
-      <Card>
+      <Card className="bg-white border-none shadow-sm">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">
+          <CardTitle className="text-xl font-semibold text-gray-900">
             Equipment Due for Service
           </CardTitle>
         </CardHeader>
@@ -98,9 +98,9 @@ export const EquipmentServiceList = ({ companyId }: EquipmentServiceListProps) =
   };
 
   return (
-    <Card>
+    <Card className="bg-white border-none shadow-sm">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold">
+        <CardTitle className="text-xl font-semibold text-gray-900">
           Equipment Due for Service
         </CardTitle>
       </CardHeader>
@@ -114,11 +114,11 @@ export const EquipmentServiceList = ({ companyId }: EquipmentServiceListProps) =
             equipment.map((item) => (
               <div
                 key={`${item.type}-${item.id}`}
-                className="flex items-center justify-between p-4 rounded-lg border bg-[#F9F9F9]"
+                className="flex items-center justify-between p-4 rounded-lg bg-gray-50"
               >
                 <div>
-                  <h3 className="font-medium text-sm">{item.model}</h3>
-                  <p className="text-xs text-[#B3B3B3]">
+                  <h3 className="font-medium text-sm text-gray-900">{item.model}</h3>
+                  <p className="text-xs text-gray-500">
                     Next Service: {format(parseISO(item.next_service_due), 'dd/MM/yyyy')}
                   </p>
                 </div>

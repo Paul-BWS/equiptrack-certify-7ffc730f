@@ -74,19 +74,19 @@ const CustomerDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#1A1F2C]">
-      <div className="bg-[#7E69AB] border-b border-[#6E59A5]">
+    <div className="min-h-screen bg-[#F4F4F5]">
+      <div className="bg-[#7E69AB]">
         <div className="container mx-auto py-4">
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => navigate('/')}
-              className="text-white hover:text-white hover:bg-[#6E59A5]"
+              className="text-white hover:text-white hover:bg-[#6E59A5]/20"
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <h1 className="text-3xl font-bold text-white">Customer Dashboard</h1>
+            <h1 className="text-2xl font-semibold text-white">Customer Dashboard</h1>
           </div>
         </div>
       </div>

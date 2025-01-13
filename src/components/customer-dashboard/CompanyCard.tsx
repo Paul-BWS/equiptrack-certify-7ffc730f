@@ -11,7 +11,7 @@ interface CompanyCardProps {
 
 export const CompanyCard = ({ company }: CompanyCardProps) => {
   return (
-    <Card className="bg-[#7E69AB] border border-[#6E59A5]/20">
+    <Card className="bg-[#7E69AB] border-none shadow-none">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-2xl font-bold text-white">
           {company.name}

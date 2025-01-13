@@ -11,9 +11,9 @@ interface ContactsListProps {
 
 export const ContactsList = ({ contacts, companyId }: ContactsListProps) => {
   return (
-    <Card className="bg-white border border-[#0EA5E9]/20">
+    <Card className="bg-white border-none shadow-sm">
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-2xl font-bold text-gray-900">Contacts</CardTitle>
+        <CardTitle className="text-xl font-semibold text-gray-900">Contacts</CardTitle>
         <ContactForm companyId={companyId} />
       </CardHeader>
       <CardContent>
@@ -21,7 +21,7 @@ export const ContactsList = ({ contacts, companyId }: ContactsListProps) => {
           {contacts?.map((contact) => (
             <div
               key={contact.id}
-              className="flex items-center justify-between p-4 rounded-lg border border-[#0EA5E9]/20 bg-white"
+              className="flex items-center justify-between p-4 rounded-lg bg-gray-50"
             >
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
