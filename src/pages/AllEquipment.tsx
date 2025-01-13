@@ -65,7 +65,7 @@ const AllEquipment = () => {
           last_service_date,
           next_service_due,
           company_id,
-          company:companies!inner(name)
+          company:companies(name)
         `);
 
       if (torqueError) {
@@ -83,7 +83,7 @@ const AllEquipment = () => {
           last_service_date,
           next_service_due,
           company_id,
-          company:companies!inner(name)
+          company:companies(name)
         `);
 
       if (tyreError) {
@@ -92,8 +92,8 @@ const AllEquipment = () => {
       }
 
       // Combine and format the data
-      const combinedEquipment: Equipment[] = [
-        ...(torqueWrenches?.map((tw) => ({
+      return [
+        ...(torqueWrenches?.map((tw: TorqueWrenchResponse) => ({
           id: tw.id,
           model: tw.model || '',
           serialNumber: tw.serial_number || '',
@@ -102,7 +102,7 @@ const AllEquipment = () => {
           companyName: tw.company?.name || 'Unknown Company',
           equipmentType: 'Torque Wrench'
         })) || []),
-        ...(tyreGauges?.map((tg) => ({
+        ...(tyreGauges?.map((tg: TyreGaugeResponse) => ({
           id: tg.id,
           model: tg.model || '',
           serialNumber: tg.serial_number || '',
@@ -112,8 +112,6 @@ const AllEquipment = () => {
           equipmentType: 'Tyre Gauge'
         })) || [])
       ];
-
-      return combinedEquipment;
     }
   });
 
