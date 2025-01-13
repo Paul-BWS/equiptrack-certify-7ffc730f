@@ -11,9 +11,7 @@ const Profile = () => {
     email,
     name,
     setName,
-    companies,
-    selectedCompany,
-    setSelectedCompany,
+    companyName,
     isBWSUser,
     isLoading,
     updateProfile,
@@ -30,18 +28,16 @@ const Profile = () => {
             <Card>
               <ProfileHeader />
               <CardContent>
-                {companies.length === 0 ? (
+                {!companyName ? (
                   <NoCompanyMessage />
                 ) : (
                   <ProfileForm
                     email={email}
                     name={name}
                     onNameChange={setName}
-                    companies={companies}
-                    selectedCompany={selectedCompany}
-                    onCompanyChange={setSelectedCompany}
                     onUpdateProfile={updateProfile}
                     isBWSUser={isBWSUser}
+                    companyName={companyName}
                   />
                 )}
               </CardContent>
