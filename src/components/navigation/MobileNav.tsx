@@ -15,7 +15,7 @@ export const MobileNav = ({ isOpen, onClose, onSignOut }: MobileNavProps) => {
     <div className="md:hidden mt-4 flex flex-col gap-4">
       <Link
         to="/"
-        className="text-white hover:text-accent flex items-center gap-2"
+        className="text-white hover:text-accent flex items-center gap-2 border-2 border-white rounded-lg p-2"
         onClick={onClose}
       >
         <LayoutDashboard size={20} />
@@ -23,7 +23,7 @@ export const MobileNav = ({ isOpen, onClose, onSignOut }: MobileNavProps) => {
       </Link>
       <Link
         to="/"
-        className="text-white hover:text-accent flex items-center gap-2"
+        className="text-white hover:text-accent flex items-center gap-2 border-2 border-white rounded-lg p-2"
         onClick={onClose}
       >
         <Users size={20} />
@@ -31,7 +31,7 @@ export const MobileNav = ({ isOpen, onClose, onSignOut }: MobileNavProps) => {
       </Link>
       <Link
         to="/all-equipment"
-        className="text-white hover:text-accent flex items-center gap-2"
+        className="text-white hover:text-accent flex items-center gap-2 border-2 border-white rounded-lg p-2"
         onClick={onClose}
       >
         <ClipboardList size={20} />
@@ -39,7 +39,7 @@ export const MobileNav = ({ isOpen, onClose, onSignOut }: MobileNavProps) => {
       </Link>
       <Button
         variant="ghost"
-        className="text-white hover:text-accent flex items-center gap-2 justify-start p-0"
+        className="text-white hover:text-accent flex items-center gap-2 justify-start p-2 border-2 border-white rounded-lg"
         onClick={onSignOut}
       >
         <LogOut size={20} />
