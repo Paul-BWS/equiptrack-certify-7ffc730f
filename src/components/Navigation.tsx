@@ -37,7 +37,6 @@ export const Navigation = () => {
           title: "Signed out successfully",
           description: "You have been signed out of your account",
         });
-        // Force a full page reload to ensure clean state
         window.location.href = '/';
       }
     } catch (err) {

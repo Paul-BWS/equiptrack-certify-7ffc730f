@@ -1,5 +1,5 @@
 import { Company } from "@/types/company";
-import { Globe, MapPin, Building2 } from "lucide-react";
+import { Building2, Globe, MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface CustomerListProps {
@@ -15,7 +15,7 @@ export const CustomerList = ({ customers }: CustomerListProps) => {
   };
 
   const handleCustomerClick = (customerId: string) => {
-    navigate(`/customers/${customerId}`);  // Changed from /customer/ to /customers/
+    navigate(`/customers/${customerId}`);
   };
 
   return (
@@ -23,7 +23,7 @@ export const CustomerList = ({ customers }: CustomerListProps) => {
       {customers.map((company) => (
         <div
           key={company.id}
-          className="p-6 rounded-xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-all duration-200"
+          className="p-6 rounded-xl border border-gray-100 bg-white hover:shadow-lg transition-all duration-200"
         >
           <div className="space-y-3">
             <button
