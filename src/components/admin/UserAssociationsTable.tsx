@@ -25,6 +25,17 @@ interface UserGroup {
   };
 }
 
+interface CompanyGroupResponse {
+  id: string;
+  user_id: string;
+  group_id: string;
+  company_groups: {
+    name: string;
+  } | {
+    name: string;
+  }[];
+}
+
 export const UserAssociationsTable = ({
   userCompanies,
   companies,
@@ -78,7 +89,7 @@ export const UserAssociationsTable = ({
         return [];
       }
       
-      return data.map((group): UserGroup => ({
+      return (data as CompanyGroupResponse[]).map((group): UserGroup => ({
         id: group.id,
         user_id: group.user_id,
         group_id: group.group_id,
