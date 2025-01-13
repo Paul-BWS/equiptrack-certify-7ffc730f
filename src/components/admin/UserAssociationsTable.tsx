@@ -16,6 +16,15 @@ interface UserAssociationsTableProps {
   onAssociationAdded: () => void;
 }
 
+interface UserGroup {
+  id: string;
+  user_id: string;
+  group_id: string;
+  company_groups: {
+    name: string;
+  };
+}
+
 export const UserAssociationsTable = ({
   userCompanies,
   companies,
@@ -69,7 +78,7 @@ export const UserAssociationsTable = ({
         return [];
       }
       
-      return data.map(group => ({
+      return data.map((group): UserGroup => ({
         id: group.id,
         user_id: group.user_id,
         group_id: group.group_id,
