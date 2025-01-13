@@ -1,7 +1,7 @@
 import { HeaderSection } from "../HeaderSection";
-import { BasicDetails } from "./form-sections/BasicDetails";
-import { ReadingsSection } from "./form-sections/ReadingsSection";
-import { NotesSection } from "./form-sections/NotesSection";
+import { MeasurementsSection } from "../MeasurementsSection";
+import { ReadingsSection } from "../ReadingsSection";
+import { NotesSection } from "../NotesSection";
 import { FormActions } from "./form-sections/FormActions";
 import { TorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
 
@@ -32,27 +32,42 @@ export const ModalForm = ({
     <form onSubmit={onSubmit} className="p-6 space-y-6">
       <HeaderSection
         date={readings.date}
-        status={readings.status}
         retestDate={readings.retestDate}
         certNumber={readings.certNumber}
         onDateChange={(value) => handleFieldChange("date", value)}
         onRetestDateChange={(value) => handleFieldChange("retestDate", value)}
-        onStatusChange={(value) => handleFieldChange("status", value)}
       />
       
-      <BasicDetails
-        formData={readings}
-        onChange={handleFieldChange}
+      <MeasurementsSection
+        min={readings.min}
+        max={readings.max}
+        units={readings.units}
+        result={readings.result}
+        onMinChange={(value) => handleFieldChange("min", value)}
+        onMaxChange={(value) => handleFieldChange("max", value)}
+        onUnitsChange={(value) => handleFieldChange("units", value)}
+        onResultChange={(value) => handleFieldChange("result", value)}
       />
       
       <ReadingsSection
-        formData={readings}
-        onChange={handleFieldChange}
+        title="Initial Readings"
+        readings={readings.readings}
+        onChange={(index, field, value) => {
+          const newReadings = [...readings.readings];
+          newReadings[index] = { ...newReadings[index], [field]: value };
+          handleFieldChange("readings", newReadings);
+        }}
+      />
+
+      <ReadingsSection
+        title="Definitive Readings"
+        readings={readings.definitiveReadings}
+        readOnly
       />
 
       <NotesSection
-        formData={readings}
-        onChange={handleFieldChange}
+        notes={readings.notes}
+        onChange={(value) => handleFieldChange("notes", value)}
       />
 
       <FormActions
