@@ -68,8 +68,6 @@ export const useProfileData = () => {
 
         if (userCompanyData?.company_id) {
           setSelectedCompany(userCompanyData.company_id);
-        } else {
-          toast.error("You are not associated with any company");
         }
 
         // Check if user is BWS user
@@ -110,6 +108,7 @@ export const useProfileData = () => {
       });
 
       if (updateError) {
+        console.error("Error updating user:", updateError);
         toast.error("Failed to update profile");
         return;
       }
@@ -121,6 +120,7 @@ export const useProfileData = () => {
         .eq("user_id", session.user.id);
 
       if (deleteError) {
+        console.error("Error deleting company association:", deleteError);
         toast.error("Failed to update company association");
         return;
       }
@@ -136,6 +136,7 @@ export const useProfileData = () => {
         ]);
 
       if (insertError) {
+        console.error("Error inserting company association:", insertError);
         toast.error("Failed to update company association");
         return;
       }
