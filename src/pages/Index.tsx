@@ -27,14 +27,18 @@ const Index = () => {
   const { data: companies = [], isLoading: isLoadingCompanies } = useQuery({
     queryKey: ['companies'],
     queryFn: async () => {
+      console.log('Fetching companies...');
       const { data, error } = await supabase
         .from('companies')
-        .select('*');
+        .select('*')
+        .order('name');
       
       if (error) {
+        console.error('Error fetching companies:', error);
         throw error;
       }
       
+      console.log('Companies fetched:', data);
       return data;
     },
     enabled: !!session,
@@ -54,7 +58,6 @@ const Index = () => {
     return <ErrorScreen message={sessionError?.message || authError || "Authentication error occurred"} />;
   }
 
-  // If there's no session, show the authentication screen
   if (!session) {
     return <AuthenticationScreen />;
   }

@@ -19,14 +19,16 @@ export const DeleteCompanyButton = ({ companyId, companyName }: DeleteCompanyBut
   const { mutate: deleteCompany, isPending } = useMutation({
     mutationFn: async () => {
       console.log("Starting company deletion for ID:", companyId);
-      const { error } = await supabase
+      
+      // Delete from companies table
+      const { error: companiesError } = await supabase
         .from('companies')
         .delete()
         .eq('id', companyId);
       
-      if (error) {
-        console.error("Error deleting company:", error);
-        throw error;
+      if (companiesError) {
+        console.error("Error deleting from companies:", companiesError);
+        throw companiesError;
       }
       
       console.log("Company deletion successful");
@@ -35,7 +37,9 @@ export const DeleteCompanyButton = ({ companyId, companyName }: DeleteCompanyBut
       // Immediately remove the company from the cache
       queryClient.setQueryData(['companies'], (oldData: any) => {
         if (!oldData) return [];
-        return oldData.filter((company: any) => company.id !== companyId);
+        const newData = oldData.filter((company: any) => company.id !== companyId);
+        console.log('Updated cache:', newData);
+        return newData;
       });
       
       // Then invalidate the queries to refetch fresh data
