@@ -2,7 +2,7 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { UseFormReturn } from "react-hook-form";
-import { ContactFormData } from "./ContactEditForm";
+import { ContactFormData } from "@/schemas/contactSchema";
 
 interface ContactFormFieldsProps {
   form: UseFormReturn<ContactFormData>;
