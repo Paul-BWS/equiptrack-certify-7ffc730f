@@ -7,6 +7,7 @@ import AdminUsers from "@/pages/AdminUsers";
 import TorqueWrenches from "@/pages/TorqueWrenches";
 import TyreGauges from "@/pages/TyreGauges";
 import CustomerDashboard from "@/pages/CustomerDashboard";
+import Equipment from "@/pages/Equipment";
 
 export const Routes = () => {
   return (
@@ -18,7 +19,10 @@ export const Routes = () => {
       <Route path="/admin/users" element={<AdminUsers />} />
       <Route path="/torque-wrenches" element={<TorqueWrenches />} />
       <Route path="/tyre-gauges" element={<TyreGauges />} />
-      <Route path="/customer/:id/*" element={<CustomerDashboard />} />
+      <Route path="/customer/:id" element={<CustomerDashboard />} />
+      <Route path="/customers/:customerId/equipment" element={<Equipment />} />
+      <Route path="/customers/:customerId/equipment/torque-wrenches" element={<TorqueWrenches />} />
+      <Route path="/customers/:customerId/equipment/tyre-gauges" element={<TyreGauges />} />
     </RouterRoutes>
   );
 };
