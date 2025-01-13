@@ -1,10 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { format, parseISO, isAfter } from "date-fns";
+import { toast } from "sonner";
 
 interface EquipmentServiceListProps {
   companyId: string;
@@ -19,7 +20,7 @@ export const EquipmentServiceList = ({ companyId }: EquipmentServiceListProps) =
       // Fetch torque wrenches
       const { data: torqueWrenches, error: torqueError } = await supabase
         .from('torque_wrench')
-        .select('id, model, next_service_due')
+        .select('id, model, serial_number, next_service_due')
         .eq('company_id', companyId)
         .order('next_service_due', { ascending: true });
 
@@ -31,7 +32,7 @@ export const EquipmentServiceList = ({ companyId }: EquipmentServiceListProps) =
       // Fetch tyre gauges
       const { data: tyreGauges, error: tyreError } = await supabase
         .from('tyre_gauges')
-        .select('id, model, next_service_due')
+        .select('id, model, serial_number, next_service_due')
         .eq('company_id', companyId)
         .order('next_service_due', { ascending: true });
 
@@ -44,11 +45,13 @@ export const EquipmentServiceList = ({ companyId }: EquipmentServiceListProps) =
       const combinedEquipment = [
         ...(torqueWrenches?.map(tw => ({
           ...tw,
-          type: 'torque-wrench' as const
+          type: 'torque-wrench' as const,
+          displayType: 'Torque Wrench'
         })) || []),
         ...(tyreGauges?.map(tg => ({
           ...tg,
-          type: 'tyre-gauge' as const
+          type: 'tyre-gauge' as const,
+          displayType: 'Tyre Gauge'
         })) || [])
       ];
 
@@ -69,6 +72,34 @@ export const EquipmentServiceList = ({ companyId }: EquipmentServiceListProps) =
     }
   });
 
+  const handleSendReminder = async () => {
+    try {
+      const response = await supabase.functions.invoke('send-reminder-email', {
+        body: { companyId }
+      });
+
+      if (response.error) {
+        throw new Error(response.error.message);
+      }
+
+      toast.success("Service reminder email sent successfully");
+    } catch (error) {
+      console.error('Error sending reminder email:', error);
+      toast.error("Failed to send reminder email");
+    }
+  };
+
+  const getEquipmentRoute = (type: string) => {
+    switch (type) {
+      case 'torque-wrench':
+        return 'torque-wrenches';
+      case 'tyre-gauge':
+        return 'tyre-gauges';
+      default:
+        return type + 's';
+    }
+  };
+
   if (isLoading) {
     return (
       <Card className="bg-white border-none shadow-sm">
@@ -86,23 +117,22 @@ export const EquipmentServiceList = ({ companyId }: EquipmentServiceListProps) =
     );
   }
 
-  const getEquipmentRoute = (type: string) => {
-    switch (type) {
-      case 'torque-wrench':
-        return 'torque-wrenches';
-      case 'tyre-gauge':
-        return 'tyre-gauges';
-      default:
-        return type + 's';
-    }
-  };
-
   return (
     <Card className="bg-white border-none shadow-sm">
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-xl font-semibold text-gray-900">
           Equipment Due for Service
         </CardTitle>
+        {equipment.length > 0 && (
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={handleSendReminder}
+            className="rounded-full bg-white border-2 border-primary hover:bg-primary/10"
+          >
+            <Mail className="h-4 w-4 text-primary" strokeWidth={2} />
+          </Button>
+        )}
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -116,8 +146,16 @@ export const EquipmentServiceList = ({ companyId }: EquipmentServiceListProps) =
                 key={`${item.type}-${item.id}`}
                 className="flex items-center justify-between p-4 rounded-lg bg-gray-50"
               >
-                <div>
-                  <h3 className="font-medium text-sm text-gray-900">{item.model}</h3>
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-medium text-sm text-gray-900">{item.model}</h3>
+                    <span className="px-2 py-1 rounded-full bg-gray-100 text-xs text-gray-600">
+                      {item.displayType}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    S/N: {item.serial_number}
+                  </p>
                   <p className="text-xs text-gray-500">
                     Next Service: {format(parseISO(item.next_service_due), 'dd/MM/yyyy')}
                   </p>
