@@ -19,12 +19,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
+import { User } from "@supabase/supabase-js";
 
 interface UserCompany {
   user_id: string;
   user_email: string;
   company_id: string;
   company_name: string;
+}
+
+interface Company {
+  id: string;
+  name: string;
 }
 
 const AdminUsers = () => {
@@ -61,8 +67,8 @@ const AdminUsers = () => {
       const userCompanyMap: UserCompany[] = [];
       
       associations?.forEach((assoc) => {
-        const user = users.find(u => u.id === assoc.user_id);
-        const company = companies?.find(c => c.id === assoc.company_id);
+        const user = users.find((u: User) => u.id === assoc.user_id);
+        const company = companies?.find((c: Company) => c.id === assoc.company_id);
         
         if (user && company) {
           userCompanyMap.push({
