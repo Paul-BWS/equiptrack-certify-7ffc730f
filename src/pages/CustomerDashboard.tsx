@@ -8,6 +8,7 @@ import { EquipmentServiceList } from "@/components/customer-dashboard/EquipmentS
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Grid } from "lucide-react";
+import { useEffect } from "react";
 
 const CustomerDashboard = () => {
   const { id } = useParams<{ id: string }>();
