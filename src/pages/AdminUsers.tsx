@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Navigation } from "@/components/Navigation";
 import {
   Card,
@@ -9,29 +9,9 @@ import {
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
-import { User } from "@supabase/supabase-js";
-
-interface UserCompany {
-  user_id: string;
-  user_email: string;
-  company_id: string;
-  company_name: string;
-}
-
-interface Company {
-  id: string;
-  name: string;
-}
+import { UserAssociationsTable } from "@/components/admin/UserAssociationsTable";
+import { AdminUser, Company, UserCompany } from "@/types/admin";
 
 const AdminUsers = () => {
   const { toast } = useToast();
@@ -67,7 +47,7 @@ const AdminUsers = () => {
       const userCompanyMap: UserCompany[] = [];
       
       associations?.forEach((assoc) => {
-        const user = users.find((u: User) => u.id === assoc.user_id);
+        const user = users.find((u: AdminUser) => u.id === assoc.user_id);
         const company = companies?.find((c: Company) => c.id === assoc.company_id);
         
         if (user && company) {
@@ -111,56 +91,11 @@ const AdminUsers = () => {
               <CardTitle>Manage User Associations</CardTitle>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>User Email</TableHead>
-                    <TableHead>Company</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {userCompanies?.map((uc) => (
-                    <TableRow key={`${uc.user_id}-${uc.company_id}`}>
-                      <TableCell>{uc.user_email}</TableCell>
-                      <TableCell>{uc.company_name}</TableCell>
-                      <TableCell>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={async () => {
-                            try {
-                              const { error } = await supabase
-                                .from('user_companies')
-                                .delete()
-                                .eq('user_id', uc.user_id)
-                                .eq('company_id', uc.company_id);
-                              
-                              if (error) throw error;
-                              
-                              toast({
-                                title: "Association removed",
-                                description: "User-company association has been removed",
-                              });
-                              
-                              refetch();
-                            } catch (error) {
-                              console.error('Error removing association:', error);
-                              toast({
-                                title: "Error",
-                                description: "Failed to remove association",
-                                variant: "destructive",
-                              });
-                            }
-                          }}
-                        >
-                          Remove
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <UserAssociationsTable 
+                userCompanies={userCompanies}
+                isLoading={isLoadingUserCompanies}
+                onAssociationRemoved={refetch}
+              />
             </CardContent>
           </Card>
         </div>
