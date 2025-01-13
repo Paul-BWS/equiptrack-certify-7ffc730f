@@ -48,8 +48,7 @@ export const HeaderSection = ({
   const formatDisplayDate = (dateString: string | undefined) => {
     if (!dateString) return undefined;
     try {
-      const date = new Date(dateString);
-      return isNaN(date.getTime()) ? undefined : date;
+      return new Date(dateString);
     } catch {
       return undefined;
     }
@@ -72,17 +71,15 @@ export const HeaderSection = ({
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {formatDisplayDate(date) ? (
-                    format(formatDisplayDate(date)!, "PPP")
+                    format(formatDisplayDate(date)!, "dd/MM/yyyy")
                   ) : (
                     <span>Pick a date</span>
                   )}
                 </Button>
               </PopoverTrigger>
               <PopoverContent 
-                className="w-auto p-0" 
+                className="w-auto p-0"
                 align="start"
-                side="bottom"
-                sideOffset={4}
               >
                 <Calendar
                   mode="single"
@@ -119,7 +116,7 @@ export const HeaderSection = ({
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {formatDisplayDate(retestDate) ? (
-                    format(formatDisplayDate(retestDate)!, "PPP")
+                    format(formatDisplayDate(retestDate)!, "dd/MM/yyyy")
                   ) : (
                     <span>Pick a date</span>
                   )}
@@ -128,8 +125,6 @@ export const HeaderSection = ({
               <PopoverContent 
                 className="w-auto p-0"
                 align="start"
-                side="bottom"
-                sideOffset={4}
               >
                 <Calendar
                   mode="single"
