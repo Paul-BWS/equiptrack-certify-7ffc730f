@@ -18,7 +18,7 @@ export const DeleteCompanyButton = ({ companyId, companyName }: DeleteCompanyBut
 
   const { mutate: deleteCompany, isPending } = useMutation({
     mutationFn: async () => {
-      console.log("Deleting company:", companyId);
+      console.log("Starting company deletion for ID:", companyId);
       const { error } = await supabase
         .from('companies')
         .delete()
@@ -29,15 +29,25 @@ export const DeleteCompanyButton = ({ companyId, companyName }: DeleteCompanyBut
         throw error;
       }
       
-      console.log("Company deleted successfully");
+      console.log("Company deletion successful");
     },
     onSuccess: () => {
+      // Immediately remove the company from the cache
+      queryClient.setQueryData(['companies'], (oldData: any) => {
+        if (!oldData) return [];
+        return oldData.filter((company: any) => company.id !== companyId);
+      });
+      
+      // Then invalidate the queries to refetch fresh data
       queryClient.invalidateQueries({ queryKey: ['companies'] });
-      queryClient.invalidateQueries({ queryKey: ['company', companyId] });
+      queryClient.removeQueries({ queryKey: ['company', companyId] });
+      
       toast({
         title: "Success",
         description: "Company has been deleted successfully",
       });
+      
+      console.log("Cache invalidated, navigating to home");
       navigate('/');
     },
     onError: (error) => {
@@ -46,7 +56,7 @@ export const DeleteCompanyButton = ({ companyId, companyName }: DeleteCompanyBut
         description: error instanceof Error ? error.message : "Failed to delete company",
         variant: "destructive",
       });
-      console.error("Error deleting company:", error);
+      console.error("Error in delete mutation:", error);
     },
   });
 
