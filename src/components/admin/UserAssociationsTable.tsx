@@ -84,6 +84,46 @@ export const UserAssociationsTable = ({
     },
   });
 
+  const handleAddCompanyAssociation = async () => {
+    if (!selectedCompany || !selectedUser) {
+      toast({
+        title: "Error",
+        description: "Please select both a user and a company",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('user_companies')
+        .insert([
+          {
+            user_id: selectedUser,
+            company_id: selectedCompany,
+          }
+        ]);
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Success",
+        description: "User-company association has been added",
+      });
+      
+      onAssociationAdded();
+      setSelectedCompany("");
+      setSelectedUser("");
+    } catch (error) {
+      console.error('Error adding association:', error);
+      toast({
+        title: "Error",
+        description: "Failed to add association",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleAddGroupAssociation = async () => {
     if (!selectedGroup || !selectedUser) {
       toast({
@@ -177,7 +217,7 @@ export const UserAssociationsTable = ({
                 </SelectContent>
               </Select>
 
-              <Button onClick={handleAddAssociation}>
+              <Button onClick={handleAddCompanyAssociation}>
                 Add Association
               </Button>
             </div>
@@ -285,7 +325,7 @@ export const UserAssociationsTable = ({
                   <TableCell>
                     {uniqueUsers?.find(u => u.id === ug.user_id)?.email}
                   </TableCell>
-                  <TableCell>{ug.company_groups?.name}</TableCell>
+                  <TableCell>{ug.company_groups.name}</TableCell>
                   <TableCell>
                     <Button
                       variant="destructive"
