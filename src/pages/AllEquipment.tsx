@@ -12,13 +12,23 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 
+interface Equipment {
+  id: string;
+  model: string;
+  serialNumber: string;
+  lastServiceDate: string;
+  nextServiceDue: string;
+  companyName?: string;
+  equipmentType?: string;
+}
+
 const AllEquipment = () => {
   const navigate = useNavigate();
   const [searchCompany, setSearchCompany] = useState("");
   const [searchEquipmentType, setSearchEquipmentType] = useState("");
   const [date, setDate] = useState<Date>();
 
-  const { data: equipment = [] } = useQuery({
+  const { data: equipment = [] } = useQuery<Equipment[]>({
     queryKey: ['all-equipment'],
     queryFn: async () => {
       // Fetch torque wrenches with company details
@@ -27,6 +37,7 @@ const AllEquipment = () => {
         .select(`
           id,
           model,
+          serial_number,
           last_service_date,
           next_service_due,
           company_id,
@@ -46,6 +57,7 @@ const AllEquipment = () => {
         .select(`
           id,
           model,
+          serial_number,
           last_service_date,
           next_service_due,
           company_id,
@@ -60,10 +72,11 @@ const AllEquipment = () => {
       }
 
       // Combine and format the data
-      const combinedEquipment = [
+      const combinedEquipment: Equipment[] = [
         ...(torqueWrenches?.map(tw => ({
           id: tw.id,
           model: tw.model || '',
+          serialNumber: tw.serial_number || '',
           lastServiceDate: tw.last_service_date || '',
           nextServiceDue: tw.next_service_due || '',
           companyName: tw.companies?.name || 'Unknown Company',
@@ -72,6 +85,7 @@ const AllEquipment = () => {
         ...(tyreGauges?.map(tg => ({
           id: tg.id,
           model: tg.model || '',
+          serialNumber: tg.serial_number || '',
           lastServiceDate: tg.last_service_date || '',
           nextServiceDue: tg.next_service_due || '',
           companyName: tg.companies?.name || 'Unknown Company',
@@ -85,11 +99,11 @@ const AllEquipment = () => {
 
   const filteredEquipment = equipment.filter((item) => {
     const matchesCompany = item.companyName
-      .toLowerCase()
-      .includes(searchCompany.toLowerCase());
+      ?.toLowerCase()
+      .includes(searchCompany.toLowerCase()) ?? false;
     const matchesType = item.equipmentType
-      .toLowerCase()
-      .includes(searchEquipmentType.toLowerCase());
+      ?.toLowerCase()
+      .includes(searchEquipmentType.toLowerCase()) ?? false;
     const matchesDate = !date || item.nextServiceDue === format(date, "yyyy-MM-dd");
 
     return matchesCompany && matchesType && matchesDate;
