@@ -4,7 +4,11 @@ import { TableActions } from "./TableActions";
 import { Equipment } from "@/types/equipment-responses";
 
 interface EquipmentRowProps {
-  equipment: Equipment;
+  equipment: Equipment & {
+    onGenerateCertificate: () => void;
+    onDelete: () => void;
+    onViewReadings: () => void;
+  };
 }
 
 export const EquipmentRow = ({ equipment }: EquipmentRowProps) => {
@@ -27,9 +31,9 @@ export const EquipmentRow = ({ equipment }: EquipmentRowProps) => {
       <TableCell>{equipment.equipmentType || 'Unknown Type'}</TableCell>
       <TableCell className="text-right">
         <TableActions
-          onDelete={() => console.log('Delete:', equipment.id)}
-          onGenerateCertificate={() => console.log('Generate Certificate:', equipment.id)}
-          onViewReadings={() => console.log('View Readings:', equipment.id)}
+          onDelete={equipment.onDelete}
+          onGenerateCertificate={equipment.onGenerateCertificate}
+          onViewReadings={equipment.onViewReadings}
         />
       </TableCell>
     </TableRow>

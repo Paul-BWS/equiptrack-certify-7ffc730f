@@ -97,11 +97,12 @@ export const EquipmentList = ({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Company</TableHead>
-              <TableHead>Equipment Type</TableHead>
               <TableHead>Model</TableHead>
-              <TableHead>Test Date</TableHead>
-              <TableHead>Retest Date</TableHead>
+              <TableHead>Serial Number</TableHead>
+              <TableHead>Company</TableHead>
+              <TableHead>Last Service</TableHead>
+              <TableHead>Next Service</TableHead>
+              <TableHead>Type</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -109,11 +110,12 @@ export const EquipmentList = ({
             {equipment.map((item) => (
               <EquipmentRow
                 key={item.id}
-                {...item}
-                isMobile={isMobile}
-                onGenerateCertificate={() => onGenerateCertificate(item.id)}
-                onDelete={() => onDeleteClick(item.id)}
-                onViewReadings={() => onViewReadings(item.id)}
+                equipment={{
+                  ...item,
+                  onGenerateCertificate: () => onGenerateCertificate(item.id),
+                  onDelete: () => onDeleteClick(item.id),
+                  onViewReadings: () => onViewReadings(item.id)
+                }}
               />
             ))}
           </TableBody>
