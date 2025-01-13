@@ -45,7 +45,7 @@ const AdminUsers = () => {
   const { data: userCompanies, isLoading: isLoadingUserCompanies, refetch } = useQuery({
     queryKey: ['user-companies'],
     queryFn: async () => {
-      const { data: users, error: usersError } = await supabase.auth.admin.listUsers();
+      const { data: { users }, error: usersError } = await supabase.auth.admin.listUsers();
       if (usersError) throw usersError;
 
       const { data: companies, error: companiesError } = await supabase
@@ -61,7 +61,7 @@ const AdminUsers = () => {
       const userCompanyMap: UserCompany[] = [];
       
       associations?.forEach((assoc) => {
-        const user = users.users.find(u => u.id === assoc.user_id);
+        const user = users.find(u => u.id === assoc.user_id);
         const company = companies?.find(c => c.id === assoc.company_id);
         
         if (user && company) {
