@@ -11,12 +11,28 @@ import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { Company } from "@/types/company";
 import { ProfileForm } from "@/components/profile/ProfileForm";
+import { useQuery } from "@tanstack/react-query";
 
 const Profile = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [companies, setCompanies] = useState<Company[]>([]);
   const [selectedCompany, setSelectedCompany] = useState("");
+  const [isBWSUser, setIsBWSUser] = useState(false);
+
+  // Query to check if user is BWS user
+  const { data: bwsStatus } = useQuery({
+    queryKey: ['bws-status'],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('is_bws_user');
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  useEffect(() => {
+    setIsBWSUser(bwsStatus || false);
+  }, [bwsStatus]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -117,7 +133,7 @@ const Profile = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       <main className="container mx-auto py-8">
-        <div className="max-w-2xl mx-auto relative">
+        <div className="max-w-2xl mx-auto relative space-y-6">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-4">
@@ -134,6 +150,7 @@ const Profile = () => {
                 selectedCompany={selectedCompany}
                 onCompanyChange={setSelectedCompany}
                 onUpdateProfile={updateProfile}
+                isBWSUser={isBWSUser}
               />
             </CardContent>
           </Card>
