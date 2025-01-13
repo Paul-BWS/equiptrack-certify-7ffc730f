@@ -12,6 +12,7 @@ interface HeaderSectionProps {
 
 export const HeaderSection = ({
   date,
+  status,
   retestDate,
   certNumber,
   onDateChange,
@@ -26,7 +27,7 @@ export const HeaderSection = ({
     return today <= retestDateObj ? "ACTIVE" : "INACTIVE";
   };
 
-  const status = calculateStatus();
+  const currentStatus = status || calculateStatus();
   
   return (
     <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
@@ -42,10 +43,10 @@ export const HeaderSection = ({
             <label className="text-sm text-[#C8C8C9]">Status</label>
             <input
               type="text"
-              value={status}
+              value={currentStatus}
               readOnly
               className={`flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-medium ${
-                status === "ACTIVE" ? "text-green-500" : "text-red-500"
+                currentStatus === "ACTIVE" ? "text-green-500" : "text-red-500"
               }`}
             />
           </div>

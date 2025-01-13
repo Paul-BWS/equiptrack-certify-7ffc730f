@@ -25,13 +25,14 @@ export const ModalForm = ({
   equipmentId
 }: ModalFormProps) => {
   const handleFieldChange = (field: keyof TorqueReadingsForm, value: any) => {
-    setReadings({ ...readings, [field]: value });
+    setReadings(prev => ({ ...prev, [field]: value }));
   };
 
   return (
     <form onSubmit={onSubmit} className="p-6 space-y-6">
       <HeaderSection
         date={readings.date}
+        status={readings.status}
         retestDate={readings.retestDate}
         certNumber={readings.certNumber}
         onDateChange={(value) => handleFieldChange("date", value)}

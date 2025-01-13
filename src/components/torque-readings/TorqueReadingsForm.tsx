@@ -101,6 +101,7 @@ export const TorqueReadingsForm = ({ equipment, onClose }: TorqueReadingsFormPro
       <FormActions
         onClose={onClose}
         isSaving={isSaving}
+        equipmentId={equipment?.id || null}
       />
     </form>
   );
