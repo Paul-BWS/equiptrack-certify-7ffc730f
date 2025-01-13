@@ -72,7 +72,7 @@ const CustomerDashboard = () => {
 
   return (
     <div className="min-h-screen bg-[#1A1F2C]">
-      <div className="bg-[#9b87f5] border-b border-[#7E69AB]">
+      <div className="bg-[#7E69AB] border-b border-[#6E59A5]">
         <div className="container mx-auto py-4">
           <h1 className="text-3xl font-bold text-white">Customer Dashboard</h1>
         </div>
