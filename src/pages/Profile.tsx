@@ -92,6 +92,8 @@ const Profile = () => {
 
         if (userCompanyData?.company_id) {
           setSelectedCompany(userCompanyData.company_id);
+        } else {
+          toast.error("You are not associated with any company");
         }
         
         setIsLoading(false);
@@ -108,9 +110,17 @@ const Profile = () => {
   const updateProfile = async () => {
     try {
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-      if (sessionError) throw sessionError;
+      if (sessionError) {
+        toast.error("Authentication error");
+        return;
+      }
       if (!session?.user) {
         toast.error("No active session found");
+        return;
+      }
+
+      if (!selectedCompany) {
+        toast.error("Please select a company");
         return;
       }
 
@@ -119,7 +129,10 @@ const Profile = () => {
         data: { name }
       });
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        toast.error("Failed to update profile");
+        return;
+      }
 
       // Delete existing company association
       const { error: deleteError } = await supabase
@@ -127,20 +140,24 @@ const Profile = () => {
         .delete()
         .eq("user_id", session.user.id);
 
-      if (deleteError) throw deleteError;
+      if (deleteError) {
+        toast.error("Failed to update company association");
+        return;
+      }
 
       // Insert new company association
-      if (selectedCompany) {
-        const { error: insertError } = await supabase
-          .from("user_companies")
-          .insert([
-            {
-              user_id: session.user.id,
-              company_id: selectedCompany,
-            },
-          ]);
+      const { error: insertError } = await supabase
+        .from("user_companies")
+        .insert([
+          {
+            user_id: session.user.id,
+            company_id: selectedCompany,
+          },
+        ]);
 
-        if (insertError) throw insertError;
+      if (insertError) {
+        toast.error("Failed to update company association");
+        return;
       }
 
       toast.success("Profile updated successfully");
