@@ -7,10 +7,13 @@ import { LoadingScreen } from "@/components/auth/LoadingScreen";
 import { ErrorScreen } from "@/components/auth/ErrorScreen";
 import { AuthenticationScreen } from "@/components/auth/AuthenticationScreen";
 import { CompanyDashboard } from "@/components/dashboard/CompanyDashboard";
+import { useAuthCheck } from "@/hooks/useAuthCheck";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [authError, setAuthError] = useState<string | null>(null);
+  const { isAuthorized } = useAuthCheck();
 
   const { data: session, isLoading: isSessionLoading, error: sessionError } = useQuery({
     queryKey: ['session'],
@@ -50,6 +53,25 @@ const Index = () => {
     }
   });
 
+  const handleTestEmail = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('send-reminder-email', {
+        body: { test: true }
+      });
+
+      if (error) {
+        console.error('Error sending test email:', error);
+        toast.error("Failed to send test email");
+        return;
+      }
+
+      toast.success("Test email sent successfully!");
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error("An error occurred while sending the test email");
+    }
+  };
+
   if (isSessionLoading) {
     return <LoadingScreen />;
   }
@@ -70,6 +92,16 @@ const Index = () => {
     <div className="min-h-screen bg-gray-50">
       <Navigation />
       <main className="container mx-auto py-8 px-4">
+        {isAuthorized && (
+          <div className="mb-4">
+            <Button 
+              onClick={handleTestEmail}
+              className="bg-blue-500 hover:bg-blue-600 text-white"
+            >
+              Send Test Email
+            </Button>
+          </div>
+        )}
         <CompanyDashboard
           companies={filteredCompanies}
           isLoading={isLoadingCompanies}
