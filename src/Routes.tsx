@@ -19,7 +19,7 @@ export const Routes = () => {
       <Route path="/admin/users" element={<AdminUsers />} />
       <Route path="/torque-wrenches" element={<TorqueWrenches />} />
       <Route path="/tyre-gauges" element={<TyreGauges />} />
-      <Route path="/customer/:id" element={<CustomerDashboard />} />
+      <Route path="/customers/:id" element={<CustomerDashboard />} />
       <Route path="/customers/:customerId/equipment" element={<Equipment />} />
       <Route path="/customers/:customerId/equipment/torque-wrenches" element={<TorqueWrenches />} />
       <Route path="/customers/:customerId/equipment/tyre-gauges" element={<TyreGauges />} />
