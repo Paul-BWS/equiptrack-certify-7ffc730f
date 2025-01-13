@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
@@ -6,10 +6,13 @@ import { CompanyCard } from "@/components/customer-dashboard/CompanyCard";
 import { ContactsList } from "@/components/customer-dashboard/ContactsList";
 import { EquipmentServiceList } from "@/components/customer-dashboard/EquipmentServiceList";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 const CustomerDashboard = () => {
   const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const { data: company, isLoading: isLoadingCompany } = useQuery({
     queryKey: ['company', id],
@@ -74,7 +77,17 @@ const CustomerDashboard = () => {
     <div className="min-h-screen bg-[#1A1F2C]">
       <div className="bg-[#7E69AB] border-b border-[#6E59A5]">
         <div className="container mx-auto py-4">
-          <h1 className="text-3xl font-bold text-white">Customer Dashboard</h1>
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate('/')}
+              className="text-white hover:text-white hover:bg-[#6E59A5]"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <h1 className="text-3xl font-bold text-white">Customer Dashboard</h1>
+          </div>
         </div>
       </div>
       <div className="container mx-auto py-6 space-y-6">
