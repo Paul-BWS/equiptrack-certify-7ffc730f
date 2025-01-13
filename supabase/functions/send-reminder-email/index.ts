@@ -33,25 +33,43 @@ interface Company {
 const generateEmailTemplate = (companyName: string, equipmentList: string) => {
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2 style="color: #2563eb; margin-bottom: 20px;">Equipment Service Reminder</h2>
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="color: #266bec; margin-bottom: 10px;">BWS Calibration Services Ltd</h1>
+        <p style="color: #4b5563; margin: 0;">Unit 1 Tungsten Park</p>
+        <p style="color: #4b5563; margin: 0;">Coventry Road, Hinckley</p>
+        <p style="color: #4b5563; margin: 0;">Leicestershire, LE10 0NB</p>
+      </div>
+
+      <p style="margin-bottom: 20px; color: #374151;">Dear ${companyName},</p>
       
-      <p style="margin-bottom: 15px;">Dear ${companyName},</p>
+      <p style="margin-bottom: 20px; color: #374151;">As part of our commitment to maintaining the highest standards of quality and safety, we are writing to inform you that the following equipment is scheduled for calibration service within the next 30 days:</p>
       
-      <p style="margin-bottom: 15px;">The following equipment is due for service in the next 30 days:</p>
-      
-      <div style="background-color: #f3f4f6; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
-        ${equipmentList.split('\n').map(item => `<div style="margin-bottom: 10px;">${item}</div>`).join('')}
+      <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+        ${equipmentList.split('\n').map(item => `<div style="margin-bottom: 12px; color: #4b5563;">${item}</div>`).join('')}
       </div>
       
-      <p style="margin-bottom: 15px;">Please contact us as soon as possible to schedule your service appointment.</p>
+      <p style="margin-bottom: 20px; color: #374151;">To ensure continuous compliance with industry standards and maintain the accuracy of your equipment, we kindly request that you contact our service department to schedule your calibration appointment at your earliest convenience.</p>
       
-      <p style="margin-bottom: 5px;">Best regards,</p>
-      <p style="margin-top: 0;">BWS Calibration Team</p>
+      <p style="margin-bottom: 20px; color: #374151;">Our team will work with you to arrange a suitable time that minimizes any disruption to your operations.</p>
+
+      <div style="margin-top: 30px;">
+        <p style="margin-bottom: 5px; color: #374151;">Best regards,</p>
+        <p style="margin-top: 0; color: #266bec; font-weight: 600;">BWS Calibration Team</p>
+      </div>
       
-      <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280;">
-        <p>For urgent inquiries, please contact us directly at:</p>
-        <p>Phone: +44 (0)1455 245700</p>
-        <p>Email: calibration@bws-uk.com</p>
+      <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+        <div style="text-align: center;">
+          <p style="color: #266bec; font-weight: 600; margin-bottom: 15px;">Contact Information</p>
+          <p style="color: #4b5563; margin: 5px 0;">Telephone: +44 (0)1455 245700</p>
+          <p style="color: #4b5563; margin: 5px 0;">Email: calibration@bws-uk.com</p>
+          <p style="color: #4b5563; margin: 5px 0;">Website: www.basicwelding.co.uk</p>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #6b7280;">
+          <p style="margin: 3px 0;">BWS Calibration Services Ltd | Registered in England & Wales</p>
+          <p style="margin: 3px 0;">Company Registration No: 123456 | VAT No: GB123456789</p>
+          <p style="margin: 3px 0;">UKAS Accredited Calibration Laboratory No. 0000</p>
+        </div>
       </div>
     </div>
   `;
