@@ -27,6 +27,12 @@ export interface Equipment {
   serialNumber: string;
   lastServiceDate: string;
   nextServiceDue: string;
-  companyName: string;
-  equipmentType: string;
+  companyName?: string;
+  equipmentType?: string;
+}
+
+export interface EquipmentWithActions extends Equipment {
+  onGenerateCertificate: () => void;
+  onDelete: () => void;
+  onViewReadings: () => void;
 }

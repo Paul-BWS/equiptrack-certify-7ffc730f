@@ -1,14 +1,10 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { format, parseISO } from "date-fns";
 import { TableActions } from "./TableActions";
-import { Equipment } from "@/types/equipment-responses";
+import { EquipmentWithActions } from "@/types/equipment-responses";
 
 interface EquipmentRowProps {
-  equipment: Equipment & {
-    onGenerateCertificate: () => void;
-    onDelete: () => void;
-    onViewReadings: () => void;
-  };
+  equipment: EquipmentWithActions;
 }
 
 export const EquipmentRow = ({ equipment }: EquipmentRowProps) => {

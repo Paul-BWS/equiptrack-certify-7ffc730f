@@ -11,9 +11,17 @@ import {
 
 interface EquipmentListTableProps {
   equipment: Equipment[];
+  onGenerateCertificate: (id: string) => void;
+  onDelete: (id: string) => void;
+  onViewReadings: (id: string) => void;
 }
 
-export const EquipmentListTable = ({ equipment }: EquipmentListTableProps) => {
+export const EquipmentListTable = ({ 
+  equipment,
+  onGenerateCertificate,
+  onDelete,
+  onViewReadings
+}: EquipmentListTableProps) => {
   return (
     <div className="rounded-md border">
       <Table>
@@ -30,7 +38,15 @@ export const EquipmentListTable = ({ equipment }: EquipmentListTableProps) => {
         </TableHeader>
         <TableBody>
           {equipment.map((item) => (
-            <EquipmentRow key={item.id} equipment={item} />
+            <EquipmentRow
+              key={item.id}
+              equipment={{
+                ...item,
+                onGenerateCertificate: () => onGenerateCertificate(item.id),
+                onDelete: () => onDelete(item.id),
+                onViewReadings: () => onViewReadings(item.id)
+              }}
+            />
           ))}
         </TableBody>
       </Table>
