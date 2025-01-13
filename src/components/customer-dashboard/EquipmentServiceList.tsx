@@ -6,13 +6,6 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { format, parseISO, isAfter, subDays } from "date-fns";
 
-interface Equipment {
-  id: string;
-  model: string;
-  next_service_due: string;
-  type: 'torque-wrench' | 'tyre-gauge';
-}
-
 interface EquipmentServiceListProps {
   companyId: string;
 }
@@ -130,12 +123,12 @@ export const EquipmentServiceList = ({ companyId }: EquipmentServiceListProps) =
                   </p>
                 </div>
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="icon"
-                  className="rounded-full bg-primary hover:bg-primary/90 h-10 w-10 p-0"
+                  className="bg-white hover:bg-white/90 border-[#0EA5E9] text-[#0EA5E9] h-10 w-10 p-0"
                   onClick={() => navigate(`/customers/${companyId}/equipment/${getEquipmentRoute(item.type)}`)}
                 >
-                  <ArrowRight className="h-4 w-4 text-primary-foreground" />
+                  <ArrowRight className="h-4 w-4" />
                 </Button>
               </div>
             ))

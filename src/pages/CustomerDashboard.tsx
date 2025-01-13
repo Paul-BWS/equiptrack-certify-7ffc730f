@@ -118,18 +118,18 @@ const CustomerDashboard = () => {
           <Button
             variant="outline"
             size="icon"
-            className="bg-primary hover:bg-primary/90"
+            className="bg-white hover:bg-white/90 border-[#0EA5E9] text-[#0EA5E9]"
             onClick={() => navigate('/')}
           >
-            <Users className="h-4 w-4 text-primary-foreground" />
+            <Users className="h-4 w-4" />
           </Button>
           <Button
             variant="outline"
             size="icon"
-            className="bg-primary hover:bg-primary/90"
+            className="bg-white hover:bg-white/90 border-[#0EA5E9] text-[#0EA5E9]"
             onClick={() => navigate(`/customers/${customerId}/equipment`)}
           >
-            <Grid className="h-4 w-4 text-primary-foreground" />
+            <Grid className="h-4 w-4" />
           </Button>
         </div>
 
