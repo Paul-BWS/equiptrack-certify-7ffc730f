@@ -4,7 +4,7 @@ import { CalendarIcon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 
 interface HeaderSectionProps {
   date: string;
@@ -33,15 +33,31 @@ export const HeaderSection = ({
 
   const status = calculateStatus();
 
+  const parseDate = (dateString: string): Date | undefined => {
+    try {
+      if (!dateString) return undefined;
+      // First try parsing as ISO format (yyyy-MM-dd)
+      const parsedDate = parse(dateString, 'yyyy-MM-dd', new Date());
+      if (isNaN(parsedDate.getTime())) {
+        // If that fails, try creating date directly
+        const directDate = new Date(dateString);
+        return isNaN(directDate.getTime()) ? undefined : directDate;
+      }
+      return parsedDate;
+    } catch {
+      return undefined;
+    }
+  };
+
   const handleDateSelect = (selectedDate: Date | undefined) => {
-    if (selectedDate) {
+    if (selectedDate && !isNaN(selectedDate.getTime())) {
       const formattedDate = format(selectedDate, 'yyyy-MM-dd');
       onDateChange(formattedDate);
     }
   };
 
   const handleRetestDateSelect = (selectedDate: Date | undefined) => {
-    if (selectedDate) {
+    if (selectedDate && !isNaN(selectedDate.getTime())) {
       const formattedDate = format(selectedDate, 'yyyy-MM-dd');
       onRetestDateChange(formattedDate);
     }
@@ -63,13 +79,13 @@ export const HeaderSection = ({
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(new Date(date), "PPP") : <span>Pick a date</span>}
+                  {date && parseDate(date) ? format(parseDate(date)!, "PPP") : <span>Pick a date</span>}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent className="w-auto p-0">
                 <Calendar
                   mode="single"
-                  selected={date ? new Date(date) : undefined}
+                  selected={parseDate(date)}
                   onSelect={handleDateSelect}
                   initialFocus
                 />
@@ -101,13 +117,13 @@ export const HeaderSection = ({
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {retestDate ? format(new Date(retestDate), "PPP") : <span>Pick a date</span>}
+                  {retestDate && parseDate(retestDate) ? format(parseDate(retestDate)!, "PPP") : <span>Pick a date</span>}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent className="w-auto p-0">
                 <Calendar
                   mode="single"
-                  selected={retestDate ? new Date(retestDate) : undefined}
+                  selected={parseDate(retestDate)}
                   onSelect={handleRetestDateSelect}
                   initialFocus
                 />
