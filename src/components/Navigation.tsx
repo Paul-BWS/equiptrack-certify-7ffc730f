@@ -6,6 +6,8 @@ import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { Building } from "lucide-react";
+import { Button } from "./ui/button";
 
 export const Navigation = () => {
   const { toast } = useToast();
@@ -52,9 +54,22 @@ export const Navigation = () => {
   return (
     <nav className="border-b bg-[#266bec]">
       <div className="flex h-16 items-center px-4">
-        <Link to="/" className="text-xl font-semibold text-white">
-          EquipService
-        </Link>
+        <div className="flex items-center space-x-4">
+          <Button
+            variant="outline"
+            size="icon"
+            className="rounded-full bg-transparent border-2 border-white hover:bg-white/10"
+            onClick={() => {
+              const customerId = window.location.pathname.split('/')[2];
+              navigate(`/customers/${customerId}`);
+            }}
+          >
+            <Building className="h-4 w-4 text-white" strokeWidth={2} />
+          </Button>
+          <Link to="/" className="text-xl font-semibold text-white">
+            EquipService
+          </Link>
+        </div>
         <div className="ml-auto flex items-center space-x-4">
           <DesktopNav />
           <MobileNav 
