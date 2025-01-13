@@ -24,16 +24,16 @@ export const TorqueWrenchHeader = ({
               variant="outline"
               size="icon"
               onClick={() => navigate(`/customers/${customerId}/equipment`)}
-              className="rounded-full bg-primary hover:bg-primary/90 w-10"
+              className="rounded-full bg-white border-2 border-primary hover:bg-primary/10"
             >
-              <Grid className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
+              <Grid className="h-4 w-4 text-primary" strokeWidth={2} />
             </Button>
             <Button 
               size="icon"
               onClick={onNewTorqueWrench}
-              className="rounded-full bg-primary hover:bg-primary/90"
+              className="rounded-full bg-white border-2 border-primary hover:bg-primary/10"
             >
-              <Plus className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
+              <Plus className="h-4 w-4 text-primary" strokeWidth={2} />
             </Button>
           </div>
         </div>
