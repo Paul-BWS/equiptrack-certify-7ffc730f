@@ -14,25 +14,25 @@ export const TableActions = ({ onDelete, onGenerateCertificate, onViewReadings }
         variant="ghost"
         size="icon"
         onClick={onDelete}
-        className="rounded-full bg-destructive hover:bg-destructive/90 h-10 w-10 p-0"
+        className="rounded-full bg-white border-2 border-destructive hover:bg-destructive/10 h-10 w-10 p-0"
       >
-        <Trash2 className="h-4 w-4 text-destructive-foreground" />
+        <Trash2 className="h-4 w-4 text-destructive" />
       </Button>
       <Button
         variant="ghost"
         size="icon"
         onClick={onGenerateCertificate}
-        className="rounded-full bg-green-600 hover:bg-green-700 h-10 w-10 p-0"
+        className="rounded-full bg-white border-2 border-primary hover:bg-primary/10 h-10 w-10 p-0"
       >
-        <FileText className="h-4 w-4 text-white" />
+        <FileText className="h-4 w-4 text-primary" />
       </Button>
       <Button
         variant="ghost"
         size="icon"
         onClick={onViewReadings}
-        className="rounded-full bg-primary hover:bg-primary/90 h-10 w-10 p-0"
+        className="rounded-full bg-white border-2 border-primary hover:bg-primary/10 h-10 w-10 p-0"
       >
-        <ArrowRight className="h-4 w-4 text-primary-foreground" />
+        <ArrowRight className="h-4 w-4 text-primary" />
       </Button>
     </div>
   );
