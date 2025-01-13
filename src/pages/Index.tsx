@@ -99,12 +99,6 @@ const Index = () => {
         {isAuthorized && (
           <div className="mb-4 space-y-4">
             <Button 
-              onClick={handleTestEmail}
-              className="bg-blue-500 hover:bg-blue-600 text-white"
-            >
-              Send Test Email
-            </Button>
-            <Button 
               onClick={handleSendInvitation}
               className="bg-green-500 hover:bg-green-600 text-white ml-4"
               disabled={isInviting}
