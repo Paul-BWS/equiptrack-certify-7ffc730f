@@ -3,13 +3,41 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserAssociationsTable } from "@/components/admin/UserAssociationsTable";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
-import { useAuthCheck } from "@/hooks/useAuthCheck";
-import { UserCompany } from "@/types/admin";
 import { useQuery } from "@tanstack/react-query";
+import { UserCompany } from "@/types/admin";
+import { LoadingScreen } from "@/components/auth/LoadingScreen";
+import { ErrorScreen } from "@/components/auth/ErrorScreen";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AdminUsers = () => {
-  const { isLoading: authLoading, isAuthorized } = useAuthCheck();
   const { toast } = useToast();
+  const navigate = useNavigate();
+
+  // Check if user is a BWS user
+  const { data: isBWSUser, isLoading: isCheckingBWS } = useQuery({
+    queryKey: ['is-bws-user'],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('is_bws_user');
+      if (error) {
+        console.error('Error checking BWS user status:', error);
+        return false;
+      }
+      return data;
+    },
+  });
+
+  // Redirect non-BWS users
+  useEffect(() => {
+    if (!isCheckingBWS && !isBWSUser) {
+      toast({
+        title: "Access Denied",
+        description: "You must be a BWS user to access this page",
+        variant: "destructive",
+      });
+      navigate('/');
+    }
+  }, [isBWSUser, isCheckingBWS, navigate, toast]);
 
   const { data: userCompanies, isLoading: isLoadingUsers, refetch: refetchUsers } = useQuery({
     queryKey: ['user-companies'],
@@ -28,6 +56,7 @@ const AdminUsers = () => {
 
       return data as UserCompany[];
     },
+    enabled: !!isBWSUser, // Only fetch if user is BWS user
   });
 
   const { data: companies, isLoading: isLoadingCompanies } = useQuery({
@@ -49,14 +78,15 @@ const AdminUsers = () => {
 
       return data;
     },
+    enabled: !!isBWSUser, // Only fetch if user is BWS user
   });
 
-  if (authLoading) {
-    return <div>Loading...</div>;
+  if (isCheckingBWS) {
+    return <LoadingScreen />;
   }
 
-  if (!isAuthorized) {
-    return <div>Not authorized</div>;
+  if (!isBWSUser) {
+    return <ErrorScreen message="You must be a BWS user to access this page" />;
   }
 
   return (
