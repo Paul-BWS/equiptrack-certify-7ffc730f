@@ -33,7 +33,7 @@ interface TorqueWrenchResponse {
   last_service_date: string | null;
   next_service_due: string | null;
   company_id: string;
-  companies: CompanyResponse;
+  company: CompanyResponse;
 }
 
 interface TyreGaugeResponse {
@@ -43,7 +43,7 @@ interface TyreGaugeResponse {
   last_service_date: string | null;
   next_service_due: string | null;
   company_id: string;
-  companies: CompanyResponse;
+  company: CompanyResponse;
 }
 
 const AllEquipment = () => {
@@ -65,9 +65,7 @@ const AllEquipment = () => {
           last_service_date,
           next_service_due,
           company_id,
-          companies:companies (
-            name
-          )
+          company:companies!inner(name)
         `);
 
       if (torqueError) {
@@ -85,9 +83,7 @@ const AllEquipment = () => {
           last_service_date,
           next_service_due,
           company_id,
-          companies:companies (
-            name
-          )
+          company:companies!inner(name)
         `);
 
       if (tyreError) {
@@ -103,7 +99,7 @@ const AllEquipment = () => {
           serialNumber: tw.serial_number || '',
           lastServiceDate: tw.last_service_date || '',
           nextServiceDue: tw.next_service_due || '',
-          companyName: tw.companies?.name || 'Unknown Company',
+          companyName: tw.company?.name || 'Unknown Company',
           equipmentType: 'Torque Wrench'
         })) || []),
         ...(tyreGauges?.map((tg) => ({
@@ -112,7 +108,7 @@ const AllEquipment = () => {
           serialNumber: tg.serial_number || '',
           lastServiceDate: tg.last_service_date || '',
           nextServiceDue: tg.next_service_due || '',
-          companyName: tg.companies?.name || 'Unknown Company',
+          companyName: tg.company?.name || 'Unknown Company',
           equipmentType: 'Tyre Gauge'
         })) || [])
       ];
@@ -199,7 +195,7 @@ const AllEquipment = () => {
         </div>
 
         <EquipmentList
-          equipment={equipment}
+          equipment={filteredEquipment}
           onGenerateCertificate={(id) => {
             console.log("Generate certificate for:", id);
           }}
