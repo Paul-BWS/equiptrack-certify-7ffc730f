@@ -1,11 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { CalendarIcon } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
+import { DatePickerField } from "./form-fields/DatePickerField";
 import {
   Select,
   SelectContent,
@@ -16,12 +9,12 @@ import {
 
 interface HeaderSectionProps {
   certNumber: string;
-  date: Date | undefined;
-  retestDate: Date | undefined;
+  date: string | undefined;
+  retestDate: string | undefined;
   status: string;
-  onDateChange: (date: Date | undefined) => void;
-  onRetestDateChange: (date: Date | undefined) => void;
-  onStatusChange: (status: string) => void;
+  onDateChange: (date: string) => void;
+  onRetestDateChange: (date: string) => void;
+  onStatusChange: (value: string) => void;
 }
 
 export const HeaderSection = ({
@@ -35,74 +28,34 @@ export const HeaderSection = ({
 }: HeaderSectionProps) => {
   return (
     <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <Label htmlFor="certNumber" className="text-sm text-[#C8C8C9]">Certificate Number</Label>
-          <Input
-            id="certNumber"
-            value={certNumber}
-            className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
-            readOnly
-          />
-        </div>
+      <div className="space-y-2">
+        <label className="text-sm text-[#C8C8C9]">Certificate Number</label>
+        <input
+          type="text"
+          value={certNumber}
+          readOnly
+          className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <DatePickerField
+          label="Date"
+          date={date}
+          onDateChange={onDateChange}
+        />
+        
+        <DatePickerField
+          label="Retest Date"
+          date={retestDate}
+          onDateChange={onRetestDateChange}
+        />
 
         <div className="space-y-2">
-          <Label className="text-sm text-[#C8C8C9]">Date</Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  "w-full justify-start text-left font-normal h-12 bg-white border-gray-200",
-                  !date && "text-[#C8C8C9]"
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {date ? format(date, "PPP") : <span>Pick a date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={onDateChange}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
-
-        <div className="space-y-2">
-          <Label className="text-sm text-[#C8C8C9]">Retest Date</Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  "w-full justify-start text-left font-normal h-12 bg-white border-gray-200",
-                  !retestDate && "text-[#C8C8C9]"
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {retestDate ? format(retestDate, "PPP") : <span>Pick a date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={retestDate}
-                onSelect={onRetestDateChange}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="status" className="text-sm text-[#C8C8C9]">Status</Label>
+          <label className="text-sm text-[#C8C8C9]">Status</label>
           <Select value={status} onValueChange={onStatusChange}>
             <SelectTrigger className="h-12 bg-white border-gray-200">
-              <SelectValue placeholder="Select status" />
+              <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="ACTIVE">Active</SelectItem>
