@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Navigation } from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserAssociationsTable } from "@/components/admin/UserAssociationsTable";
