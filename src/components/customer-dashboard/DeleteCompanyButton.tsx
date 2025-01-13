@@ -67,7 +67,11 @@ export const DeleteCompanyButton = ({ companyId, companyName }: DeleteCompanyBut
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="outline" size="icon" className="hover:bg-destructive/90 hover:text-destructive-foreground">
+        <Button 
+          variant="outline" 
+          size="icon" 
+          className="bg-white hover:bg-white/90 border-[#0EA5E9] text-[#0EA5E9]"
+        >
           <Trash2 className="h-4 w-4" />
         </Button>
       </AlertDialogTrigger>

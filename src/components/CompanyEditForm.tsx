@@ -94,7 +94,11 @@ export const CompanyEditForm = ({ company }: CompanyEditFormProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button 
+          variant="outline" 
+          size="icon"
+          className="bg-white hover:bg-white/90 border-[#0EA5E9] text-[#0EA5E9]"
+        >
           <Pencil className="h-4 w-4" />
         </Button>
       </DialogTrigger>
