@@ -1,12 +1,12 @@
 import { Routes as RouterRoutes, Route } from "react-router-dom";
-import { Index } from "@/pages/Index";
-import { Profile } from "@/pages/Profile";
-import { Settings } from "@/pages/Settings";
-import { AllEquipment } from "@/pages/AllEquipment";
-import { AdminUsers } from "@/pages/AdminUsers";
-import { TorqueWrenches } from "@/pages/TorqueWrenches";
-import { TyreGauges } from "@/pages/TyreGauges";
-import { CustomerDashboard } from "@/pages/CustomerDashboard";
+import Index from "@/pages/Index";
+import Profile from "@/pages/Profile";
+import Settings from "@/pages/Settings";
+import AllEquipment from "@/pages/AllEquipment";
+import AdminUsers from "@/pages/AdminUsers";
+import TorqueWrenches from "@/pages/TorqueWrenches";
+import TyreGauges from "@/pages/TyreGauges";
+import CustomerDashboard from "@/pages/CustomerDashboard";
 
 export const Routes = () => {
   return (
