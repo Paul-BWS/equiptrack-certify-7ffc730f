@@ -1,33 +1,13 @@
 import { TableCell, TableRow } from "@/components/ui/table";
 import { format, parseISO } from "date-fns";
 import { TableActions } from "./TableActions";
+import { Equipment } from "@/types/equipment-responses";
 
 interface EquipmentRowProps {
-  id: string;
-  model: string;
-  serialNumber: string;
-  lastServiceDate: string;
-  nextServiceDue: string;
-  companyName?: string;
-  equipmentType?: string;
-  isMobile: boolean;
-  onGenerateCertificate: () => void;
-  onDelete: (e: React.MouseEvent) => void;
-  onViewReadings: () => void;
+  equipment: Equipment;
 }
 
-export const EquipmentRow = ({
-  id,
-  model,
-  companyName = "Unknown Company",
-  equipmentType = "Unknown Type",
-  lastServiceDate,
-  nextServiceDue,
-  isMobile,
-  onGenerateCertificate,
-  onDelete,
-  onViewReadings,
-}: EquipmentRowProps) => {
+export const EquipmentRow = ({ equipment }: EquipmentRowProps) => {
   const formatDate = (dateString: string) => {
     try {
       return format(parseISO(dateString), 'dd/MM/yyyy');
@@ -39,16 +19,17 @@ export const EquipmentRow = ({
 
   return (
     <TableRow>
-      <TableCell>{companyName}</TableCell>
-      <TableCell>{equipmentType}</TableCell>
-      <TableCell>{model}</TableCell>
-      <TableCell>{formatDate(lastServiceDate)}</TableCell>
-      <TableCell>{formatDate(nextServiceDue)}</TableCell>
+      <TableCell>{equipment.model}</TableCell>
+      <TableCell>{equipment.serialNumber}</TableCell>
+      <TableCell>{equipment.companyName || 'Unknown Company'}</TableCell>
+      <TableCell>{formatDate(equipment.lastServiceDate)}</TableCell>
+      <TableCell>{formatDate(equipment.nextServiceDue)}</TableCell>
+      <TableCell>{equipment.equipmentType || 'Unknown Type'}</TableCell>
       <TableCell className="text-right">
         <TableActions
-          onDelete={onDelete}
-          onGenerateCertificate={onGenerateCertificate}
-          onViewReadings={onViewReadings}
+          onDelete={() => console.log('Delete:', equipment.id)}
+          onGenerateCertificate={() => console.log('Generate Certificate:', equipment.id)}
+          onViewReadings={() => console.log('View Readings:', equipment.id)}
         />
       </TableCell>
     </TableRow>
