@@ -30,7 +30,11 @@ interface Company {
 }
 
 // Function to generate the email HTML template
-const generateEmailTemplate = (companyName: string, equipmentList: string) => {
+const generateEmailTemplate = (companyName: string, equipmentList: Equipment[]) => {
+  const settings = {
+    logo: "/logo.png" // This will be replaced with the actual logo URL from settings
+  };
+
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <div style="text-align: center; margin-bottom: 30px;">
@@ -42,19 +46,31 @@ const generateEmailTemplate = (companyName: string, equipmentList: string) => {
 
       <p style="margin-bottom: 20px; color: #374151;">Dear ${companyName},</p>
       
-      <p style="margin-bottom: 20px; color: #374151;">As part of our commitment to maintaining the highest standards of quality and safety, we are writing to inform you that the following equipment is scheduled for calibration service within the next 30 days:</p>
+      <p style="margin-bottom: 20px; color: #374151;">This email serves as a friendly reminder that the following equipment requires recalibration/retesting soon:</p>
       
       <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
-        ${equipmentList.split('\n').map(item => `<div style="margin-bottom: 12px; color: #4b5563;">${item}</div>`).join('')}
+        ${equipmentList.map(item => `
+          <div style="margin-bottom: 20px; color: #4b5563;">
+            <h3 style="margin: 0 0 8px 0; color: #1f2937;">Equipment Details</h3>
+            <p style="margin: 4px 0;">Model: ${item.model}</p>
+            <p style="margin: 4px 0;">Serial Number: ${item.serial_number}</p>
+            <p style="margin: 4px 0;">Next Service Due: ${new Date(item.next_service_due).toLocaleDateString('en-GB')}</p>
+          </div>
+        `).join('')}
       </div>
       
-      <p style="margin-bottom: 20px; color: #374151;">To ensure continuous compliance with industry standards and maintain the accuracy of your equipment, we kindly request that you contact our service department to schedule your calibration appointment at your earliest convenience.</p>
-      
-      <p style="margin-bottom: 20px; color: #374151;">Our team will work with you to arrange a suitable time that minimizes any disruption to your operations.</p>
+      <p style="margin-bottom: 20px; color: #374151;">Action Required: None - our service coordinator team will be in contact to book your recalibration/retest with our engineers before the expiration date to ensure:</p>
+      <ul style="color: #374151; margin-bottom: 20px;">
+        <li>Continued accuracy of measurements</li>
+        <li>Compliance with quality standards</li>
+        <li>Uninterrupted operational capability</li>
+      </ul>
+
+      <p style="margin-bottom: 20px; color: #374151;">If you have any questions or need assistance, please contact Cathy or Clare on 0161 223 1843.</p>
 
       <div style="margin-top: 30px;">
         <p style="margin-bottom: 5px; color: #374151;">Best regards,</p>
-        <p style="margin-top: 0; color: #266bec; font-weight: 600;">BWS Calibration Team</p>
+        <p style="margin-top: 0; color: #266bec; font-weight: 600;">Service Department, BWS LTD</p>
       </div>
       
       <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
@@ -67,8 +83,7 @@ const generateEmailTemplate = (companyName: string, equipmentList: string) => {
         
         <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #6b7280;">
           <p style="margin: 3px 0;">BWS Calibration Services Ltd | Registered in England & Wales</p>
-          <p style="margin: 3px 0;">Company Registration No: 123456 | VAT No: GB123456789</p>
-          <p style="margin: 3px 0;">UKAS Accredited Calibration Laboratory No. 0000</p>
+          <p style="margin: 3px 0;">Company Registration No: 03334319 | VAT No: GB123456789</p>
         </div>
       </div>
     </div>
@@ -137,16 +152,7 @@ const handler = async (req: Request): Promise<Response> => {
         );
 
         if (primaryContacts.length > 0) {
-          const equipmentList = equipmentByCompany[companyId]
-            .map(
-              (item) =>
-                `${item.model} (Serial: ${item.serial_number}) - Due: ${new Date(
-                  item.next_service_due
-                ).toLocaleDateString('en-GB')}`
-            )
-            .join('\n');
-
-          const emailHtml = generateEmailTemplate(company.name, equipmentList);
+          const emailHtml = generateEmailTemplate(company.name, equipmentByCompany[companyId]);
 
           const res = await fetch("https://api.resend.com/emails", {
             method: "POST",
@@ -157,7 +163,7 @@ const handler = async (req: Request): Promise<Response> => {
             body: JSON.stringify({
               from: "BWS <calibration@bws-uk.com>",
               to: primaryContacts.map((contact) => contact.email),
-              subject: "Equipment Service Reminder - 30 Day Notice",
+              subject: "Equipment Calibration Reminder - Upcoming Retest Due",
               html: emailHtml,
             }),
           });
