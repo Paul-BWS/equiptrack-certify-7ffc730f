@@ -7,7 +7,7 @@ import { ContactsList } from "@/components/customer-dashboard/ContactsList";
 import { EquipmentServiceList } from "@/components/customer-dashboard/EquipmentServiceList";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Grid } from "lucide-react";
 
 const CustomerDashboard = () => {
   const { id } = useParams<{ id: string }>();
@@ -87,6 +87,17 @@ const CustomerDashboard = () => {
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <h1 className="text-2xl font-semibold text-white">Company</h1>
+            <div className="ml-auto">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate(`/customers/${id}/equipment`)}
+                className="text-white hover:text-white hover:bg-white/20"
+                title="Go to Equipment List"
+              >
+                <Grid className="h-5 w-5" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>
