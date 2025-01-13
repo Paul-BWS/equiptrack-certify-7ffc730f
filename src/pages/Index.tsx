@@ -14,6 +14,7 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [authError, setAuthError] = useState<string | null>(null);
   const { isAuthorized } = useAuthCheck();
+  const [isInviting, setIsInviting] = useState(false);
 
   const { data: session, isLoading: isSessionLoading, error: sessionError } = useQuery({
     queryKey: ['session'],
@@ -53,22 +54,25 @@ const Index = () => {
     }
   });
 
-  const handleTestEmail = async () => {
+  const handleSendInvitation = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke('send-reminder-email', {
-        body: { test: true }
+      setIsInviting(true);
+      const { data, error } = await supabase.functions.invoke('send-invitation-email', {
+        body: { email: 'jason@basicwelding.co.uk' }
       });
 
       if (error) {
-        console.error('Error sending test email:', error);
-        toast.error("Failed to send test email");
+        console.error('Error sending invitation:', error);
+        toast.error("Failed to send invitation email");
         return;
       }
 
-      toast.success("Test email sent successfully!");
+      toast.success("Invitation email sent successfully!");
     } catch (error) {
       console.error('Error:', error);
-      toast.error("An error occurred while sending the test email");
+      toast.error("An error occurred while sending the invitation email");
+    } finally {
+      setIsInviting(false);
     }
   };
 
@@ -93,12 +97,19 @@ const Index = () => {
       <Navigation />
       <main className="container mx-auto py-8 px-4">
         {isAuthorized && (
-          <div className="mb-4">
+          <div className="mb-4 space-y-4">
             <Button 
               onClick={handleTestEmail}
               className="bg-blue-500 hover:bg-blue-600 text-white"
             >
               Send Test Email
+            </Button>
+            <Button 
+              onClick={handleSendInvitation}
+              className="bg-green-500 hover:bg-green-600 text-white ml-4"
+              disabled={isInviting}
+            >
+              {isInviting ? "Sending Invitation..." : "Send Invitation to Jason"}
             </Button>
           </div>
         )}
