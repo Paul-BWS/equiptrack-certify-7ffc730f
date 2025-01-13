@@ -21,15 +21,23 @@ export const CompanyCard = ({ company }: CompanyCardProps) => {
 
   const { mutate: deleteCompany, isPending } = useMutation({
     mutationFn: async () => {
+      console.log("Deleting company:", company.id);
       const { error } = await supabase
         .from('companies')
         .delete()
         .eq('id', company.id);
       
-      if (error) throw error;
+      if (error) {
+        console.error("Error deleting company:", error);
+        throw error;
+      }
+      
+      console.log("Company deleted successfully");
     },
     onSuccess: () => {
+      // Invalidate both the companies list and the specific company query
       queryClient.invalidateQueries({ queryKey: ['companies'] });
+      queryClient.invalidateQueries({ queryKey: ['company', company.id] });
       toast({
         title: "Success",
         description: "Company has been deleted successfully",
