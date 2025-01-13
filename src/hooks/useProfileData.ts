@@ -89,10 +89,13 @@ export const useProfileData = () => {
     try {
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       if (sessionError) {
+        console.error("Session error:", sessionError);
         toast.error("Authentication error");
         return;
       }
+      
       if (!session?.user) {
+        console.error("No active session");
         toast.error("No active session found");
         return;
       }
