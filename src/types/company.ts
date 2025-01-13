@@ -1,3 +1,5 @@
+import { Contact } from "./contact";
+
 export interface Company {
   id: string;
   name: string;
@@ -8,4 +10,5 @@ export interface Company {
   billingaddress: string;
   notes: string;
   created_at: string;
+  contacts?: Contact[];
 }
