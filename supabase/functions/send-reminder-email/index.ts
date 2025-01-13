@@ -29,6 +29,34 @@ interface Company {
   }>;
 }
 
+// Function to generate the email HTML template
+const generateEmailTemplate = (companyName: string, equipmentList: string) => {
+  return `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <h2 style="color: #2563eb; margin-bottom: 20px;">Equipment Service Reminder</h2>
+      
+      <p style="margin-bottom: 15px;">Dear ${companyName},</p>
+      
+      <p style="margin-bottom: 15px;">The following equipment is due for service in the next 30 days:</p>
+      
+      <div style="background-color: #f3f4f6; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+        ${equipmentList.split('\n').map(item => `<div style="margin-bottom: 10px;">${item}</div>`).join('')}
+      </div>
+      
+      <p style="margin-bottom: 15px;">Please contact us as soon as possible to schedule your service appointment.</p>
+      
+      <p style="margin-bottom: 5px;">Best regards,</p>
+      <p style="margin-top: 0;">BWS Calibration Team</p>
+      
+      <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280;">
+        <p>For urgent inquiries, please contact us directly at:</p>
+        <p>Phone: +44 (0)1455 245700</p>
+        <p>Email: calibration@bws-uk.com</p>
+      </div>
+    </div>
+  `;
+};
+
 const handler = async (req: Request): Promise<Response> => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -96,18 +124,11 @@ const handler = async (req: Request): Promise<Response> => {
               (item) =>
                 `${item.model} (Serial: ${item.serial_number}) - Due: ${new Date(
                   item.next_service_due
-                ).toLocaleDateString()}`
+                ).toLocaleDateString('en-GB')}`
             )
             .join('\n');
 
-          const emailHtml = `
-            <h2>Equipment Service Reminder</h2>
-            <p>Dear ${company.name},</p>
-            <p>The following equipment is due for service in the next 30 days:</p>
-            <pre>${equipmentList}</pre>
-            <p>Please contact us to schedule your service appointment.</p>
-            <p>Best regards,<br>BWS Team</p>
-          `;
+          const emailHtml = generateEmailTemplate(company.name, equipmentList);
 
           const res = await fetch("https://api.resend.com/emails", {
             method: "POST",
