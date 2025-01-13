@@ -74,6 +74,8 @@ export const EquipmentServiceList = ({ companyId }: EquipmentServiceListProps) =
 
   const handleSendReminder = async () => {
     try {
+      toast.loading("Sending service reminder email...");
+      
       const response = await supabase.functions.invoke('send-reminder-email', {
         body: { companyId }
       });
@@ -82,10 +84,17 @@ export const EquipmentServiceList = ({ companyId }: EquipmentServiceListProps) =
         throw new Error(response.error.message);
       }
 
-      toast.success("Service reminder email sent successfully");
+      toast.dismiss();
+      toast.success("Service reminder email sent successfully", {
+        description: "The reminder has been sent to the registered email address.",
+        duration: 5000,
+      });
     } catch (error: any) {
       console.error('Error sending reminder email:', error);
-      toast.error("Failed to send reminder email");
+      toast.error("Failed to send reminder email", {
+        description: "Please try again later or contact support if the problem persists.",
+        duration: 5000,
+      });
     }
   };
 
