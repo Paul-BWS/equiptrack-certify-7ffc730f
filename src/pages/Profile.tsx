@@ -41,9 +41,17 @@ const Profile = () => {
       try {
         setIsLoading(true);
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        if (sessionError) throw sessionError;
+        if (sessionError) {
+          console.error("Session error:", sessionError);
+          toast.error("Authentication error");
+          setIsLoading(false);
+          return;
+        }
+
         if (!session?.user) {
-          toast.error("No active session found");
+          console.log("No active session found");
+          toast.error("Please sign in to access settings");
+          setIsLoading(false);
           return;
         }
 
@@ -58,7 +66,9 @@ const Profile = () => {
 
         if (companiesError) {
           console.error("Error fetching companies:", companiesError);
-          throw companiesError;
+          toast.error("Error fetching companies");
+          setIsLoading(false);
+          return;
         }
 
         if (userCompanies) {
@@ -75,10 +85,12 @@ const Profile = () => {
 
         if (userCompanyError) {
           console.error("Error fetching user company:", userCompanyError);
-          throw userCompanyError;
+          toast.error("Error fetching user company");
+          setIsLoading(false);
+          return;
         }
 
-        if (userCompanyData) {
+        if (userCompanyData?.company_id) {
           setSelectedCompany(userCompanyData.company_id);
         }
         
@@ -138,6 +150,7 @@ const Profile = () => {
     }
   };
 
+  // Loading state with spinner
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
