@@ -23,6 +23,16 @@ interface UserAssociationsTableProps {
   onAssociationAdded: () => void;
 }
 
+// Define the type for user group data
+interface UserGroup {
+  id: string;
+  user_id: string;
+  group_id: string;
+  company_groups: {
+    name: string;
+  } | null;
+}
+
 export const UserAssociationsTable = ({
   userCompanies,
   companies,
@@ -35,7 +45,6 @@ export const UserAssociationsTable = ({
   const [selectedUser, setSelectedUser] = useState<string>("");
   const [selectedGroup, setSelectedGroup] = useState<string>("");
 
-  // Fetch company groups
   const { data: groups } = useQuery({
     queryKey: ['company-groups'],
     queryFn: async () => {
@@ -56,7 +65,7 @@ export const UserAssociationsTable = ({
     },
   });
 
-  // Fetch user group associations
+  // Fetch user group associations with proper typing
   const { data: userGroups, refetch: refetchUserGroups } = useQuery({
     queryKey: ['user-groups'],
     queryFn: async () => {
@@ -80,7 +89,7 @@ export const UserAssociationsTable = ({
         });
         return [];
       }
-      return data;
+      return data as UserGroup[];
     },
   });
 
@@ -168,7 +177,6 @@ export const UserAssociationsTable = ({
     return <div>Loading...</div>;
   }
 
-  // Group users by email to avoid duplicates in the dropdown
   const uniqueUsers = userCompanies?.reduce((acc: { id: string; email: string }[], current) => {
     if (!acc.find(user => user.id === current.user_id)) {
       acc.push({
@@ -325,7 +333,7 @@ export const UserAssociationsTable = ({
                   <TableCell>
                     {uniqueUsers?.find(u => u.id === ug.user_id)?.email}
                   </TableCell>
-                  <TableCell>{ug.company_groups.name}</TableCell>
+                  <TableCell>{ug.company_groups?.name || 'N/A'}</TableCell>
                   <TableCell>
                     <Button
                       variant="destructive"
