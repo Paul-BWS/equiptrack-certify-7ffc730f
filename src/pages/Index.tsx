@@ -8,13 +8,11 @@ import { ErrorScreen } from "@/components/auth/ErrorScreen";
 import { AuthenticationScreen } from "@/components/auth/AuthenticationScreen";
 import { CompanyDashboard } from "@/components/dashboard/CompanyDashboard";
 import { useAuthCheck } from "@/hooks/useAuthCheck";
-import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [authError, setAuthError] = useState<string | null>(null);
   const { isAuthorized } = useAuthCheck();
-  const [isInviting, setIsInviting] = useState(false);
 
   const { data: session, isLoading: isSessionLoading, error: sessionError } = useQuery({
     queryKey: ['session'],
@@ -54,28 +52,6 @@ const Index = () => {
     }
   });
 
-  const handleSendInvitation = async () => {
-    try {
-      setIsInviting(true);
-      const { data, error } = await supabase.functions.invoke('send-invitation-email', {
-        body: { email: 'jason@basicwelding.co.uk' }
-      });
-
-      if (error) {
-        console.error('Error sending invitation:', error);
-        toast.error("Failed to send invitation email");
-        return;
-      }
-
-      toast.success("Invitation email sent successfully!");
-    } catch (error) {
-      console.error('Error:', error);
-      toast.error("An error occurred while sending the invitation email");
-    } finally {
-      setIsInviting(false);
-    }
-  };
-
   if (isSessionLoading) {
     return <LoadingScreen />;
   }
@@ -96,17 +72,6 @@ const Index = () => {
     <div className="min-h-screen bg-gray-50">
       <Navigation />
       <main className="container mx-auto py-8 px-4">
-        {isAuthorized && (
-          <div className="mb-4 space-y-4">
-            <Button 
-              onClick={handleSendInvitation}
-              className="bg-green-500 hover:bg-green-600 text-white ml-4"
-              disabled={isInviting}
-            >
-              {isInviting ? "Sending Invitation..." : "Send Invitation to Jason"}
-            </Button>
-          </div>
-        )}
         <CompanyDashboard
           companies={filteredCompanies}
           isLoading={isLoadingCompanies}
