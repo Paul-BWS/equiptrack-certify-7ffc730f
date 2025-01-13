@@ -32,7 +32,9 @@ const Category = ({ icon, title, description, type }: CategoryProps) => {
       onClick={() => navigate(`/customers/${customerId}/equipment/${type}`)}
     >
       <div className="flex flex-col items-center text-center space-y-2">
-        <div className="text-primary">{icon}</div>
+        <div className="p-2 rounded-full bg-white border-2 border-primary">
+          <div className="text-primary">{icon}</div>
+        </div>
         <h3 className="font-medium">{title}</h3>
         <p className="text-sm text-muted-foreground">{description}</p>
       </div>
