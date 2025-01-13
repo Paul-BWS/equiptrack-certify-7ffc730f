@@ -22,6 +22,28 @@ interface Equipment {
   equipmentType?: string;
 }
 
+interface CompanyResponse {
+  name: string;
+}
+
+interface TorqueWrenchResponse {
+  id: string;
+  model: string | null;
+  serial_number: string | null;
+  last_service_date: string | null;
+  next_service_due: string | null;
+  companies: CompanyResponse;
+}
+
+interface TyreGaugeResponse {
+  id: string;
+  model: string | null;
+  serial_number: string | null;
+  last_service_date: string | null;
+  next_service_due: string | null;
+  companies: CompanyResponse;
+}
+
 const AllEquipment = () => {
   const navigate = useNavigate();
   const [searchCompany, setSearchCompany] = useState("");
@@ -41,7 +63,7 @@ const AllEquipment = () => {
           last_service_date,
           next_service_due,
           company_id,
-          companies:company_id (
+          companies:companies (
             name
           )
         `);
@@ -61,7 +83,7 @@ const AllEquipment = () => {
           last_service_date,
           next_service_due,
           company_id,
-          companies:company_id (
+          companies:companies (
             name
           )
         `);
@@ -73,7 +95,7 @@ const AllEquipment = () => {
 
       // Combine and format the data
       const combinedEquipment: Equipment[] = [
-        ...(torqueWrenches?.map(tw => ({
+        ...(torqueWrenches?.map((tw: TorqueWrenchResponse) => ({
           id: tw.id,
           model: tw.model || '',
           serialNumber: tw.serial_number || '',
@@ -82,7 +104,7 @@ const AllEquipment = () => {
           companyName: tw.companies?.name || 'Unknown Company',
           equipmentType: 'Torque Wrench'
         })) || []),
-        ...(tyreGauges?.map(tg => ({
+        ...(tyreGauges?.map((tg: TyreGaugeResponse) => ({
           id: tg.id,
           model: tg.model || '',
           serialNumber: tg.serial_number || '',
