@@ -1,9 +1,9 @@
+import { TorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
 import { HeaderSection } from "../HeaderSection";
 import { MeasurementsSection } from "../MeasurementsSection";
 import { ReadingsSection } from "../ReadingsSection";
 import { NotesSection } from "../NotesSection";
 import { FormActions } from "./form-sections/FormActions";
-import { TorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
 
 interface ModalFormProps {
   readings: TorqueReadingsForm;
@@ -25,7 +25,10 @@ export const ModalForm = ({
   equipmentId
 }: ModalFormProps) => {
   const handleFieldChange = (field: keyof TorqueReadingsForm, value: any) => {
-    setReadings(prev => ({ ...prev, [field]: value }));
+    setReadings({
+      ...readings,
+      [field]: value
+    });
   };
 
   return (
@@ -49,22 +52,23 @@ export const ModalForm = ({
         onUnitsChange={(value) => handleFieldChange("units", value)}
         onResultChange={(value) => handleFieldChange("result", value)}
       />
-      
-      <ReadingsSection
-        title="Initial Readings"
-        readings={readings.readings}
-        onChange={(index, field, value) => {
-          const newReadings = [...readings.readings];
-          newReadings[index] = { ...newReadings[index], [field]: value };
-          handleFieldChange("readings", newReadings);
-        }}
-      />
 
-      <ReadingsSection
-        title="Definitive Readings"
-        readings={readings.definitiveReadings}
-        readOnly
-      />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <ReadingsSection
+          title="AS FOUND"
+          readings={readings.readings}
+          onChange={(index, field, value) => {
+            const newReadings = [...readings.readings];
+            newReadings[index] = { ...newReadings[index], [field]: value };
+            handleFieldChange("readings", newReadings);
+          }}
+        />
+        <ReadingsSection
+          title="DEFINITIVE"
+          readings={readings.definitiveReadings}
+          readOnly
+        />
+      </div>
 
       <NotesSection
         notes={readings.notes}
