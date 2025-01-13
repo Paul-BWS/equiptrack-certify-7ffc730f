@@ -1,84 +1,42 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Navigation } from "@/components/Navigation";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { supabase } from "@/lib/supabase";
-import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserAssociationsTable } from "@/components/admin/UserAssociationsTable";
-import { AdminUser, Company, UserCompany } from "@/types/admin";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase";
+import { useAuthCheck } from "@/hooks/useAuthCheck";
+import { UserCompany } from "@/types/admin";
+import { useQuery } from "@tanstack/react-query";
 
 const AdminUsers = () => {
+  const { isLoading: authLoading, isAuthorized } = useAuthCheck();
   const { toast } = useToast();
-  const navigate = useNavigate();
 
-  // Check if user is BWS user
-  const { data: isBWSUser, isLoading: isCheckingBWSStatus } = useQuery({
-    queryKey: ['is-bws-user'],
-    queryFn: async () => {
-      const { data, error } = await supabase.rpc('is_bws_user');
-      if (error) throw error;
-      return data;
-    },
-  });
-
-  // Fetch user-company associations
-  const { data: userCompanies, isLoading: isLoadingUserCompanies, refetch } = useQuery({
+  const { data: userCompanies, isLoading: isLoadingUsers, refetch } = useQuery({
     queryKey: ['user-companies'],
     queryFn: async () => {
-      const { data: { users }, error: usersError } = await supabase.auth.admin.listUsers();
-      if (usersError) throw usersError;
-
-      const { data: companies, error: companiesError } = await supabase
-        .from('companies')
-        .select('id, name');
-      if (companiesError) throw companiesError;
-
-      const { data: associations, error: associationsError } = await supabase
-        .from('user_companies')
-        .select('*');
-      if (associationsError) throw associationsError;
-
-      const userCompanyMap: UserCompany[] = [];
+      const { data, error } = await supabase.rpc('get_user_data');
       
-      associations?.forEach((assoc) => {
-        const user = users.find((u: AdminUser) => u.id === assoc.user_id);
-        const company = companies?.find((c: Company) => c.id === assoc.company_id);
-        
-        if (user && company) {
-          userCompanyMap.push({
-            user_id: user.id,
-            user_email: user.email || '',
-            company_id: company.id,
-            company_name: company.name,
-          });
-        }
-      });
+      if (error) {
+        console.error('Error fetching user data:', error);
+        toast({
+          title: "Error fetching users",
+          description: error.message,
+          variant: "destructive",
+        });
+        return [];
+      }
 
-      return userCompanyMap;
+      return data as UserCompany[];
     },
-    enabled: isBWSUser,
   });
 
-  // Redirect if not BWS user
-  useEffect(() => {
-    if (!isCheckingBWSStatus && !isBWSUser) {
-      toast({
-        title: "Access Denied",
-        description: "You don't have permission to access this page",
-        variant: "destructive",
-      });
-      navigate('/');
-    }
-  }, [isBWSUser, isCheckingBWSStatus, navigate, toast]);
-
-  if (isCheckingBWSStatus || isLoadingUserCompanies) {
+  if (authLoading) {
     return <div>Loading...</div>;
+  }
+
+  if (!isAuthorized) {
+    return <div>Not authorized</div>;
   }
 
   return (
@@ -88,12 +46,12 @@ const AdminUsers = () => {
         <div className="max-w-5xl mx-auto space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Manage User Associations</CardTitle>
+              <CardTitle>User Associations</CardTitle>
             </CardHeader>
             <CardContent>
-              <UserAssociationsTable 
+              <UserAssociationsTable
                 userCompanies={userCompanies}
-                isLoading={isLoadingUserCompanies}
+                isLoading={isLoadingUsers}
                 onAssociationRemoved={refetch}
               />
             </CardContent>
