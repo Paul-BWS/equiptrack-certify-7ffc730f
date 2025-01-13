@@ -120,7 +120,7 @@ serve(async (req) => {
       </div>
     `
 
-    // Send email using Resend
+    // Send email using Resend with the default domain
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -128,7 +128,7 @@ serve(async (req) => {
         'Authorization': `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'BWS Calibration <calibration@basicwelding.co.uk>',
+        from: 'BWS Calibration <onboarding@resend.dev>', // Using Resend's default domain
         to: [contacts[0].email],
         subject: `Equipment Service Reminder - ${company.name}`,
         html: emailHtml,
