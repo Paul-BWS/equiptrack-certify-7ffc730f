@@ -1,6 +1,5 @@
 import { Card } from "@/components/ui/card";
 import { useNavigate, useParams } from "react-router-dom";
-import { LucideIcon } from "lucide-react";
 
 interface CategoryProps {
   icon: React.ReactNode;
