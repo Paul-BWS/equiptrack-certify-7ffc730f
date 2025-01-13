@@ -71,11 +71,18 @@ const CustomerDashboard = () => {
   }
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
-      <CompanyCard company={company} />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <ContactsList contacts={company.contacts || []} companyId={company.id} />
-        <EquipmentServiceList companyId={company.id} />
+    <div className="min-h-screen bg-gray-50">
+      <div className="bg-white border-b">
+        <div className="container mx-auto py-4">
+          <h1 className="text-3xl font-bold text-gray-900">Customer Dashboard</h1>
+        </div>
+      </div>
+      <div className="container mx-auto py-6 space-y-6">
+        <CompanyCard company={company} />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <ContactsList contacts={company.contacts || []} companyId={company.id} />
+          <EquipmentServiceList companyId={company.id} />
+        </div>
       </div>
     </div>
   );
