@@ -11,6 +11,11 @@ const CustomerDashboard = () => {
     queryKey: ['company', id],
     queryFn: async () => {
       if (!id) {
+        toast({
+          title: "Error",
+          description: "Company ID is required",
+          variant: "destructive",
+        });
         throw new Error('Company ID is required');
       }
 
