@@ -33,18 +33,8 @@ serve(async (req) => {
 
     if (companyError) throw companyError
 
-    // Fetch contacts for the company
-    const { data: contacts, error: contactsError } = await supabase
-      .from('contacts')
-      .select('email, name')
-      .eq('company_id', companyId)
-      .eq('is_primary', true)
-
-    if (contactsError) throw contactsError
-
-    if (!contacts || contacts.length === 0) {
-      throw new Error('No primary contact found for this company')
-    }
+    // For testing, we'll send all emails to your verified email
+    const testEmail = 'sales@basicwelding.co.uk'
 
     // Fetch equipment due for service
     const thirtyDaysFromNow = new Date()
@@ -95,8 +85,8 @@ serve(async (req) => {
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #333;">Equipment Service Reminder</h2>
-        <p>Dear ${contacts[0].name},</p>
-        <p>This is a reminder that the following equipment for ${company.name} is due for service in the next 30 days:</p>
+        <p>Dear ${company.name},</p>
+        <p>This is a reminder that the following equipment is due for service in the next 30 days:</p>
         
         <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
           <thead>
@@ -120,7 +110,9 @@ serve(async (req) => {
       </div>
     `
 
-    // Send email using Resend with the default domain
+    console.log('Sending email to:', testEmail)
+
+    // Send email using Resend
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -128,8 +120,8 @@ serve(async (req) => {
         'Authorization': `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'BWS Calibration <onboarding@resend.dev>', // Using Resend's default domain
-        to: [contacts[0].email],
+        from: 'BWS Calibration <onboarding@resend.dev>',
+        to: [testEmail], // During testing, all emails go to your verified email
         subject: `Equipment Service Reminder - ${company.name}`,
         html: emailHtml,
       }),
