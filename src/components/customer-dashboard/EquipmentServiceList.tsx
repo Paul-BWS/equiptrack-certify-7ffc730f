@@ -93,6 +93,17 @@ export const EquipmentServiceList = ({ companyId }: EquipmentServiceListProps) =
     );
   }
 
+  const getEquipmentRoute = (type: string) => {
+    switch (type) {
+      case 'torque-wrench':
+        return 'torque-wrenches';
+      case 'tyre-gauge':
+        return 'tyre-gauges';
+      default:
+        return type + 's';
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -122,7 +133,7 @@ export const EquipmentServiceList = ({ companyId }: EquipmentServiceListProps) =
                   variant="ghost"
                   size="icon"
                   className="rounded-full bg-primary hover:bg-primary/90 h-10 w-10 p-0"
-                  onClick={() => navigate(`/customers/${companyId}/equipment/${item.type}s`)}
+                  onClick={() => navigate(`/customers/${companyId}/equipment/${getEquipmentRoute(item.type)}`)}
                 >
                   <ArrowRight className="h-4 w-4 text-primary-foreground" />
                 </Button>
