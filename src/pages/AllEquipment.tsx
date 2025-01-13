@@ -33,7 +33,7 @@ interface TorqueWrenchResponse {
   last_service_date: string | null;
   next_service_due: string | null;
   company_id: string;
-  company: CompanyResponse;
+  companies: CompanyResponse;
 }
 
 interface TyreGaugeResponse {
@@ -43,7 +43,7 @@ interface TyreGaugeResponse {
   last_service_date: string | null;
   next_service_due: string | null;
   company_id: string;
-  company: CompanyResponse;
+  companies: CompanyResponse;
 }
 
 const AllEquipment = () => {
@@ -65,7 +65,7 @@ const AllEquipment = () => {
           last_service_date,
           next_service_due,
           company_id,
-          company:companies(name)
+          companies!inner(name)
         `);
 
       if (torqueError) {
@@ -83,7 +83,7 @@ const AllEquipment = () => {
           last_service_date,
           next_service_due,
           company_id,
-          company:companies(name)
+          companies!inner(name)
         `);
 
       if (tyreError) {
@@ -99,7 +99,7 @@ const AllEquipment = () => {
           serialNumber: tw.serial_number || '',
           lastServiceDate: tw.last_service_date || '',
           nextServiceDue: tw.next_service_due || '',
-          companyName: tw.company?.name || 'Unknown Company',
+          companyName: tw.companies?.name || 'Unknown Company',
           equipmentType: 'Torque Wrench'
         })) || []),
         ...(tyreGauges?.map((tg: TyreGaugeResponse) => ({
@@ -108,7 +108,7 @@ const AllEquipment = () => {
           serialNumber: tg.serial_number || '',
           lastServiceDate: tg.last_service_date || '',
           nextServiceDue: tg.next_service_due || '',
-          companyName: tg.company?.name || 'Unknown Company',
+          companyName: tg.companies?.name || 'Unknown Company',
           equipmentType: 'Tyre Gauge'
         })) || [])
       ];
@@ -193,7 +193,7 @@ const AllEquipment = () => {
         </div>
 
         <EquipmentList
-          equipment={filteredEquipment}
+          equipment={equipment}
           onGenerateCertificate={(id) => {
             console.log("Generate certificate for:", id);
           }}
