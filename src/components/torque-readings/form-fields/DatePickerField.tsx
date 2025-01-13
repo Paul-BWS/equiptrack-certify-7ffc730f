@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 
 interface DatePickerFieldProps {
@@ -19,6 +19,7 @@ export const DatePickerField = ({
   const formatDisplayDate = (dateString: string | undefined) => {
     if (!dateString) return undefined;
     try {
+      // Parse the ISO date string to a Date object
       return new Date(dateString);
     } catch {
       return undefined;
@@ -27,6 +28,7 @@ export const DatePickerField = ({
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
     if (!selectedDate) return;
+    // Format the date as ISO string (YYYY-MM-DD)
     const formattedDate = format(selectedDate, 'yyyy-MM-dd');
     onDateChange(formattedDate);
   };
@@ -44,8 +46,8 @@ export const DatePickerField = ({
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {formatDisplayDate(date) ? (
-              format(formatDisplayDate(date)!, "dd/MM/yyyy")
+            {date ? (
+              format(new Date(date), "dd/MM/yyyy")
             ) : (
               <span>Pick a date</span>
             )}
