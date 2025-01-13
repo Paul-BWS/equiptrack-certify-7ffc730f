@@ -141,11 +141,11 @@ export const TyreGaugeReadingsModal = ({
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <HeaderSection
             certNumber={certNumber}
-            date={date}
-            retestDate={retestDate}
+            date={date?.toISOString() || ''}
+            retestDate={retestDate?.toISOString() || ''}
             status={status}
-            onDateChange={setDate}
-            onRetestDateChange={setRetestDate}
+            onDateChange={(dateStr) => setDate(new Date(dateStr))}
+            onRetestDateChange={(dateStr) => setRetestDate(new Date(dateStr))}
             onStatusChange={setStatus}
           />
           

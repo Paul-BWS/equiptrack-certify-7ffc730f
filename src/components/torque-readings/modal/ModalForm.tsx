@@ -24,6 +24,10 @@ export const ModalForm = ({
   isSaving,
   equipmentId
 }: ModalFormProps) => {
+  const handleFieldChange = (field: keyof TorqueReadingsForm, value: any) => {
+    setReadings({ ...readings, [field]: value });
+  };
+
   return (
     <form onSubmit={onSubmit} className="p-6 space-y-6">
       <HeaderSection
@@ -31,30 +35,30 @@ export const ModalForm = ({
         status={readings.status}
         retestDate={readings.retestDate}
         certNumber={readings.certNumber}
-        onDateChange={(value) => setReadings({ ...readings, date: value })}
-        onRetestDateChange={(value) => setReadings({ ...readings, retestDate: value })}
+        onDateChange={(value) => handleFieldChange("date", value)}
+        onRetestDateChange={(value) => handleFieldChange("retestDate", value)}
+        onStatusChange={(value) => handleFieldChange("status", value)}
       />
       
       <BasicDetails
         formData={readings}
-        onChange={(field, value) => setReadings(prev => ({ ...prev, [field]: value }))}
+        onChange={handleFieldChange}
       />
       
       <ReadingsSection
-        readings={readings.readings}
-        definitiveReadings={readings.definitiveReadings}
-        onChange={(field, value) => setReadings(prev => ({ ...prev, [field]: value }))}
+        formData={readings}
+        onChange={handleFieldChange}
       />
 
       <NotesSection
-        notes={readings.notes}
-        onChange={(notes) => setReadings(prev => ({ ...prev, notes }))}
+        formData={readings}
+        onChange={handleFieldChange}
       />
 
       <FormActions
         onClose={onClose}
-        isSaving={isSaving}
         onDelete={onDelete}
+        isSaving={isSaving}
         equipmentId={equipmentId}
       />
     </form>
