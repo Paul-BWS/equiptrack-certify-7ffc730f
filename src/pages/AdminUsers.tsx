@@ -11,7 +11,7 @@ const AdminUsers = () => {
   const { isLoading: authLoading, isAuthorized } = useAuthCheck();
   const { toast } = useToast();
 
-  const { data: userCompanies, isLoading: isLoadingUsers, refetch } = useQuery({
+  const { data: userCompanies, isLoading: isLoadingUsers, refetch: refetchUsers } = useQuery({
     queryKey: ['user-companies'],
     queryFn: async () => {
       const { data, error } = await supabase.rpc('get_user_data');
@@ -27,6 +27,27 @@ const AdminUsers = () => {
       }
 
       return data as UserCompany[];
+    },
+  });
+
+  const { data: companies, isLoading: isLoadingCompanies } = useQuery({
+    queryKey: ['companies'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('companies')
+        .select('id, name');
+      
+      if (error) {
+        console.error('Error fetching companies:', error);
+        toast({
+          title: "Error fetching companies",
+          description: error.message,
+          variant: "destructive",
+        });
+        return [];
+      }
+
+      return data;
     },
   });
 
@@ -50,8 +71,10 @@ const AdminUsers = () => {
             <CardContent>
               <UserAssociationsTable
                 userCompanies={userCompanies}
-                isLoading={isLoadingUsers}
-                onAssociationRemoved={refetch}
+                companies={companies || []}
+                isLoading={isLoadingUsers || isLoadingCompanies}
+                onAssociationRemoved={refetchUsers}
+                onAssociationAdded={refetchUsers}
               />
             </CardContent>
           </Card>
