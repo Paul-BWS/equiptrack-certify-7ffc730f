@@ -38,10 +38,10 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const supabase = createClient(supabaseUrl, supabaseKey);
     
-    // Get equipment due for service in the next 7 days
+    // Get equipment due for service in the next 30 days
     const today = new Date();
-    const nextWeek = new Date();
-    nextWeek.setDate(today.getDate() + 7);
+    const thirtyDaysFromNow = new Date();
+    thirtyDaysFromNow.setDate(today.getDate() + 30);
 
     // Query both torque wrenches and tyre gauges
     const [{ data: torqueWrenches }, { data: tyreGauges }] = await Promise.all([
@@ -49,12 +49,12 @@ const handler = async (req: Request): Promise<Response> => {
         .from('torque_wrench')
         .select('id, model, serial_number, next_service_due, company_id')
         .gte('next_service_due', today.toISOString())
-        .lte('next_service_due', nextWeek.toISOString()),
+        .lte('next_service_due', thirtyDaysFromNow.toISOString()),
       supabase
         .from('tyre_gauges')
         .select('id, model, serial_number, next_service_due, company_id')
         .gte('next_service_due', today.toISOString())
-        .lte('next_service_due', nextWeek.toISOString())
+        .lte('next_service_due', thirtyDaysFromNow.toISOString())
     ]);
 
     const equipment = [...(torqueWrenches || []), ...(tyreGauges || [])];
@@ -103,7 +103,7 @@ const handler = async (req: Request): Promise<Response> => {
           const emailHtml = `
             <h2>Equipment Service Reminder</h2>
             <p>Dear ${company.name},</p>
-            <p>The following equipment is due for service in the next 7 days:</p>
+            <p>The following equipment is due for service in the next 30 days:</p>
             <pre>${equipmentList}</pre>
             <p>Please contact us to schedule your service appointment.</p>
             <p>Best regards,<br>BWS Team</p>
@@ -118,7 +118,7 @@ const handler = async (req: Request): Promise<Response> => {
             body: JSON.stringify({
               from: "BWS <calibration@bws-uk.com>",
               to: primaryContacts.map((contact) => contact.email),
-              subject: "Equipment Service Reminder",
+              subject: "Equipment Service Reminder - 30 Day Notice",
               html: emailHtml,
             }),
           });
