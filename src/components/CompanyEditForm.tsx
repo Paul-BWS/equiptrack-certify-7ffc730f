@@ -1,9 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Form } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { Company } from "@/types/company";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,20 +8,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Pencil } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { supabase } from "@/lib/supabase";
-
-const companySchema = z.object({
-  name: z.string().min(1, "Company name is required"),
-  industry: z.string().min(1, "Industry is required"),
-  website: z.string().url("Invalid website URL").or(z.string().length(0)),
-  address: z.string().min(1, "Site address is required"),
-  useSeparateBillingAddress: z.boolean().default(false),
-  billingaddress: z.string().min(1, "Billing address is required").optional(),
-  notes: z.string(),
-});
-
-type CompanyFormData = z.infer<typeof companySchema>;
+import { CompanyFormFields } from "./company-edit/CompanyFormFields";
+import { companySchema, CompanyFormData } from "@/schemas/companySchema";
 
 interface CompanyEditFormProps {
   company: Company;
@@ -108,107 +94,7 @@ export const CompanyEditForm = ({ company }: CompanyEditFormProps) => {
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Company Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter company name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="industry"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Industry</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter industry" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="website"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Website</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter website URL (optional)" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="address"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Site Address</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter site address" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="useSeparateBillingAddress"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel>Use separate billing address</FormLabel>
-                  </div>
-                </FormItem>
-              )}
-            />
-            {form.watch("useSeparateBillingAddress") && (
-              <FormField
-                control={form.control}
-                name="billingaddress"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Billing Address</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter billing address" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
-            <FormField
-              control={form.control}
-              name="notes"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Notes</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder="Enter any additional notes"
-                      className="resize-none"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <CompanyFormFields form={form} />
             <Button type="submit" className="w-full" disabled={isPending}>
               {isPending ? "Updating..." : "Update Company"}
             </Button>
