@@ -30,16 +30,30 @@ export const useProfileData = () => {
         setEmail(session.user.email || "");
         setName(session.user.user_metadata?.name || "");
 
-        // Get user's company name if they have one
-        const { data: userData, error: userError } = await supabase
+        // First get the user's company
+        const { data: userCompanyData, error: userCompanyError } = await supabase
           .from('user_companies')
-          .select('companies(name)')
+          .select('company_id')
           .eq('user_id', session.user.id)
           .single();
 
-        if (!userError && userData?.companies) {
-          setCompanyName(userData.companies.name);
-          setIsBWSUser(userData.companies.name === 'BWS');
+        if (userCompanyError) {
+          console.error("Error fetching user company:", userCompanyError);
+          return;
+        }
+
+        if (userCompanyData?.company_id) {
+          // Then get the company details
+          const { data: companyData, error: companyError } = await supabase
+            .from('companies')
+            .select('name')
+            .eq('id', userCompanyData.company_id)
+            .single();
+
+          if (!companyError && companyData) {
+            setCompanyName(companyData.name);
+            setIsBWSUser(companyData.name === 'BWS');
+          }
         }
 
       } catch (error) {
