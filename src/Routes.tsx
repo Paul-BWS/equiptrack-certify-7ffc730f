@@ -18,7 +18,7 @@ export const Routes = () => {
       <Route path="/admin/users" element={<AdminUsers />} />
       <Route path="/torque-wrenches" element={<TorqueWrenches />} />
       <Route path="/tyre-gauges" element={<TyreGauges />} />
-      <Route path="/customer/:id" element={<CustomerDashboard />} />
+      <Route path="/customer/:id/*" element={<CustomerDashboard />} />
     </RouterRoutes>
   );
 };
