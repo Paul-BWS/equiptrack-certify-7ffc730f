@@ -11,7 +11,7 @@ export const CompanyInfo = ({ company }: CompanyInfoProps) => {
       <div className="space-y-4">
         <div className="p-4 rounded-lg bg-blue-50">
           <h3 className="text-xs text-gray-500 mb-1 flex items-center gap-2">
-            <Factory className="h-4 w-4 text-[#1EAEDB]" />
+            <Factory className="h-4 w-4 text-[#266bec]" />
             Industry
           </h3>
           <p className="text-sm text-gray-900">{company.industry}</p>
@@ -19,14 +19,14 @@ export const CompanyInfo = ({ company }: CompanyInfoProps) => {
         {company.website && (
           <div className="p-4 rounded-lg bg-blue-50">
             <h3 className="text-xs text-gray-500 mb-1 flex items-center gap-2">
-              <Globe className="h-4 w-4 text-[#1EAEDB]" />
+              <Globe className="h-4 w-4 text-[#266bec]" />
               Website
             </h3>
             <a 
               href={company.website}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-[#1EAEDB] hover:underline"
+              className="text-sm text-[#266bec] hover:underline"
             >
               {company.website}
             </a>

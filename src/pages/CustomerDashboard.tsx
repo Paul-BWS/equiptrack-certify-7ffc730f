@@ -75,7 +75,7 @@ const CustomerDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="bg-[#1EAEDB]">
+      <div className="bg-[#266bec]">
         <div className="container mx-auto py-4">
           <div className="flex items-center gap-4">
             <Button

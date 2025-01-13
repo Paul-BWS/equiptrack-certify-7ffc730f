@@ -50,7 +50,7 @@ export const Navigation = () => {
   };
 
   return (
-    <nav className="border-b bg-[#1EAEDB]">
+    <nav className="border-b bg-[#266bec]">
       <div className="flex h-16 items-center px-4">
         <Link to="/" className="text-xl font-semibold text-white">
           EquipService

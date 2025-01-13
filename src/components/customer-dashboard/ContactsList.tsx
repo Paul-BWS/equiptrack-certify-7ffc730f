@@ -28,7 +28,7 @@ export const ContactsList = ({ contacts, companyId }: ContactsListProps) => {
                   <h3 className="font-medium text-gray-900">
                     {contact.name}
                     {contact.is_primary && (
-                      <span className="ml-2 text-xs bg-[#1EAEDB]/10 text-[#1EAEDB] px-2 py-1 rounded-full">
+                      <span className="ml-2 text-xs bg-[#266bec]/10 text-[#266bec] px-2 py-1 rounded-full">
                         Primary Contact
                       </span>
                     )}
@@ -36,11 +36,11 @@ export const ContactsList = ({ contacts, companyId }: ContactsListProps) => {
                 </div>
                 <div className="space-y-1 text-sm text-gray-500">
                   <p className="flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-[#1EAEDB]" />
+                    <Mail className="h-4 w-4 text-[#266bec]" />
                     {contact.email}
                   </p>
                   <p className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-[#1EAEDB]" />
+                    <Phone className="h-4 w-4 text-[#266bec]" />
                     {contact.phone}
                   </p>
                 </div>
