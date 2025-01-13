@@ -8,45 +8,93 @@ import { Calendar as CalendarIcon, Search } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { EquipmentList } from "@/components/EquipmentList";
-
-// Sample data - in a real app, this would come from your backend
-const sampleEquipment = [
-  {
-    id: "1",
-    name: "Torque Wrench XL",
-    serialNumber: "TW-001",
-    customerName: "ABC Industries",
-    model: "TP-100",
-    lastServiceDate: "2023-06-15",
-    nextServiceDue: "2024-06-15",
-  },
-  {
-    id: "2",
-    name: "Pressure Gauge",
-    serialNumber: "PG-002",
-    customerName: "XYZ Corporation",
-    model: "PT-200",
-    lastServiceDate: "2023-07-20",
-    nextServiceDue: "2024-05-20",
-  },
-];
+import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 const AllEquipment = () => {
+  const navigate = useNavigate();
   const [searchCompany, setSearchCompany] = useState("");
   const [searchEquipmentType, setSearchEquipmentType] = useState("");
   const [date, setDate] = useState<Date>();
 
-  const filteredEquipment = sampleEquipment.filter((equipment) => {
-    const matchesCompany = equipment.customerName
+  const { data: equipment = [] } = useQuery({
+    queryKey: ['all-equipment'],
+    queryFn: async () => {
+      // Fetch torque wrenches
+      const { data: torqueWrenches, error: torqueError } = await supabase
+        .from('torque_wrench')
+        .select(`
+          id,
+          model,
+          serial_number,
+          last_service_date,
+          next_service_due,
+          companies (name)
+        `);
+
+      if (torqueError) throw torqueError;
+
+      // Fetch tyre gauges
+      const { data: tyreGauges, error: tyreError } = await supabase
+        .from('tyre_gauges')
+        .select(`
+          id,
+          model,
+          serial_number,
+          last_service_date,
+          next_service_due,
+          companies (name)
+        `);
+
+      if (tyreError) throw tyreError;
+
+      // Combine and format the data
+      const combinedEquipment = [
+        ...torqueWrenches.map(tw => ({
+          id: tw.id,
+          model: tw.model || '',
+          serialNumber: tw.serial_number || '',
+          lastServiceDate: tw.last_service_date || '',
+          nextServiceDue: tw.next_service_due || '',
+          companyName: tw.companies?.name || 'Unknown Company',
+          equipmentType: 'Torque Wrench'
+        })),
+        ...tyreGauges.map(tg => ({
+          id: tg.id,
+          model: tg.model || '',
+          serialNumber: tg.serial_number || '',
+          lastServiceDate: tg.last_service_date || '',
+          nextServiceDue: tg.next_service_due || '',
+          companyName: tg.companies?.name || 'Unknown Company',
+          equipmentType: 'Tyre Gauge'
+        }))
+      ];
+
+      return combinedEquipment;
+    }
+  });
+
+  const filteredEquipment = equipment.filter((item) => {
+    const matchesCompany = item.companyName
       .toLowerCase()
       .includes(searchCompany.toLowerCase());
-    const matchesType = equipment.name
+    const matchesType = item.equipmentType
       .toLowerCase()
       .includes(searchEquipmentType.toLowerCase());
-    const matchesDate = !date || equipment.nextServiceDue === format(date, "yyyy-MM-dd");
+    const matchesDate = !date || item.nextServiceDue === format(date, "yyyy-MM-dd");
 
     return matchesCompany && matchesType && matchesDate;
   });
+
+  const handleViewReadings = (id: string) => {
+    const equipment = filteredEquipment.find(e => e.id === id);
+    if (equipment?.equipmentType === 'Torque Wrench') {
+      navigate(`/torque-wrenches/${id}`);
+    } else {
+      navigate(`/tyre-gauges/${id}`);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -109,9 +157,7 @@ const AllEquipment = () => {
           onGenerateCertificate={(id) => {
             console.log("Generate certificate for:", id);
           }}
-          onViewReadings={(id) => {
-            console.log("View readings for:", id);
-          }}
+          onViewReadings={handleViewReadings}
         />
       </main>
     </div>

@@ -28,6 +28,8 @@ interface EquipmentListProps {
     serialNumber: string;
     lastServiceDate: string;
     nextServiceDue: string;
+    companyName?: string;
+    equipmentType?: string;
   }>;
   onGenerateCertificate: (id: string) => void;
   onViewReadings: (id: string) => void;
@@ -44,7 +46,6 @@ export const EquipmentList = ({
 
   const handleDelete = async (id: string) => {
     try {
-      // First, delete all certificates associated with this torque wrench
       const { error: certificatesError } = await supabase
         .from('certificates')
         .delete()
@@ -55,7 +56,6 @@ export const EquipmentList = ({
         throw certificatesError;
       }
 
-      // Then delete the torque wrench itself
       const { error: torqueWrenchError } = await supabase
         .from('torque_wrench')
         .delete()
@@ -87,17 +87,22 @@ export const EquipmentList = ({
     }
   };
 
+  if (isMobile) {
+    return null;
+  }
+
   return (
     <>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Company</TableHead>
+              <TableHead>Equipment Type</TableHead>
               <TableHead>Model</TableHead>
-              <TableHead>Serial Number</TableHead>
               <TableHead>Test Date</TableHead>
-              {!isMobile && <TableHead>Retest Date</TableHead>}
-              {!isMobile && <TableHead className="text-right">Actions</TableHead>}
+              <TableHead>Retest Date</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -120,7 +125,7 @@ export const EquipmentList = ({
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the torque wrench
+              This action cannot be undone. This will permanently delete the equipment
               and all of its associated certificates.
             </AlertDialogDescription>
           </AlertDialogHeader>

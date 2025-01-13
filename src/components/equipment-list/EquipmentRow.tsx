@@ -8,6 +8,8 @@ interface EquipmentRowProps {
   serialNumber: string;
   lastServiceDate: string;
   nextServiceDue: string;
+  companyName?: string;
+  equipmentType?: string;
   isMobile: boolean;
   onGenerateCertificate: () => void;
   onDelete: (e: React.MouseEvent) => void;
@@ -17,7 +19,8 @@ interface EquipmentRowProps {
 export const EquipmentRow = ({
   id,
   model,
-  serialNumber,
+  companyName = "Unknown Company",
+  equipmentType = "Unknown Type",
   lastServiceDate,
   nextServiceDue,
   isMobile,
@@ -34,35 +37,20 @@ export const EquipmentRow = ({
     }
   };
 
-  const handleRowClick = (e: React.MouseEvent) => {
-    if (isMobile) {
-      e.preventDefault();
-      e.stopPropagation();
-      onViewReadings();
-    }
-  };
-
   return (
-    <TableRow 
-      className={isMobile ? "cursor-pointer hover:bg-muted/60" : ""}
-      onClick={handleRowClick}
-    >
+    <TableRow>
+      <TableCell>{companyName}</TableCell>
+      <TableCell>{equipmentType}</TableCell>
       <TableCell>{model}</TableCell>
-      <TableCell>{serialNumber}</TableCell>
       <TableCell>{formatDate(lastServiceDate)}</TableCell>
-      {!isMobile && <TableCell>{formatDate(nextServiceDue)}</TableCell>}
-      {!isMobile && (
-        <TableCell className="text-right">
-          <TableActions
-            onDelete={(e) => {
-              e.stopPropagation();
-              onDelete(e);
-            }}
-            onGenerateCertificate={onGenerateCertificate}
-            onViewReadings={onViewReadings}
-          />
-        </TableCell>
-      )}
+      <TableCell>{formatDate(nextServiceDue)}</TableCell>
+      <TableCell className="text-right">
+        <TableActions
+          onDelete={onDelete}
+          onGenerateCertificate={onGenerateCertificate}
+          onViewReadings={onViewReadings}
+        />
+      </TableCell>
     </TableRow>
   );
 };
