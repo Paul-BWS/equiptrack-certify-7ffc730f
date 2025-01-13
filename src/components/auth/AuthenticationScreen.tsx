@@ -11,64 +11,67 @@ export const AuthenticationScreen = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Check for existing session first
+    const checkSession = async () => {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (error) {
+        console.error("Session check error:", error);
+        toast.error(getErrorMessage(error));
+        return;
+      }
+      if (session) {
+        console.log("Existing session found, redirecting to home");
+        window.location.href = '/';
+      }
+    };
+
+    checkSession();
+
+    // Then set up auth state change listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log("Auth state changed:", event, session?.user?.id);
+      console.log("Auth state changed:", event);
       
       if (event === 'SIGNED_IN' && session) {
         console.log("User signed in, redirecting to home");
         toast.success("Welcome back!");
-        // Force navigation and reload to ensure proper state update
         window.location.href = '/';
       }
+      
       if (event === 'SIGNED_OUT') {
-        console.log("User signed out, staying on auth screen");
+        console.log("User signed out");
         navigate('/');
       }
+      
+      if (event === 'TOKEN_REFRESHED') {
+        console.log("Token refreshed successfully");
+      }
+      
       if (event === 'USER_UPDATED') {
-        const { error } = await supabase.auth.getSession();
-        if (error) {
-          handleAuthError(error);
+        try {
+          const { error } = await supabase.auth.getSession();
+          if (error) throw error;
+        } catch (error) {
+          if (error instanceof AuthError) {
+            console.error("Auth error:", error);
+            toast.error(getErrorMessage(error));
+          }
         }
       }
     });
 
-    // Check if we already have a session
-    const checkExistingSession = async () => {
-      try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        if (error) {
-          console.error("Session check error:", error);
-          handleAuthError(error);
-          return;
-        }
-        if (session) {
-          console.log("Existing session found, redirecting to home");
-          window.location.href = '/';
-        }
-      } catch (err) {
-        console.error("Unexpected error during session check:", err);
-        toast.error("An unexpected error occurred while checking your session");
-      }
+    return () => {
+      subscription.unsubscribe();
     };
-
-    checkExistingSession();
-
-    return () => subscription.unsubscribe();
   }, [navigate]);
 
-  const handleAuthError = (error: AuthError) => {
-    console.error("Auth error:", error);
-    let errorMessage = "An error occurred during authentication";
-    
-    if (error.message.includes("missing email")) {
-      errorMessage = "Please enter your email address";
-    } else if (error.message.includes("invalid credentials")) {
-      errorMessage = "Invalid email or password";
-    } else if (error.message.includes("validation failed")) {
-      errorMessage = "Please check your email and password";
+  const getErrorMessage = (error: AuthError) => {
+    if (error.message.includes("refresh_token_not_found")) {
+      return "Your session has expired. Please sign in again.";
     }
-    
-    toast.error(errorMessage);
+    if (error.message.includes("invalid credentials")) {
+      return "Invalid email or password";
+    }
+    return error.message;
   };
 
   return (

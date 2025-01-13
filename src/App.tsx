@@ -24,7 +24,7 @@ function App() {
         const { data: { session }, error } = await supabase.auth.getSession();
         if (error) {
           console.error("Auth check error:", error);
-          toast.error(error.message);
+          toast.error("Authentication error occurred");
           return;
         }
         
@@ -34,7 +34,6 @@ function App() {
         }
         
         console.log("Active session found:", session.user.id);
-        toast.success("Successfully authenticated");
       } catch (err) {
         console.error("Unexpected error during auth check:", err);
         toast.error("An unexpected error occurred");
@@ -45,8 +44,14 @@ function App() {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       console.log("Auth state changed:", event);
+      
+      if (event === 'TOKEN_REFRESHED') {
+        console.log("Token refreshed successfully");
+      }
+      
       if (event === 'SIGNED_OUT') {
         toast.info("You have been signed out");
+        window.location.href = '/';
       }
     });
 
