@@ -5,14 +5,19 @@ import { EquipmentList } from "@/components/EquipmentList";
 import { useNavigate } from "react-router-dom";
 import { SearchFilters } from "@/components/equipment/SearchFilters";
 import { useEquipmentQuery } from "@/hooks/useEquipmentQuery";
+import { Card, CardContent } from "@/components/ui/card";
+import { Search } from "lucide-react";
 
 const AllEquipment = () => {
   const navigate = useNavigate();
   const [searchCompany, setSearchCompany] = useState("");
   const [searchEquipmentType, setSearchEquipmentType] = useState("");
   const [date, setDate] = useState<Date>();
+  const [hasSearched, setHasSearched] = useState(false);
 
-  const { data: equipment = [] } = useEquipmentQuery();
+  const { data: equipment = [] } = useEquipmentQuery({
+    enabled: hasSearched,
+  });
 
   const filteredEquipment = equipment.filter((item) => {
     const matchesCompany = item.companyName
@@ -25,6 +30,10 @@ const AllEquipment = () => {
 
     return matchesCompany && matchesType && matchesDate;
   });
+
+  const handleSearch = () => {
+    setHasSearched(true);
+  };
 
   const handleViewReadings = (id: string) => {
     const equipment = filteredEquipment.find(e => e.id === id);
@@ -55,15 +64,27 @@ const AllEquipment = () => {
           setSearchEquipmentType={setSearchEquipmentType}
           date={date}
           setDate={setDate}
+          onSearch={handleSearch}
         />
 
-        <EquipmentList
-          equipment={filteredEquipment}
-          onGenerateCertificate={(id) => {
-            console.log("Generate certificate for:", id);
-          }}
-          onViewReadings={handleViewReadings}
-        />
+        {!hasSearched ? (
+          <Card>
+            <CardContent className="flex flex-col items-center justify-center py-12">
+              <Search className="h-12 w-12 text-muted-foreground mb-4" />
+              <p className="text-lg text-muted-foreground text-center">
+                Enter search criteria above to find equipment
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          <EquipmentList
+            equipment={filteredEquipment}
+            onGenerateCertificate={(id) => {
+              console.log("Generate certificate for:", id);
+            }}
+            onViewReadings={handleViewReadings}
+          />
+        )}
       </main>
     </div>
   );

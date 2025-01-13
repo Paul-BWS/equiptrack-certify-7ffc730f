@@ -13,6 +13,7 @@ interface SearchFiltersProps {
   setSearchEquipmentType: (value: string) => void;
   date: Date | undefined;
   setDate: (date: Date | undefined) => void;
+  onSearch: () => void;
 }
 
 export const SearchFilters = ({
@@ -22,49 +23,57 @@ export const SearchFilters = ({
   setSearchEquipmentType,
   date,
   setDate,
+  onSearch,
 }: SearchFiltersProps) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-      <div className="relative">
-        <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Search by company..."
-          value={searchCompany}
-          onChange={(e) => setSearchCompany(e.target.value)}
-          className="pl-10"
-        />
-      </div>
-      <div className="relative">
-        <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Search by equipment type..."
-          value={searchEquipmentType}
-          onChange={(e) => setSearchEquipmentType(e.target.value)}
-          className="pl-10"
-        />
-      </div>
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            className={cn(
-              "w-full justify-start text-left font-normal",
-              !date && "text-muted-foreground"
-            )}
-          >
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {date ? format(date, "PPP") : <span>Pick a date</span>}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0">
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={setDate}
-            initialFocus
+    <div className="space-y-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="relative">
+          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by company..."
+            value={searchCompany}
+            onChange={(e) => setSearchCompany(e.target.value)}
+            className="pl-10"
           />
-        </PopoverContent>
-      </Popover>
+        </div>
+        <div className="relative">
+          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by equipment type..."
+            value={searchEquipmentType}
+            onChange={(e) => setSearchEquipmentType(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                "w-full justify-start text-left font-normal",
+                !date && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {date ? format(date, "PPP") : <span>Pick a date</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={setDate}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
+      <div className="flex justify-end">
+        <Button onClick={onSearch} className="bg-primary hover:bg-primary/90">
+          Search Equipment
+        </Button>
+      </div>
     </div>
   );
 };

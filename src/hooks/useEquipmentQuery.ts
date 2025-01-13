@@ -1,8 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { Equipment, TorqueWrenchResponse, TyreGaugeResponse } from "@/types/equipment-responses";
+import { Equipment } from "@/types/equipment-responses";
 
-export const useEquipmentQuery = () => {
+interface UseEquipmentQueryOptions {
+  enabled?: boolean;
+}
+
+export const useEquipmentQuery = (options: UseEquipmentQueryOptions = {}) => {
   return useQuery({
     queryKey: ['all-equipment'],
     queryFn: async () => {
@@ -82,6 +86,7 @@ export const useEquipmentQuery = () => {
       ];
 
       return equipment;
-    }
+    },
+    enabled: options.enabled
   });
 };
