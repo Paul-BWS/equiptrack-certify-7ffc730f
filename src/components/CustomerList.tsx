@@ -15,7 +15,7 @@ export const CustomerList = ({ customers }: CustomerListProps) => {
   };
 
   const handleCustomerClick = (customerId: string) => {
-    navigate(`/customer/${customerId}`);  // Changed from /customers/ to /customer/
+    navigate(`/customers/${customerId}`);  // Changed from /customer/ to /customers/
   };
 
   return (
