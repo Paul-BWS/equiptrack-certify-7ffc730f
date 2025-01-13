@@ -30,7 +30,7 @@ interface UserGroup {
   group_id: string;
   company_groups: {
     name: string;
-  } | null;
+  };
 }
 
 export const UserAssociationsTable = ({
@@ -89,7 +89,12 @@ export const UserAssociationsTable = ({
         });
         return [];
       }
-      return data as UserGroup[];
+      
+      // Transform the data to match our UserGroup interface
+      return (data || []).map(group => ({
+        ...group,
+        company_groups: group.company_groups || { name: 'N/A' }
+      })) as UserGroup[];
     },
   });
 
@@ -333,7 +338,7 @@ export const UserAssociationsTable = ({
                   <TableCell>
                     {uniqueUsers?.find(u => u.id === ug.user_id)?.email}
                   </TableCell>
-                  <TableCell>{ug.company_groups?.name || 'N/A'}</TableCell>
+                  <TableCell>{ug.company_groups.name}</TableCell>
                   <TableCell>
                     <Button
                       variant="destructive"
