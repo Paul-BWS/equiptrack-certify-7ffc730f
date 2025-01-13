@@ -1,17 +1,14 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { HeaderSection } from "./torque-readings/HeaderSection";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useEquipmentData } from "@/hooks/useEquipmentData";
-import { LoadingState } from "./torque-readings/LoadingState";
 import { toast } from "sonner";
 import { useTorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
-import { BasicDetails } from "./torque-readings/form-sections/BasicDetails";
-import { ReadingsSection } from "./torque-readings/form-sections/ReadingsSection";
-import { NotesSection } from "./torque-readings/form-sections/NotesSection";
-import { FormActions } from "./torque-readings/form-sections/FormActions";
 import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
 import { useTorqueWrenchSubmit } from "@/hooks/useTorqueWrenchSubmit";
 import { validateForm } from "@/utils/torqueReadingsValidation";
 import { supabase } from "@/lib/supabase";
+import { ModalHeader } from "./torque-readings/modal/ModalHeader";
+import { LoadingView } from "./torque-readings/modal/LoadingView";
+import { ModalForm } from "./torque-readings/modal/ModalForm";
 
 interface TorqueReadingsModalProps {
   open: boolean;
@@ -45,14 +42,13 @@ export const TorqueReadingsModal = ({
   }
 
   if (isLoading) {
-    return <LoadingState open={open} onOpenChange={onOpenChange} />;
+    return <LoadingView open={open} onOpenChange={onOpenChange} />;
   }
 
   const handleDelete = async () => {
     if (!equipmentId) return;
 
     try {
-      // First delete associated certificates
       const { error: certError } = await supabase
         .from('certificates')
         .delete()
@@ -60,7 +56,6 @@ export const TorqueReadingsModal = ({
 
       if (certError) throw certError;
 
-      // Then delete the torque wrench
       const { error: deleteError } = await supabase
         .from('torque_wrench')
         .delete()
@@ -117,43 +112,16 @@ export const TorqueReadingsModal = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[800px] lg:max-w-[1000px] max-h-[90vh] overflow-y-auto bg-white p-0">
-        <DialogHeader className="p-6 border-b">
-          <DialogTitle className="text-xl font-semibold">Torque Wrench Readings</DialogTitle>
-        </DialogHeader>
-        
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          <HeaderSection
-            date={readings.date}
-            status={readings.status}
-            retestDate={readings.retestDate}
-            certNumber={readings.certNumber}
-            onDateChange={(value) => setReadings({ ...readings, date: value })}
-            onRetestDateChange={(value) => setReadings({ ...readings, retestDate: value })}
-          />
-          
-          <BasicDetails
-            formData={readings}
-            onChange={(field, value) => setReadings(prev => ({ ...prev, [field]: value }))}
-          />
-          
-          <ReadingsSection
-            readings={readings.readings}
-            definitiveReadings={readings.definitiveReadings}
-            onChange={(field, value) => setReadings(prev => ({ ...prev, [field]: value }))}
-          />
-
-          <NotesSection
-            notes={readings.notes}
-            onChange={(notes) => setReadings(prev => ({ ...prev, notes }))}
-          />
-
-          <FormActions
-            onClose={() => onOpenChange(false)}
-            isSaving={isSaving}
-            onDelete={handleDelete}
-            equipmentId={equipmentId}
-          />
-        </form>
+        <ModalHeader />
+        <ModalForm
+          readings={readings}
+          setReadings={setReadings}
+          onSubmit={handleSubmit}
+          onClose={() => onOpenChange(false)}
+          onDelete={handleDelete}
+          isSaving={isSaving}
+          equipmentId={equipmentId}
+        />
       </DialogContent>
     </Dialog>
   );
