@@ -76,6 +76,17 @@ export const UserAssociationsTable = ({
     return <div>Loading...</div>;
   }
 
+  // Group users by email to avoid duplicates in the dropdown
+  const uniqueUsers = userCompanies?.reduce((acc: { id: string; email: string }[], current) => {
+    if (!acc.find(user => user.id === current.user_id)) {
+      acc.push({
+        id: current.user_id,
+        email: current.user_email
+      });
+    }
+    return acc;
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="bg-gray-50 p-4 rounded-lg space-y-4">
@@ -86,9 +97,9 @@ export const UserAssociationsTable = ({
               <SelectValue placeholder="Select user" />
             </SelectTrigger>
             <SelectContent>
-              {userCompanies?.map((uc) => (
-                <SelectItem key={uc.user_id} value={uc.user_id}>
-                  {uc.user_email}
+              {uniqueUsers?.map((user) => (
+                <SelectItem key={user.id} value={user.id}>
+                  {user.email}
                 </SelectItem>
               ))}
             </SelectContent>
