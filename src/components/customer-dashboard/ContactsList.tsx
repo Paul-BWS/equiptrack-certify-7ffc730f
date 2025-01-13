@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Contact } from "@/types/contact";
-import { Mail, Phone, Pencil } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Mail, Phone } from "lucide-react";
 import { ContactForm } from "@/components/ContactForm";
+import { ContactEditForm } from "@/components/ContactEditForm";
 
 interface ContactsListProps {
   contacts: Contact[];
@@ -46,13 +46,7 @@ export const ContactsList = ({ contacts, companyId }: ContactsListProps) => {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="bg-white hover:bg-white/90 border-[#0EA5E9] text-[#0EA5E9]"
-                >
-                  <Pencil className="h-4 w-4" />
-                </Button>
+                <ContactEditForm contact={contact} />
               </div>
             </div>
           ))}
