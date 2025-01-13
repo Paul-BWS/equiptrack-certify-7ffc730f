@@ -5,7 +5,7 @@ import { UserMenu } from "./navigation/UserMenu";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Building } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "./ui/button";
 import { supabase } from "@/lib/supabase";
 
@@ -76,7 +76,7 @@ export const Navigation = () => {
               className="rounded-full bg-transparent border-2 border-white hover:bg-white/10"
               onClick={() => navigate(`/customers/${customerId}`)}
             >
-              <Building className="h-4 w-4 text-white" strokeWidth={2} />
+              <ArrowLeft className="h-4 w-4 text-white" strokeWidth={2} />
             </Button>
           )}
           <Link to="/" className="text-xl font-semibold text-white">
