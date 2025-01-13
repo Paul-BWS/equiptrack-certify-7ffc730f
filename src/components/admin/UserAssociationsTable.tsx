@@ -69,7 +69,7 @@ export const UserAssociationsTable = ({
         return [];
       }
       
-      return (data || []).map(group => ({
+      return data.map(group => ({
         id: group.id,
         user_id: group.user_id,
         group_id: group.group_id,
