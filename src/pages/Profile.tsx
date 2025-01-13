@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { Company } from "@/types/company";
 import { ProfileForm } from "@/components/profile/ProfileForm";
 import { useQuery } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
 
 const Profile = () => {
   const [email, setEmail] = useState("");
@@ -19,6 +20,7 @@ const Profile = () => {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [selectedCompany, setSelectedCompany] = useState("");
   const [isBWSUser, setIsBWSUser] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Query to check if user is BWS user
   const { data: bwsStatus } = useQuery({
@@ -37,9 +39,13 @@ const Profile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        setIsLoading(true);
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
         if (sessionError) throw sessionError;
-        if (!session?.user) return;
+        if (!session?.user) {
+          toast.error("No active session found");
+          return;
+        }
 
         setEmail(session.user.email || "");
         setName(session.user.user_metadata?.name || "");
@@ -75,9 +81,12 @@ const Profile = () => {
         if (userCompanyData) {
           setSelectedCompany(userCompanyData.company_id);
         }
+        
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching user data:", error);
         toast.error("Failed to load user data");
+        setIsLoading(false);
       }
     };
 
@@ -129,6 +138,25 @@ const Profile = () => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <main className="container mx-auto py-8">
+          <div className="max-w-2xl mx-auto">
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -142,16 +170,30 @@ const Profile = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ProfileForm
-                email={email}
-                name={name}
-                onNameChange={setName}
-                companies={companies}
-                selectedCompany={selectedCompany}
-                onCompanyChange={setSelectedCompany}
-                onUpdateProfile={updateProfile}
-                isBWSUser={isBWSUser}
-              />
+              {companies.length === 0 ? (
+                <div className="text-center space-y-4">
+                  <p className="text-muted-foreground">
+                    You are not associated with any company yet.
+                  </p>
+                  <Button
+                    variant="outline"
+                    onClick={() => toast.info("Please contact your administrator to get access to a company.")}
+                  >
+                    Request Company Access
+                  </Button>
+                </div>
+              ) : (
+                <ProfileForm
+                  email={email}
+                  name={name}
+                  onNameChange={setName}
+                  companies={companies}
+                  selectedCompany={selectedCompany}
+                  onCompanyChange={setSelectedCompany}
+                  onUpdateProfile={updateProfile}
+                  isBWSUser={isBWSUser}
+                />
+              )}
             </CardContent>
           </Card>
         </div>
