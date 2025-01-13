@@ -6,6 +6,7 @@ export const useEquipmentQuery = () => {
   return useQuery({
     queryKey: ['all-equipment'],
     queryFn: async () => {
+      // Fetch torque wrenches
       const { data: torqueWrenches, error: torqueError } = await supabase
         .from('torque_wrench')
         .select(`
@@ -14,8 +15,7 @@ export const useEquipmentQuery = () => {
           serial_number,
           last_service_date,
           next_service_due,
-          company_id,
-          companies!inner(name)
+          company_id
         `);
 
       if (torqueError) {
@@ -23,6 +23,7 @@ export const useEquipmentQuery = () => {
         throw torqueError;
       }
 
+      // Fetch tyre gauges
       const { data: tyreGauges, error: tyreError } = await supabase
         .from('tyre_gauges')
         .select(`
@@ -31,8 +32,7 @@ export const useEquipmentQuery = () => {
           serial_number,
           last_service_date,
           next_service_due,
-          company_id,
-          companies!inner(name)
+          company_id
         `);
 
       if (tyreError) {
@@ -40,23 +40,43 @@ export const useEquipmentQuery = () => {
         throw tyreError;
       }
 
+      // Get unique company IDs
+      const companyIds = [...new Set([
+        ...(torqueWrenches?.map(tw => tw.company_id) || []),
+        ...(tyreGauges?.map(tg => tg.company_id) || [])
+      ])];
+
+      // Fetch company names
+      const { data: companies, error: companiesError } = await supabase
+        .from('companies')
+        .select('id, name')
+        .in('id', companyIds);
+
+      if (companiesError) {
+        console.error('Error fetching companies:', companiesError);
+        throw companiesError;
+      }
+
+      // Create a map of company IDs to names for faster lookup
+      const companyMap = new Map(companies?.map(c => [c.id, c.name]));
+
       const equipment: Equipment[] = [
-        ...(torqueWrenches?.map((tw: TorqueWrenchResponse) => ({
+        ...(torqueWrenches?.map(tw => ({
           id: tw.id,
           model: tw.model || '',
           serialNumber: tw.serial_number || '',
           lastServiceDate: tw.last_service_date || '',
           nextServiceDue: tw.next_service_due || '',
-          companyName: tw.companies?.name || 'Unknown Company',
+          companyName: companyMap.get(tw.company_id) || 'Unknown Company',
           equipmentType: 'Torque Wrench'
         })) || []),
-        ...(tyreGauges?.map((tg: TyreGaugeResponse) => ({
+        ...(tyreGauges?.map(tg => ({
           id: tg.id,
           model: tg.model || '',
           serialNumber: tg.serial_number || '',
           lastServiceDate: tg.last_service_date || '',
           nextServiceDue: tg.next_service_due || '',
-          companyName: tg.companies?.name || 'Unknown Company',
+          companyName: companyMap.get(tg.company_id) || 'Unknown Company',
           equipmentType: 'Tyre Gauge'
         })) || [])
       ];

@@ -1,4 +1,5 @@
 export interface CompanyResponse {
+  id: string;
   name: string;
 }
 
@@ -9,7 +10,6 @@ export interface TorqueWrenchResponse {
   last_service_date: string | null;
   next_service_due: string | null;
   company_id: string;
-  companies: CompanyResponse;
 }
 
 export interface TyreGaugeResponse {
@@ -19,7 +19,6 @@ export interface TyreGaugeResponse {
   last_service_date: string | null;
   next_service_due: string | null;
   company_id: string;
-  companies: CompanyResponse;
 }
 
 export interface Equipment {
