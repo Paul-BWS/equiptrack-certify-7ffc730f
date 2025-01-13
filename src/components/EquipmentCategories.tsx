@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Wrench,
   ArrowUpDown,
@@ -24,12 +24,18 @@ interface CategoryProps {
 
 const Category = ({ icon, title, description, type }: CategoryProps) => {
   const navigate = useNavigate();
-  const customerId = window.location.pathname.split('/')[2];
+  const { customerId } = useParams();
+
+  const handleClick = () => {
+    if (customerId) {
+      navigate(`/customers/${customerId}/equipment/${type}`);
+    }
+  };
 
   return (
     <Card
       className="p-6 cursor-pointer hover:bg-accent transition-colors"
-      onClick={() => navigate(`/customers/${customerId}/equipment/${type}`)}
+      onClick={handleClick}
     >
       <div className="flex flex-col items-center text-center space-y-2">
         <div className="p-2 rounded-full bg-white border-2 border-primary">
