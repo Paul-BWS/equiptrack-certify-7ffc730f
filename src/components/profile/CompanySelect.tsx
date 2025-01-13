@@ -26,7 +26,7 @@ export const CompanySelect = ({
         <SelectTrigger className="w-full">
           <SelectValue placeholder="Select a company" />
         </SelectTrigger>
-        <SelectContent position="popper" className="w-full z-50 bg-white">
+        <SelectContent className="w-full z-50 bg-popover border shadow-md">
           {companies.map((company) => (
             <SelectItem key={company.id} value={company.id}>
               {company.name}
