@@ -14,16 +14,24 @@ const CustomerDashboard = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  // Redirect to home if no ID or invalid ID
+  useEffect(() => {
+    if (!id || id === 'undefined') {
+      toast({
+        title: "Error",
+        description: "Invalid customer ID",
+        variant: "destructive",
+      });
+      navigate('/');
+      return;
+    }
+  }, [id, navigate, toast]);
+
   const { data: company, isLoading: isLoadingCompany } = useQuery({
     queryKey: ['company', id],
     queryFn: async () => {
-      if (!id) {
-        toast({
-          title: "Error",
-          description: "Company ID is required",
-          variant: "destructive",
-        });
-        throw new Error('Company ID is required');
+      if (!id || id === 'undefined') {
+        throw new Error('Invalid customer ID');
       }
 
       const { data, error } = await supabase
@@ -53,7 +61,7 @@ const CustomerDashboard = () => {
 
       return data;
     },
-    enabled: !!id,
+    enabled: !!id && id !== 'undefined',
   });
 
   if (isLoadingCompany) {

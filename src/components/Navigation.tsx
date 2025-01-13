@@ -7,6 +7,7 @@ import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Building } from "lucide-react";
 import { Button } from "./ui/button";
+import { supabase } from "@/lib/supabase";
 
 export const Navigation = () => {
   const { toast } = useToast();
@@ -14,23 +15,61 @@ export const Navigation = () => {
   const location = useLocation();
   const { customerId } = useParams();
   const [isMounted, setIsMounted] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_OUT') {
+        console.log('User signed out, forcing navigation to root');
+        window.location.href = '/';
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        toast({
+          title: "Error signing out",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Signed out successfully",
+          description: "You have been signed out of your account",
+        });
+        window.location.href = '/';
+      }
+    } catch (err) {
+      console.error("Error during sign out:", err);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred while signing out",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (!isMounted) {
     return null;
   }
 
-  // Check if we're on a customer-related route
-  const isCustomerRoute = location.pathname.includes('/customers/');
+  // Check if we're on a customer-related route and have a valid ID
+  const isCustomerRoute = location.pathname.includes('/customers/') && customerId && customerId !== 'undefined';
 
   return (
     <nav className="border-b bg-[#266bec]">
       <div className="flex h-16 items-center px-4">
         <div className="flex items-center space-x-4">
-          {isCustomerRoute && customerId && (
+          {isCustomerRoute && (
             <Button
               variant="outline"
               size="icon"
@@ -46,8 +85,12 @@ export const Navigation = () => {
         </div>
         <div className="ml-auto flex items-center space-x-4">
           <DesktopNav />
-          <MobileNav />
-          <UserMenu />
+          <MobileNav 
+            isOpen={isMobileMenuOpen}
+            onClose={() => setIsMobileMenuOpen(false)}
+            onSignOut={handleSignOut}
+          />
+          <UserMenu onSignOut={handleSignOut} />
         </div>
       </div>
     </nav>
