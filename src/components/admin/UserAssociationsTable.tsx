@@ -83,7 +83,9 @@ export const UserAssociationsTable = ({
         user_id: group.user_id,
         group_id: group.group_id,
         company_groups: {
-          name: group.company_groups?.name || 'N/A'
+          name: Array.isArray(group.company_groups) 
+            ? group.company_groups[0]?.name || 'N/A'
+            : group.company_groups?.name || 'N/A'
         }
       }));
     },
