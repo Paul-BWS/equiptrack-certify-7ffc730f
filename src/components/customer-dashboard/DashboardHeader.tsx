@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Grid } from "lucide-react";
+import { Grid, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface DashboardHeaderProps {
@@ -19,7 +19,7 @@ export const DashboardHeader = ({ id }: DashboardHeaderProps) => {
             onClick={() => navigate('/')}
             className="text-white hover:text-white hover:bg-white/20"
           >
-            <ArrowLeft className="h-5 w-5" />
+            <Users className="h-5 w-5" />
           </Button>
           <h1 className="text-2xl font-semibold text-white">Company</h1>
           <div className="ml-auto">
