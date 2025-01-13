@@ -21,54 +21,62 @@ const AllEquipment = () => {
   const { data: equipment = [] } = useQuery({
     queryKey: ['all-equipment'],
     queryFn: async () => {
-      // Fetch torque wrenches
+      // Fetch torque wrenches with company details
       const { data: torqueWrenches, error: torqueError } = await supabase
         .from('torque_wrench')
         .select(`
           id,
           model,
-          serial_number,
           last_service_date,
           next_service_due,
-          companies (name)
+          company_id,
+          companies:company_id (
+            name
+          )
         `);
 
-      if (torqueError) throw torqueError;
+      if (torqueError) {
+        console.error('Error fetching torque wrenches:', torqueError);
+        throw torqueError;
+      }
 
-      // Fetch tyre gauges
+      // Fetch tyre gauges with company details
       const { data: tyreGauges, error: tyreError } = await supabase
         .from('tyre_gauges')
         .select(`
           id,
           model,
-          serial_number,
           last_service_date,
           next_service_due,
-          companies (name)
+          company_id,
+          companies:company_id (
+            name
+          )
         `);
 
-      if (tyreError) throw tyreError;
+      if (tyreError) {
+        console.error('Error fetching tyre gauges:', tyreError);
+        throw tyreError;
+      }
 
       // Combine and format the data
       const combinedEquipment = [
-        ...torqueWrenches.map(tw => ({
+        ...(torqueWrenches?.map(tw => ({
           id: tw.id,
           model: tw.model || '',
-          serialNumber: tw.serial_number || '',
           lastServiceDate: tw.last_service_date || '',
           nextServiceDue: tw.next_service_due || '',
           companyName: tw.companies?.name || 'Unknown Company',
           equipmentType: 'Torque Wrench'
-        })),
-        ...tyreGauges.map(tg => ({
+        })) || []),
+        ...(tyreGauges?.map(tg => ({
           id: tg.id,
           model: tg.model || '',
-          serialNumber: tg.serial_number || '',
           lastServiceDate: tg.last_service_date || '',
           nextServiceDue: tg.next_service_due || '',
           companyName: tg.companies?.name || 'Unknown Company',
           equipmentType: 'Tyre Gauge'
-        }))
+        })) || [])
       ];
 
       return combinedEquipment;
