@@ -5,7 +5,6 @@ import { useToast } from "@/hooks/use-toast";
 import { CompanyCard } from "@/components/customer-dashboard/CompanyCard";
 import { ContactsList } from "@/components/customer-dashboard/ContactsList";
 import { EquipmentServiceList } from "@/components/customer-dashboard/EquipmentServiceList";
-import { EquipmentCategories } from "@/components/EquipmentCategories";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const CustomerDashboard = () => {
@@ -77,10 +76,6 @@ const CustomerDashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <ContactsList contacts={company.contacts || []} companyId={company.id} />
         <EquipmentServiceList companyId={company.id} />
-      </div>
-      <div className="mt-8">
-        <h2 className="text-2xl font-bold mb-6">Equipment Categories</h2>
-        <EquipmentCategories />
       </div>
     </div>
   );
