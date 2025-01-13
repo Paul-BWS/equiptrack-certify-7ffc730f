@@ -28,21 +28,31 @@ const Profile = () => {
         setEmail(session.user.email || "");
         setName(session.user.user_metadata?.name || "");
 
+        // Fetch companies based on user's access
         const { data: userCompanies, error: companiesError } = await supabase
           .from("companies")
           .select("*")
           .order("name");
 
-        if (companiesError) throw companiesError;
-        setCompanies(userCompanies);
+        if (companiesError) {
+          console.error("Error fetching companies:", companiesError);
+          throw companiesError;
+        }
 
+        if (userCompanies) {
+          console.log("Fetched companies:", userCompanies);
+          setCompanies(userCompanies);
+        }
+
+        // Fetch user's current company association
         const { data: userCompanyData, error: userCompanyError } = await supabase
           .from("user_companies")
           .select("company_id")
           .eq("user_id", session.user.id)
-          .single();
+          .maybeSingle();
 
-        if (userCompanyError && userCompanyError.code !== "PGRST116") {
+        if (userCompanyError) {
+          console.error("Error fetching user company:", userCompanyError);
           throw userCompanyError;
         }
 
@@ -74,6 +84,7 @@ const Profile = () => {
 
       if (updateError) throw updateError;
 
+      // Delete existing company association
       const { error: deleteError } = await supabase
         .from("user_companies")
         .delete()
@@ -81,16 +92,19 @@ const Profile = () => {
 
       if (deleteError) throw deleteError;
 
-      const { error: insertError } = await supabase
-        .from("user_companies")
-        .insert([
-          {
-            user_id: session.user.id,
-            company_id: selectedCompany,
-          },
-        ]);
+      // Insert new company association
+      if (selectedCompany) {
+        const { error: insertError } = await supabase
+          .from("user_companies")
+          .insert([
+            {
+              user_id: session.user.id,
+              company_id: selectedCompany,
+            },
+          ]);
 
-      if (insertError) throw insertError;
+        if (insertError) throw insertError;
+      }
 
       toast.success("Profile updated successfully");
     } catch (error) {
