@@ -11,8 +11,10 @@ interface SearchFiltersProps {
   setSearchCompany: (value: string) => void;
   searchEquipmentType: string;
   setSearchEquipmentType: (value: string) => void;
-  date: Date | undefined;
-  setDate: (date: Date | undefined) => void;
+  startDate: Date | undefined;
+  setStartDate: (date: Date | undefined) => void;
+  endDate: Date | undefined;
+  setEndDate: (date: Date | undefined) => void;
   onSearch: () => void;
 }
 
@@ -21,13 +23,15 @@ export const SearchFilters = ({
   setSearchCompany,
   searchEquipmentType,
   setSearchEquipmentType,
-  date,
-  setDate,
+  startDate,
+  setStartDate,
+  endDate,
+  setEndDate,
   onSearch,
 }: SearchFiltersProps) => {
   return (
     <div className="space-y-4 mb-8">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="relative">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <Input
@@ -52,18 +56,40 @@ export const SearchFilters = ({
               variant="outline"
               className={cn(
                 "w-full justify-start text-left font-normal",
-                !date && "text-muted-foreground"
+                !startDate && "text-muted-foreground"
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, "PPP") : <span>Pick a date</span>}
+              {startDate ? format(startDate, "PPP") : <span>Start date</span>}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0">
             <Calendar
               mode="single"
-              selected={date}
-              onSelect={setDate}
+              selected={startDate}
+              onSelect={setStartDate}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                "w-full justify-start text-left font-normal",
+                !endDate && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {endDate ? format(endDate, "PPP") : <span>End date</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0">
+            <Calendar
+              mode="single"
+              selected={endDate}
+              onSelect={setEndDate}
               initialFocus
             />
           </PopoverContent>

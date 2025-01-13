@@ -1,6 +1,6 @@
 import { Navigation } from "@/components/Navigation";
 import { useState } from "react";
-import { format } from "date-fns";
+import { format, isWithinInterval, parseISO } from "date-fns";
 import { EquipmentList } from "@/components/EquipmentList";
 import { useNavigate } from "react-router-dom";
 import { SearchFilters } from "@/components/equipment/SearchFilters";
@@ -12,7 +12,8 @@ const AllEquipment = () => {
   const navigate = useNavigate();
   const [searchCompany, setSearchCompany] = useState("");
   const [searchEquipmentType, setSearchEquipmentType] = useState("");
-  const [date, setDate] = useState<Date>();
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
   const [hasSearched, setHasSearched] = useState(false);
 
   const { data: equipment = [] } = useEquipmentQuery({
@@ -26,7 +27,12 @@ const AllEquipment = () => {
     const matchesType = item.equipmentType
       ?.toLowerCase()
       .includes(searchEquipmentType.toLowerCase()) ?? false;
-    const matchesDate = !date || item.nextServiceDue === format(date, "yyyy-MM-dd");
+    
+    let matchesDate = true;
+    if (startDate && endDate && item.nextServiceDue) {
+      const serviceDate = parseISO(item.nextServiceDue);
+      matchesDate = isWithinInterval(serviceDate, { start: startDate, end: endDate });
+    }
 
     return matchesCompany && matchesType && matchesDate;
   });
@@ -62,8 +68,10 @@ const AllEquipment = () => {
           setSearchCompany={setSearchCompany}
           searchEquipmentType={searchEquipmentType}
           setSearchEquipmentType={setSearchEquipmentType}
-          date={date}
-          setDate={setDate}
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
           onSearch={handleSearch}
         />
 
