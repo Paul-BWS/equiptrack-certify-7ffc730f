@@ -2,13 +2,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
-import { CompanyCard } from "@/components/customer-dashboard/CompanyCard";
-import { ContactsList } from "@/components/customer-dashboard/ContactsList";
-import { EquipmentServiceList } from "@/components/customer-dashboard/EquipmentServiceList";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, Grid } from "lucide-react";
 import { useEffect } from "react";
+import { DashboardHeader } from "@/components/customer-dashboard/DashboardHeader";
+import { DashboardContent } from "@/components/customer-dashboard/DashboardContent";
+import { LoadingState } from "@/components/customer-dashboard/LoadingState";
 
 const CustomerDashboard = () => {
   const { id } = useParams<{ id: string }>();
@@ -66,12 +63,7 @@ const CustomerDashboard = () => {
   });
 
   if (isLoadingCompany) {
-    return (
-      <div className="space-y-6">
-        <Skeleton className="h-[200px] w-full" />
-        <Skeleton className="h-[400px] w-full" />
-      </div>
-    );
+    return <LoadingState />;
   }
 
   if (!company) {
@@ -84,39 +76,8 @@ const CustomerDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="bg-[#266bec]">
-        <div className="container mx-auto py-4">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate('/')}
-              className="text-white hover:text-white hover:bg-white/20"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <h1 className="text-2xl font-semibold text-white">Company</h1>
-            <div className="ml-auto">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => navigate(`/customers/${id}/equipment`)}
-                className="text-white hover:text-white hover:bg-white/20"
-                title="Go to Equipment List"
-              >
-                <Grid className="h-5 w-5" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="container mx-auto py-6 space-y-6">
-        <CompanyCard company={company} />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <ContactsList contacts={company.contacts || []} companyId={company.id} />
-          <EquipmentServiceList companyId={company.id} />
-        </div>
-      </div>
+      <DashboardHeader id={company.id} />
+      <DashboardContent company={company} />
     </div>
   );
 };
