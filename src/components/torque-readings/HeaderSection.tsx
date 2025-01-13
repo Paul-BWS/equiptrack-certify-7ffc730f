@@ -89,7 +89,6 @@ export const HeaderSection = ({
                   selected={formatDisplayDate(date)}
                   onSelect={handleDateSelect}
                   initialFocus
-                  disabled={false}
                 />
               </PopoverContent>
             </Popover>
@@ -137,7 +136,6 @@ export const HeaderSection = ({
                   selected={formatDisplayDate(retestDate)}
                   onSelect={handleRetestDateSelect}
                   initialFocus
-                  disabled={false}
                 />
               </PopoverContent>
             </Popover>
