@@ -32,6 +32,7 @@ interface TorqueWrenchResponse {
   serial_number: string | null;
   last_service_date: string | null;
   next_service_due: string | null;
+  company_id: string;
   companies: CompanyResponse;
 }
 
@@ -41,6 +42,7 @@ interface TyreGaugeResponse {
   serial_number: string | null;
   last_service_date: string | null;
   next_service_due: string | null;
+  company_id: string;
   companies: CompanyResponse;
 }
 
@@ -95,7 +97,7 @@ const AllEquipment = () => {
 
       // Combine and format the data
       const combinedEquipment: Equipment[] = [
-        ...(torqueWrenches?.map((tw: TorqueWrenchResponse) => ({
+        ...(torqueWrenches?.map((tw) => ({
           id: tw.id,
           model: tw.model || '',
           serialNumber: tw.serial_number || '',
@@ -104,7 +106,7 @@ const AllEquipment = () => {
           companyName: tw.companies?.name || 'Unknown Company',
           equipmentType: 'Torque Wrench'
         })) || []),
-        ...(tyreGauges?.map((tg: TyreGaugeResponse) => ({
+        ...(tyreGauges?.map((tg) => ({
           id: tg.id,
           model: tg.model || '',
           serialNumber: tg.serial_number || '',
@@ -197,7 +199,7 @@ const AllEquipment = () => {
         </div>
 
         <EquipmentList
-          equipment={filteredEquipment}
+          equipment={equipment}
           onGenerateCertificate={(id) => {
             console.log("Generate certificate for:", id);
           }}
