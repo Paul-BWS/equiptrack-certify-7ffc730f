@@ -86,7 +86,7 @@ const CustomerDashboard = () => {
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <h1 className="text-2xl font-semibold text-white">Customer Dashboard</h1>
+            <h1 className="text-2xl font-semibold text-white">Company</h1>
           </div>
         </div>
       </div>
