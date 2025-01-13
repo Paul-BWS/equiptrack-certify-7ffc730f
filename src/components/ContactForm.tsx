@@ -86,7 +86,7 @@ export const ContactForm = ({ companyId }: ContactFormProps) => {
         <Button 
           variant="outline" 
           size="icon"
-          className="bg-white hover:bg-white/90 border-[#0EA5E9] text-[#0EA5E9]"
+          className="bg-white hover:bg-white/90 border-[#0EA5E9] text-[#0EA5E9] hover:text-[#0EA5E9]"
         >
           <UserPlus className="h-4 w-4" />
         </Button>

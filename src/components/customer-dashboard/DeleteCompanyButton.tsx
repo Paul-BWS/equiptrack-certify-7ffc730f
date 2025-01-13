@@ -70,7 +70,7 @@ export const DeleteCompanyButton = ({ companyId, companyName }: DeleteCompanyBut
         <Button 
           variant="outline" 
           size="icon" 
-          className="bg-white hover:bg-white/90 border-[#0EA5E9] text-[#0EA5E9]"
+          className="bg-white hover:bg-white/90 border-[#0EA5E9] text-[#0EA5E9] hover:text-[#0EA5E9]"
         >
           <Trash2 className="h-4 w-4" />
         </Button>
