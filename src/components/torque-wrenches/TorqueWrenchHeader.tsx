@@ -29,11 +29,11 @@ export const TorqueWrenchHeader = ({
               <Grid className="h-4 w-4 text-primary" strokeWidth={2} />
             </Button>
             <Button 
-              size="icon"
               onClick={onNewTorqueWrench}
-              className="rounded-full bg-white border-2 border-primary hover:bg-primary/10"
+              className="rounded-full bg-white text-primary border-2 border-primary hover:bg-primary/10 px-4 flex items-center gap-2"
             >
-              <Plus className="h-4 w-4 text-primary" strokeWidth={2} />
+              <Plus className="h-4 w-4" strokeWidth={2} />
+              <span>Torque</span>
             </Button>
           </div>
         </div>
