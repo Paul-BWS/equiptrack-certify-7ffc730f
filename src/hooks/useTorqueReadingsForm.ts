@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { Reading } from "@/types/equipment";
 import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
 
 export interface TorqueReadingsForm {
@@ -16,15 +15,25 @@ export interface TorqueReadingsForm {
   sentOn: string;
   result: string;
   notes: string;
-  readings: Reading[];
-  definitiveReadings: Reading[];
+  target1: string;
+  actual1: string;
+  deviation1: string;
+  target2: string;
+  actual2: string;
+  deviation2: string;
+  target3: string;
+  actual3: string;
+  deviation3: string;
+  def_target1: string;
+  def_actual1: string;
+  def_deviation1: string;
+  def_target2: string;
+  def_actual2: string;
+  def_deviation2: string;
+  def_target3: string;
+  def_actual3: string;
+  def_deviation3: string;
 }
-
-const defaultReadings = [
-  { target: "", actual: "", deviation: "" },
-  { target: "", actual: "", deviation: "" },
-  { target: "", actual: "", deviation: "" }
-];
 
 const initialFormState: TorqueReadingsForm = {
   certNumber: generateCertificateNumber(),
@@ -40,8 +49,24 @@ const initialFormState: TorqueReadingsForm = {
   sentOn: "",
   result: "PASS",
   notes: "",
-  readings: [...defaultReadings],
-  definitiveReadings: [...defaultReadings],
+  target1: "",
+  actual1: "",
+  deviation1: "",
+  target2: "",
+  actual2: "",
+  deviation2: "",
+  target3: "",
+  actual3: "",
+  deviation3: "",
+  def_target1: "",
+  def_actual1: "",
+  def_deviation1: "",
+  def_target2: "",
+  def_actual2: "",
+  def_deviation2: "",
+  def_target3: "",
+  def_actual3: "",
+  def_deviation3: ""
 };
 
 export const useTorqueReadingsForm = (equipment: any, isOpen: boolean) => {
@@ -51,26 +76,6 @@ export const useTorqueReadingsForm = (equipment: any, isOpen: boolean) => {
     if (equipment && isOpen) {
       console.log('Equipment data received:', equipment);
       
-      // Parse readings if they're stored as strings
-      let parsedReadings = defaultReadings;
-      let parsedDefinitiveReadings = defaultReadings;
-      
-      try {
-        if (equipment.readings) {
-          parsedReadings = typeof equipment.readings === 'string' 
-            ? JSON.parse(equipment.readings) 
-            : equipment.readings;
-        }
-        
-        if (equipment.definitive_readings) {
-          parsedDefinitiveReadings = typeof equipment.definitive_readings === 'string'
-            ? JSON.parse(equipment.definitive_readings)
-            : equipment.definitive_readings;
-        }
-      } catch (error) {
-        console.error('Error parsing readings:', error);
-      }
-
       setReadings({
         model: equipment.model || '',
         serialNumber: equipment.serial_number || '',
@@ -82,11 +87,27 @@ export const useTorqueReadingsForm = (equipment: any, isOpen: boolean) => {
         engineer: equipment.engineer || '',
         result: equipment.result || 'PASS',
         notes: equipment.notes || '',
-        readings: parsedReadings,
-        definitiveReadings: parsedDefinitiveReadings,
         certNumber: equipment.cert_number || generateCertificateNumber(),
         status: equipment.status || 'ACTIVE',
-        sentOn: equipment.sent_on || ''
+        sentOn: equipment.sent_on || '',
+        target1: equipment.target1 || '',
+        actual1: equipment.actual1 || '',
+        deviation1: equipment.deviation1 || '',
+        target2: equipment.target2 || '',
+        actual2: equipment.actual2 || '',
+        deviation2: equipment.deviation2 || '',
+        target3: equipment.target3 || '',
+        actual3: equipment.actual3 || '',
+        deviation3: equipment.deviation3 || '',
+        def_target1: equipment.def_target1 || '',
+        def_actual1: equipment.def_actual1 || '',
+        def_deviation1: equipment.def_deviation1 || '',
+        def_target2: equipment.def_target2 || '',
+        def_actual2: equipment.def_actual2 || '',
+        def_deviation2: equipment.def_deviation2 || '',
+        def_target3: equipment.def_target3 || '',
+        def_actual3: equipment.def_actual3 || '',
+        def_deviation3: equipment.def_deviation3 || ''
       });
     } else if (isOpen) {
       setReadings({ ...initialFormState, certNumber: generateCertificateNumber() });

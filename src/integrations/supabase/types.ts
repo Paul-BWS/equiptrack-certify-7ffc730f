@@ -433,10 +433,24 @@ export type Database = {
       }
       torque_wrench: {
         Row: {
+          actual1: string | null
+          actual2: string | null
+          actual3: string | null
           cert_number: string | null
           company_id: string
           created_at: string
-          definitive_readings: Json | null
+          def_actual1: string | null
+          def_actual2: string | null
+          def_actual3: string | null
+          def_deviation1: string | null
+          def_deviation2: string | null
+          def_deviation3: string | null
+          def_target1: string | null
+          def_target2: string | null
+          def_target3: string | null
+          deviation1: string | null
+          deviation2: string | null
+          deviation3: string | null
           engineer: string | null
           id: string
           last_service_date: string | null
@@ -445,18 +459,34 @@ export type Database = {
           model: string | null
           next_service_due: string | null
           notes: string | null
-          readings: Json | null
           result: string | null
           serial_number: string | null
           status: string | null
+          target1: string | null
+          target2: string | null
+          target3: string | null
           units: string | null
           updated_at: string
         }
         Insert: {
+          actual1?: string | null
+          actual2?: string | null
+          actual3?: string | null
           cert_number?: string | null
           company_id: string
           created_at?: string
-          definitive_readings?: Json | null
+          def_actual1?: string | null
+          def_actual2?: string | null
+          def_actual3?: string | null
+          def_deviation1?: string | null
+          def_deviation2?: string | null
+          def_deviation3?: string | null
+          def_target1?: string | null
+          def_target2?: string | null
+          def_target3?: string | null
+          deviation1?: string | null
+          deviation2?: string | null
+          deviation3?: string | null
           engineer?: string | null
           id?: string
           last_service_date?: string | null
@@ -465,18 +495,34 @@ export type Database = {
           model?: string | null
           next_service_due?: string | null
           notes?: string | null
-          readings?: Json | null
           result?: string | null
           serial_number?: string | null
           status?: string | null
+          target1?: string | null
+          target2?: string | null
+          target3?: string | null
           units?: string | null
           updated_at?: string
         }
         Update: {
+          actual1?: string | null
+          actual2?: string | null
+          actual3?: string | null
           cert_number?: string | null
           company_id?: string
           created_at?: string
-          definitive_readings?: Json | null
+          def_actual1?: string | null
+          def_actual2?: string | null
+          def_actual3?: string | null
+          def_deviation1?: string | null
+          def_deviation2?: string | null
+          def_deviation3?: string | null
+          def_target1?: string | null
+          def_target2?: string | null
+          def_target3?: string | null
+          deviation1?: string | null
+          deviation2?: string | null
+          deviation3?: string | null
           engineer?: string | null
           id?: string
           last_service_date?: string | null
@@ -485,10 +531,12 @@ export type Database = {
           model?: string | null
           next_service_due?: string | null
           notes?: string | null
-          readings?: Json | null
           result?: string | null
           serial_number?: string | null
           status?: string | null
+          target1?: string | null
+          target2?: string | null
+          target3?: string | null
           units?: string | null
           updated_at?: string
         }

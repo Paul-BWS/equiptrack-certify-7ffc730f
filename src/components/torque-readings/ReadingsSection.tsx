@@ -1,57 +1,40 @@
 import { Reading } from "@/types/equipment";
 import { FormField } from "@/components/torque-readings/FormField";
-import { calculateDeviation } from "@/utils/certificateDataPreparation";
+import { calculateDeviation } from "@/utils/deviationCalculator";
 
 interface ReadingsSectionProps {
   title: string;
-  readings: Reading[];
+  readings: any;
   onChange?: (index: number, field: keyof Reading, value: string) => void;
   readOnly?: boolean;
 }
 
 export const ReadingsSection = ({
   title,
-  readings = [],
+  readings,
   onChange,
   readOnly,
 }: ReadingsSectionProps) => {
-  const readingsArray = Array.isArray(readings) ? readings.slice(0, 3) : [];
-  while (readingsArray.length < 3) {
-    readingsArray.push({ target: "", actual: "", deviation: "" });
-  }
-
-  const handleInputChange = (index: number, field: keyof Reading, value: string) => {
-    if (!onChange) return;
-
-    const updatedReading = { ...readingsArray[index] };
-    updatedReading[field] = value;
-
-    // Calculate deviation when either target or actual changes
-    if (field === 'target' || field === 'actual') {
-      const target = field === 'target' ? value : updatedReading.target;
-      const actual = field === 'actual' ? value : updatedReading.actual;
-      
-      if (target && actual) {
-        updatedReading.deviation = calculateDeviation(target, actual);
-      } else {
-        updatedReading.deviation = "";
-      }
-    }
-
-    onChange(index, field, value);
+  const getReadingValue = (index: number, field: string) => {
+    const fieldPrefix = field === 'target' ? 'target' : field === 'actual' ? 'actual' : 'deviation';
+    const readingNumber = (index + 1).toString();
+    const fieldName = title.toLowerCase().includes('definitive') 
+      ? `def_${fieldPrefix}${readingNumber}`
+      : `${fieldPrefix}${readingNumber}`;
+    return readings[fieldName] || '';
   };
 
   return (
     <div className="bg-[#F1F1F1] p-6 rounded-lg">
       <h3 className="font-semibold mb-4 text-base text-gray-900">{title}</h3>
       <div className="space-y-4">
-        {readingsArray.map((reading, index) => (
+        {[0, 1, 2].map((index) => (
           <div key={`${title}-${index}`} className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
               <label className="text-base text-[#C8C8C9]">Target</label>
               <input
-                value={reading.target}
-                onChange={(e) => handleInputChange(index, "target", e.target.value)}
+                value={getReadingValue(index, 'target')}
+                onChange={(e) => onChange?.(index, "target", e.target.value)}
                 className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base"
                 readOnly={readOnly}
               />
@@ -59,8 +42,8 @@ export const ReadingsSection = ({
             <div className="space-y-2">
               <label className="text-base text-[#C8C8C9]">Actual</label>
               <input
-                value={reading.actual}
-                onChange={(e) => handleInputChange(index, "actual", e.target.value)}
+                value={getReadingValue(index, 'actual')}
+                onChange={(e) => onChange?.(index, "actual", e.target.value)}
                 className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base"
                 readOnly={readOnly}
               />
@@ -68,7 +51,7 @@ export const ReadingsSection = ({
             <div className="space-y-2">
               <label className="text-base text-[#C8C8C9]">Deviation (%)</label>
               <input
-                value={reading.deviation}
+                value={getReadingValue(index, 'deviation')}
                 className="flex h-12 w-full rounded-md border border-gray-200 bg-[#F1F1F1] px-3 py-2 text-base"
                 readOnly
               />

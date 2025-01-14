@@ -19,52 +19,32 @@ export const ReadingsHandler = ({
   isSaving 
 }: ReadingsHandlerProps) => {
   const handleReadingChange = (index: number, field: string, value: string) => {
-    // Create fresh arrays with new objects
-    const newReadings = (readings.readings || []).map((reading: Reading) => ({
-      target: reading.target || "",
-      actual: reading.actual || "",
-      deviation: reading.deviation || ""
-    }));
-
-    const newDefinitiveReadings = (readings.definitiveReadings || []).map((reading: Reading) => ({
-      target: reading.target || "",
-      actual: reading.actual || "",
-      deviation: reading.deviation || ""
-    }));
+    const fieldPrefix = field === 'target' ? 'target' : field === 'actual' ? 'actual' : 'deviation';
+    const readingNumber = (index + 1).toString();
+    const fieldName = `${fieldPrefix}${readingNumber}`;
+    const defFieldName = `def_${fieldPrefix}${readingNumber}`;
     
-    // Update the reading in the "as found" section
-    newReadings[index] = { 
-      ...newReadings[index],
-      [field]: value 
+    // Update the reading
+    const updatedReadings = {
+      ...readings,
+      [fieldName]: value
     };
-    
+
     // Calculate deviation if both target and actual are present
     if (field === 'target' || field === 'actual') {
-      const target = field === 'target' ? value : newReadings[index].target;
-      const actual = field === 'actual' ? value : newReadings[index].actual;
+      const targetField = field === 'target' ? value : readings[`target${readingNumber}` as keyof TorqueReadingsForm];
+      const actualField = field === 'actual' ? value : readings[`actual${readingNumber}` as keyof TorqueReadingsForm];
       
-      if (target && actual) {
-        const deviation = calculateDeviation(target, actual);
-        newReadings[index].deviation = deviation;
-        
-        // Update definitive reading with the same values
-        newDefinitiveReadings[index] = {
-          target: target,
-          actual: actual,
-          deviation: deviation
-        };
-      } else {
-        newReadings[index].deviation = "";
-        newDefinitiveReadings[index].deviation = "";
+      if (targetField && actualField) {
+        const deviation = calculateDeviation(targetField, actualField);
+        updatedReadings[`deviation${readingNumber}` as keyof TorqueReadingsForm] = deviation;
+        updatedReadings[`def_target${readingNumber}` as keyof TorqueReadingsForm] = targetField;
+        updatedReadings[`def_actual${readingNumber}` as keyof TorqueReadingsForm] = actualField;
+        updatedReadings[`def_deviation${readingNumber}` as keyof TorqueReadingsForm] = deviation;
       }
     }
 
-    // Update both readings arrays with the new objects
-    setReadings({
-      ...readings,
-      readings: newReadings,
-      definitiveReadings: newDefinitiveReadings
-    });
+    setReadings(updatedReadings);
   };
 
   return (
