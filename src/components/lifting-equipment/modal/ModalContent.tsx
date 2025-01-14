@@ -1,4 +1,4 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { DialogContent } from "@/components/ui/dialog";
 import { ModalHeader } from "./ModalHeader";
 import { LoadingView } from "./LoadingView";
 import { ModalForm } from "./ModalForm";
@@ -22,7 +22,7 @@ export const ModalContent = ({
   equipmentId,
 }: ModalContentProps) => {
   const { data: equipment, isLoading, error } = useEquipmentData(equipmentId, open);
-  const { readings, setReadings } = useLiftingEquipmentForm(equipmentId ? equipment : null, open);
+  const { readings, setReadings } = useLiftingEquipmentForm(equipment, open);
   const { handleSave, isSaving } = useLiftingEquipmentSubmit(equipmentId, () => {
     toast.success("Lifting equipment data saved successfully");
     onOpenChange(false);
@@ -76,16 +76,15 @@ export const ModalContent = ({
     const companyId = pathSegments[companyIdIndex];
 
     const liftingEquipmentData = {
-      id: equipmentId,
       company_id: companyId,
+      cert_number: readings.certNumber,
       model: readings.model,
       serial_number: readings.serialNumber,
+      engineer: readings.engineer,
       last_service_date: readings.date,
       next_service_due: readings.retestDate,
-      engineer: readings.engineer,
       result: readings.result,
       notes: readings.notes,
-      cert_number: readings.certNumber,
       status: readings.status,
       platform_condition: readings.platform_condition,
       control_box_condition: readings.control_box_condition,

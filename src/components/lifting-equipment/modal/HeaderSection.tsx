@@ -1,4 +1,4 @@
-import { DatePickerField } from "@/components/torque-readings/form-fields/DatePickerField";
+import { DatePickerField } from "@/components/tyre-gauge-readings/form-fields/DatePickerField";
 import {
   Select,
   SelectContent,
@@ -40,7 +40,7 @@ export const HeaderSection = ({
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <DatePickerField
-          label="Date"
+          label="Test Date"
           date={date}
           onDateChange={onDateChange}
         />
