@@ -5,68 +5,68 @@ import { TorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
 
 interface ReadingsSectionProps {
   formData: TorqueReadingsForm;
-  onChange: (field: keyof TorqueReadingsForm, value: Reading[]) => void;
+  onChange: (field: keyof TorqueReadingsForm, value: string) => void;
 }
 
 export const ReadingsSection = ({ formData, onChange }: ReadingsSectionProps) => {
-  const handleReadingChange = (index: number, field: keyof Reading, value: string, isDefinitive: boolean) => {
-    const readingsArray = isDefinitive ? [...formData.definitiveReadings] : [...formData.readings];
-    const reading = { ...readingsArray[index] };
-
-    if (field === "target" || field === "actual") {
-      reading[field] = value;
-      reading.deviation = calculateDeviation(
-        field === "target" ? value : reading.target,
-        field === "actual" ? value : reading.actual
-      );
-    } else {
-      reading[field] = value;
+  const handleReadingChange = (index: number, field: string, value: string) => {
+    const readingNumber = (index + 1).toString();
+    const fieldName = `${field}${readingNumber}` as keyof TorqueReadingsForm;
+    const defFieldName = `def_${field}${readingNumber}` as keyof TorqueReadingsForm;
+    
+    onChange(fieldName, value);
+    
+    // Update definitive readings
+    onChange(defFieldName, value);
+    
+    // Calculate and update deviation if both target and actual are present
+    if (field === 'target' || field === 'actual') {
+      const targetField = `target${readingNumber}` as keyof TorqueReadingsForm;
+      const actualField = `actual${readingNumber}` as keyof TorqueReadingsForm;
+      const deviationField = `deviation${readingNumber}` as keyof TorqueReadingsForm;
+      const defDeviationField = `def_deviation${readingNumber}` as keyof TorqueReadingsForm;
+      
+      const target = field === 'target' ? value : formData[targetField];
+      const actual = field === 'actual' ? value : formData[actualField];
+      
+      if (target && actual) {
+        const deviation = calculateDeviation(target, actual);
+        onChange(deviationField, deviation);
+        onChange(defDeviationField, deviation);
+      }
     }
-
-    readingsArray[index] = reading;
-    onChange(isDefinitive ? "definitiveReadings" : "readings", readingsArray);
-  };
-
-  const renderReadingsGroup = (isDefinitive: boolean) => {
-    const currentReadings = isDefinitive ? formData.definitiveReadings : formData.readings;
-    const title = isDefinitive ? "Definitive Readings" : "Initial Readings";
-
-    return (
-      <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
-        <h3 className="text-lg font-semibold">{title}</h3>
-        {currentReadings.map((reading, index) => (
-          <div key={index} className="grid grid-cols-3 gap-4">
-            <FormField
-              id={`${isDefinitive ? "definitive" : "initial"}-target-${index}`}
-              label="Target"
-              value={reading.target}
-              onChange={(e) => handleReadingChange(index, "target", e.target.value, isDefinitive)}
-              type="number"
-            />
-            <FormField
-              id={`${isDefinitive ? "definitive" : "initial"}-actual-${index}`}
-              label="Actual"
-              value={reading.actual}
-              onChange={(e) => handleReadingChange(index, "actual", e.target.value, isDefinitive)}
-              type="number"
-            />
-            <FormField
-              id={`${isDefinitive ? "definitive" : "initial"}-deviation-${index}`}
-              label="Deviation (%)"
-              value={reading.deviation}
-              readOnly
-              className="bg-gray-50"
-            />
-          </div>
-        ))}
-      </div>
-    );
   };
 
   return (
     <div className="space-y-6">
-      {renderReadingsGroup(false)}
-      {renderReadingsGroup(true)}
+      {[0, 1, 2].map((index) => {
+        const readingNumber = (index + 1).toString();
+        return (
+          <div key={index} className="grid grid-cols-3 gap-4">
+            <FormField
+              id={`target-${index}`}
+              label="Target"
+              value={formData[`target${readingNumber}` as keyof TorqueReadingsForm]}
+              onChange={(e) => handleReadingChange(index, "target", e.target.value)}
+              type="number"
+            />
+            <FormField
+              id={`actual-${index}`}
+              label="Actual"
+              value={formData[`actual${readingNumber}` as keyof TorqueReadingsForm]}
+              onChange={(e) => handleReadingChange(index, "actual", e.target.value)}
+              type="number"
+            />
+            <FormField
+              id={`deviation-${index}`}
+              label="Deviation (%)"
+              value={formData[`deviation${readingNumber}` as keyof TorqueReadingsForm]}
+              readOnly
+              className="bg-gray-50"
+            />
+          </div>
+        );
+      })}
     </div>
   );
 };

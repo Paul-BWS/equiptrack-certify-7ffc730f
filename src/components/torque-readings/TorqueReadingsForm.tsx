@@ -9,6 +9,7 @@ import { useTorqueWrenchSubmit } from "@/hooks/useTorqueWrenchSubmit";
 import { toast } from "sonner";
 import { validateForm } from "@/utils/torqueReadingsValidation";
 import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
+import { TorqueReadingsForm as TorqueReadingsFormType } from "@/hooks/useTorqueReadingsForm";
 
 interface TorqueReadingsFormProps {
   equipment: TorqueWrench | null;
@@ -16,10 +17,9 @@ interface TorqueReadingsFormProps {
 }
 
 export const TorqueReadingsForm = ({ equipment, onClose }: TorqueReadingsFormProps) => {
-  // Generate certificate number only once when component mounts for new equipment
   const initialCertNumber = equipment?.cert_number || `BWS-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<TorqueReadingsFormType>({
     model: equipment?.model || "",
     serialNumber: equipment?.serial_number || "",
     engineer: equipment?.engineer || "",
@@ -28,13 +28,29 @@ export const TorqueReadingsForm = ({ equipment, onClose }: TorqueReadingsFormPro
     units: equipment?.units || "nm",
     date: equipment?.last_service_date || new Date().toISOString().split('T')[0],
     retestDate: equipment?.next_service_due || "",
-    readings: equipment?.readings || Array(3).fill({ target: "", actual: "", deviation: "" }),
-    definitiveReadings: equipment?.definitive_readings || Array(3).fill({ target: "", actual: "", deviation: "" }),
     notes: equipment?.notes || "",
     status: equipment?.status || "ACTIVE",
     result: equipment?.result || "PASS",
     certNumber: initialCertNumber,
-    sentOn: equipment?.last_service_date || new Date().toISOString().split('T')[0]
+    sentOn: equipment?.last_service_date || new Date().toISOString().split('T')[0],
+    target1: equipment?.target1 || "",
+    actual1: equipment?.actual1 || "",
+    deviation1: equipment?.deviation1 || "",
+    target2: equipment?.target2 || "",
+    actual2: equipment?.actual2 || "",
+    deviation2: equipment?.deviation2 || "",
+    target3: equipment?.target3 || "",
+    actual3: equipment?.actual3 || "",
+    deviation3: equipment?.deviation3 || "",
+    def_target1: equipment?.def_target1 || "",
+    def_actual1: equipment?.def_actual1 || "",
+    def_deviation1: equipment?.def_deviation1 || "",
+    def_target2: equipment?.def_target2 || "",
+    def_actual2: equipment?.def_actual2 || "",
+    def_deviation2: equipment?.def_deviation2 || "",
+    def_target3: equipment?.def_target3 || "",
+    def_actual3: equipment?.def_actual3 || "",
+    def_deviation3: equipment?.def_deviation3 || ""
   });
 
   const { handleSave, isSaving } = useTorqueWrenchSubmit(equipment?.id || null, () => {
@@ -66,10 +82,26 @@ export const TorqueReadingsForm = ({ equipment, onClose }: TorqueReadingsFormPro
       engineer: formData.engineer,
       result: formData.result,
       notes: formData.notes,
-      readings: formData.readings,
-      definitive_readings: formData.definitiveReadings,
       cert_number: formData.certNumber,
-      status: formData.status
+      status: formData.status,
+      target1: formData.target1,
+      actual1: formData.actual1,
+      deviation1: formData.deviation1,
+      target2: formData.target2,
+      actual2: formData.actual2,
+      deviation2: formData.deviation2,
+      target3: formData.target3,
+      actual3: formData.actual3,
+      deviation3: formData.deviation3,
+      def_target1: formData.def_target1,
+      def_actual1: formData.def_actual1,
+      def_deviation1: formData.def_deviation1,
+      def_target2: formData.def_target2,
+      def_actual2: formData.def_actual2,
+      def_deviation2: formData.def_deviation2,
+      def_target3: formData.def_target3,
+      def_actual3: formData.def_actual3,
+      def_deviation3: formData.def_deviation3
     };
 
     try {
@@ -92,9 +124,19 @@ export const TorqueReadingsForm = ({ equipment, onClose }: TorqueReadingsFormPro
       />
       
       <ReadingsSection
-        readings={formData.readings}
-        definitiveReadings={formData.definitiveReadings}
-        onChange={(field, value) => setFormData(prev => ({ ...prev, [field]: value }))}
+        title="AS FOUND"
+        readings={formData}
+        onChange={(index, field, value) => {
+          const readingNumber = (index + 1).toString();
+          const fieldName = `${field}${readingNumber}` as keyof TorqueReadingsFormType;
+          setFormData(prev => ({ ...prev, [fieldName]: value }));
+        }}
+      />
+
+      <ReadingsSection
+        title="DEFINITIVE"
+        readings={formData}
+        readOnly
       />
 
       <NotesSection
