@@ -19,8 +19,18 @@ export const ReadingsHandler = ({
   isSaving 
 }: ReadingsHandlerProps) => {
   const handleReadingChange = (index: number, field: string, value: string) => {
-    const newReadings = readings.readings.map(reading => ({...reading}));
-    const newDefinitiveReadings = readings.definitiveReadings.map(reading => ({...reading}));
+    // Create new arrays with fresh objects to avoid circular references
+    const newReadings = readings.readings.map(reading => ({
+      target: reading.target || "",
+      actual: reading.actual || "",
+      deviation: reading.deviation || ""
+    }));
+
+    const newDefinitiveReadings = readings.definitiveReadings.map(reading => ({
+      target: reading.target || "",
+      actual: reading.actual || "",
+      deviation: reading.deviation || ""
+    }));
     
     // Update the reading in the "as found" section
     newReadings[index] = { 
@@ -37,16 +47,19 @@ export const ReadingsHandler = ({
         const deviation = calculateDeviation(target, actual);
         newReadings[index].deviation = deviation;
         
-        // Create a completely new definitive reading object
+        // Update definitive reading with the same values
         newDefinitiveReadings[index] = {
           target: target,
           actual: actual,
           deviation: deviation
         };
+      } else {
+        newReadings[index].deviation = "";
+        newDefinitiveReadings[index].deviation = "";
       }
     }
 
-    // Update both readings and definitiveReadings
+    // Update both readings arrays
     setReadings({
       ...readings,
       readings: newReadings,

@@ -28,19 +28,8 @@ export const ModalContent = ({
     onOpenChange(false);
   });
 
-  console.log('Equipment data:', equipment); // Debug log
-  console.log('Current readings:', readings); // Debug log
-
-  // Generate certificate number for new entries
-  if (!equipmentId && !readings.certNumber) {
-    setReadings(prev => ({
-      ...prev,
-      certNumber: generateCertificateNumber()
-    }));
-  }
-
   if (error) {
-    console.error('Error loading equipment:', error); // Debug log
+    console.error('Error loading equipment:', error);
     toast.error("Failed to load equipment data");
     return null;
   }
@@ -75,12 +64,9 @@ export const ModalContent = ({
       return;
     }
 
-    // Extract company ID from URL
     const pathSegments = window.location.pathname.split('/');
     const customersIndex = pathSegments.indexOf('customers');
     const companyId = pathSegments[customersIndex + 1];
-
-    console.log('Company ID from URL:', companyId); // Debug log
 
     if (!companyId) {
       console.error('No company ID found in URL');

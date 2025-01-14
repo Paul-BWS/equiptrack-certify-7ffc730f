@@ -8,8 +8,6 @@ export const useEquipmentData = (equipmentId: string | null, enabled: boolean) =
     queryFn: async () => {
       if (!equipmentId) return null;
       
-      console.log('Fetching equipment data for ID:', equipmentId); // Debug log
-      
       const { data, error } = await supabase
         .from('torque_wrench')
         .select(`
@@ -39,9 +37,10 @@ export const useEquipmentData = (equipmentId: string | null, enabled: boolean) =
         throw error;
       }
 
-      console.log('Fetched equipment data:', data); // Debug log
       return data;
     },
-    enabled: enabled && !!equipmentId
+    enabled: enabled && !!equipmentId,
+    staleTime: 0, // Always fetch fresh data
+    cacheTime: 0  // Don't cache the data
   });
 };
