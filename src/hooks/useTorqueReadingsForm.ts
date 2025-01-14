@@ -51,23 +51,9 @@ export const useTorqueReadingsForm = (equipment: any, isOpen: boolean) => {
     if (equipment && isOpen) {
       console.log('Equipment data received:', equipment);
       
-      // Parse readings if they're stored as strings
-      let parsedReadings;
-      let parsedDefinitiveReadings;
-      
-      try {
-        parsedReadings = typeof equipment.readings === 'string' 
-          ? JSON.parse(equipment.readings) 
-          : equipment.readings || defaultReadings;
-          
-        parsedDefinitiveReadings = typeof equipment.definitive_readings === 'string'
-          ? JSON.parse(equipment.definitive_readings)
-          : equipment.definitive_readings || defaultReadings;
-      } catch (error) {
-        console.error('Error parsing readings:', error);
-        parsedReadings = defaultReadings;
-        parsedDefinitiveReadings = defaultReadings;
-      }
+      // Ensure readings are properly initialized
+      const currentReadings = equipment.readings || defaultReadings;
+      const currentDefinitiveReadings = equipment.definitive_readings || defaultReadings;
 
       setReadings({
         model: equipment.model || '',
@@ -80,8 +66,8 @@ export const useTorqueReadingsForm = (equipment: any, isOpen: boolean) => {
         engineer: equipment.engineer || '',
         result: equipment.result || 'PASS',
         notes: equipment.notes || '',
-        readings: parsedReadings,
-        definitiveReadings: parsedDefinitiveReadings,
+        readings: currentReadings,
+        definitiveReadings: currentDefinitiveReadings,
         certNumber: equipment.cert_number || generateCertificateNumber(),
         status: equipment.status || 'ACTIVE',
         sentOn: equipment.sent_on || ''

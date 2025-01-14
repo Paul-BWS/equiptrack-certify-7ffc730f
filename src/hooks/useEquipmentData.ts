@@ -22,12 +22,8 @@ export const useEquipmentData = (equipmentId: string | null, enabled: boolean) =
         throw error;
       }
 
-      if (data) {
-        console.log('Raw equipment data:', data);
-        return data;
-      }
-
-      return null;
+      console.log('Equipment data fetched:', data);
+      return data;
     },
     enabled: enabled && !!equipmentId,
     gcTime: 0,
