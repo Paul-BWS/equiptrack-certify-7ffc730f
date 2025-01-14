@@ -9,8 +9,25 @@ export const useEquipmentData = (equipmentId: string | null, enabled: boolean) =
       if (!equipmentId) return null;
       
       const { data, error } = await supabase
-        .from('lifting_equipment')
-        .select('*')
+        .from('torque_wrench')
+        .select(`
+          id,
+          company_id,
+          model,
+          serial_number,
+          min_torque,
+          max_torque,
+          units,
+          last_service_date,
+          next_service_due,
+          engineer,
+          result,
+          notes,
+          readings,
+          definitive_readings,
+          cert_number,
+          status
+        `)
         .eq('id', equipmentId)
         .maybeSingle();
 
