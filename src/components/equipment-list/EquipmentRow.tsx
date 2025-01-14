@@ -28,14 +28,18 @@ export const EquipmentRow = ({ equipment }: EquipmentRowProps) => {
       <TableCell>{equipment.model}</TableCell>
       <TableCell>{equipment.serialNumber}</TableCell>
       <TableCell>{formatDate(equipment.lastServiceDate)}</TableCell>
-      <TableCell>{formatDate(equipment.nextServiceDue)}</TableCell>
-      <TableCell className="text-right">
-        <TableActions
-          onDelete={equipment.onDelete}
-          onGenerateCertificate={equipment.onGenerateCertificate}
-          onViewReadings={equipment.onViewReadings}
-        />
-      </TableCell>
+      {!isMobile && (
+        <>
+          <TableCell>{formatDate(equipment.nextServiceDue)}</TableCell>
+          <TableCell className="text-right">
+            <TableActions
+              onDelete={equipment.onDelete}
+              onGenerateCertificate={equipment.onGenerateCertificate}
+              onViewReadings={equipment.onViewReadings}
+            />
+          </TableCell>
+        </>
+      )}
     </TableRow>
   );
 };

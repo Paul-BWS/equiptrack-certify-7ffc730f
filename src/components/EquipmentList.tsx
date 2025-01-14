@@ -96,8 +96,12 @@ export const EquipmentList = ({
               <TableHead>Model</TableHead>
               <TableHead>Serial Number</TableHead>
               <TableHead>Last Service</TableHead>
-              <TableHead>Next Service</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              {!isMobile && (
+                <>
+                  <TableHead>Next Service</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </>
+              )}
             </TableRow>
           </TableHeader>
           <TableBody>
