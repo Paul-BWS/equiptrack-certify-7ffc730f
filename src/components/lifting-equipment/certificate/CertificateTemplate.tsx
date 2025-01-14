@@ -1,15 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { CertificateHeader } from "@/components/certificate/CertificateHeader";
-import { EquipmentDetails } from "@/components/certificate/EquipmentDetails";
-import { TechnicianStatus } from "@/components/certificate/TechnicianStatus";
-import { CertificateFooter } from "@/components/certificate/CertificateFooter";
+import { getOrganizationSettings } from "@/utils/settings";
 
 interface CertificateTemplateProps {
   equipmentId: string | null;
 }
 
 export const CertificateTemplate = ({ equipmentId }: CertificateTemplateProps) => {
+  const settings = getOrganizationSettings();
+  
   const { data: equipment, isLoading } = useQuery({
     queryKey: ['lifting-equipment-certificate', equipmentId],
     queryFn: async () => {
@@ -17,7 +16,7 @@ export const CertificateTemplate = ({ equipmentId }: CertificateTemplateProps) =
 
       const { data, error } = await supabase
         .from('lifting_equipment')
-        .select('*')
+        .select('*, companies(*)')
         .eq('id', equipmentId)
         .single();
 
@@ -35,26 +34,10 @@ export const CertificateTemplate = ({ equipmentId }: CertificateTemplateProps) =
     );
   }
 
-  const serviceRecord = {
-    id: equipment.id,
-    service_date: equipment.last_service_date,
-    next_service_date: equipment.next_service_due,
-    technician: equipment.engineer || 'N/A',
-    service_type: 'Inspection',
-    notes: equipment.notes || ''
-  };
-
-  const certificate = {
-    id: equipment.id,
-    certification_number: equipment.cert_number || 'N/A',
-    issue_date: equipment.last_service_date,
-    expiry_date: equipment.next_service_due
-  };
-
   const inspectionItems = [
     { key: 'platform_condition', label: 'Check Condition Of Platform' },
     { key: 'control_box_condition', label: 'Check Condition Control Box' },
-    { key: 'hydraulic_hoses_condition', label: 'Check Condition Hydraulic Hoses' },
+    { key: 'hydraulic_hoses_condition', label: 'Check Condition Hydraulic System' },
     { key: 'main_structure_inspection', label: 'Visual Inspection Of Main Structure' },
     { key: 'oil_levels', label: 'Check Oil Levels' },
     { key: 'rollers_and_guides', label: 'Check Rollers And Guides' },
@@ -66,54 +49,124 @@ export const CertificateTemplate = ({ equipmentId }: CertificateTemplateProps) =
   ];
 
   return (
-    <div className="max-w-4xl mx-auto p-4 bg-white shadow-lg border-4 border-double border-gray-200" id="certificate">
-      <CertificateHeader certificate={certificate} />
+    <div className="max-w-4xl mx-auto p-4 bg-white" id="certificate">
+      <h1 className="text-xl font-bold text-center mb-6">Report Of Thorough LOLER Examination</h1>
       
-      <div className="space-y-4">
-        <EquipmentDetails 
-          equipment={{
-            id: equipment.id,
-            model: equipment.model || 'N/A',
-            serial_number: equipment.serial_number || 'N/A',
-            last_service_date: equipment.last_service_date,
-            next_service_due: equipment.next_service_due
-          }} 
-          serviceRecord={serviceRecord}
-        />
-
-        <TechnicianStatus serviceRecord={serviceRecord} />
-
+      <div className="grid grid-cols-2 gap-8 mb-6">
         <div className="space-y-2">
-          <h3 className="text-base font-semibold">Inspection Results</h3>
-          <div className="space-y-1">
-            {inspectionItems.map(({ key, label }) => (
-              <div key={key} className="grid grid-cols-[2fr,4fr,1fr] gap-2 items-center border border-gray-100 text-sm">
-                <div className="p-2 text-gray-600">
-                  {label}
-                </div>
-                <div className="p-2 border-x border-gray-100">
-                  {equipment[`${key}_notes`] || ''}
-                </div>
-                <div className={`p-2 text-center font-medium ${
-                  equipment[key] === 'PASS' 
-                    ? 'text-green-600' 
-                    : equipment[key] === 'N/A' 
-                    ? 'text-gray-500'
-                    : 'text-red-600'
-                }`}>
-                  {equipment[key] || 'N/A'}
-                </div>
-              </div>
-            ))}
+          <h2 className="text-sm font-semibold mb-2">Customer</h2>
+          <p className="text-sm">{equipment.companies?.name}</p>
+          <p className="text-sm">{equipment.companies?.address}</p>
+        </div>
+        
+        <div className="space-y-2">
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <p className="text-xs text-gray-600">Certificate Number</p>
+              <p className="text-sm">{equipment.cert_number}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-600">Equipment</p>
+              <p className="text-sm">{equipment.model}</p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <p className="text-xs text-gray-600">Equipment Serial</p>
+              <p className="text-sm">{equipment.serial_number}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-600">Capacity</p>
+              <p className="text-sm">{equipment.capacity} {equipment.units}</p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <p className="text-xs text-gray-600">Safe To Operate</p>
+              <p className="text-sm font-semibold">{equipment.status || 'PASS'}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-600">Inspection Date</p>
+              <p className="text-sm">{new Date(equipment.last_service_date).toLocaleDateString()}</p>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div className="bg-gray-50 p-2 rounded-lg">
-          <h2 className="text-sm font-semibold mb-1 text-primary">Notes</h2>
-          <p className="min-h-[40px] whitespace-pre-wrap text-xs">{equipment.notes}</p>
+      <div className="mb-6">
+        <div className="grid grid-cols-[2fr,3fr,1fr] gap-2 mb-2">
+          <h3 className="text-sm font-semibold">Action Performed</h3>
+          <h3 className="text-sm font-semibold">Action Notes</h3>
+          <h3 className="text-sm font-semibold text-center">Results</h3>
         </div>
+        
+        {inspectionItems.map(({ key, label }) => (
+          <div key={key} className="grid grid-cols-[2fr,3fr,1fr] gap-2 py-1 border-t border-gray-100">
+            <p className="text-xs text-gray-600">{label}</p>
+            <p className="text-xs">{equipment[`${key}_notes`] || ''}</p>
+            <p className="text-xs text-center font-medium">
+              {equipment[key] || 'N/A'}
+            </p>
+          </div>
+        ))}
+      </div>
 
-        <CertificateFooter />
+      <div className="mb-6">
+        <h3 className="text-sm font-semibold mb-2">Observations / additional comments relative to this thorough examination</h3>
+        <p className="text-xs min-h-[40px] p-2 bg-gray-50 rounded">
+          {equipment.notes || 'No additional comments'}
+        </p>
+      </div>
+
+      <div className="text-xs space-y-4 mb-6">
+        <p>
+          The above equipment has been thoroughly inspected. To be legally compliant with The lifting Operations 
+          and Lifting Equipment Regulations 1988 Regulation 9/3 and must be thoroughly examined at least every 
+          12 months. (6 months recommended for vehicle lifts)
+        </p>
+        <p>
+          Safe to operate No = defects which could cause a danger to persons. Remedial= identification of parts that 
+          require rectification but still safe to operate. Yes = Safe to operate.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-8 mb-6">
+        <div className="space-y-2">
+          <div>
+            <p className="text-xs text-gray-600">Inspector's name</p>
+            <p className="text-sm">{equipment.engineer}</p>
+          </div>
+          <div>
+            <p className="text-xs text-gray-600">Qualifications</p>
+            <p className="text-sm">HNC Electrical Mechanical Engineering</p>
+            <p className="text-sm">Employee BWS Ltd</p>
+          </div>
+          <div>
+            <p className="text-xs text-gray-600">Latest Retest Date</p>
+            <p className="text-sm">{new Date(equipment.next_service_due).toLocaleDateString()}</p>
+          </div>
+          <div>
+            <p className="text-xs text-gray-600">Previous Test Date</p>
+            <p className="text-sm">N/A</p>
+          </div>
+        </div>
+        
+        <div className="flex flex-col items-end justify-between">
+          <div className="text-right space-y-1">
+            <p className="text-sm font-semibold">Basic Welding Service LTD</p>
+            <p className="text-xs">232 Briscoe lane</p>
+            <p className="text-xs">Manchester</p>
+            <p className="text-xs">M40 2XG</p>
+            <p className="text-xs">0161 223 1843</p>
+          </div>
+          <img src={settings.logo} alt="BWS Logo" className="h-16 w-auto" />
+        </div>
+      </div>
+
+      <div className="text-center text-xs">
+        Web - www.basicwelding.co.uk - Email - sales@basicwelding.co.uk
       </div>
     </div>
   );
