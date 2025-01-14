@@ -17,7 +17,7 @@ export const CertificateTemplate = ({
   serviceRecord,
 }: CertificateTemplateProps) => {
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg border-8 border-double border-gray-200" id="certificate">
+    <div className="w-full bg-white border-8 border-double border-gray-200" id="certificate">
       <CertificateHeader certificate={certificate} />
       
       <div className="space-y-3">

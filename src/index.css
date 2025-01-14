@@ -11,17 +11,23 @@
     background: white;
     margin: 0;
     padding: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
   
   #certificate {
     border: none !important;
     margin: 0 !important;
     padding: 0 !important;
-    scale: 1 !important;
+    transform: scale(1) !important;
+    box-shadow: none !important;
+    max-width: none !important;
+    width: 100% !important;
   }
 
   /* Hide all header and footer elements when printing */
   @page {
+    size: A4;
     margin: 0;
   }
   

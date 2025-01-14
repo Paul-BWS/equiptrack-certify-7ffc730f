@@ -24,41 +24,6 @@ export const CertificateModal = ({
     const timestamp = new Date().toISOString();
     console.log("Certificate printed on:", timestamp);
     
-    // Set the filename for printing and clean print styles
-    const style = document.createElement('style');
-    style.innerHTML = `
-      @page { 
-        size: auto;
-        margin: 0mm;
-      }
-      @media print {
-        body { 
-          -webkit-print-color-adjust: exact;
-          margin: 0;
-          padding: 0;
-        }
-        .no-print {
-          display: none !important;
-        }
-        #certificate {
-          padding: 0;
-          margin: 0;
-        }
-        /* Hide header and footer */
-        @page :first {
-          margin-top: 0;
-        }
-        @page {
-          margin: 0;
-        }
-        /* Hide browser-generated content */
-        html {
-          height: 100%;
-        }
-      }
-    `;
-    document.head.appendChild(style);
-    
     // Set document title for filename
     const originalTitle = document.title;
     document.title = `${certificate.certification_number}`;
@@ -66,7 +31,6 @@ export const CertificateModal = ({
     window.print();
     
     // Clean up
-    document.head.removeChild(style);
     document.title = originalTitle;
     
     toast.success(`Certificate ${certificate.certification_number} printed at ${new Date(timestamp).toLocaleString()}`);
@@ -128,7 +92,7 @@ export const CertificateModal = ({
         />
         
         <div className="flex justify-center">
-          <div className="w-full max-w-4xl">
+          <div className="w-full">
             <CertificateTemplate
               certificate={certificate}
               equipment={equipment}
