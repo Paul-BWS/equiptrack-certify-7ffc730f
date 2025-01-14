@@ -54,7 +54,8 @@ const TorqueWrenches = () => {
         model: wrench.model || '',
         serialNumber: wrench.serial_number || '',
         lastServiceDate: wrench.last_service_date || '',
-        nextServiceDue: wrench.next_service_due || ''
+        nextServiceDue: wrench.next_service_due || '',
+        company_id: wrench.company_id
       }));
     }
   });
