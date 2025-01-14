@@ -20,24 +20,28 @@ export const ReadingsHandler = ({
 }: ReadingsHandlerProps) => {
   const handleReadingChange = (index: number, field: string, value: string) => {
     const newReadings = [...readings.readings];
+    const newDefinitiveReadings = [...readings.definitiveReadings];
+    
+    // Update the reading in the "as found" section
     newReadings[index] = { ...newReadings[index], [field]: value };
-
-    // Calculate deviation when either target or actual changes
+    
+    // Calculate deviation for "as found" reading
     if (field === 'target' || field === 'actual') {
       const target = field === 'target' ? value : newReadings[index].target;
       const actual = field === 'actual' ? value : newReadings[index].actual;
       
       if (target && actual) {
-        newReadings[index].deviation = calculateDeviation(target, actual);
+        const deviation = calculateDeviation(target, actual);
+        newReadings[index].deviation = deviation;
+        
+        // Update definitive reading to match
+        newDefinitiveReadings[index] = {
+          target: target,
+          actual: actual,
+          deviation: deviation
+        };
       }
     }
-
-    // Update definitive readings to match the new readings
-    const newDefinitiveReadings = newReadings.map(reading => ({
-      target: reading.target,
-      actual: reading.actual,
-      deviation: reading.deviation
-    }));
 
     // Update both readings and definitiveReadings
     setReadings({
