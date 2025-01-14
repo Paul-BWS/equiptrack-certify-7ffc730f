@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { LiftingEquipmentHeader } from "@/components/lifting-equipment/LiftingEquipmentHeader";
 import { LiftingEquipmentList } from "@/components/lifting-equipment/LiftingEquipmentList";
+import { LiftingEquipmentReadingsModal } from "@/components/lifting-equipment/LiftingEquipmentReadingsModal";
 
 const LiftingEquipment = () => {
   const { customerId } = useParams();
@@ -104,7 +105,11 @@ const LiftingEquipment = () => {
         </div>
       </main>
 
-      {/* Readings modal and certificate modal will be implemented later */}
+      <LiftingEquipmentReadingsModal
+        open={showReadingsModal}
+        onOpenChange={setShowReadingsModal}
+        equipmentId={selectedEquipmentId}
+      />
     </div>
   );
 };
