@@ -9,6 +9,7 @@ import { NotesSection } from "./tyre-gauge-readings/NotesSection";
 import { FormActions } from "./tyre-gauge-readings/FormActions";
 import { useTyreGaugeForm } from "@/hooks/useTyreGaugeForm";
 import { useParams, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 interface TyreGaugeReadingsModalProps {
   open: boolean;
@@ -53,7 +54,15 @@ export const TyreGaugeReadingsModal = ({
     setReadings,
     setDefinitiveReadings,
     setResult,
+    resetForm
   } = useTyreGaugeForm(equipmentId);
+
+  // Reset form when modal opens for new entry
+  useEffect(() => {
+    if (open && !equipmentId) {
+      resetForm();
+    }
+  }, [open, equipmentId, resetForm]);
 
   const handleDelete = async () => {
     try {
