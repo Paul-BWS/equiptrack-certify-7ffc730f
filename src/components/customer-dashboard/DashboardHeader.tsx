@@ -13,26 +13,26 @@ export const DashboardHeader = ({ id }: DashboardHeaderProps) => {
     <div className="bg-[#266bec]">
       <div className="container mx-auto py-4">
         <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate('/')}
-            className="text-white hover:text-white hover:bg-white/20 border-2 border-white"
-          >
-            <Users className="h-5 w-5" />
-          </Button>
-          <h1 className="text-2xl font-semibold text-white">Company</h1>
-          <div className="ml-auto">
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate('/')}
+              className="text-white hover:text-white hover:bg-white/20 border border-white"
+            >
+              <Users className="h-5 w-5" />
+            </Button>
             <Button
               variant="ghost"
               size="icon"
               onClick={() => navigate(`/customers/${id}/equipment`)}
-              className="text-white hover:text-white hover:bg-white/20 border-2 border-white"
+              className="text-white hover:text-white hover:bg-white/20 border border-white"
               title="Go to Equipment List"
             >
               <Grid className="h-5 w-5" />
             </Button>
           </div>
+          <h1 className="text-2xl font-semibold text-white">Company Details</h1>
         </div>
       </div>
     </div>
