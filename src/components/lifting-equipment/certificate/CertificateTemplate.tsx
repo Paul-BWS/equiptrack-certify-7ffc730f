@@ -66,7 +66,7 @@ export const CertificateTemplate = ({ equipmentId }: CertificateTemplateProps) =
   ];
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg border-8 border-double border-gray-200 scale-[0.85] origin-top" id="certificate">
+    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg border-8 border-double border-gray-200" id="certificate">
       <CertificateHeader certificate={certificate} />
       
       <div className="space-y-6">
