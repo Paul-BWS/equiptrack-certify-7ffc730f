@@ -64,6 +64,21 @@ export const ModalForm = ({
     setReadings(prev => ({ ...prev, [field]: value }));
   };
 
+  // Create an object with only the inspection-related fields
+  const inspectionValues: Partial<Record<string, string>> = {
+    platform_condition: readings.platform_condition,
+    control_box_condition: readings.control_box_condition,
+    hydraulic_hoses_condition: readings.hydraulic_hoses_condition,
+    main_structure_inspection: readings.main_structure_inspection,
+    oil_levels: readings.oil_levels,
+    rollers_and_guides: readings.rollers_and_guides,
+    safety_mechanism: readings.safety_mechanism,
+    scissor_operation: readings.scissor_operation,
+    securing_bolts: readings.securing_bolts,
+    toe_guards: readings.toe_guards,
+    lubrication_moving_parts: readings.lubrication_moving_parts,
+  };
+
   return (
     <form onSubmit={onSubmit} className="space-y-6 p-6">
       <BasicDetailsSection
@@ -78,7 +93,7 @@ export const ModalForm = ({
 
       <InspectionChecklist
         items={inspectionItems}
-        values={readings}
+        values={inspectionValues}
         onFieldChange={handleFieldChange}
       />
 
