@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { ArrowLeft, Users, ClipboardList } from "lucide-react";
 import { Button } from "./ui/button";
 import { supabase } from "@/lib/supabase";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const Navigation = () => {
   const { toast } = useToast();
@@ -17,6 +18,7 @@ export const Navigation = () => {
   const { customerId } = useParams();
   const [isMounted, setIsMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     setIsMounted(true);
@@ -65,6 +67,14 @@ export const Navigation = () => {
 
   const isCustomerRoute = location.pathname.includes('/customers/') && customerId && customerId !== 'undefined';
 
+  const handleBackClick = () => {
+    if (isMobile) {
+      navigate(`/customers/${customerId}/equipment`);
+    } else {
+      navigate(`/customers/${customerId}`);
+    }
+  };
+
   return (
     <nav className="border-b bg-[#266bec]">
       <div className="flex h-16 items-center px-4">
@@ -74,7 +84,7 @@ export const Navigation = () => {
               variant="outline"
               size="icon"
               className="rounded-full bg-transparent border border-white hover:bg-white/10"
-              onClick={() => navigate(`/customers/${customerId}`)}
+              onClick={handleBackClick}
             >
               <ArrowLeft className="h-4 w-4 text-white" strokeWidth={2} />
             </Button>
