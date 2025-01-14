@@ -20,16 +20,16 @@ export const ReadingsHandler = ({
 }: ReadingsHandlerProps) => {
   const handleReadingChange = (index: number, field: string, value: string) => {
     // Create fresh arrays with new objects
-    const newReadings = readings.readings.map((reading: Reading) => ({
-      target: reading.target,
-      actual: reading.actual,
-      deviation: reading.deviation
+    const newReadings = (readings.readings || []).map((reading: Reading) => ({
+      target: reading.target || "",
+      actual: reading.actual || "",
+      deviation: reading.deviation || ""
     }));
 
-    const newDefinitiveReadings = readings.definitiveReadings.map((reading: Reading) => ({
-      target: reading.target,
-      actual: reading.actual,
-      deviation: reading.deviation
+    const newDefinitiveReadings = (readings.definitiveReadings || []).map((reading: Reading) => ({
+      target: reading.target || "",
+      actual: reading.actual || "",
+      deviation: reading.deviation || ""
     }));
     
     // Update the reading in the "as found" section
