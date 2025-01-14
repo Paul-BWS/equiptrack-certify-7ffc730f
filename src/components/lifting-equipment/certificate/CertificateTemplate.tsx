@@ -49,12 +49,24 @@ export const CertificateTemplate = ({ equipmentId }: CertificateTemplateProps) =
   ];
 
   return (
-    <div className="max-w-4xl mx-auto p-4 bg-white" id="certificate">
-      <h1 className="text-xl font-bold text-center mb-6">Report Of Thorough LOLER Examination</h1>
+    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg border-8 border-double border-gray-200" id="certificate">
+      <div className="flex justify-between items-center mb-6 border-b pb-4">
+        <div className="flex items-center gap-4">
+          <img src={settings.logo} alt="Company Logo" className="h-16 w-auto" />
+          <div>
+            <h1 className="text-xl font-bold text-primary">Report Of Thorough LOLER Examination</h1>
+            <p className="text-xs text-gray-600">BS EN ISO 6789:2017</p>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="text-base font-semibold text-primary">Certificate No:</p>
+          <p className="text-base">{equipment.cert_number}</p>
+        </div>
+      </div>
       
       <div className="grid grid-cols-2 gap-8 mb-6">
         <div className="space-y-2">
-          <h2 className="text-sm font-semibold mb-2">Customer</h2>
+          <h2 className="text-sm font-semibold text-primary mb-2">Customer</h2>
           <p className="text-sm">{equipment.companies?.name}</p>
           <p className="text-sm">{equipment.companies?.address}</p>
         </div>
@@ -62,40 +74,41 @@ export const CertificateTemplate = ({ equipmentId }: CertificateTemplateProps) =
         <div className="space-y-2">
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <p className="text-xs text-gray-600">Certificate Number</p>
-              <p className="text-sm">{equipment.cert_number}</p>
-            </div>
-            <div>
               <p className="text-xs text-gray-600">Equipment</p>
               <p className="text-sm">{equipment.model}</p>
             </div>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-2">
             <div>
               <p className="text-xs text-gray-600">Equipment Serial</p>
               <p className="text-sm">{equipment.serial_number}</p>
             </div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-2">
             <div>
               <p className="text-xs text-gray-600">Capacity</p>
               <p className="text-sm">{equipment.capacity} {equipment.units}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-600">Safe To Operate</p>
+              <p className="text-sm font-semibold">{equipment.status || 'PASS'}</p>
             </div>
           </div>
           
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <p className="text-xs text-gray-600">Safe To Operate</p>
-              <p className="text-sm font-semibold">{equipment.status || 'PASS'}</p>
-            </div>
-            <div>
               <p className="text-xs text-gray-600">Inspection Date</p>
               <p className="text-sm">{new Date(equipment.last_service_date).toLocaleDateString()}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-600">Next Due Date</p>
+              <p className="text-sm">{new Date(equipment.next_service_due).toLocaleDateString()}</p>
             </div>
           </div>
         </div>
       </div>
 
       <div className="mb-6">
+        <h3 className="text-sm font-semibold text-primary mb-2">Inspection Checklist</h3>
         <div className="grid grid-cols-[2fr,3fr,1fr] gap-2 mb-2">
           <h3 className="text-sm font-semibold">Action Performed</h3>
           <h3 className="text-sm font-semibold">Action Notes</h3>
@@ -114,7 +127,7 @@ export const CertificateTemplate = ({ equipmentId }: CertificateTemplateProps) =
       </div>
 
       <div className="mb-6">
-        <h3 className="text-sm font-semibold mb-2">Observations / additional comments relative to this thorough examination</h3>
+        <h3 className="text-sm font-semibold text-primary mb-2">Observations / Additional Comments</h3>
         <p className="text-xs min-h-[40px] p-2 bg-gray-50 rounded">
           {equipment.notes || 'No additional comments'}
         </p>
@@ -132,7 +145,7 @@ export const CertificateTemplate = ({ equipmentId }: CertificateTemplateProps) =
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-8 mb-6">
+      <div className="grid grid-cols-2 gap-8 mb-6 border-t pt-4">
         <div className="space-y-2">
           <div>
             <p className="text-xs text-gray-600">Inspector's name</p>
@@ -142,14 +155,6 @@ export const CertificateTemplate = ({ equipmentId }: CertificateTemplateProps) =
             <p className="text-xs text-gray-600">Qualifications</p>
             <p className="text-sm">HNC Electrical Mechanical Engineering</p>
             <p className="text-sm">Employee BWS Ltd</p>
-          </div>
-          <div>
-            <p className="text-xs text-gray-600">Latest Retest Date</p>
-            <p className="text-sm">{new Date(equipment.next_service_due).toLocaleDateString()}</p>
-          </div>
-          <div>
-            <p className="text-xs text-gray-600">Previous Test Date</p>
-            <p className="text-sm">N/A</p>
           </div>
         </div>
         
@@ -165,7 +170,7 @@ export const CertificateTemplate = ({ equipmentId }: CertificateTemplateProps) =
         </div>
       </div>
 
-      <div className="text-center text-xs">
+      <div className="text-center text-xs border-t pt-4">
         Web - www.basicwelding.co.uk - Email - sales@basicwelding.co.uk
       </div>
     </div>
