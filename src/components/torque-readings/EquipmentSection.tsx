@@ -42,7 +42,7 @@ export const EquipmentSection = ({
   const isMobile = useIsMobile();
 
   return (
-    <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
+    <div className="space-y-4 bg-[#F1F1F1] p-6 rounded-lg">
       <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-6`}>
         <div className="space-y-2">
           <label className="text-sm text-[#C8C8C9]">Model</label>
@@ -88,7 +88,7 @@ export const EquipmentSection = ({
           <input
             value={sentOn}
             readOnly
-            className="flex h-12 w-full rounded-md border border-gray-200 bg-[#F9F9F9] px-3 py-2 text-sm"
+            className="flex h-12 w-full rounded-md border border-gray-200 bg-[#F1F1F1] px-3 py-2 text-sm"
           />
         </div>
       </div>
