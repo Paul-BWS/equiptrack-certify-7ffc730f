@@ -70,7 +70,7 @@ export const BasicDetailsSection = ({
                 <SelectValue placeholder="Select an engineer" />
               )}
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white border shadow-lg z-50">
               {staff?.map((engineer) => (
                 <SelectItem 
                   key={engineer.id} 
@@ -84,15 +84,18 @@ export const BasicDetailsSection = ({
         </div>
         <div className="space-y-2">
           <label className="text-sm text-[#C8C8C9]">Result</label>
-          <select
+          <Select
             value={result}
-            onChange={(e) => onFieldChange("result", e.target.value)}
-            className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
+            onValueChange={(value) => onFieldChange("result", value)}
           >
-            <option value="">Select result</option>
-            <option value="PASS">Pass</option>
-            <option value="FAIL">Fail</option>
-          </select>
+            <SelectTrigger className="h-12 bg-white border-gray-200">
+              <SelectValue placeholder="Select result" />
+            </SelectTrigger>
+            <SelectContent className="bg-white border shadow-lg z-50">
+              <SelectItem value="PASS">Pass</SelectItem>
+              <SelectItem value="FAIL">Fail</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
