@@ -8,7 +8,7 @@
   }
   
   body {
-    background: white;
+    background: white !important;
     margin: 0 !important;
     padding: 0 !important;
     -webkit-print-color-adjust: exact;
@@ -27,6 +27,7 @@
     page-break-after: avoid !important;
     page-break-before: avoid !important;
     page-break-inside: avoid !important;
+    background: white !important;
   }
 
   /* Hide all header and footer elements when printing */
@@ -39,5 +40,12 @@
   body::before,
   body::after {
     display: none !important;
+  }
+
+  /* Ensure all backgrounds are white in print */
+  * {
+    background-color: white !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 }

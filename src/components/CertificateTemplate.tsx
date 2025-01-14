@@ -17,7 +17,7 @@ export const CertificateTemplate = ({
   serviceRecord,
 }: CertificateTemplateProps) => {
   return (
-    <div className="w-full bg-white border-8 border-double border-gray-200" id="certificate">
+    <div className="w-full bg-white border border-gray-200 print:border-0" id="certificate">
       <CertificateHeader certificate={certificate} />
       
       <div className="space-y-3">
@@ -25,12 +25,12 @@ export const CertificateTemplate = ({
         <TechnicianStatus serviceRecord={serviceRecord} />
         <Measurements />
         
-        <div className="bg-gray-50 p-3 rounded-lg">
+        <div className="bg-gray-50 print:bg-white p-3 rounded-lg">
           <h2 className="text-sm font-semibold mb-1 text-primary">Equipment and Standards Used</h2>
           <p className="text-xs">Test Equipment - Torque Master Digital Precision 516.0100. - Traceability NAMAS</p>
         </div>
 
-        <div className="bg-gray-50 p-3 rounded-lg">
+        <div className="bg-gray-50 print:bg-white p-3 rounded-lg">
           <h2 className="text-sm font-semibold mb-1 text-primary">Notes</h2>
           <p className="min-h-[40px] whitespace-pre-wrap text-[11px]">{serviceRecord.notes}</p>
         </div>
