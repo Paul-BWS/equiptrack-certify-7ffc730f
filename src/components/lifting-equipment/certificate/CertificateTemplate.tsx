@@ -66,10 +66,10 @@ export const CertificateTemplate = ({ equipmentId }: CertificateTemplateProps) =
   ];
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg border-8 border-double border-gray-200" id="certificate">
+    <div className="max-w-4xl mx-auto p-4 bg-white shadow-lg border-4 border-double border-gray-200" id="certificate">
       <CertificateHeader certificate={certificate} />
       
-      <div className="space-y-6">
+      <div className="space-y-4">
         <EquipmentDetails 
           equipment={{
             id: equipment.id,
@@ -83,18 +83,18 @@ export const CertificateTemplate = ({ equipmentId }: CertificateTemplateProps) =
 
         <TechnicianStatus serviceRecord={serviceRecord} />
 
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Inspection Results</h3>
-          <div className="space-y-2">
+        <div className="space-y-2">
+          <h3 className="text-base font-semibold">Inspection Results</h3>
+          <div className="space-y-1">
             {inspectionItems.map(({ key, label }) => (
-              <div key={key} className="grid grid-cols-[2fr,4fr,1fr] gap-4 items-center border border-gray-200">
-                <div className="p-3 text-gray-600 text-sm font-medium">
+              <div key={key} className="grid grid-cols-[2fr,4fr,1fr] gap-2 items-center border border-gray-100 text-sm">
+                <div className="p-2 text-gray-600">
                   {label}
                 </div>
-                <div className="p-3 border-x border-gray-200 text-sm">
+                <div className="p-2 border-x border-gray-100">
                   {equipment[`${key}_notes`] || ''}
                 </div>
-                <div className={`p-3 text-center font-medium text-sm ${
+                <div className={`p-2 text-center font-medium ${
                   equipment[key] === 'PASS' 
                     ? 'text-green-600' 
                     : equipment[key] === 'N/A' 
@@ -108,7 +108,7 @@ export const CertificateTemplate = ({ equipmentId }: CertificateTemplateProps) =
           </div>
         </div>
 
-        <div className="bg-gray-50 p-3 rounded-lg">
+        <div className="bg-gray-50 p-2 rounded-lg">
           <h2 className="text-sm font-semibold mb-1 text-primary">Notes</h2>
           <p className="min-h-[40px] whitespace-pre-wrap text-xs">{equipment.notes}</p>
         </div>
