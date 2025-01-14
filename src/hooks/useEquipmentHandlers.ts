@@ -2,9 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { Equipment } from "@/types/equipment-responses";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const useEquipmentHandlers = (equipment: Equipment[]) => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const handleDelete = async (id: string) => {
     try {
@@ -29,7 +31,8 @@ export const useEquipmentHandlers = (equipment: Equipment[]) => {
       }
 
       toast.success("Equipment deleted successfully");
-      window.location.reload();
+      // Invalidate and refetch equipment data instead of page reload
+      queryClient.invalidateQueries({ queryKey: ['all-equipment'] });
     } catch (error: any) {
       console.error('Error deleting equipment:', error);
       toast.error("Failed to delete equipment");
