@@ -28,14 +28,14 @@ export const TorqueWrenchHeader = ({
             >
               <Grid className="h-4 w-4 text-primary" strokeWidth={2} />
             </Button>
-            <Button 
-              onClick={onNewTorqueWrench}
-              className="rounded-full bg-white border-2 border-primary hover:bg-primary/10 px-4"
-            >
-              <Plus className="h-4 w-4 text-primary" strokeWidth={2} />
-              <span className="text-primary ml-1">(+ Torque)</span>
-            </Button>
           </div>
+          <Button 
+            onClick={onNewTorqueWrench}
+            className="rounded-full bg-white text-primary border-2 border-primary hover:bg-primary/10 px-6 py-2"
+          >
+            <Plus className="h-4 w-4" strokeWidth={2} />
+            <span className="ml-1">New Torque</span>
+          </Button>
         </div>
         {customerName && (
           <div className="flex flex-col gap-1">
