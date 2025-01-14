@@ -75,9 +75,18 @@ export const ModalContent = ({
       return;
     }
 
+    // Extract company ID from URL
     const pathSegments = window.location.pathname.split('/');
-    const companyIdIndex = pathSegments.indexOf('customers') + 1;
-    const companyId = pathSegments[companyIdIndex];
+    const customersIndex = pathSegments.indexOf('customers');
+    const companyId = pathSegments[customersIndex + 1];
+
+    console.log('Company ID from URL:', companyId); // Debug log
+
+    if (!companyId) {
+      console.error('No company ID found in URL');
+      toast.error("Company ID not found");
+      return;
+    }
 
     const torqueWrenchData = {
       id: equipmentId || undefined,
