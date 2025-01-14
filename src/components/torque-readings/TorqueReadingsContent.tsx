@@ -63,12 +63,12 @@ export const TorqueReadingsContent = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <ReadingsSection
           title="AS FOUND"
-          readings={readings.readings}
+          readings={readings}
           onChange={handleReadingChange}
         />
         <ReadingsSection
           title="DEFINITIVE"
-          readings={readings.definitiveReadings}
+          readings={readings}
           readOnly
         />
       </div>

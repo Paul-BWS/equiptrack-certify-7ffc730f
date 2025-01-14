@@ -1,9 +1,10 @@
 import { FormField } from "@/components/torque-readings/FormField";
 import { calculateDeviation } from "@/utils/deviationCalculator";
+import { TorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
 
 interface ReadingsSectionProps {
   title: string;
-  readings: any;
+  readings: TorqueReadingsForm;
   onChange?: (index: number, field: string, value: string) => void;
   readOnly?: boolean;
 }
@@ -17,8 +18,8 @@ export const ReadingsSection = ({
   const getReadingValue = (index: number, field: string) => {
     const readingNumber = (index + 1).toString();
     const prefix = title.toLowerCase().includes('definitive') ? 'def_' : '';
-    const fieldName = `${prefix}${field}${readingNumber}`;
-    return readings?.[fieldName] || '';
+    const fieldName = `${prefix}${field}${readingNumber}` as keyof TorqueReadingsForm;
+    return readings[fieldName] || '';
   };
 
   return (
