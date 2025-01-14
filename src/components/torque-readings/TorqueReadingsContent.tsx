@@ -32,8 +32,11 @@ export const TorqueReadingsContent = ({
         retestDate={readings.retestDate}
         certNumber={readings.certNumber}
         status={readings.status}
+        engineer={readings.engineer}
         onDateChange={(value) => setReadings({ ...readings, date: value })}
         onRetestDateChange={(value) => setReadings({ ...readings, retestDate: value })}
+        onStatusChange={(value) => setReadings({ ...readings, status: value })}
+        onEngineerChange={(value) => setReadings({ ...readings, engineer: value })}
       />
 
       <EquipmentSection
