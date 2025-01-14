@@ -31,7 +31,6 @@ export const ReadingsSection = ({
               <input
                 value={reading.target}
                 onChange={onChange ? (e) => onChange(index, "target", e.target.value) : undefined}
-                placeholder="Target"
                 className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base"
                 readOnly={readOnly}
               />
@@ -41,7 +40,6 @@ export const ReadingsSection = ({
               <input
                 value={reading.actual}
                 onChange={onChange ? (e) => onChange(index, "actual", e.target.value) : undefined}
-                placeholder="Actual"
                 className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base"
                 readOnly={readOnly}
               />
@@ -50,7 +48,6 @@ export const ReadingsSection = ({
               <label className="text-base text-[#C8C8C9]">Deviation (%)</label>
               <input
                 value={reading.deviation}
-                placeholder="Deviation"
                 className="flex h-12 w-full rounded-md border border-gray-200 bg-[#F9F9F9] px-3 py-2 text-base"
                 readOnly
               />
