@@ -1,7 +1,8 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { CertificateTemplate } from "./CertificateTemplate";
 import { CertificateActions } from "./certificate/CertificateActions";
+import { CertificateContent } from "./certificate/CertificateContent";
 import { Certificate, TorqueWrench, ServiceRecord } from "@/types/equipment";
+import { handleCertificatePrint } from "@/utils/certificateUtils";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 
@@ -21,19 +22,7 @@ export const CertificateModal = ({
   serviceRecord,
 }: CertificateModalProps) => {
   const handlePrint = () => {
-    const timestamp = new Date().toISOString();
-    console.log("Certificate printed on:", timestamp);
-    
-    // Set document title for filename
-    const originalTitle = document.title;
-    document.title = `${certificate.certification_number}`;
-    
-    window.print();
-    
-    // Clean up
-    document.title = originalTitle;
-    
-    toast.success(`Certificate ${certificate.certification_number} printed at ${new Date(timestamp).toLocaleString()}`);
+    handleCertificatePrint(certificate.certification_number);
   };
 
   const handleEmail = async () => {
@@ -59,8 +48,6 @@ export const CertificateModal = ({
         expiry_date: new Date(certificate.expiry_date).toISOString()
       };
 
-      console.log('Attempting to save certificate with data:', certificateData);
-
       const { data, error } = await supabase
         .from('certificates')
         .insert([certificateData])
@@ -72,7 +59,6 @@ export const CertificateModal = ({
         throw new Error(error.message);
       }
 
-      console.log("Certificate saved successfully:", data);
       toast.success(`Email sent successfully for certificate ${certificationNumber}`, {
         description: `To: ${equipment.model} (${equipment.serial_number})`,
       });
@@ -93,15 +79,11 @@ export const CertificateModal = ({
           />
         </div>
         
-        <div className="flex justify-center">
-          <div className="w-full">
-            <CertificateTemplate
-              certificate={certificate}
-              equipment={equipment}
-              serviceRecord={serviceRecord}
-            />
-          </div>
-        </div>
+        <CertificateContent
+          certificate={certificate}
+          equipment={equipment}
+          serviceRecord={serviceRecord}
+        />
       </DialogContent>
     </Dialog>
   );
