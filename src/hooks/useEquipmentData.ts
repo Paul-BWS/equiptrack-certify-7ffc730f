@@ -1,6 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import { Reading } from "@/types/equipment";
+
+const parseReadings = (readingsStr: string | null): Reading[] => {
+  if (!readingsStr) return [];
+  try {
+    return JSON.parse(readingsStr);
+  } catch (e) {
+    console.error('Error parsing readings:', e);
+    return [];
+  }
+};
 
 export const useEquipmentData = (equipmentId: string | null, enabled: boolean) => {
   return useQuery({
@@ -37,10 +48,19 @@ export const useEquipmentData = (equipmentId: string | null, enabled: boolean) =
         throw error;
       }
 
+      if (data) {
+        // Parse the readings and definitive_readings strings into arrays
+        return {
+          ...data,
+          readings: parseReadings(data.readings as string),
+          definitive_readings: parseReadings(data.definitive_readings as string)
+        };
+      }
+
       return data;
     },
     enabled: enabled && !!equipmentId,
-    staleTime: 0, // Always fetch fresh data
-    cacheTime: 0  // Don't cache the data
+    gcTime: 0, // Don't cache in garbage collector
+    staleTime: 0 // Always fetch fresh data
   });
 };

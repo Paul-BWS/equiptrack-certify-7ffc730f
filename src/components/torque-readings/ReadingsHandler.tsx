@@ -19,26 +19,26 @@ export const ReadingsHandler = ({
   isSaving 
 }: ReadingsHandlerProps) => {
   const handleReadingChange = (index: number, field: string, value: string) => {
-    // Create new arrays with fresh objects to avoid circular references
-    const newReadings = readings.readings.map(reading => ({
-      target: reading.target || "",
-      actual: reading.actual || "",
-      deviation: reading.deviation || ""
+    // Create fresh arrays with new objects
+    const newReadings = readings.readings.map((reading: Reading) => ({
+      target: reading.target,
+      actual: reading.actual,
+      deviation: reading.deviation
     }));
 
-    const newDefinitiveReadings = readings.definitiveReadings.map(reading => ({
-      target: reading.target || "",
-      actual: reading.actual || "",
-      deviation: reading.deviation || ""
+    const newDefinitiveReadings = readings.definitiveReadings.map((reading: Reading) => ({
+      target: reading.target,
+      actual: reading.actual,
+      deviation: reading.deviation
     }));
     
     // Update the reading in the "as found" section
     newReadings[index] = { 
-      ...newReadings[index], 
+      ...newReadings[index],
       [field]: value 
     };
     
-    // Calculate deviation for "as found" reading
+    // Calculate deviation if both target and actual are present
     if (field === 'target' || field === 'actual') {
       const target = field === 'target' ? value : newReadings[index].target;
       const actual = field === 'actual' ? value : newReadings[index].actual;
@@ -59,7 +59,7 @@ export const ReadingsHandler = ({
       }
     }
 
-    // Update both readings arrays
+    // Update both readings arrays with the new objects
     setReadings({
       ...readings,
       readings: newReadings,
