@@ -62,7 +62,6 @@ export const Navigation = () => {
     return null;
   }
 
-  // Check if we're on a customer-related route and have a valid ID
   const isCustomerRoute = location.pathname.includes('/customers/') && customerId && customerId !== 'undefined';
 
   return (
@@ -73,7 +72,7 @@ export const Navigation = () => {
             <Button
               variant="outline"
               size="icon"
-              className="rounded-full bg-transparent border-2 border-white hover:bg-white/10"
+              className="rounded-full bg-transparent border border-white hover:bg-white/10"
               onClick={() => navigate(`/customers/${customerId}`)}
             >
               <ArrowLeft className="h-4 w-4 text-white" strokeWidth={2} />
