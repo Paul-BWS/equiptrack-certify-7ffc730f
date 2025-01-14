@@ -1,5 +1,4 @@
 import { FormActions } from "@/components/torque-readings/form-sections/FormActions";
-import { HeaderSection } from "@/components/torque-readings/HeaderSection";
 import { NotesSection } from "@/components/torque-readings/form-sections/NotesSection";
 import { useStaffMembers } from "@/hooks/useStaffMembers";
 import { Loader2 } from "lucide-react";
@@ -15,12 +14,12 @@ import { DatePickerField } from "@/components/tyre-gauge-readings/form-fields/Da
 interface LiftingEquipmentReadings {
   date: string;
   retestDate: string;
-  certNumber: string;
+  certNumber?: string;
   model: string;
   serialNumber: string;
-  engineer?: string; // Made optional to match database schema
+  engineer?: string;
   result: string;
-  notes: string;
+  notes?: string;
   status: string;
   platform_condition: string;
   control_box_condition: string;
