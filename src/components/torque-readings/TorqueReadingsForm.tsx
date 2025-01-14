@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { TorqueWrench } from "@/types/equipment";
 import { BasicDetails } from "./form-sections/BasicDetails";
 import { ReadingsSection } from "./form-sections/ReadingsSection";
@@ -8,6 +8,7 @@ import { FormActions } from "./form-sections/FormActions";
 import { useTorqueWrenchSubmit } from "@/hooks/useTorqueWrenchSubmit";
 import { toast } from "sonner";
 import { validateForm } from "@/utils/torqueReadingsValidation";
+import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
 
 interface TorqueReadingsFormProps {
   equipment: TorqueWrench | null;
@@ -15,6 +16,9 @@ interface TorqueReadingsFormProps {
 }
 
 export const TorqueReadingsForm = ({ equipment, onClose }: TorqueReadingsFormProps) => {
+  // Generate certificate number only once when component mounts for new equipment
+  const initialCertNumber = equipment?.cert_number || `BWS-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+  
   const [formData, setFormData] = useState({
     model: equipment?.model || "",
     serialNumber: equipment?.serial_number || "",
@@ -29,7 +33,7 @@ export const TorqueReadingsForm = ({ equipment, onClose }: TorqueReadingsFormPro
     notes: equipment?.notes || "",
     status: equipment?.status || "ACTIVE",
     result: equipment?.result || "PASS",
-    certNumber: equipment?.cert_number || `BWS-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+    certNumber: initialCertNumber,
     sentOn: equipment?.last_service_date || new Date().toISOString().split('T')[0]
   });
 
