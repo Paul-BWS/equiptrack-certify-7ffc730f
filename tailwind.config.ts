@@ -19,8 +19,9 @@ export default {
     },
     extend: {
       fontSize: {
-        sm: '16px',
-        base: '16px',
+        xs: '10px',
+        sm: '12px',
+        base: '12px',
       },
       colors: {
         border: "hsl(var(--border))",
