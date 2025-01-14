@@ -9,6 +9,68 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      axle_stands: {
+        Row: {
+          capacity: number | null
+          cert_number: string | null
+          company_id: string
+          created_at: string
+          engineer: string | null
+          id: string
+          last_service_date: string | null
+          model: string | null
+          next_service_due: string | null
+          notes: string | null
+          serial_number: string | null
+          status: string | null
+          test_result: string | null
+          units: string | null
+          updated_at: string
+        }
+        Insert: {
+          capacity?: number | null
+          cert_number?: string | null
+          company_id: string
+          created_at?: string
+          engineer?: string | null
+          id?: string
+          last_service_date?: string | null
+          model?: string | null
+          next_service_due?: string | null
+          notes?: string | null
+          serial_number?: string | null
+          status?: string | null
+          test_result?: string | null
+          units?: string | null
+          updated_at?: string
+        }
+        Update: {
+          capacity?: number | null
+          cert_number?: string | null
+          company_id?: string
+          created_at?: string
+          engineer?: string | null
+          id?: string
+          last_service_date?: string | null
+          model?: string | null
+          next_service_due?: string | null
+          notes?: string | null
+          serial_number?: string | null
+          status?: string | null
+          test_result?: string | null
+          units?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "axle_stands_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       certificates: {
         Row: {
           certification_number: string
