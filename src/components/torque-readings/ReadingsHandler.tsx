@@ -34,7 +34,7 @@ export const ReadingsHandler = ({
         const deviation = calculateDeviation(target, actual);
         newReadings[index].deviation = deviation;
         
-        // Update definitive reading to match
+        // Create a new definitive reading object (not a reference)
         newDefinitiveReadings[index] = {
           target: target,
           actual: actual,
