@@ -26,31 +26,35 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
     { target: "", actual: "", deviation: "" },
   ]);
 
+  const resetForm = () => {
+    setCertNumber(generateCertificateNumber());
+    setDate(new Date());
+    const nextYear = new Date();
+    nextYear.setFullYear(nextYear.getFullYear() + 1);
+    setRetestDate(nextYear);
+    setModel("");
+    setSerialNumber("");
+    setEngineer("");
+    setMin("");
+    setMax("");
+    setUnits("psi");
+    setStatus("ACTIVE");
+    setResult("PASS");
+    setNotes("");
+    setReadings([
+      { target: "", actual: "", deviation: "" },
+      { target: "", actual: "", deviation: "" },
+    ]);
+    setDefinitiveReadings([
+      { target: "", actual: "", deviation: "" },
+      { target: "", actual: "", deviation: "" },
+    ]);
+  };
+
   useEffect(() => {
     const loadData = async () => {
       if (!equipmentId) {
-        setCertNumber(generateCertificateNumber());
-        setDate(new Date());
-        const nextYear = new Date();
-        nextYear.setFullYear(nextYear.getFullYear() + 1);
-        setRetestDate(nextYear);
-        setModel("");
-        setSerialNumber("");
-        setEngineer("");
-        setMin("");
-        setMax("");
-        setUnits("psi");
-        setStatus("ACTIVE");
-        setResult("PASS");
-        setNotes("");
-        setReadings([
-          { target: "", actual: "", deviation: "" },
-          { target: "", actual: "", deviation: "" },
-        ]);
-        setDefinitiveReadings([
-          { target: "", actual: "", deviation: "" },
-          { target: "", actual: "", deviation: "" },
-        ]);
+        resetForm();
         return;
       }
 
@@ -122,5 +126,6 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
     setReadings,
     setDefinitiveReadings,
     setResult,
+    resetForm,
   };
 };
