@@ -10,6 +10,7 @@ export interface Equipment {
 
 export interface TorqueWrench {
   id: string;
+  company_id: string;
   model?: string;
   serial_number?: string;
   min_torque?: number;
@@ -24,7 +25,6 @@ export interface TorqueWrench {
   definitive_readings?: Reading[];
   cert_number?: string;
   status?: string;
-  company_id?: string;
 }
 
 export interface ServiceRecord {
@@ -65,6 +65,7 @@ export interface LiftingEquipment {
   next_service_due?: string;
   status?: string;
   notes?: string;
+  result?: string;
   platform_condition?: string;
   control_box_condition?: string;
   hydraulic_hoses_condition?: string;
