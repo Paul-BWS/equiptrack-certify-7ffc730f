@@ -5,7 +5,7 @@ import { UserMenu } from "./navigation/UserMenu";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Users, ClipboardList } from "lucide-react";
 import { Button } from "./ui/button";
 import { supabase } from "@/lib/supabase";
 
@@ -83,6 +83,22 @@ export const Navigation = () => {
           </Link>
         </div>
         <div className="flex-1 flex justify-end items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-4">
+            <Link
+              to="/"
+              className="text-white hover:text-accent flex items-center gap-2"
+            >
+              <Users size={20} />
+              <span>Companies</span>
+            </Link>
+            <Link
+              to="/all-equipment"
+              className="text-white hover:text-accent flex items-center gap-2"
+            >
+              <ClipboardList size={20} />
+              <span>Equipment</span>
+            </Link>
+          </div>
           <DesktopNav />
           <MobileNav 
             isOpen={isMobileMenuOpen}

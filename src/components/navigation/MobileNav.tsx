@@ -12,15 +12,7 @@ export const MobileNav = ({ isOpen, onClose, onSignOut }: MobileNavProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="md:hidden mt-4 flex flex-col gap-4">
-      <Link
-        to="/"
-        className="text-white hover:text-accent flex items-center gap-2 border border-white rounded-lg p-2"
-        onClick={onClose}
-      >
-        <LayoutDashboard size={20} />
-        <span>Dashboard</span>
-      </Link>
+    <div className="md:hidden absolute top-16 right-0 left-0 bg-[#266bec] p-4 flex flex-col gap-4 z-50">
       <Link
         to="/"
         className="text-white hover:text-accent flex items-center gap-2 border border-white rounded-lg p-2"
