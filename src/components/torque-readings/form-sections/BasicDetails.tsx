@@ -2,17 +2,11 @@ import { FormField } from "@/components/torque-readings/FormField";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useStaffMembers } from "@/hooks/useStaffMembers";
 import { Loader2 } from "lucide-react";
+import { TorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
 
 interface BasicDetailsProps {
-  formData: {
-    model: string;
-    serialNumber: string;
-    engineer: string;
-    min: string;
-    max: string;
-    units: string;
-  };
-  onChange: (field: string, value: string) => void;
+  formData: TorqueReadingsForm;
+  onChange: (field: keyof TorqueReadingsForm, value: string) => void;
 }
 
 export const BasicDetails = ({ formData, onChange }: BasicDetailsProps) => {
@@ -21,30 +15,34 @@ export const BasicDetails = ({ formData, onChange }: BasicDetailsProps) => {
   return (
     <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormField
-          id="model"
-          label="Model"
-          value={formData.model}
-          onChange={(e) => onChange("model", e.target.value)}
-        />
-        <FormField
-          id="serialNumber"
-          label="Serial Number"
-          value={formData.serialNumber}
-          onChange={(e) => onChange("serialNumber", e.target.value)}
-        />
+        <div className="space-y-2">
+          <label className="text-base text-[#C8C8C9]">Model</label>
+          <input
+            value={formData.model}
+            onChange={(e) => onChange("model", e.target.value)}
+            className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base"
+            placeholder="Enter model"
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="text-base text-[#C8C8C9]">Serial Number</label>
+          <input
+            value={formData.serialNumber}
+            onChange={(e) => onChange("serialNumber", e.target.value)}
+            className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base"
+            placeholder="Enter serial number"
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <label htmlFor="engineer" className="text-sm text-[#C8C8C9]">
-            Engineer
-          </label>
+          <label className="text-base text-[#C8C8C9]">Engineer</label>
           <Select
             value={formData.engineer}
             onValueChange={(value) => onChange("engineer", value)}
           >
-            <SelectTrigger id="engineer" className="h-12 bg-white border-gray-200">
+            <SelectTrigger className="h-12 bg-white border-gray-200">
               {isLoadingStaff ? (
                 <div className="flex items-center gap-2">
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -63,37 +61,18 @@ export const BasicDetails = ({ formData, onChange }: BasicDetailsProps) => {
             </SelectContent>
           </Select>
         </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <FormField
-          id="min"
-          label="Min Torque"
-          value={formData.min}
-          onChange={(e) => onChange("min", e.target.value)}
-          type="number"
-        />
-        <FormField
-          id="max"
-          label="Max Torque"
-          value={formData.max}
-          onChange={(e) => onChange("max", e.target.value)}
-          type="number"
-        />
         <div className="space-y-2">
-          <label htmlFor="units" className="text-sm text-[#C8C8C9]">
-            Units
-          </label>
+          <label className="text-base text-[#C8C8C9]">Result</label>
           <Select
-            value={formData.units}
-            onValueChange={(value) => onChange("units", value)}
+            value={formData.result}
+            onValueChange={(value) => onChange("result", value)}
           >
-            <SelectTrigger id="units" className="h-12 bg-white border-gray-200">
-              <SelectValue />
+            <SelectTrigger className="h-12 bg-white border-gray-200">
+              <SelectValue placeholder="Select result" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="nm">Nm</SelectItem>
-              <SelectItem value="ftlb">ft/lb</SelectItem>
+              <SelectItem value="PASS">Pass</SelectItem>
+              <SelectItem value="FAIL">Fail</SelectItem>
             </SelectContent>
           </Select>
         </div>

@@ -9,14 +9,14 @@ export const useEquipmentData = (equipmentId: string | null, enabled: boolean) =
       if (!equipmentId) return null;
       
       const { data, error } = await supabase
-        .from('torque_wrench')
+        .from('tyre_gauges')
         .select(`
           id,
           company_id,
           model,
           serial_number,
-          min_torque,
-          max_torque,
+          min_pressure,
+          max_pressure,
           units,
           last_service_date,
           next_service_due,
