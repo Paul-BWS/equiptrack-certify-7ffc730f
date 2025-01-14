@@ -21,7 +21,6 @@ export const EquipmentRow = ({ equipment }: EquipmentRowProps) => {
     <TableRow>
       <TableCell>{equipment.model}</TableCell>
       <TableCell>{equipment.serialNumber}</TableCell>
-      <TableCell>{equipment.companyName || 'Unknown Company'}</TableCell>
       <TableCell>{formatDate(equipment.lastServiceDate)}</TableCell>
       <TableCell>{formatDate(equipment.nextServiceDue)}</TableCell>
       <TableCell>{equipment.equipmentType || 'Unknown Type'}</TableCell>
