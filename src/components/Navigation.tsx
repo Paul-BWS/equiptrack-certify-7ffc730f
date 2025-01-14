@@ -65,6 +65,7 @@ export const Navigation = () => {
   const isCustomerRoute = location.pathname.includes('/customers/') && customerId && customerId !== 'undefined';
   const isTorqueWrenchRoute = location.pathname.includes('/torque-wrenches');
   const isTyreGaugeRoute = location.pathname.includes('/tyre-gauges');
+  const isLiftingEquipmentRoute = location.pathname.includes('/lifting-equipment');
 
   return (
     <nav className="border-b bg-[#266bec]">
@@ -83,7 +84,7 @@ export const Navigation = () => {
             </>
           )}
           <Link to="/" className="text-xl font-semibold text-white">
-            {isTyreGaugeRoute ? "Tyre Gauges" : isTorqueWrenchRoute ? "Torque Wrenches" : "EquipTrack"}
+            {isLiftingEquipmentRoute ? "Lifting Equipment" : isTyreGaugeRoute ? "Tyre Gauges" : isTorqueWrenchRoute ? "Torque Wrenches" : "EquipTrack"}
           </Link>
         </div>
         <div className="flex-1 flex justify-end items-center space-x-4">
