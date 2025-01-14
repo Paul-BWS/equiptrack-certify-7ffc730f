@@ -17,7 +17,7 @@ export const DesktopNav = () => {
   });
 
   return (
-    <div className="hidden md:flex items-center gap-4 ml-auto">
+    <div className="hidden md:flex items-center gap-4">
       {isBWSUser && window.location.pathname === '/' && (
         <Link
           to="/admin/users"
