@@ -7,7 +7,7 @@ interface LiftingEquipment {
   next_service_due: string;
   engineer?: string;
   result: string;
-  notes: string;
+  notes?: string;
   cert_number: string;
   status: string;
   platform_condition: string;

@@ -78,5 +78,3 @@ export interface LiftingEquipment {
   toe_guards?: string;
   lubrication_moving_parts?: string;
 }
-
-// ... keep existing code
