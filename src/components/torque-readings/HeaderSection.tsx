@@ -83,7 +83,7 @@ export const HeaderSection = ({
                   <SelectValue placeholder="Select an engineer" />
                 )}
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white border border-gray-200 shadow-lg z-50">
                 {staff?.map((engineer) => (
                   <SelectItem key={engineer.id} value={engineer.name}>
                     {engineer.name}
@@ -99,7 +99,7 @@ export const HeaderSection = ({
               <SelectTrigger className="h-12 bg-white border-gray-200 text-base">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white border border-gray-200 shadow-lg z-50">
                 <SelectItem value="ACTIVE">Active</SelectItem>
                 <SelectItem value="INACTIVE">Inactive</SelectItem>
               </SelectContent>
