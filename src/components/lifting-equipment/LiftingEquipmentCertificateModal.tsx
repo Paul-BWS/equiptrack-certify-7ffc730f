@@ -39,7 +39,7 @@ export const LiftingEquipmentCertificateModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[95vw] h-[90vh] p-4 overflow-auto bg-white">
+      <DialogContent className="max-w-[800px] h-[90vh] p-4 overflow-auto bg-white">
         <div className="flex justify-between gap-4 mb-4 sticky top-0 bg-white z-10 p-2 no-print">
           <Button
             variant="ghost"
