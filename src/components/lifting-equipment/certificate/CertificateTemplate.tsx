@@ -1,4 +1,3 @@
-import { DialogContent } from "@/components/ui/dialog";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { CertificateHeader } from "@/components/certificate/CertificateHeader";
@@ -8,13 +7,14 @@ import { CertificateFooter } from "@/components/certificate/CertificateFooter";
 
 interface CertificateTemplateProps {
   equipmentId: string | null;
-  onClose: () => void;
 }
 
 export const CertificateTemplate = ({ equipmentId }: CertificateTemplateProps) => {
   const { data: equipment, isLoading } = useQuery({
     queryKey: ['lifting-equipment-certificate', equipmentId],
     queryFn: async () => {
+      if (!equipmentId) return null;
+
       const { data, error } = await supabase
         .from('lifting_equipment')
         .select('*')
@@ -29,31 +29,33 @@ export const CertificateTemplate = ({ equipmentId }: CertificateTemplateProps) =
 
   if (isLoading || !equipment) {
     return (
-      <DialogContent>
-        <div className="flex items-center justify-center p-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-        </div>
-      </DialogContent>
+      <div className="flex items-center justify-center p-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
     );
   }
 
   const serviceRecord = {
+    id: equipment.id,
     service_date: equipment.last_service_date,
     next_service_date: equipment.next_service_due,
-    technician: equipment.engineer || 'N/A'
+    technician: equipment.engineer || 'N/A',
+    service_type: 'Inspection',
+    notes: equipment.notes || ''
   };
 
   const certificate = {
+    id: equipment.id,
     certification_number: equipment.cert_number || 'N/A',
     issue_date: equipment.last_service_date,
     expiry_date: equipment.next_service_due
   };
 
   return (
-    <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-      <div className="space-y-6 p-6">
-        <CertificateHeader certificate={certificate} />
-        
+    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg border-8 border-double border-gray-200 scale-[0.85] origin-top" id="certificate">
+      <CertificateHeader certificate={certificate} />
+      
+      <div className="space-y-6">
         <EquipmentDetails 
           equipment={{
             id: equipment.id,
@@ -70,21 +72,36 @@ export const CertificateTemplate = ({ equipmentId }: CertificateTemplateProps) =
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Inspection Results</h3>
           <div className="grid grid-cols-2 gap-4">
-            {Object.entries(equipment)
-              .filter(([key]) => key.endsWith('_condition') || key.includes('inspection') || key.includes('levels') || key.includes('operation'))
-              .map(([key, value]) => (
-                <div key={key} className="flex justify-between p-2 bg-gray-50 rounded">
-                  <span className="text-sm capitalize">{key.replace(/_/g, ' ')}</span>
-                  <span className={`text-sm font-medium ${value === 'PASS' ? 'text-green-600' : 'text-red-600'}`}>
-                    {value}
-                  </span>
-                </div>
-              ))}
+            {[
+              { key: 'platform_condition', label: 'Platform Condition' },
+              { key: 'control_box_condition', label: 'Control Box Condition' },
+              { key: 'hydraulic_hoses_condition', label: 'Hydraulic Hoses' },
+              { key: 'main_structure_inspection', label: 'Main Structure' },
+              { key: 'oil_levels', label: 'Oil Levels' },
+              { key: 'rollers_and_guides', label: 'Rollers and Guides' },
+              { key: 'safety_mechanism', label: 'Safety Mechanism' },
+              { key: 'scissor_operation', label: 'Scissor Operation' },
+              { key: 'securing_bolts', label: 'Securing Bolts' },
+              { key: 'toe_guards', label: 'Toe Guards' },
+              { key: 'lubrication_moving_parts', label: 'Lubrication' }
+            ].map(({ key, label }) => (
+              <div key={key} className="flex justify-between p-2 bg-gray-50 rounded">
+                <span className="text-sm">{label}</span>
+                <span className={`text-sm font-medium ${equipment[key] === 'PASS' ? 'text-green-600' : 'text-red-600'}`}>
+                  {equipment[key] || 'N/A'}
+                </span>
+              </div>
+            ))}
           </div>
+        </div>
+
+        <div className="bg-gray-50 p-3 rounded-lg">
+          <h2 className="text-sm font-semibold mb-1 text-primary">Notes</h2>
+          <p className="min-h-[40px] whitespace-pre-wrap text-xs">{equipment.notes}</p>
         </div>
 
         <CertificateFooter />
       </div>
-    </DialogContent>
+    </div>
   );
 };
