@@ -5,7 +5,7 @@ import { UserMenu } from "./navigation/UserMenu";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, CircleUserRound } from "lucide-react";
 import { Button } from "./ui/button";
 import { supabase } from "@/lib/supabase";
 
@@ -79,9 +79,12 @@ export const Navigation = () => {
               <ArrowLeft className="h-4 w-4 text-white" strokeWidth={2} />
             </Button>
           )}
-          <Link to="/" className="text-xl font-semibold text-white">
-            Companies
-          </Link>
+          <div className="flex items-center gap-3">
+            <CircleUserRound className="h-8 w-8 text-white border border-white rounded-full p-1" />
+            <Link to="/" className="text-xl font-semibold text-white">
+              Companies
+            </Link>
+          </div>
         </div>
         <div className="ml-auto flex items-center space-x-4">
           <DesktopNav />
