@@ -138,8 +138,8 @@ const TorqueWrenches = () => {
           certificate={{
             id: crypto.randomUUID(),
             certification_number: selectedEquipment.cert_number || '',
-            issue_date: new Date().toISOString(),
-            expiry_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
+            issue_date: selectedEquipment.last_service_date || new Date().toISOString(),
+            expiry_date: selectedEquipment.next_service_due || new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
           }}
           equipment={{
             id: selectedEquipment.id,
@@ -147,12 +147,13 @@ const TorqueWrenches = () => {
             model: selectedEquipment.model || '',
             serial_number: selectedEquipment.serial_number || '',
             last_service_date: selectedEquipment.last_service_date || '',
-            next_service_due: selectedEquipment.next_service_due || '',
+            next_service_due: selectedEquipment.next_service_due || ''
           }}
           serviceRecord={{
             id: crypto.randomUUID(),
             equipment_id: selectedEquipmentId,
-            service_date: new Date().toISOString(),
+            service_date: selectedEquipment.last_service_date || new Date().toISOString(),
+            next_service_date: selectedEquipment.next_service_due || '',
             service_type: 'Calibration',
             technician: selectedEquipment.engineer || '',
             notes: selectedEquipment.notes || ''
