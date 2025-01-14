@@ -9,6 +9,8 @@
   
   body {
     background: white;
+    margin: 0;
+    padding: 0;
   }
   
   #certificate {
@@ -16,5 +18,16 @@
     margin: 0 !important;
     padding: 0 !important;
     scale: 1 !important;
+  }
+
+  /* Hide all header and footer elements when printing */
+  @page {
+    margin: 0;
+  }
+  
+  /* Hide URL, date, and other browser-added content */
+  body::before,
+  body::after {
+    display: none !important;
   }
 }
