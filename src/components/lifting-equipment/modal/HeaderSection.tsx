@@ -5,6 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { DatePickerField } from "@/components/tyre-gauge-readings/form-fields/DatePickerField";
 
 interface HeaderSectionProps {
   certNumber: string;
@@ -38,25 +39,17 @@ export const HeaderSection = ({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="space-y-2">
-          <label className="text-sm text-[#C8C8C9]">Date</label>
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => onDateChange(e.target.value)}
-            className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
-          />
-        </div>
+        <DatePickerField
+          label="Date"
+          date={date}
+          onDateChange={onDateChange}
+        />
         
-        <div className="space-y-2">
-          <label className="text-sm text-[#C8C8C9]">Retest Date</label>
-          <input
-            type="date"
-            value={retestDate}
-            onChange={(e) => onRetestDateChange(e.target.value)}
-            className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
-          />
-        </div>
+        <DatePickerField
+          label="Retest Date"
+          date={retestDate}
+          onDateChange={onRetestDateChange}
+        />
 
         <div className="space-y-2">
           <label className="text-sm text-[#C8C8C9]">Status</label>
