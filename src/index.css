@@ -9,21 +9,24 @@
   
   body {
     background: white;
-    margin: 15mm !important;
-    padding: 0;
+    margin: 0 !important;
+    padding: 0 !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
   
   #certificate {
     border: none !important;
-    margin: 0 !important;
+    margin: 15mm auto !important;
     padding: 0 !important;
-    transform: scale(0.9) !important;
+    transform: scale(0.95) !important;
     transform-origin: top center !important;
     box-shadow: none !important;
     max-width: none !important;
     width: 100% !important;
+    page-break-after: avoid !important;
+    page-break-before: avoid !important;
+    page-break-inside: avoid !important;
   }
 
   /* Hide all header and footer elements when printing */
