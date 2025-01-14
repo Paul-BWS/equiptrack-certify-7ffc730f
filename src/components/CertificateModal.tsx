@@ -24,11 +24,28 @@ export const CertificateModal = ({
     const timestamp = new Date().toISOString();
     console.log("Certificate printed on:", timestamp);
     
-    // Set the filename for printing
+    // Set the filename for printing and clean print styles
     const style = document.createElement('style');
-    style.innerHTML = `@page { size: auto; margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }`;
+    style.innerHTML = `
+      @page { 
+        size: auto; 
+        margin: 0mm; 
+      } 
+      @media print { 
+        body { 
+          -webkit-print-color-adjust: exact;
+        }
+        .no-print {
+          display: none !important;
+        }
+        #certificate {
+          padding: 20px;
+        }
+      }
+    `;
     document.head.appendChild(style);
     
+    // Set document title for filename
     const originalTitle = document.title;
     document.title = `${certificate.certification_number}`;
     
