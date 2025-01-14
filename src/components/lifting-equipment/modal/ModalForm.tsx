@@ -21,6 +21,17 @@ interface LiftingEquipmentReadings {
   result: string;
   notes: string;
   status: string;
+  platform_condition: string;
+  control_box_condition: string;
+  hydraulic_hoses_condition: string;
+  main_structure_inspection: string;
+  oil_levels: string;
+  rollers_and_guides: string;
+  safety_mechanism: string;
+  scissor_operation: string;
+  securing_bolts: string;
+  toe_guards: string;
+  lubrication_moving_parts: string;
 }
 
 interface ModalFormProps {
@@ -32,6 +43,20 @@ interface ModalFormProps {
   isSaving: boolean;
   equipmentId: string | null;
 }
+
+const inspectionItems = [
+  { key: 'platform_condition', label: 'Check Condition Of Platform' },
+  { key: 'control_box_condition', label: 'Check Condition Control Box' },
+  { key: 'hydraulic_hoses_condition', label: 'Check Condition Hydraulic Hoses' },
+  { key: 'main_structure_inspection', label: 'Visual Inspection Of Main Structure' },
+  { key: 'oil_levels', label: 'Check Oil Levels' },
+  { key: 'rollers_and_guides', label: 'Check Rollers And Guides' },
+  { key: 'safety_mechanism', label: 'Check Safety Mechanism' },
+  { key: 'scissor_operation', label: 'Check Scissor Operation' },
+  { key: 'securing_bolts', label: 'Check Securing Bolts' },
+  { key: 'toe_guards', label: 'Check Toe Guards' },
+  { key: 'lubrication_moving_parts', label: 'Check Lubrication Moving Parts' },
+] as const;
 
 export const ModalForm = ({
   readings,
@@ -122,6 +147,36 @@ export const ModalForm = ({
               <option value="FAIL">Fail</option>
             </select>
           </div>
+        </div>
+      </div>
+
+      <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
+        <h3 className="text-lg font-semibold mb-4">Inspection Checklist</h3>
+        <div className="space-y-4">
+          {inspectionItems.map(({ key, label }) => (
+            <div key={key} className="grid grid-cols-[2fr,3fr,1fr] gap-4 items-center">
+              <span className="text-gray-500">{label}</span>
+              <input
+                type="text"
+                placeholder="Enter description"
+                className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
+              />
+              <Select 
+                value={readings[key as keyof LiftingEquipmentReadings]} 
+                onValueChange={(value) => handleFieldChange(key as keyof LiftingEquipmentReadings, value)}
+              >
+                <SelectTrigger className="h-12 bg-white border-gray-200">
+                  <SelectValue placeholder="Result" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="PASS">Pass</SelectItem>
+                  <SelectItem value="FAIL">Fail</SelectItem>
+                  <SelectItem value="RECTIFY">Rectify</SelectItem>
+                  <SelectItem value="N/A">N/A</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          ))}
         </div>
       </div>
 
