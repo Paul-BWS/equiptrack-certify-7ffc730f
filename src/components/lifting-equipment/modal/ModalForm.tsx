@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DatePickerField } from "@/components/tyre-gauge-readings/form-fields/DatePickerField";
+import { Dispatch, SetStateAction } from "react";
 
 interface LiftingEquipmentReadings {
   date: string;
@@ -36,7 +37,7 @@ interface LiftingEquipmentReadings {
 
 interface ModalFormProps {
   readings: LiftingEquipmentReadings;
-  setReadings: (readings: LiftingEquipmentReadings) => void;
+  setReadings: Dispatch<SetStateAction<LiftingEquipmentReadings>>;
   onSubmit: (e: React.FormEvent) => void;
   onClose: () => void;
   onDelete?: () => void;
@@ -70,7 +71,7 @@ export const ModalForm = ({
   const { data: staff, isLoading: isLoadingStaff } = useStaffMembers();
   
   const handleFieldChange = (field: keyof LiftingEquipmentReadings, value: string) => {
-    setReadings({ ...readings, [field]: value });
+    setReadings(prev => ({ ...prev, [field]: value }));
   };
 
   return (
