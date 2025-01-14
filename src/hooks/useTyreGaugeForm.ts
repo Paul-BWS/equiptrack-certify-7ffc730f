@@ -5,7 +5,8 @@ import { supabase } from "@/lib/supabase";
 
 export const useTyreGaugeForm = (equipmentId: string | null) => {
   const [isSaving, setIsSaving] = useState(false);
-  const [certNumber, setCertNumber] = useState("");
+  // Initialize certNumber with generateCertificateNumber() only on first render
+  const [certNumber, setCertNumber] = useState(() => generateCertificateNumber());
   const [date, setDate] = useState<Date>();
   const [retestDate, setRetestDate] = useState<Date>();
   const [model, setModel] = useState("");
@@ -27,7 +28,7 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
   ]);
 
   const resetForm = () => {
-    setCertNumber(generateCertificateNumber());
+    // Don't generate a new certificate number here
     setDate(new Date());
     const nextYear = new Date();
     nextYear.setFullYear(nextYear.getFullYear() + 1);
@@ -54,10 +55,7 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
   useEffect(() => {
     const loadData = async () => {
       if (!equipmentId) {
-        // Only generate a new certificate number when creating a new record
-        if (!certNumber) {
-          setCertNumber(generateCertificateNumber());
-        }
+        // For new entries, we'll use the certificate number that was generated on first render
         return;
       }
 
