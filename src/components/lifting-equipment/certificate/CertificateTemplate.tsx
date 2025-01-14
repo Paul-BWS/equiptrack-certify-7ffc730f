@@ -73,17 +73,17 @@ export const CertificateTemplate = ({ equipmentId }: CertificateTemplateProps) =
           <h3 className="text-lg font-semibold">Inspection Results</h3>
           <div className="grid grid-cols-2 gap-4">
             {[
-              { key: 'platform_condition', label: 'Platform Condition' },
-              { key: 'control_box_condition', label: 'Control Box Condition' },
-              { key: 'hydraulic_hoses_condition', label: 'Hydraulic Hoses' },
-              { key: 'main_structure_inspection', label: 'Main Structure' },
-              { key: 'oil_levels', label: 'Oil Levels' },
-              { key: 'rollers_and_guides', label: 'Rollers and Guides' },
-              { key: 'safety_mechanism', label: 'Safety Mechanism' },
-              { key: 'scissor_operation', label: 'Scissor Operation' },
-              { key: 'securing_bolts', label: 'Securing Bolts' },
-              { key: 'toe_guards', label: 'Toe Guards' },
-              { key: 'lubrication_moving_parts', label: 'Lubrication' }
+              { key: 'platform_condition', label: 'Check Condition Of Platform' },
+              { key: 'control_box_condition', label: 'Check Condition Control Box' },
+              { key: 'hydraulic_hoses_condition', label: 'Check Condition Hydraulic Hoses' },
+              { key: 'main_structure_inspection', label: 'Visual Inspection Of Main Structure' },
+              { key: 'oil_levels', label: 'Check Oil Levels' },
+              { key: 'rollers_and_guides', label: 'Check Rollers And Guides' },
+              { key: 'safety_mechanism', label: 'Check Safety Mechanism' },
+              { key: 'scissor_operation', label: 'Check Scissor Operation' },
+              { key: 'securing_bolts', label: 'Check Securing Bolts' },
+              { key: 'toe_guards', label: 'Check Toe Guards' },
+              { key: 'lubrication_moving_parts', label: 'Check Lubrication Moving Parts' }
             ].map(({ key, label }) => (
               <div key={key} className="flex justify-between p-2 bg-gray-50 rounded">
                 <span className="text-sm">{label}</span>
