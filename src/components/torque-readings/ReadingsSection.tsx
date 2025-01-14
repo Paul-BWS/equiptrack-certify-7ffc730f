@@ -1,10 +1,6 @@
-import { Input } from "@/components/ui/input";
-
-interface Reading {
-  target: string;
-  actual: string;
-  deviation: string;
-}
+import { Reading } from "@/types/equipment";
+import { FormField } from "@/components/torque-readings/FormField";
+import { calculateDeviation } from "@/utils/certificateDataPreparation";
 
 interface ReadingsSectionProps {
   title: string;
@@ -26,36 +22,36 @@ export const ReadingsSection = ({
 
   return (
     <div className="bg-[#F9F9F9] p-6 rounded-lg">
-      <h3 className="font-semibold mb-4 text-gray-900">{title}</h3>
+      <h3 className="font-semibold mb-4 text-base text-gray-900">{title}</h3>
       <div className="space-y-4">
         {readingsArray.map((reading, index) => (
           <div key={`${title}-${index}`} className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
-              <label className="text-sm text-[#C8C8C9]">Target</label>
-              <Input
+              <label className="text-base text-[#C8C8C9]">Target</label>
+              <input
                 value={reading.target}
                 onChange={onChange ? (e) => onChange(index, "target", e.target.value) : undefined}
                 placeholder="Target"
-                className="h-12 bg-white border-gray-200"
+                className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base"
                 readOnly={readOnly}
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm text-[#C8C8C9]">Actual</label>
-              <Input
+              <label className="text-base text-[#C8C8C9]">Actual</label>
+              <input
                 value={reading.actual}
                 onChange={onChange ? (e) => onChange(index, "actual", e.target.value) : undefined}
                 placeholder="Actual"
-                className="h-12 bg-white border-gray-200"
+                className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base"
                 readOnly={readOnly}
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm text-[#C8C8C9]">Deviation (%)</label>
-              <Input
+              <label className="text-base text-[#C8C8C9]">Deviation (%)</label>
+              <input
                 value={reading.deviation}
                 placeholder="Deviation"
-                className="h-12 bg-[#F9F9F9] border-gray-200"
+                className="flex h-12 w-full rounded-md border border-gray-200 bg-[#F9F9F9] px-3 py-2 text-base"
                 readOnly
               />
             </div>

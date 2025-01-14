@@ -30,41 +30,41 @@ export const HeaderSection = ({
     <div className="space-y-4 bg-[#F9F9F9] p-4 sm:p-6 rounded-lg">
       <div className="grid grid-cols-1 gap-4">
         <div className="space-y-2">
-          <label className="text-sm text-[#C8C8C9]">Certificate Number</label>
+          <label className="text-base text-[#C8C8C9]">Certificate Number</label>
           <input
             type="text"
             value={certNumber}
             readOnly
-            className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
+            className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base"
           />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <label className="text-sm text-[#C8C8C9]">Test Date</label>
+            <label className="text-base text-[#C8C8C9]">Test Date</label>
             <DatePickerField
               label="Date"
               date={date}
               onDateChange={onDateChange}
-              className="w-full"
+              className="w-full text-base"
             />
           </div>
           
           <div className="space-y-2">
-            <label className="text-sm text-[#C8C8C9]">Retest Date</label>
+            <label className="text-base text-[#C8C8C9]">Retest Date</label>
             <DatePickerField
               label="Retest Date"
               date={retestDate}
               onDateChange={onRetestDateChange}
-              className="w-full"
+              className="w-full text-base"
             />
           </div>
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm text-[#C8C8C9]">Status</label>
+          <label className="text-base text-[#C8C8C9]">Status</label>
           <Select value={status} onValueChange={onStatusChange}>
-            <SelectTrigger className="h-12 bg-white border-gray-200">
+            <SelectTrigger className="h-12 bg-white border-gray-200 text-base">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

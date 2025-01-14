@@ -34,30 +34,30 @@ export const MeasurementsSection = ({
     <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
       <div className={`grid ${isMobile ? 'grid-cols-2' : 'grid-cols-4'} gap-6`}>
         <div className="space-y-2">
-          <label className="text-sm text-[#C8C8C9]">Min</label>
+          <label className="text-base text-[#C8C8C9]">Min</label>
           <input
             type="number"
             value={min}
             onChange={(e) => onMinChange(e.target.value)}
-            className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
+            className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base"
           />
         </div>
         <div className="space-y-2">
-          <label className="text-sm text-[#C8C8C9]">Max</label>
+          <label className="text-base text-[#C8C8C9]">Max</label>
           <input
             type="number"
             value={max}
             onChange={(e) => onMaxChange(e.target.value)}
-            className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
+            className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base"
           />
         </div>
         <div className="space-y-2">
-          <label className="text-sm text-[#C8C8C9]">Units</label>
+          <label className="text-base text-[#C8C8C9]">Units</label>
           <Select
             value={units}
             onValueChange={onUnitsChange}
           >
-            <SelectTrigger className="h-12 bg-white border-gray-200">
+            <SelectTrigger className="h-12 bg-white border-gray-200 text-base">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -67,12 +67,12 @@ export const MeasurementsSection = ({
           </Select>
         </div>
         <div className="space-y-2">
-          <label className="text-sm text-[#C8C8C9]">Result</label>
+          <label className="text-base text-[#C8C8C9]">Result</label>
           <Select
             value={result}
             onValueChange={onResultChange}
           >
-            <SelectTrigger className={`h-12 bg-white border-gray-200 ${
+            <SelectTrigger className={`h-12 bg-white border-gray-200 text-base ${
               result === 'PASS' ? 'text-green-500' : 'text-red-500'
             }`}>
               <SelectValue />
