@@ -177,6 +177,101 @@ export type Database = {
         }
         Relationships: []
       }
+      lifting_equipment: {
+        Row: {
+          capacity: number | null
+          cert_number: string | null
+          company_id: string
+          control_box_condition: string | null
+          created_at: string
+          engineer: string | null
+          hydraulic_hoses_condition: string | null
+          id: string
+          last_service_date: string | null
+          lubrication_moving_parts: string | null
+          main_structure_inspection: string | null
+          model: string | null
+          next_service_due: string | null
+          notes: string | null
+          oil_levels: string | null
+          platform_condition: string | null
+          rollers_and_guides: string | null
+          safety_mechanism: string | null
+          scissor_operation: string | null
+          securing_bolts: string | null
+          serial_number: string | null
+          status: string | null
+          test_result: string | null
+          toe_guards: string | null
+          units: string | null
+          updated_at: string
+        }
+        Insert: {
+          capacity?: number | null
+          cert_number?: string | null
+          company_id: string
+          control_box_condition?: string | null
+          created_at?: string
+          engineer?: string | null
+          hydraulic_hoses_condition?: string | null
+          id?: string
+          last_service_date?: string | null
+          lubrication_moving_parts?: string | null
+          main_structure_inspection?: string | null
+          model?: string | null
+          next_service_due?: string | null
+          notes?: string | null
+          oil_levels?: string | null
+          platform_condition?: string | null
+          rollers_and_guides?: string | null
+          safety_mechanism?: string | null
+          scissor_operation?: string | null
+          securing_bolts?: string | null
+          serial_number?: string | null
+          status?: string | null
+          test_result?: string | null
+          toe_guards?: string | null
+          units?: string | null
+          updated_at?: string
+        }
+        Update: {
+          capacity?: number | null
+          cert_number?: string | null
+          company_id?: string
+          control_box_condition?: string | null
+          created_at?: string
+          engineer?: string | null
+          hydraulic_hoses_condition?: string | null
+          id?: string
+          last_service_date?: string | null
+          lubrication_moving_parts?: string | null
+          main_structure_inspection?: string | null
+          model?: string | null
+          next_service_due?: string | null
+          notes?: string | null
+          oil_levels?: string | null
+          platform_condition?: string | null
+          rollers_and_guides?: string | null
+          safety_mechanism?: string | null
+          scissor_operation?: string | null
+          securing_bolts?: string | null
+          serial_number?: string | null
+          status?: string | null
+          test_result?: string | null
+          toe_guards?: string | null
+          units?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lifting_equipment_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           company_id: string | null
