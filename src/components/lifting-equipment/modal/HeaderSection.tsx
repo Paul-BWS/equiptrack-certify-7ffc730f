@@ -40,7 +40,7 @@ export const HeaderSection = ({
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <DatePickerField
-          label="Test Date"
+          label="Date"
           date={date}
           onDateChange={onDateChange}
         />

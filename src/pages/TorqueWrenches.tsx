@@ -1,6 +1,4 @@
 import { Navigation } from "@/components/Navigation";
-import { TorqueReadingsModal } from "@/components/TorqueReadingsModal";
-import { CertificateModal } from "@/components/CertificateModal";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -8,6 +6,8 @@ import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { TorqueWrenchHeader } from "@/components/torque-wrenches/TorqueWrenchHeader";
 import { TorqueWrenchList } from "@/components/torque-wrenches/TorqueWrenchList";
+import { TorqueReadingsModal } from "@/components/TorqueReadingsModal";
+import { CertificateModal } from "@/components/CertificateModal";
 
 const TorqueWrenches = () => {
   const { customerId } = useParams();
@@ -76,37 +76,6 @@ const TorqueWrenches = () => {
     enabled: !!selectedEquipmentId && showCertificateModal
   });
 
-  const { data: latestCertificate } = useQuery({
-    queryKey: ['certificate', selectedEquipmentId],
-    queryFn: async () => {
-      if (!selectedEquipmentId) return null;
-      
-      const { data, error } = await supabase
-        .from('certificates')
-        .select('*')
-        .eq('torque_wrench_id', selectedEquipmentId)
-        .order('issue_date', { ascending: false })
-        .limit(1)
-        .single();
-
-      if (error) {
-        // If no certificate exists, return a default one
-        if (error.code === 'PGRST116') {
-          return {
-            id: crypto.randomUUID(),
-            torque_wrench_id: selectedEquipmentId,
-            issue_date: new Date().toISOString(),
-            certification_number: `BWS-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-            expiry_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
-          };
-        }
-        throw error;
-      }
-      return data;
-    },
-    enabled: !!selectedEquipmentId && showCertificateModal
-  });
-
   const handleNewTorqueWrench = () => {
     setSelectedEquipmentId(null);
     setShowReadingsModal(true);
@@ -165,10 +134,9 @@ const TorqueWrenches = () => {
         <CertificateModal
           open={showCertificateModal}
           onOpenChange={setShowCertificateModal}
-          certificate={latestCertificate || {
-            id: "",
-            torque_wrench_id: selectedEquipmentId,
-            certification_number: `BWS-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+          certificate={{
+            id: crypto.randomUUID(),
+            certification_number: selectedEquipment.cert_number || '',
             issue_date: new Date().toISOString(),
             expiry_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
           }}
@@ -182,11 +150,10 @@ const TorqueWrenches = () => {
           serviceRecord={{
             id: crypto.randomUUID(),
             torque_wrench_id: selectedEquipmentId,
-            service_date: selectedEquipment.last_service_date || new Date().toISOString(),
-            service_type: 'calibration',
-            technician: selectedEquipment.engineer || 'Default Technician',
-            notes: selectedEquipment.notes || '',
-            next_service_date: selectedEquipment.next_service_due || new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
+            service_date: new Date().toISOString(),
+            service_type: 'Calibration',
+            technician: selectedEquipment.engineer || '',
+            notes: selectedEquipment.notes || ''
           }}
         />
       )}
