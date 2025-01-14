@@ -52,9 +52,9 @@ const TorqueWrenches = () => {
       return equipmentData.map(wrench => ({
         id: wrench.id,
         model: wrench.model || '',
-        serialNumber: wrench.serial_number || '',
-        lastServiceDate: wrench.last_service_date || '',
-        nextServiceDue: wrench.next_service_due || ''
+        serial_number: wrench.serial_number || '',
+        last_service_date: wrench.last_service_date || '',
+        next_service_due: wrench.next_service_due || ''
       }));
     }
   });
@@ -172,7 +172,13 @@ const TorqueWrenches = () => {
             issue_date: new Date().toISOString(),
             expiry_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
           }}
-          equipment={selectedEquipment}
+          equipment={{
+            id: selectedEquipment.id,
+            model: selectedEquipment.model || '',
+            serial_number: selectedEquipment.serial_number || '',
+            last_service_date: selectedEquipment.last_service_date || '',
+            next_service_due: selectedEquipment.next_service_due || '',
+          }}
           serviceRecord={{
             id: crypto.randomUUID(),
             torque_wrench_id: selectedEquipmentId,

@@ -1,9 +1,9 @@
 export interface Equipment {
   id: string;
   model: string;
-  serialNumber: string;
-  lastServiceDate: string;
-  nextServiceDue: string;
+  serial_number: string;
+  last_service_date: string;
+  next_service_due: string;
   companyName?: string;
   equipmentType?: string;
 }
@@ -18,7 +18,7 @@ export interface Certificate {
 
 export interface ServiceRecord {
   id?: string;
-  equipment_id?: string;
+  torque_wrench_id?: string;
   service_date: string;
   service_type: string;
   technician: string;
