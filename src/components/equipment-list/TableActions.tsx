@@ -3,8 +3,8 @@ import { ArrowRight, Trash2, FileText } from "lucide-react";
 
 interface TableActionsProps {
   onDelete: (e: React.MouseEvent) => void;
-  onGenerateCertificate: () => void;
-  onViewReadings: () => void;
+  onGenerateCertificate: (e: React.MouseEvent) => void;
+  onViewReadings: (e: React.MouseEvent) => void;
 }
 
 export const TableActions = ({ onDelete, onGenerateCertificate, onViewReadings }: TableActionsProps) => {

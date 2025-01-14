@@ -23,7 +23,13 @@ export const EquipmentRow = ({ equipment }: EquipmentRowProps) => {
   return (
     <TableRow
       className={isMobile ? "cursor-pointer hover:bg-accent/50" : undefined}
-      onClick={() => isMobile ? equipment.onViewReadings() : undefined}
+      onClick={(e) => {
+        if (isMobile) {
+          e.preventDefault();
+          e.stopPropagation();
+          equipment.onViewReadings();
+        }
+      }}
     >
       <TableCell>{equipment.model}</TableCell>
       <TableCell>{equipment.serialNumber}</TableCell>
@@ -33,9 +39,21 @@ export const EquipmentRow = ({ equipment }: EquipmentRowProps) => {
           <TableCell>{formatDate(equipment.nextServiceDue)}</TableCell>
           <TableCell className="text-right">
             <TableActions
-              onDelete={equipment.onDelete}
-              onGenerateCertificate={equipment.onGenerateCertificate}
-              onViewReadings={equipment.onViewReadings}
+              onDelete={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                equipment.onDelete();
+              }}
+              onGenerateCertificate={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                equipment.onGenerateCertificate();
+              }}
+              onViewReadings={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                equipment.onViewReadings();
+              }}
             />
           </TableCell>
         </>
