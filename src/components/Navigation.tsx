@@ -80,7 +80,7 @@ export const Navigation = () => {
             </Button>
           )}
           <Link to="/" className="text-xl font-semibold text-white">
-            Equipment
+            EquipTrack
           </Link>
         </div>
         <div className="ml-auto flex items-center space-x-4">
