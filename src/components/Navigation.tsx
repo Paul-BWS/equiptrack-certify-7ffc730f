@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { MobileNav } from "./navigation/MobileNav";
 import { DesktopNav } from "./navigation/DesktopNav";
 import { UserMenu } from "./navigation/UserMenu";
+import { NavigationTitle } from "./navigation/NavigationTitle";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -63,29 +64,22 @@ export const Navigation = () => {
   }
 
   const isCustomerRoute = location.pathname.includes('/customers/') && customerId && customerId !== 'undefined';
-  const isTorqueWrenchRoute = location.pathname.includes('/torque-wrenches');
-  const isTyreGaugeRoute = location.pathname.includes('/tyre-gauges');
-  const isLiftingEquipmentRoute = location.pathname.includes('/lifting-equipment');
 
   return (
     <nav className="border-b bg-[#266bec]">
       <div className="flex h-16 items-center px-4">
         <div className="flex items-center space-x-4">
           {isCustomerRoute && (
-            <>
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-full bg-transparent border border-white hover:bg-white/10"
-                onClick={() => navigate(`/customers/${customerId}`)}
-              >
-                <ArrowLeft className="h-4 w-4 text-white" strokeWidth={2} />
-              </Button>
-            </>
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full bg-transparent border border-white hover:bg-white/10"
+              onClick={() => navigate(`/customers/${customerId}`)}
+            >
+              <ArrowLeft className="h-4 w-4 text-white" strokeWidth={2} />
+            </Button>
           )}
-          <Link to="/" className="text-xl font-semibold text-white">
-            {isLiftingEquipmentRoute ? "Lifting Equipment" : isTyreGaugeRoute ? "Tyre Gauges" : isTorqueWrenchRoute ? "Torque Wrenches" : "EquipTrack"}
-          </Link>
+          <NavigationTitle />
         </div>
         <div className="flex-1 flex justify-end items-center space-x-4">
           <div className="hidden md:flex items-center space-x-4">
