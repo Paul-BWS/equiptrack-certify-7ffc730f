@@ -143,6 +143,7 @@ const TorqueWrenches = () => {
           }}
           equipment={{
             id: selectedEquipment.id,
+            company_id: selectedEquipment.company_id,
             model: selectedEquipment.model || '',
             serial_number: selectedEquipment.serial_number || '',
             last_service_date: selectedEquipment.last_service_date || '',
