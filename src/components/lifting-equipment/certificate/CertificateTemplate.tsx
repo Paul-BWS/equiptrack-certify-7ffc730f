@@ -166,7 +166,6 @@ export const CertificateTemplate = ({ equipmentId }: CertificateTemplateProps) =
             <p className="text-xs">M40 2XG</p>
             <p className="text-xs">0161 223 1843</p>
           </div>
-          <img src={settings.logo} alt="BWS Logo" className="h-16 w-auto" />
         </div>
       </div>
 
