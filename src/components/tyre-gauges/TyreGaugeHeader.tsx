@@ -23,7 +23,8 @@ export const TyreGaugeHeader = ({
           )}
           <Button 
             onClick={onNewTyreGauge}
-            className="bg-primary hover:bg-primary/90"
+            variant="outline"
+            className="bg-white text-[#266bec] border-[#266bec] hover:bg-[#266bec] hover:text-white"
           >
             <Plus className="h-4 w-4 mr-2" />
             New Tyre Gauge

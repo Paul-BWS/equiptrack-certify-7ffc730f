@@ -5,7 +5,7 @@ import { UserMenu } from "./navigation/UserMenu";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { ArrowLeft, Grid, Users, ClipboardList } from "lucide-react";
+import { ArrowLeft, Users, ClipboardList } from "lucide-react";
 import { Button } from "./ui/button";
 import { supabase } from "@/lib/supabase";
 
@@ -83,7 +83,7 @@ export const Navigation = () => {
             </>
           )}
           <Link to="/" className="text-xl font-semibold text-white">
-            {isTorqueWrenchRoute ? "Torque Wrenches" : isTyreGaugeRoute ? "Tyre Gauges" : "EquipTrack"}
+            {isTyreGaugeRoute ? "Tyre Gauges" : isTorqueWrenchRoute ? "Torque Wrenches" : "EquipTrack"}
           </Link>
         </div>
         <div className="flex-1 flex justify-end items-center space-x-4">
