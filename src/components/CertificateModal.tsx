@@ -84,12 +84,14 @@ export const CertificateModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[800px] h-[90vh] p-4 overflow-auto bg-white">
-        <CertificateActions
-          onClose={() => onOpenChange(false)}
-          onEmail={handleEmail}
-          onPrint={handlePrint}
-        />
+      <DialogContent className="max-w-[800px] h-[90vh] p-4 overflow-auto bg-white print:p-0">
+        <div className="no-print">
+          <CertificateActions
+            onClose={() => onOpenChange(false)}
+            onEmail={handleEmail}
+            onPrint={handlePrint}
+          />
+        </div>
         
         <div className="flex justify-center">
           <div className="w-full">

@@ -9,7 +9,7 @@
   
   body {
     background: white;
-    margin: 0;
+    margin: 20mm !important;
     padding: 0;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
@@ -19,7 +19,7 @@
     border: none !important;
     margin: 0 !important;
     padding: 0 !important;
-    transform: scale(1) !important;
+    transform: scale(0.95) !important;
     box-shadow: none !important;
     max-width: none !important;
     width: 100% !important;
