@@ -48,4 +48,9 @@
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
+
+  /* Hide dialog close button in print */
+  [role="dialog"] button[aria-label="Close"] {
+    display: none !important;
+  }
 }
