@@ -41,6 +41,7 @@ export const AxleStandsCertificateModal = ({
             }}
             equipment={{
               id: equipment.id,
+              company_id: equipment.company_id,
               model: equipment.model,
               serial_number: equipment.serial_number,
               last_service_date: equipment.last_service_date,
