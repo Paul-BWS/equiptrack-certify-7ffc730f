@@ -31,7 +31,7 @@ export const TorqueWrenchHeader = ({
           </div>
           <Button 
             onClick={onNewTorqueWrench}
-            className="rounded-full bg-white text-primary border-2 border-primary hover:bg-primary/10 px-6 py-2"
+            className="rounded-md bg-white text-primary border border-primary/50 hover:bg-primary/10 px-6 py-2"
           >
             <Plus className="h-4 w-4" strokeWidth={2} />
             <span className="ml-1">New Torque</span>
