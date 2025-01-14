@@ -68,10 +68,10 @@ export const Navigation = () => {
   const isCustomerRoute = location.pathname.includes('/customers/') && customerId && customerId !== 'undefined';
 
   const handleBackClick = () => {
-    if (isMobile) {
-      navigate(`/customers/${customerId}/equipment`);
-    } else {
+    if (location.pathname.includes('/equipment')) {
       navigate(`/customers/${customerId}`);
+    } else {
+      navigate(-1);
     }
   };
 
