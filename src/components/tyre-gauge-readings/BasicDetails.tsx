@@ -78,7 +78,7 @@ export const BasicDetails = ({
                 <SelectValue placeholder="Select an engineer" />
               )}
             </SelectTrigger>
-            <SelectContent position="popper">
+            <SelectContent className="bg-white border shadow-lg z-50">
               {staff?.map((engineer) => (
                 <SelectItem 
                   key={engineer.id} 
@@ -105,7 +105,7 @@ export const BasicDetails = ({
             >
               <SelectValue placeholder="Select result" />
             </SelectTrigger>
-            <SelectContent position="popper">
+            <SelectContent className="bg-white border shadow-lg z-50">
               <SelectItem value="PASS">Pass</SelectItem>
               <SelectItem value="FAIL">Fail</SelectItem>
             </SelectContent>
