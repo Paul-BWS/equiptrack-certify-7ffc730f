@@ -7,10 +7,12 @@ import { toast } from "sonner";
 import { LiftingEquipmentHeader } from "@/components/lifting-equipment/LiftingEquipmentHeader";
 import { LiftingEquipmentList } from "@/components/lifting-equipment/LiftingEquipmentList";
 import { LiftingEquipmentReadingsModal } from "@/components/lifting-equipment/LiftingEquipmentReadingsModal";
+import { LiftingEquipmentCertificateModal } from "@/components/lifting-equipment/LiftingEquipmentCertificateModal";
 
 const LiftingEquipment = () => {
   const { customerId } = useParams();
   const [showReadingsModal, setShowReadingsModal] = useState(false);
+  const [showCertificateModal, setShowCertificateModal] = useState(false);
   const [selectedEquipmentId, setSelectedEquipmentId] = useState<string | null>(null);
 
   const { data: customerData } = useQuery({
@@ -64,7 +66,7 @@ const LiftingEquipment = () => {
 
   const handleGenerateCertificate = (id: string) => {
     setSelectedEquipmentId(id);
-    // Certificate modal will be implemented later
+    setShowCertificateModal(true);
   };
 
   const handleViewReadings = (id: string) => {
@@ -108,6 +110,12 @@ const LiftingEquipment = () => {
       <LiftingEquipmentReadingsModal
         open={showReadingsModal}
         onOpenChange={setShowReadingsModal}
+        equipmentId={selectedEquipmentId}
+      />
+
+      <LiftingEquipmentCertificateModal
+        open={showCertificateModal}
+        onOpenChange={setShowCertificateModal}
         equipmentId={selectedEquipmentId}
       />
     </div>
