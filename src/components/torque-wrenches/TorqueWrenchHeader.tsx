@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Grid, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface TorqueWrenchHeaderProps {
@@ -20,14 +20,6 @@ export const TorqueWrenchHeader = ({
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => navigate(`/customers/${customerId}/equipment`)}
-              className="rounded-full bg-white border-2 border-primary hover:bg-primary/10"
-            >
-              <Grid className="h-4 w-4 text-primary" strokeWidth={2} />
-            </Button>
           </div>
           <Button 
             onClick={onNewTorqueWrench}
