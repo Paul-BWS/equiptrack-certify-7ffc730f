@@ -47,27 +47,39 @@ const initialFormState: TorqueReadingsForm = {
 export const useTorqueReadingsForm = (equipment: any, isOpen: boolean) => {
   const [readings, setReadings] = useState<TorqueReadingsForm>({ ...initialFormState });
 
-  const parseReadings = (readingsStr: string | Reading[]) => {
-    if (typeof readingsStr === 'string') {
-      try {
-        return JSON.parse(readingsStr);
-      } catch (e) {
-        console.error('Error parsing readings:', e);
-        return defaultReadings;
-      }
+  const parseReadings = useCallback((readingsData: any): Reading[] => {
+    if (!readingsData) return [...defaultReadings];
+    
+    if (Array.isArray(readingsData)) {
+      return readingsData.map(reading => ({
+        target: reading.target || "",
+        actual: reading.actual || "",
+        deviation: reading.deviation || ""
+      }));
     }
-    return readingsStr || defaultReadings;
-  };
+    
+    try {
+      const parsed = typeof readingsData === 'string' ? JSON.parse(readingsData) : readingsData;
+      const readingsArray = Array.isArray(parsed) ? parsed : JSON.parse(parsed);
+      return readingsArray.map((reading: Reading) => ({
+        target: reading.target || "",
+        actual: reading.actual || "",
+        deviation: reading.deviation || ""
+      }));
+    } catch (e) {
+      console.error('Error parsing readings:', e);
+      return [...defaultReadings];
+    }
+  }, []);
 
   useEffect(() => {
     if (equipment && isOpen) {
-      console.log('Loading equipment data:', equipment);
+      console.log('Setting form data from equipment:', equipment);
       
       const equipmentReadings = parseReadings(equipment.readings);
       const equipmentDefinitiveReadings = parseReadings(equipment.definitive_readings);
 
-      setReadings(prev => ({
-        ...prev,
+      setReadings({
         model: equipment.model || '',
         serialNumber: equipment.serial_number || '',
         min: equipment.min_torque?.toString() || '',
@@ -81,13 +93,13 @@ export const useTorqueReadingsForm = (equipment: any, isOpen: boolean) => {
         readings: equipmentReadings,
         definitiveReadings: equipmentDefinitiveReadings,
         certNumber: equipment.cert_number || generateCertificateNumber(),
-        status: equipment.status || 'ACTIVE'
-      }));
+        status: equipment.status || 'ACTIVE',
+        sentOn: equipment.sent_on || ''
+      });
     } else if (isOpen) {
-      // Reset form when opening for a new torque wrench
       setReadings({ ...initialFormState, certNumber: generateCertificateNumber() });
     }
-  }, [equipment, isOpen]);
+  }, [equipment, isOpen, parseReadings]);
 
   const resetForm = useCallback(() => {
     setReadings({ ...initialFormState, certNumber: generateCertificateNumber() });
