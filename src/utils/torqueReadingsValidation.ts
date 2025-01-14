@@ -1,22 +1,5 @@
 import { toast } from "sonner";
 import { TorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
-import { Reading } from "@/types/equipment";
-
-export const validateReadings = (readings: Array<Reading>) => {
-  if (!Array.isArray(readings)) {
-    console.error('Readings is not an array:', readings);
-    return false;
-  }
-
-  // Check if all readings have both target and actual values filled
-  const hasEmptyValues = readings.some(reading => {
-    const target = reading.target?.trim() || '';
-    const actual = reading.actual?.trim() || '';
-    return target === '' || actual === '';
-  });
-
-  return !hasEmptyValues;
-};
 
 export const validateForm = (formData: TorqueReadingsForm): boolean => {
   const requiredFields = {
@@ -37,14 +20,15 @@ export const validateForm = (formData: TorqueReadingsForm): boolean => {
     }
   }
 
-  // Parse the readings if they're stored as a string
-  const readingsArray = Array.isArray(formData.readings) 
-    ? formData.readings 
-    : JSON.parse(formData.readings as unknown as string);
-
-  if (!validateReadings(readingsArray)) {
-    toast.error("All readings (target and actual) must be filled");
-    return false;
+  // Validate readings
+  for (let i = 1; i <= 3; i++) {
+    const target = formData[`target${i}` as keyof TorqueReadingsForm];
+    const actual = formData[`actual${i}` as keyof TorqueReadingsForm];
+    
+    if (!target || !actual) {
+      toast.error(`Reading ${i} must have both target and actual values`);
+      return false;
+    }
   }
 
   return true;

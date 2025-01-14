@@ -1,4 +1,3 @@
-import { Reading } from "@/types/equipment";
 import { calculateDeviation } from "@/utils/deviationCalculator";
 import { TorqueReadingsContent } from "./TorqueReadingsContent";
 import { TorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
@@ -19,28 +18,33 @@ export const ReadingsHandler = ({
   isSaving 
 }: ReadingsHandlerProps) => {
   const handleReadingChange = (index: number, field: string, value: string) => {
-    const fieldPrefix = field === 'target' ? 'target' : field === 'actual' ? 'actual' : 'deviation';
     const readingNumber = (index + 1).toString();
-    const fieldName = `${fieldPrefix}${readingNumber}`;
-    const defFieldName = `def_${fieldPrefix}${readingNumber}`;
+    const targetField = `target${readingNumber}` as keyof TorqueReadingsForm;
+    const actualField = `actual${readingNumber}` as keyof TorqueReadingsForm;
+    const deviationField = `deviation${readingNumber}` as keyof TorqueReadingsForm;
+    const defTargetField = `def_target${readingNumber}` as keyof TorqueReadingsForm;
+    const defActualField = `def_actual${readingNumber}` as keyof TorqueReadingsForm;
+    const defDeviationField = `def_deviation${readingNumber}` as keyof TorqueReadingsForm;
     
-    // Update the reading
-    const updatedReadings = {
-      ...readings,
-      [fieldName]: value
-    };
+    const updatedReadings = { ...readings };
 
-    // Calculate deviation if both target and actual are present
-    if (field === 'target' || field === 'actual') {
-      const targetField = field === 'target' ? value : readings[`target${readingNumber}` as keyof TorqueReadingsForm];
-      const actualField = field === 'actual' ? value : readings[`actual${readingNumber}` as keyof TorqueReadingsForm];
-      
-      if (targetField && actualField) {
-        const deviation = calculateDeviation(targetField, actualField);
-        updatedReadings[`deviation${readingNumber}` as keyof TorqueReadingsForm] = deviation;
-        updatedReadings[`def_target${readingNumber}` as keyof TorqueReadingsForm] = targetField;
-        updatedReadings[`def_actual${readingNumber}` as keyof TorqueReadingsForm] = actualField;
-        updatedReadings[`def_deviation${readingNumber}` as keyof TorqueReadingsForm] = deviation;
+    if (field === 'target') {
+      updatedReadings[targetField] = value;
+      if (updatedReadings[actualField]) {
+        const deviation = calculateDeviation(value, updatedReadings[actualField]);
+        updatedReadings[deviationField] = deviation;
+        updatedReadings[defTargetField] = value;
+        updatedReadings[defActualField] = updatedReadings[actualField];
+        updatedReadings[defDeviationField] = deviation;
+      }
+    } else if (field === 'actual') {
+      updatedReadings[actualField] = value;
+      if (updatedReadings[targetField]) {
+        const deviation = calculateDeviation(updatedReadings[targetField], value);
+        updatedReadings[deviationField] = deviation;
+        updatedReadings[defTargetField] = updatedReadings[targetField];
+        updatedReadings[defActualField] = value;
+        updatedReadings[defDeviationField] = deviation;
       }
     }
 

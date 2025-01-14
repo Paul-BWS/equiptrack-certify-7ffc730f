@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
 
 export interface TorqueReadingsForm {
@@ -74,8 +74,6 @@ export const useTorqueReadingsForm = (equipment: any, isOpen: boolean) => {
 
   useEffect(() => {
     if (equipment && isOpen) {
-      console.log('Equipment data received:', equipment);
-      
       setReadings({
         model: equipment.model || '',
         serialNumber: equipment.serial_number || '',
@@ -114,9 +112,5 @@ export const useTorqueReadingsForm = (equipment: any, isOpen: boolean) => {
     }
   }, [equipment, isOpen]);
 
-  const resetForm = useCallback(() => {
-    setReadings({ ...initialFormState, certNumber: generateCertificateNumber() });
-  }, []);
-
-  return { readings, setReadings, resetForm };
+  return { readings, setReadings };
 };
