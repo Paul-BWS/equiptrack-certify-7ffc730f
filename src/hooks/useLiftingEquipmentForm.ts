@@ -5,7 +5,7 @@ interface LiftingEquipment {
   serial_number: string;
   last_service_date: string;
   next_service_due: string;
-  engineer?: string; // Made optional to match database schema
+  engineer?: string;
   result: string;
   notes: string;
   cert_number: string;
@@ -29,7 +29,7 @@ interface LiftingEquipmentReadings {
   certNumber: string;
   model: string;
   serialNumber: string;
-  engineer?: string; // Made optional to match database schema
+  engineer?: string;
   result: string;
   notes: string;
   status: string;
@@ -57,7 +57,7 @@ export const useLiftingEquipmentForm = (
     model: "",
     serialNumber: "",
     engineer: "",
-    result: "",
+    result: "PASS",
     notes: "",
     status: "ACTIVE",
     platform_condition: "PASS",
@@ -82,7 +82,7 @@ export const useLiftingEquipmentForm = (
         model: equipment.model || "",
         serialNumber: equipment.serial_number || "",
         engineer: equipment.engineer || "",
-        result: equipment.result || "",
+        result: equipment.result || "PASS",
         notes: equipment.notes || "",
         status: equipment.status || "ACTIVE",
         platform_condition: equipment.platform_condition || "PASS",
@@ -96,29 +96,6 @@ export const useLiftingEquipmentForm = (
         securing_bolts: equipment.securing_bolts || "PASS",
         toe_guards: equipment.toe_guards || "PASS",
         lubrication_moving_parts: equipment.lubrication_moving_parts || "PASS"
-      });
-    } else if (!isOpen) {
-      setReadings({
-        date: "",
-        retestDate: "",
-        certNumber: "",
-        model: "",
-        serialNumber: "",
-        engineer: "",
-        result: "",
-        notes: "",
-        status: "ACTIVE",
-        platform_condition: "PASS",
-        control_box_condition: "PASS",
-        hydraulic_hoses_condition: "PASS",
-        main_structure_inspection: "PASS",
-        oil_levels: "PASS",
-        rollers_and_guides: "PASS",
-        safety_mechanism: "PASS",
-        scissor_operation: "PASS",
-        securing_bolts: "PASS",
-        toe_guards: "PASS",
-        lubrication_moving_parts: "PASS"
       });
     }
   }, [equipment, isOpen]);

@@ -5,7 +5,7 @@ interface LiftingEquipmentReadings {
   retestDate: string;
   model: string;
   serialNumber: string;
-  engineer: string;
+  engineer?: string;
   result: string;
 }
 
@@ -27,11 +27,6 @@ export const validateLiftingEquipmentForm = (readings: LiftingEquipmentReadings)
 
   if (!readings.serialNumber) {
     toast.error("Serial number is required");
-    return false;
-  }
-
-  if (!readings.engineer) {
-    toast.error("Engineer name is required");
     return false;
   }
 

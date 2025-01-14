@@ -65,7 +65,7 @@ export interface LiftingEquipment {
   next_service_due: string;
   status?: string;
   notes?: string;
-  result?: string;
+  result: string;
   platform_condition?: string;
   control_box_condition?: string;
   hydraulic_hoses_condition?: string;
@@ -78,3 +78,5 @@ export interface LiftingEquipment {
   toe_guards?: string;
   lubrication_moving_parts?: string;
 }
+
+// ... keep existing code
