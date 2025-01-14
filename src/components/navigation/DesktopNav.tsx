@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ClipboardList, Users, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 
@@ -27,22 +27,6 @@ export const DesktopNav = () => {
           <span>Admin</span>
         </Link>
       )}
-      <div className="flex items-center gap-4">
-        <Link
-          to="/"
-          className="text-white hover:text-accent flex items-center gap-2"
-        >
-          <Users size={20} />
-          <span>Companies</span>
-        </Link>
-        <Link
-          to="/all-equipment"
-          className="text-white hover:text-accent flex items-center gap-2"
-        >
-          <ClipboardList size={20} />
-          <span>Equipment</span>
-        </Link>
-      </div>
     </div>
   );
 };
