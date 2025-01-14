@@ -10,12 +10,40 @@ export const useEquipmentData = (equipmentId: string | null, isOpen: boolean) =>
 
       const { data, error } = await supabase
         .from('lifting_equipment')
-        .select('*')
+        .select(`
+          id,
+          company_id,
+          cert_number,
+          model,
+          serial_number,
+          engineer,
+          last_service_date,
+          next_service_due,
+          test_result,
+          notes,
+          status,
+          platform_condition,
+          control_box_condition,
+          hydraulic_hoses_condition,
+          main_structure_inspection,
+          oil_levels,
+          rollers_and_guides,
+          safety_mechanism,
+          scissor_operation,
+          securing_bolts,
+          toe_guards,
+          lubrication_moving_parts
+        `)
         .eq('id', equipmentId)
         .single();
 
       if (error) throw error;
-      return data as LiftingEquipment;
+
+      // Map test_result to result for frontend compatibility
+      return {
+        ...data,
+        result: data.test_result
+      } as LiftingEquipment;
     },
     enabled: !!equipmentId && isOpen,
   });
