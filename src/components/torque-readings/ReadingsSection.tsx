@@ -33,6 +33,8 @@ export const ReadingsSection = ({
       
       if (target && actual) {
         updatedReading.deviation = calculateDeviation(target, actual);
+      } else {
+        updatedReading.deviation = "";
       }
     }
 

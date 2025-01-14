@@ -19,11 +19,14 @@ export const ReadingsHandler = ({
   isSaving 
 }: ReadingsHandlerProps) => {
   const handleReadingChange = (index: number, field: string, value: string) => {
-    const newReadings = [...readings.readings];
-    const newDefinitiveReadings = [...readings.definitiveReadings];
+    const newReadings = readings.readings.map(reading => ({...reading}));
+    const newDefinitiveReadings = readings.definitiveReadings.map(reading => ({...reading}));
     
     // Update the reading in the "as found" section
-    newReadings[index] = { ...newReadings[index], [field]: value };
+    newReadings[index] = { 
+      ...newReadings[index], 
+      [field]: value 
+    };
     
     // Calculate deviation for "as found" reading
     if (field === 'target' || field === 'actual') {
@@ -34,7 +37,7 @@ export const ReadingsHandler = ({
         const deviation = calculateDeviation(target, actual);
         newReadings[index].deviation = deviation;
         
-        // Create a new definitive reading object (not a reference)
+        // Create a completely new definitive reading object
         newDefinitiveReadings[index] = {
           target: target,
           actual: actual,
