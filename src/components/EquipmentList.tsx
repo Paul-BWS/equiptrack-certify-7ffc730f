@@ -87,10 +87,6 @@ export const EquipmentList = ({
     }
   };
 
-  if (isMobile) {
-    return null;
-  }
-
   return (
     <>
       <div className="rounded-md border">
