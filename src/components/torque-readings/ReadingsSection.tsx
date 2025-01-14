@@ -20,6 +20,25 @@ export const ReadingsSection = ({
     readingsArray.push({ target: "", actual: "", deviation: "" });
   }
 
+  const handleInputChange = (index: number, field: keyof Reading, value: string) => {
+    if (!onChange) return;
+
+    const updatedReading = { ...readingsArray[index] };
+    updatedReading[field] = value;
+
+    // Calculate deviation when either target or actual changes
+    if (field === 'target' || field === 'actual') {
+      const target = field === 'target' ? value : updatedReading.target;
+      const actual = field === 'actual' ? value : updatedReading.actual;
+      
+      if (target && actual) {
+        updatedReading.deviation = calculateDeviation(target, actual);
+      }
+    }
+
+    onChange(index, field, value);
+  };
+
   return (
     <div className="bg-[#F1F1F1] p-6 rounded-lg">
       <h3 className="font-semibold mb-4 text-base text-gray-900">{title}</h3>
@@ -30,7 +49,7 @@ export const ReadingsSection = ({
               <label className="text-base text-[#C8C8C9]">Target</label>
               <input
                 value={reading.target}
-                onChange={onChange ? (e) => onChange(index, "target", e.target.value) : undefined}
+                onChange={(e) => handleInputChange(index, "target", e.target.value)}
                 className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base"
                 readOnly={readOnly}
               />
@@ -39,7 +58,7 @@ export const ReadingsSection = ({
               <label className="text-base text-[#C8C8C9]">Actual</label>
               <input
                 value={reading.actual}
-                onChange={onChange ? (e) => onChange(index, "actual", e.target.value) : undefined}
+                onChange={(e) => handleInputChange(index, "actual", e.target.value)}
                 className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base"
                 readOnly={readOnly}
               />
