@@ -41,7 +41,7 @@ export const FormField = ({
 
   return (
     <div className="space-y-2">
-      <Label htmlFor={id} className="text-[#C8C8C9] text-sm">{label}</Label>
+      <Label htmlFor={id} className="text-base text-[#C8C8C9]">{label}</Label>
       <div className="relative">
         <Input
           id={id}
@@ -50,7 +50,7 @@ export const FormField = ({
           onChange={onChange}
           placeholder={placeholder}
           readOnly={readOnly}
-          className={`text-sm bg-white border-gray-200 placeholder:text-[#CCCCCC] ${className}`}
+          className={`text-base bg-white border-gray-200 placeholder:text-[#CCCCCC] ${className}`}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />

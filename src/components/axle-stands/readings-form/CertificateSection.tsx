@@ -29,12 +29,12 @@ export const CertificateSection = ({
   return (
     <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
       <div className="space-y-2">
-        <label className="text-sm text-[#C8C8C9]">Certificate Number</label>
+        <label className="text-base text-[#C8C8C9]">Certificate Number</label>
         <input
           type="text"
           value={certNumber}
           readOnly
-          className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
+          className="flex h-12 w-full text-base rounded-md border border-gray-200 bg-white px-3 py-2"
         />
       </div>
 
@@ -52,9 +52,9 @@ export const CertificateSection = ({
         />
 
         <div className="space-y-2">
-          <label className="text-sm text-[#C8C8C9]">Status</label>
+          <label className="text-base text-[#C8C8C9]">Status</label>
           <Select value={status} onValueChange={onStatusChange}>
-            <SelectTrigger className="h-12 bg-white border-gray-200">
+            <SelectTrigger className="h-12 bg-white border-gray-200 text-base">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
