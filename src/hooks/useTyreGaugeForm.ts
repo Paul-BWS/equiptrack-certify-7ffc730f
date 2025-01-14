@@ -54,7 +54,10 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
   useEffect(() => {
     const loadData = async () => {
       if (!equipmentId) {
-        resetForm();
+        // Only generate a new certificate number when creating a new record
+        if (!certNumber) {
+          setCertNumber(generateCertificateNumber());
+        }
         return;
       }
 
