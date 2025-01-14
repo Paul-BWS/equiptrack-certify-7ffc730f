@@ -52,9 +52,9 @@ const TorqueWrenches = () => {
       return equipmentData.map(wrench => ({
         id: wrench.id,
         model: wrench.model || '',
-        serial_number: wrench.serial_number || '',
-        last_service_date: wrench.last_service_date || '',
-        next_service_due: wrench.next_service_due || ''
+        serialNumber: wrench.serial_number || '',
+        lastServiceDate: wrench.last_service_date || '',
+        nextServiceDue: wrench.next_service_due || ''
       }));
     }
   });
@@ -149,7 +149,7 @@ const TorqueWrenches = () => {
           }}
           serviceRecord={{
             id: crypto.randomUUID(),
-            torque_wrench_id: selectedEquipmentId,
+            equipment_id: selectedEquipmentId,
             service_date: new Date().toISOString(),
             service_type: 'Calibration',
             technician: selectedEquipment.engineer || '',
