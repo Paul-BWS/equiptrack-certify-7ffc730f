@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Reading } from "@/types/equipment";
+import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
 
 export interface TorqueReadingsForm {
   certNumber: string;
@@ -26,9 +27,9 @@ const defaultReadings = [
 ];
 
 const initialFormState: TorqueReadingsForm = {
-  certNumber: "",
+  certNumber: generateCertificateNumber(),
   date: new Date().toISOString().split('T')[0],
-  retestDate: "",
+  retestDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
   model: "",
   serialNumber: "",
   engineer: "",
@@ -59,7 +60,7 @@ export const useTorqueReadingsForm = (equipment: any, isOpen: boolean) => {
   };
 
   useEffect(() => {
-    if (equipment) {
+    if (equipment && isOpen) {
       console.log('Loading equipment data:', equipment);
       
       const equipmentReadings = parseReadings(equipment.readings);
@@ -79,14 +80,17 @@ export const useTorqueReadingsForm = (equipment: any, isOpen: boolean) => {
         notes: equipment.notes || '',
         readings: equipmentReadings,
         definitiveReadings: equipmentDefinitiveReadings,
-        certNumber: equipment.cert_number || '',
+        certNumber: equipment.cert_number || generateCertificateNumber(),
         status: equipment.status || 'ACTIVE'
       }));
+    } else if (isOpen) {
+      // Reset form when opening for a new torque wrench
+      setReadings({ ...initialFormState, certNumber: generateCertificateNumber() });
     }
-  }, [equipment]);
+  }, [equipment, isOpen]);
 
   const resetForm = useCallback(() => {
-    setReadings({ ...initialFormState });
+    setReadings({ ...initialFormState, certNumber: generateCertificateNumber() });
   }, []);
 
   return { readings, setReadings, resetForm };
