@@ -21,10 +21,26 @@ export interface TorqueWrench {
   engineer?: string;
   result?: string;
   notes?: string;
-  readings?: Reading[];
-  definitive_readings?: Reading[];
   cert_number?: string;
   status?: string;
+  target1?: string;
+  actual1?: string;
+  deviation1?: string;
+  target2?: string;
+  actual2?: string;
+  deviation2?: string;
+  target3?: string;
+  actual3?: string;
+  deviation3?: string;
+  def_target1?: string;
+  def_actual1?: string;
+  def_deviation1?: string;
+  def_target2?: string;
+  def_actual2?: string;
+  def_deviation2?: string;
+  def_target3?: string;
+  def_actual3?: string;
+  def_deviation3?: string;
 }
 
 export interface ServiceRecord {
