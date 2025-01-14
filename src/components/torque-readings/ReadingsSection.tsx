@@ -17,8 +17,8 @@ export const ReadingsSection = ({
   const getReadingValue = (index: number, field: string) => {
     const readingNumber = (index + 1).toString();
     const prefix = title.toLowerCase().includes('definitive') ? 'def_' : '';
-    const fieldName = `${prefix}${field}${readingNumber}` as keyof typeof readings;
-    return readings[fieldName] || '';
+    const fieldName = `${prefix}${field}${readingNumber}`;
+    return readings?.[fieldName] || '';
   };
 
   return (
@@ -30,6 +30,7 @@ export const ReadingsSection = ({
             <div className="space-y-2">
               <label className="text-base text-[#C8C8C9]">Target</label>
               <input
+                type="number"
                 value={getReadingValue(index, 'target')}
                 onChange={(e) => onChange?.(index, "target", e.target.value)}
                 className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base"
@@ -39,6 +40,7 @@ export const ReadingsSection = ({
             <div className="space-y-2">
               <label className="text-base text-[#C8C8C9]">Actual</label>
               <input
+                type="number"
                 value={getReadingValue(index, 'actual')}
                 onChange={(e) => onChange?.(index, "actual", e.target.value)}
                 className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base"
