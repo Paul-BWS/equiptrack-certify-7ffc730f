@@ -21,7 +21,7 @@ export const ReadingsSection = ({
   }
 
   return (
-    <div className="bg-[#8E9196] p-6 rounded-lg">
+    <div className="bg-[#F1F1F1] p-6 rounded-lg">
       <h3 className="font-semibold mb-4 text-base text-gray-900">{title}</h3>
       <div className="space-y-4">
         {readingsArray.map((reading, index) => (
@@ -48,7 +48,7 @@ export const ReadingsSection = ({
               <label className="text-base text-[#C8C8C9]">Deviation (%)</label>
               <input
                 value={reading.deviation}
-                className="flex h-12 w-full rounded-md border border-gray-200 bg-[#8E9196] px-3 py-2 text-base"
+                className="flex h-12 w-full rounded-md border border-gray-200 bg-[#F1F1F1] px-3 py-2 text-base"
                 readOnly
               />
             </div>

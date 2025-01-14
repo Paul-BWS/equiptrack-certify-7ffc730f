@@ -31,7 +31,7 @@ export const MeasurementsSection = ({
   const isMobile = useIsMobile();
 
   return (
-    <div className="space-y-4 bg-[#8E9196] p-6 rounded-lg">
+    <div className="space-y-4 bg-[#F1F1F1] p-6 rounded-lg">
       <div className={`grid ${isMobile ? 'grid-cols-2' : 'grid-cols-4'} gap-6`}>
         <div className="space-y-2">
           <label className="text-base text-[#C8C8C9]">Min</label>
