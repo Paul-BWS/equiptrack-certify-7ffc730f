@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import { LiftingEquipmentHeader } from "@/components/lifting-equipment/LiftingEquipmentHeader";
+import { LiftingEquipmentList } from "@/components/lifting-equipment/LiftingEquipmentList";
 
 const LiftingEquipment = () => {
   const { customerId } = useParams();
@@ -44,9 +46,30 @@ const LiftingEquipment = () => {
         throw error;
       }
 
-      return equipmentData;
+      return equipmentData.map(equipment => ({
+        id: equipment.id,
+        model: equipment.model || '',
+        serialNumber: equipment.serial_number || '',
+        lastServiceDate: equipment.last_service_date || '',
+        nextServiceDue: equipment.next_service_due || ''
+      }));
     }
   });
+
+  const handleNewLiftingEquipment = () => {
+    setSelectedEquipmentId(null);
+    setShowReadingsModal(true);
+  };
+
+  const handleGenerateCertificate = (id: string) => {
+    setSelectedEquipmentId(id);
+    // Certificate modal will be implemented later
+  };
+
+  const handleViewReadings = (id: string) => {
+    setSelectedEquipmentId(id);
+    setShowReadingsModal(true);
+  };
 
   if (isLoading) {
     return (
@@ -66,11 +89,22 @@ const LiftingEquipment = () => {
       <Navigation />
       <main className="container mx-auto py-8">
         <div className="space-y-6">
-          <h1 className="text-2xl font-bold">Lifting Equipment</h1>
-          {/* We'll implement the full UI in the next iteration */}
-          <p>Coming soon...</p>
+          <LiftingEquipmentHeader
+            customerId={customerId!}
+            customerName={customerData?.name}
+            onNewLiftingEquipment={handleNewLiftingEquipment}
+          />
+          
+          <LiftingEquipmentList
+            liftingEquipment={liftingEquipment}
+            onNewLiftingEquipment={handleNewLiftingEquipment}
+            onGenerateCertificate={handleGenerateCertificate}
+            onViewReadings={handleViewReadings}
+          />
         </div>
       </main>
+
+      {/* Readings modal and certificate modal will be implemented later */}
     </div>
   );
 };
