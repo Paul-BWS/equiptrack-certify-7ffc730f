@@ -21,20 +21,15 @@ export const LiftingEquipmentList = ({
   onGenerateCertificate,
   onViewReadings,
 }: LiftingEquipmentListProps) => {
-  const handleNewLiftingEquipment = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onNewLiftingEquipment();
-  };
-
   if (liftingEquipment.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center p-8 text-center border rounded-lg bg-muted/10">
         <p className="text-muted-foreground mb-4">No lifting equipment found for this customer.</p>
         <Button 
-          onClick={handleNewLiftingEquipment}
+          onClick={onNewLiftingEquipment}
           className="bg-primary hover:bg-primary/90"
         >
+          <Plus className="h-4 w-4 mr-2" />
           Add First Lifting Equipment
         </Button>
       </div>
