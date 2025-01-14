@@ -5,7 +5,7 @@ import { UserMenu } from "./navigation/UserMenu";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { ArrowLeft, Users, ClipboardList } from "lucide-react";
+import { ArrowLeft, Grid, Users, ClipboardList } from "lucide-react";
 import { Button } from "./ui/button";
 import { supabase } from "@/lib/supabase";
 
@@ -63,23 +63,34 @@ export const Navigation = () => {
   }
 
   const isCustomerRoute = location.pathname.includes('/customers/') && customerId && customerId !== 'undefined';
+  const isTorqueWrenchRoute = location.pathname.includes('/torque-wrenches');
 
   return (
     <nav className="border-b bg-[#266bec]">
       <div className="flex h-16 items-center px-4">
         <div className="flex items-center space-x-4">
           {isCustomerRoute && (
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full bg-transparent border border-white hover:bg-white/10"
-              onClick={() => navigate(`/customers/${customerId}`)}
-            >
-              <ArrowLeft className="h-4 w-4 text-white" strokeWidth={2} />
-            </Button>
+            <>
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full bg-transparent border border-white hover:bg-white/10"
+                onClick={() => navigate(`/customers/${customerId}`)}
+              >
+                <ArrowLeft className="h-4 w-4 text-white" strokeWidth={2} />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full bg-transparent border border-white hover:bg-white/10"
+                onClick={() => navigate(`/customers/${customerId}/equipment`)}
+              >
+                <Grid className="h-4 w-4 text-white" strokeWidth={2} />
+              </Button>
+            </>
           )}
           <Link to="/" className="text-xl font-semibold text-white">
-            EquipTrack
+            {isTorqueWrenchRoute ? "Torque Wrenches" : "EquipTrack"}
           </Link>
         </div>
         <div className="flex-1 flex justify-end items-center space-x-4">
