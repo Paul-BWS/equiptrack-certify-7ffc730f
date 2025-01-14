@@ -64,6 +64,7 @@ export const Navigation = () => {
 
   const isCustomerRoute = location.pathname.includes('/customers/') && customerId && customerId !== 'undefined';
   const isTorqueWrenchRoute = location.pathname.includes('/torque-wrenches');
+  const isTyreGaugeRoute = location.pathname.includes('/tyre-gauges');
 
   return (
     <nav className="border-b bg-[#266bec]">
@@ -79,18 +80,10 @@ export const Navigation = () => {
               >
                 <ArrowLeft className="h-4 w-4 text-white" strokeWidth={2} />
               </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-full bg-transparent border border-white hover:bg-white/10"
-                onClick={() => navigate(`/customers/${customerId}/equipment`)}
-              >
-                <Grid className="h-4 w-4 text-white" strokeWidth={2} />
-              </Button>
             </>
           )}
           <Link to="/" className="text-xl font-semibold text-white">
-            {isTorqueWrenchRoute ? "Torque Wrenches" : "EquipTrack"}
+            {isTorqueWrenchRoute ? "Torque Wrenches" : isTyreGaugeRoute ? "Tyre Gauges" : "EquipTrack"}
           </Link>
         </div>
         <div className="flex-1 flex justify-end items-center space-x-4">

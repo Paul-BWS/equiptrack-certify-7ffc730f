@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Grid, Plus } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Plus } from "lucide-react";
 
 interface TyreGaugeHeaderProps {
   customerId: string;
@@ -13,37 +12,23 @@ export const TyreGaugeHeader = ({
   customerName,
   onNewTyreGauge,
 }: TyreGaugeHeaderProps) => {
-  const navigate = useNavigate();
-
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => navigate(`/customers/${customerId}/equipment`)}
-              className="rounded-full bg-primary hover:bg-primary/90 w-10"
-            >
-              <Grid className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
-            </Button>
-            <Button 
-              size="icon"
-              onClick={onNewTyreGauge}
-              className="rounded-full bg-primary hover:bg-primary/90"
-            >
-              <Plus className="h-4 w-4 text-primary-foreground" strokeWidth={2} />
-            </Button>
-          </div>
-        </div>
-        {customerName && (
-          <div className="flex flex-col gap-1">
+          {customerName && (
             <h1 className="text-3xl font-bold">
               {customerName}
             </h1>
-          </div>
-        )}
+          )}
+          <Button 
+            onClick={onNewTyreGauge}
+            className="bg-primary hover:bg-primary/90"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            New Tyre Gauge
+          </Button>
+        </div>
       </div>
     </div>
   );
