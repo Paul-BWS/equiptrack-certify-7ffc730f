@@ -21,8 +21,9 @@ export const TorqueReadingsModal = ({
   onOpenChange,
   equipmentId,
 }: TorqueReadingsModalProps) => {
+  // Only fetch equipment data if we have an equipmentId
   const { data: equipment, isLoading, error } = useEquipmentData(equipmentId, open);
-  const { readings, setReadings } = useTorqueReadingsForm(equipment, open);
+  const { readings, setReadings } = useTorqueReadingsForm(equipmentId ? equipment : null, open);
   const { handleSave, isSaving } = useTorqueWrenchSubmit(equipmentId, () => {
     toast.success("Torque wrench data saved successfully");
     onOpenChange(false);
@@ -41,7 +42,7 @@ export const TorqueReadingsModal = ({
     return null;
   }
 
-  if (isLoading) {
+  if (isLoading && equipmentId) {
     return <LoadingView open={open} onOpenChange={onOpenChange} />;
   }
 
