@@ -23,7 +23,6 @@ export const EquipmentRow = ({ equipment }: EquipmentRowProps) => {
       <TableCell>{equipment.serialNumber}</TableCell>
       <TableCell>{formatDate(equipment.lastServiceDate)}</TableCell>
       <TableCell>{formatDate(equipment.nextServiceDue)}</TableCell>
-      <TableCell>{equipment.equipmentType || 'Unknown Type'}</TableCell>
       <TableCell className="text-right">
         <TableActions
           onDelete={equipment.onDelete}

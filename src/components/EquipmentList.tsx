@@ -101,7 +101,6 @@ export const EquipmentList = ({
               <TableHead>Serial Number</TableHead>
               <TableHead>Last Service</TableHead>
               <TableHead>Next Service</TableHead>
-              <TableHead>Type</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
