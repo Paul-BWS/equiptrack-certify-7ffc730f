@@ -6,9 +6,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+interface InspectionItem {
+  key: string;
+  label: string;
+}
+
 interface InspectionChecklistProps {
-  items: Array<{ key: string; label: string }>;
-  values: Record<string, string>;
+  items: readonly InspectionItem[];
+  values: Partial<Record<string, string>>;
   onFieldChange: (field: string, value: string) => void;
 }
 
