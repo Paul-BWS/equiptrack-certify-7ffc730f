@@ -101,7 +101,7 @@ export const AxleStandsReadingsModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 border shadow-lg">
         <form onSubmit={handleSubmit} className="space-y-6 p-6">
           <BasicDetails
             model={formData.model}
