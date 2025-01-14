@@ -80,6 +80,7 @@ export const ModalContent = ({
     const companyId = pathSegments[companyIdIndex];
 
     const torqueWrenchData = {
+      id: equipmentId || undefined,
       company_id: companyId,
       model: readings.model,
       serial_number: readings.serialNumber,
