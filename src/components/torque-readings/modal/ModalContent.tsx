@@ -1,4 +1,4 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { DialogContent } from "@/components/ui/dialog";
 import { ModalHeader } from "./ModalHeader";
 import { LoadingView } from "./LoadingView";
 import { ModalForm } from "./ModalForm";
@@ -22,11 +22,14 @@ export const ModalContent = ({
   equipmentId,
 }: ModalContentProps) => {
   const { data: equipment, isLoading, error } = useEquipmentData(equipmentId, open);
-  const { readings, setReadings } = useTorqueReadingsForm(equipmentId ? equipment : null, open);
+  const { readings, setReadings } = useTorqueReadingsForm(equipment, open);
   const { handleSave, isSaving } = useTorqueWrenchSubmit(equipmentId, () => {
     toast.success("Torque wrench data saved successfully");
     onOpenChange(false);
   });
+
+  console.log('Equipment data:', equipment); // Debug log
+  console.log('Current readings:', readings); // Debug log
 
   // Generate certificate number for new entries
   if (!equipmentId && !readings.certNumber) {
@@ -37,6 +40,7 @@ export const ModalContent = ({
   }
 
   if (error) {
+    console.error('Error loading equipment:', error); // Debug log
     toast.error("Failed to load equipment data");
     return null;
   }
@@ -49,13 +53,6 @@ export const ModalContent = ({
     if (!equipmentId) return;
 
     try {
-      const { error: certError } = await supabase
-        .from('certificates')
-        .delete()
-        .eq('torque_wrench_id', equipmentId);
-
-      if (certError) throw certError;
-
       const { error: deleteError } = await supabase
         .from('torque_wrench')
         .delete()
@@ -83,7 +80,6 @@ export const ModalContent = ({
     const companyId = pathSegments[companyIdIndex];
 
     const torqueWrenchData = {
-      id: equipmentId,
       company_id: companyId,
       model: readings.model,
       serial_number: readings.serialNumber,
