@@ -55,7 +55,6 @@ export const CertificateTemplate = ({ equipmentId }: CertificateTemplateProps) =
           <img src={settings.logo} alt="Company Logo" className="h-16 w-auto" />
           <div>
             <h1 className="text-xl font-bold text-primary">Report Of Thorough LOLER Examination</h1>
-            <p className="text-xs text-gray-600">BS EN ISO 6789:2017</p>
           </div>
         </div>
         <div className="text-right">
