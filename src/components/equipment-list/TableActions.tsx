@@ -1,38 +1,46 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Trash2, FileText } from "lucide-react";
+import {
+  FileText,
+  LineChart,
+  Trash2,
+} from "lucide-react";
 
 interface TableActionsProps {
-  onDelete: (e: React.MouseEvent) => void;
+  onDelete: () => void;
   onGenerateCertificate: () => void;
   onViewReadings: () => void;
 }
 
-export const TableActions = ({ onDelete, onGenerateCertificate, onViewReadings }: TableActionsProps) => {
+export const TableActions = ({
+  onDelete,
+  onGenerateCertificate,
+  onViewReadings,
+}: TableActionsProps) => {
   return (
     <div className="flex justify-end gap-2">
       <Button
-        variant="ghost"
-        size="icon"
-        onClick={onDelete}
-        className="rounded-full bg-white border-2 border-destructive hover:bg-destructive/10 h-10 w-10 p-0"
-      >
-        <Trash2 className="h-4 w-4 text-destructive" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={onGenerateCertificate}
-        className="rounded-full bg-white border-2 border-primary hover:bg-primary/10 h-10 w-10 p-0"
-      >
-        <FileText className="h-4 w-4 text-primary" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
         onClick={onViewReadings}
-        className="rounded-full bg-white border-2 border-primary hover:bg-primary/10 h-10 w-10 p-0"
+        variant="outline"
+        size="icon"
+        className="h-8 w-8 border-[1px]"
       >
-        <ArrowRight className="h-4 w-4 text-primary" />
+        <LineChart className="h-4 w-4" />
+      </Button>
+      <Button
+        onClick={onGenerateCertificate}
+        variant="outline"
+        size="icon"
+        className="h-8 w-8 border-[1px]"
+      >
+        <FileText className="h-4 w-4" />
+      </Button>
+      <Button
+        onClick={onDelete}
+        variant="outline"
+        size="icon"
+        className="h-8 w-8 border-[1px]"
+      >
+        <Trash2 className="h-4 w-4" />
       </Button>
     </div>
   );
