@@ -154,7 +154,7 @@ export const ModalForm = ({
         <h3 className="text-lg font-semibold mb-4">Inspection Checklist</h3>
         <div className="space-y-4">
           {inspectionItems.map(({ key, label }) => (
-            <div key={key} className="grid grid-cols-[2fr,3fr,1fr] gap-4 items-center">
+            <div key={key} className="grid grid-cols-1 md:grid-cols-[2fr,3fr,1fr] gap-4 items-center">
               <span className="text-gray-500">{label}</span>
               <input
                 type="text"
