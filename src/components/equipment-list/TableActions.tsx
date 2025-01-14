@@ -1,46 +1,38 @@
 import { Button } from "@/components/ui/button";
-import {
-  FileText,
-  LineChart,
-  Trash2,
-} from "lucide-react";
+import { ArrowRight, Trash2, FileText } from "lucide-react";
 
 interface TableActionsProps {
-  onDelete: () => void;
+  onDelete: (e: React.MouseEvent) => void;
   onGenerateCertificate: () => void;
   onViewReadings: () => void;
 }
 
-export const TableActions = ({
-  onDelete,
-  onGenerateCertificate,
-  onViewReadings,
-}: TableActionsProps) => {
+export const TableActions = ({ onDelete, onGenerateCertificate, onViewReadings }: TableActionsProps) => {
   return (
     <div className="flex justify-end gap-2">
       <Button
-        onClick={onViewReadings}
-        variant="outline"
+        variant="ghost"
         size="icon"
-        className="h-8 w-8 border-[1px]"
-      >
-        <LineChart className="h-4 w-4" />
-      </Button>
-      <Button
-        onClick={onGenerateCertificate}
-        variant="outline"
-        size="icon"
-        className="h-8 w-8 border-[1px]"
-      >
-        <FileText className="h-4 w-4" />
-      </Button>
-      <Button
         onClick={onDelete}
-        variant="outline"
-        size="icon"
-        className="h-8 w-8 border-[1px]"
+        className="rounded-full bg-white border-[1px] border-destructive hover:bg-destructive/10 h-10 w-10 p-0"
       >
-        <Trash2 className="h-4 w-4" />
+        <Trash2 className="h-4 w-4 text-destructive" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={onGenerateCertificate}
+        className="rounded-full bg-white border-[1px] border-primary hover:bg-primary/10 h-10 w-10 p-0"
+      >
+        <FileText className="h-4 w-4 text-primary" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={onViewReadings}
+        className="rounded-full bg-white border-[1px] border-primary hover:bg-primary/10 h-10 w-10 p-0"
+      >
+        <ArrowRight className="h-4 w-4 text-primary" />
       </Button>
     </div>
   );
