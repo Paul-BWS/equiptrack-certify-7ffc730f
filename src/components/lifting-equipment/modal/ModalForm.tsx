@@ -1,6 +1,15 @@
 import { FormActions } from "@/components/torque-readings/form-sections/FormActions";
 import { HeaderSection } from "@/components/torque-readings/HeaderSection";
 import { NotesSection } from "@/components/torque-readings/form-sections/NotesSection";
+import { useStaffMembers } from "@/hooks/useStaffMembers";
+import { Loader2 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface LiftingEquipmentReadings {
   date: string;
@@ -33,6 +42,8 @@ export const ModalForm = ({
   isSaving,
   equipmentId,
 }: ModalFormProps) => {
+  const { data: staff, isLoading: isLoadingStaff } = useStaffMembers();
+  
   const handleFieldChange = (field: keyof LiftingEquipmentReadings, value: string) => {
     setReadings({ ...readings, [field]: value });
   };
@@ -73,12 +84,31 @@ export const ModalForm = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <label className="text-sm text-[#C8C8C9]">Engineer</label>
-            <input
-              type="text"
-              value={readings.engineer}
-              onChange={(e) => handleFieldChange("engineer", e.target.value)}
-              className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
-            />
+            <Select 
+              value={readings.engineer} 
+              onValueChange={(value) => handleFieldChange("engineer", value)}
+            >
+              <SelectTrigger className="h-12 bg-white border-gray-200">
+                {isLoadingStaff ? (
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Loading engineers...</span>
+                  </div>
+                ) : (
+                  <SelectValue placeholder="Select an engineer" />
+                )}
+              </SelectTrigger>
+              <SelectContent>
+                {staff?.map((engineer) => (
+                  <SelectItem 
+                    key={engineer.id} 
+                    value={engineer.name}
+                  >
+                    {engineer.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
             <label className="text-sm text-[#C8C8C9]">Result</label>
