@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { DatePickerField } from "@/components/tyre-gauge-readings/form-fields/DatePickerField";
 
 interface LiftingEquipmentReadings {
   date: string;
@@ -17,7 +18,7 @@ interface LiftingEquipmentReadings {
   certNumber: string;
   model: string;
   serialNumber: string;
-  engineer: string;
+  engineer?: string; // Made optional to match database schema
   result: string;
   notes: string;
   status: string;
@@ -75,14 +76,18 @@ export const ModalForm = ({
 
   return (
     <form onSubmit={onSubmit} className="space-y-6 p-6">
-      <HeaderSection
-        date={readings.date}
-        status={readings.status}
-        retestDate={readings.retestDate}
-        certNumber={readings.certNumber}
-        onDateChange={(value) => handleFieldChange("date", value)}
-        onRetestDateChange={(value) => handleFieldChange("retestDate", value)}
-      />
+      <div className="space-y-4">
+        <DatePickerField
+          label="Test Date"
+          date={readings.date}
+          onDateChange={(value) => handleFieldChange("date", value)}
+        />
+        <DatePickerField
+          label="Retest Date"
+          date={readings.retestDate}
+          onDateChange={(value) => handleFieldChange("retestDate", value)}
+        />
+      </div>
 
       <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

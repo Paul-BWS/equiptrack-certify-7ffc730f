@@ -5,7 +5,7 @@ interface LiftingEquipment {
   serial_number: string;
   last_service_date: string;
   next_service_due: string;
-  engineer: string;
+  engineer?: string; // Made optional to match database schema
   result: string;
   notes: string;
   cert_number: string;
@@ -29,7 +29,7 @@ interface LiftingEquipmentReadings {
   certNumber: string;
   model: string;
   serialNumber: string;
-  engineer: string;
+  engineer?: string; // Made optional to match database schema
   result: string;
   notes: string;
   status: string;
