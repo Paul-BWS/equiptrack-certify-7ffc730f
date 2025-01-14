@@ -24,8 +24,22 @@ export const CertificateModal = ({
   const handlePrint = () => {
     const timestamp = new Date().toISOString();
     console.log("Certificate printed on:", timestamp);
-    toast.success(`Certificate ${certificate.certification_number} printed at ${new Date(timestamp).toLocaleString()}`);
+    
+    // Set the filename for printing
+    const style = document.createElement('style');
+    style.innerHTML = `@page { size: auto; margin: 0mm; } @media print { body { -webkit-print-color-adjust: exact; } }`;
+    document.head.appendChild(style);
+    
+    const originalTitle = document.title;
+    document.title = `${certificate.certification_number}`;
+    
     window.print();
+    
+    // Clean up
+    document.head.removeChild(style);
+    document.title = originalTitle;
+    
+    toast.success(`Certificate ${certificate.certification_number} printed at ${new Date(timestamp).toLocaleString()}`);
   };
 
   const handleEmail = async () => {
@@ -82,7 +96,7 @@ export const CertificateModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[95vw] h-[90vh] p-4 overflow-auto bg-white">
+      <DialogContent className="max-w-[800px] h-[90vh] p-4 overflow-auto bg-white">
         <div className="flex justify-between gap-4 mb-4 sticky top-0 bg-white z-10 p-2 no-print">
           <Button
             variant="ghost"
