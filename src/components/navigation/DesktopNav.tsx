@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ClipboardList, Users } from "lucide-react";
+import { ClipboardList, Users, Settings } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 
@@ -23,6 +23,7 @@ export const DesktopNav = () => {
           to="/admin/users"
           className="text-white hover:text-accent flex items-center gap-2"
         >
+          <Settings size={20} />
           <span>Admin</span>
         </Link>
       )}
