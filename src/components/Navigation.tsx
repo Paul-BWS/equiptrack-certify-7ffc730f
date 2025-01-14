@@ -82,7 +82,7 @@ export const Navigation = () => {
             EquipTrack
           </Link>
         </div>
-        <div className="ml-auto flex items-center space-x-4">
+        <div className="flex items-center space-x-4">
           <DesktopNav />
           <MobileNav 
             isOpen={isMobileMenuOpen}

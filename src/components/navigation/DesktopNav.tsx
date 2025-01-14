@@ -2,8 +2,12 @@ import { Link } from "react-router-dom";
 import { ClipboardList, Users, Settings } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { useLocation } from "react-router-dom";
 
 export const DesktopNav = () => {
+  const location = useLocation();
+  const isCustomerList = location.pathname === '/';
+
   const { data: isBWSUser } = useQuery({
     queryKey: ['is-bws-user'],
     queryFn: async () => {
@@ -17,7 +21,7 @@ export const DesktopNav = () => {
   });
 
   return (
-    <div className="hidden md:flex gap-4">
+    <div className="hidden md:flex items-center gap-4 ml-auto">
       <Link
         to="/"
         className="text-white hover:text-accent flex items-center gap-2"
@@ -32,7 +36,7 @@ export const DesktopNav = () => {
         <ClipboardList size={20} />
         <span>Equipment</span>
       </Link>
-      {isBWSUser && (
+      {isBWSUser && isCustomerList && (
         <Link
           to="/admin/users"
           className="text-white hover:text-accent flex items-center gap-2"
