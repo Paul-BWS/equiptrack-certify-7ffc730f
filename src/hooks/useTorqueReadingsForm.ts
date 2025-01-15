@@ -36,7 +36,7 @@ export interface TorqueReadingsForm {
 }
 
 const initialFormState: TorqueReadingsForm = {
-  certNumber: generateCertificateNumber(),
+  certNumber: "",
   date: new Date().toISOString().split('T')[0],
   retestDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
   model: "",
@@ -74,6 +74,7 @@ export const useTorqueReadingsForm = (equipment: any, isOpen: boolean) => {
 
   useEffect(() => {
     if (equipment && isOpen) {
+      console.log('Setting form data from equipment:', equipment);
       setReadings({
         model: equipment.model || '',
         serialNumber: equipment.serial_number || '',

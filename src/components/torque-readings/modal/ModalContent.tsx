@@ -5,7 +5,6 @@ import { ModalForm } from "./ModalForm";
 import { useEquipmentData } from "@/hooks/useEquipmentData";
 import { useTorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
 import { useTorqueWrenchSubmit } from "@/hooks/useTorqueWrenchSubmit";
-import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
 import { validateForm } from "@/utils/torqueReadingsValidation";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
@@ -77,6 +76,7 @@ export const ModalContent = ({
     const torqueWrenchData = {
       id: equipmentId || undefined,
       company_id: companyId,
+      cert_number: readings.certNumber,
       model: readings.model,
       serial_number: readings.serialNumber,
       min_torque: parseFloat(readings.min),
@@ -87,7 +87,6 @@ export const ModalContent = ({
       engineer: readings.engineer,
       result: readings.result,
       notes: readings.notes,
-      cert_number: readings.certNumber,
       status: readings.status,
       target1: readings.target1,
       actual1: readings.actual1,
