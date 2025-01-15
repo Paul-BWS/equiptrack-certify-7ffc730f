@@ -4,7 +4,8 @@ import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
 
 export const useFormState = (equipmentId: string | null) => {
   const [isSaving, setIsSaving] = useState(false);
-  const [certNumber, setCertNumber] = useState(() => generateCertificateNumber());
+  // Generate certificate number only once when the component mounts
+  const [certNumber] = useState(() => generateCertificateNumber());
   const [date, setDate] = useState<Date>();
   const [retestDate, setRetestDate] = useState<Date>();
   const [model, setModel] = useState("");
@@ -29,7 +30,6 @@ export const useFormState = (equipmentId: string | null) => {
     isSaving,
     setIsSaving,
     certNumber,
-    setCertNumber,
     date,
     setDate,
     retestDate,
