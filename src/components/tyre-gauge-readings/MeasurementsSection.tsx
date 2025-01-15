@@ -34,9 +34,8 @@ export const MeasurementsSection = ({
             id="min"
             value={min}
             onChange={(e) => onMinChange(e.target.value)}
-            type="number"
+            type="text"
             inputMode="decimal"
-            pattern="[0-9]*"
             placeholder="Min pressure"
             className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
           />
@@ -48,9 +47,8 @@ export const MeasurementsSection = ({
             id="max"
             value={max}
             onChange={(e) => onMaxChange(e.target.value)}
-            type="number"
+            type="text"
             inputMode="decimal"
-            pattern="[0-9]*"
             placeholder="Max pressure"
             className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
           />
