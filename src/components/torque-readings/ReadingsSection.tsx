@@ -37,7 +37,7 @@ export const ReadingsSection = ({
         
         if (target && actual) {
           const deviation = calculateDeviation(target, actual);
-          onChange(index, 'deviation', deviation.toString());
+          onChange(index, 'deviation', deviation);
         }
       }
     }
