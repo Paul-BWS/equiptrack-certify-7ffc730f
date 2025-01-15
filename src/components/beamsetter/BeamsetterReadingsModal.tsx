@@ -17,6 +17,12 @@ import { NotesSection } from "./readings-form/NotesSection";
 import { FormActions } from "./readings-form/FormActions";
 import { format } from "date-fns";
 
+interface BeamsetterReadingsModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  equipmentId: string | null;
+}
+
 export interface BeamsetterFormData {
   certNumber: string;
   model: string;
