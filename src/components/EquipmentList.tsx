@@ -46,14 +46,14 @@ export const EquipmentList = ({
 
   const handleDelete = async (id: string) => {
     try {
-      const { error: torqueWrenchError } = await supabase
-        .from('torque_wrench')
+      const { error } = await supabase
+        .from('tyre_gauges')
         .delete()
         .eq('id', id);
 
-      if (torqueWrenchError) {
-        console.error('Error deleting torque wrench:', torqueWrenchError);
-        throw torqueWrenchError;
+      if (error) {
+        console.error('Error deleting tyre gauge:', error);
+        throw error;
       }
 
       toast.success("Equipment deleted successfully");
