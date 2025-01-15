@@ -20,6 +20,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 
 interface EquipmentListProps {
   equipment: Array<{
@@ -43,21 +45,28 @@ export const EquipmentList = ({
   const isMobile = useIsMobile();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [equipmentToDelete, setEquipmentToDelete] = useState<string | null>(null);
+  const queryClient = useQueryClient();
+  const { customerId } = useParams();
 
   const handleDelete = async (id: string) => {
     try {
       const { error } = await supabase
-        .from('tyre_gauges')
+        .from('beamsetter')
         .delete()
         .eq('id', id);
 
       if (error) {
-        console.error('Error deleting tyre gauge:', error);
+        console.error('Error deleting beamsetter:', error);
         throw error;
       }
 
+      await queryClient.invalidateQueries({
+        queryKey: ['equipment', customerId, 'beamsetter']
+      });
+      
       toast.success("Equipment deleted successfully");
-      window.location.reload();
+      setIsDeleteDialogOpen(false);
+      setEquipmentToDelete(null);
     } catch (error: any) {
       console.error('Error deleting equipment:', error);
       toast.error("Failed to delete equipment");
@@ -72,8 +81,6 @@ export const EquipmentList = ({
   const onConfirmDelete = () => {
     if (equipmentToDelete) {
       handleDelete(equipmentToDelete);
-      setIsDeleteDialogOpen(false);
-      setEquipmentToDelete(null);
     }
   };
 
