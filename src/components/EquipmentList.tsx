@@ -46,16 +46,6 @@ export const EquipmentList = ({
 
   const handleDelete = async (id: string) => {
     try {
-      const { error: certificatesError } = await supabase
-        .from('certificates')
-        .delete()
-        .eq('torque_wrench_id', id);
-
-      if (certificatesError) {
-        console.error('Error deleting certificates:', certificatesError);
-        throw certificatesError;
-      }
-
       const { error: torqueWrenchError } = await supabase
         .from('torque_wrench')
         .delete()
@@ -125,8 +115,7 @@ export const EquipmentList = ({
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the equipment
-              and all of its associated certificates.
+              This action cannot be undone. This will permanently delete the equipment.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
