@@ -18,7 +18,7 @@ export const CertificateHeader = ({ certNumber }: CertificateHeaderProps) => {
       </div>
       <div className="text-right">
         <p className="text-base font-semibold text-primary">Certificate No:</p>
-        <p className="text-base">{certNumber}</p>
+        <p className="text-base font-mono">{certNumber || 'N/A'}</p>
       </div>
     </div>
   );
