@@ -58,6 +58,10 @@ export const useFormSubmit = (equipmentId: string | null, onSuccess: () => void)
         const companyIdIndex = pathSegments.indexOf('customers') + 1;
         const companyId = pathSegments[companyIdIndex];
 
+        if (!companyId) {
+          throw new Error('Company ID not found in URL');
+        }
+
         const { error } = await supabase
           .from('tyre_gauges')
           .insert([{
