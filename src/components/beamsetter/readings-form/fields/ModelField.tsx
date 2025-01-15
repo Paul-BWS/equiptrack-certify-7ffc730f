@@ -22,7 +22,7 @@ export const ModelField = ({ form }: ModelFieldProps) => {
         <FormItem>
           <FormLabel className="text-sm text-[#C8C8C9]">Model</FormLabel>
           <FormControl>
-            <Input {...field} className="h-12 bg-white border-[#E5E7EB] border-[0.5px] rounded-[4px]" />
+            <Input {...field} className="h-12 bg-white border-[#E5E7EB] border-[0.5px] rounded-md" />
           </FormControl>
           <FormMessage />
         </FormItem>

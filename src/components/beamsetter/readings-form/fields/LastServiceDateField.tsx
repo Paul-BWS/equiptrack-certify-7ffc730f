@@ -30,7 +30,7 @@ export const LastServiceDateField = ({ form }: LastServiceDateFieldProps) => {
                 const date = new Date(e.target.value);
                 field.onChange(date);
               }}
-              className="h-12 bg-white"
+              className="h-12 bg-white border-[#E5E7EB] border-[0.5px] rounded-md"
             />
           </FormControl>
           <FormMessage />

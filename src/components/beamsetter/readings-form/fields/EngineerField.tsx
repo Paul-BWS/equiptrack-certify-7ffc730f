@@ -33,7 +33,7 @@ export const EngineerField = ({ form }: EngineerFieldProps) => {
           <FormLabel className="text-sm text-[#C8C8C9]">Engineer</FormLabel>
           <Select onValueChange={field.onChange} value={field.value}>
             <FormControl>
-              <SelectTrigger className="h-12 bg-white">
+              <SelectTrigger className="h-12 bg-white border-[#E5E7EB] border-[0.5px] rounded-md">
                 {isLoadingStaff ? (
                   <div className="flex items-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" />

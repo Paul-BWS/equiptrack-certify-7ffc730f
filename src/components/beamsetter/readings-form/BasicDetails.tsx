@@ -12,12 +12,17 @@ interface BasicDetailsProps {
 
 export const BasicDetails = ({ form }: BasicDetailsProps) => {
   return (
-    <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
-      <CertificateField form={form} />
-      <ModelField form={form} />
-      <SerialNumberField form={form} />
-      <EngineerField form={form} />
-      <LastServiceDateField form={form} />
+    <div className="space-y-6">
+      <div className="bg-[#F9F9F9] p-6 rounded-lg space-y-4">
+        <CertificateField form={form} />
+      </div>
+      
+      <div className="bg-[#F9F9F9] p-6 rounded-lg space-y-4">
+        <ModelField form={form} />
+        <SerialNumberField form={form} />
+        <EngineerField form={form} />
+        <LastServiceDateField form={form} />
+      </div>
     </div>
   );
 };
