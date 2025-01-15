@@ -50,7 +50,7 @@ export const useDataLoader = (equipmentId: string | null, formState: FormState) 
         if (data.last_service_date) {
           console.log("Raw last service date from DB:", data.last_service_date);
           try {
-            const parsedDate = new Date(data.last_service_date);
+            const parsedDate = parseISO(data.last_service_date);
             console.log("Parsed last service date:", parsedDate);
             formState.setDate(parsedDate);
           } catch (error) {
@@ -62,7 +62,7 @@ export const useDataLoader = (equipmentId: string | null, formState: FormState) 
         if (data.next_service_due) {
           console.log("Raw next service date from DB:", data.next_service_due);
           try {
-            const parsedDate = new Date(data.next_service_due);
+            const parsedDate = parseISO(data.next_service_due);
             console.log("Parsed next service date:", parsedDate);
             formState.setRetestDate(parsedDate);
           } catch (error) {
