@@ -12,68 +12,58 @@ export const useDataLoader = (equipmentId: string | null, formState: FormState) 
         return;
       }
 
-      console.log("Loading tyre gauge data for ID:", equipmentId);
-      
-      const { data, error } = await supabase
-        .from('tyre_gauges')
-        .select('*')
-        .eq('id', equipmentId)
-        .single();
+      try {
+        const { data, error } = await supabase
+          .from('tyre_gauges')
+          .select('*')
+          .eq('id', equipmentId)
+          .single();
 
-      if (error) {
+        if (error) {
+          throw error;
+        }
+
+        console.log("Fetched tyre gauge data:", data);
+
+        if (data) {
+          // Only set cert number if the setter exists and we have data
+          if (formState.setCertNumber && data.cert_number) {
+            formState.setCertNumber(data.cert_number);
+          }
+          
+          // Handle last_service_date
+          if (data.last_service_date) {
+            formState.setDate(parseISO(data.last_service_date));
+          }
+
+          // Handle next_service_due
+          if (data.next_service_due) {
+            formState.setRetestDate(parseISO(data.next_service_due));
+          }
+
+          formState.setModel(data.model || "");
+          formState.setSerialNumber(data.serial_number || "");
+          formState.setEngineer(data.engineer || "");
+          formState.setMin(data.min_pressure?.toString() || "");
+          formState.setMax(data.max_pressure?.toString() || "");
+          formState.setUnits(data.units || "psi");
+          formState.setStatus(data.status || "ACTIVE");
+          formState.setNotes(data.notes || "");
+          
+          // Handle readings
+          if (data.readings) {
+            formState.setReadings(Array.isArray(data.readings) ? data.readings : []);
+          }
+          
+          // Handle definitive readings
+          if (data.definitive_readings) {
+            formState.setDefinitiveReadings(Array.isArray(data.definitive_readings) ? data.definitive_readings : []);
+          }
+          
+          formState.setResult(data.result || "PASS");
+        }
+      } catch (error) {
         console.error('Error loading tyre gauge:', error);
-        return;
-      }
-
-      console.log("Fetched tyre gauge data:", data);
-
-      if (data) {
-        // Only set cert number if the setter exists and we have data
-        if (formState.setCertNumber && data.cert_number) {
-          formState.setCertNumber(data.cert_number);
-        }
-        
-        // Handle last_service_date
-        if (data.last_service_date) {
-          console.log("Raw last service date from DB:", data.last_service_date);
-          try {
-            const parsedDate = parseISO(data.last_service_date);
-            console.log("Parsed last service date:", parsedDate);
-            formState.setDate(parsedDate);
-          } catch (error) {
-            console.error("Error parsing last_service_date:", error);
-          }
-        }
-        
-        // Handle next_service_due
-        if (data.next_service_due) {
-          console.log("Raw next service date from DB:", data.next_service_due);
-          try {
-            const parsedDate = parseISO(data.next_service_due);
-            console.log("Parsed next service date:", parsedDate);
-            formState.setRetestDate(parsedDate);
-          } catch (error) {
-            console.error("Error parsing next_service_due:", error);
-          }
-        }
-        
-        formState.setModel(data.model || "");
-        formState.setSerialNumber(data.serial_number || "");
-        formState.setEngineer(data.engineer || "");
-        formState.setMin(data.min_pressure?.toString() || "");
-        formState.setMax(data.max_pressure?.toString() || "");
-        formState.setUnits(data.units || "psi");
-        formState.setStatus(data.status || "ACTIVE");
-        formState.setResult(data.result || "PASS");
-        formState.setNotes(data.notes || "");
-        formState.setReadings(data.readings || [
-          { target: "", actual: "", deviation: "" },
-          { target: "", actual: "", deviation: "" },
-        ]);
-        formState.setDefinitiveReadings(data.definitive_readings || [
-          { target: "", actual: "", deviation: "" },
-          { target: "", actual: "", deviation: "" },
-        ]);
       }
     };
 
@@ -99,16 +89,16 @@ export const useDataLoader = (equipmentId: string | null, formState: FormState) 
     formState.setMax("");
     formState.setUnits("psi");
     formState.setStatus("ACTIVE");
-    formState.setResult("PASS");
     formState.setNotes("");
     formState.setReadings([
       { target: "", actual: "", deviation: "" },
-      { target: "", actual: "", deviation: "" },
+      { target: "", actual: "", deviation: "" }
     ]);
     formState.setDefinitiveReadings([
       { target: "", actual: "", deviation: "" },
-      { target: "", actual: "", deviation: "" },
+      { target: "", actual: "", deviation: "" }
     ]);
+    formState.setResult("PASS");
   };
 
   return { resetForm };

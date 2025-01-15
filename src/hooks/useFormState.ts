@@ -15,11 +15,11 @@ export const useFormState = (equipmentId: string | null, certNumber: string) => 
   const [notes, setNotes] = useState("");
   const [readings, setReadings] = useState<Reading[]>([
     { target: "", actual: "", deviation: "" },
-    { target: "", actual: "", deviation: "" },
+    { target: "", actual: "", deviation: "" }
   ]);
   const [definitiveReadings, setDefinitiveReadings] = useState<Reading[]>([
     { target: "", actual: "", deviation: "" },
-    { target: "", actual: "", deviation: "" },
+    { target: "", actual: "", deviation: "" }
   ]);
   const [result, setResult] = useState("PASS");
 
@@ -52,6 +52,6 @@ export const useFormState = (equipmentId: string | null, certNumber: string) => 
     definitiveReadings,
     setDefinitiveReadings,
     result,
-    setResult,
+    setResult
   };
 };

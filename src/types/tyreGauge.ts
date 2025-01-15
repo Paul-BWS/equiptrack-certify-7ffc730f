@@ -1,23 +1,4 @@
-export interface TyreGauge {
-  id?: string;
-  company_id: string;
-  model: string;
-  serial_number: string;
-  min_pressure: number;
-  max_pressure: number;
-  units: string;
-  last_service_date: string;
-  next_service_due: string;
-  engineer: string;
-  result: string;
-  notes: string | null;
-  readings: Reading[];
-  definitive_readings: Reading[];
-  cert_number: string;
-  status: string;
-  created_at?: string;
-  updated_at?: string;
-}
+import { Dispatch, SetStateAction } from 'react';
 
 export interface Reading {
   target: string;
@@ -35,25 +16,25 @@ export interface FormState {
   retestDate?: Date;
   setRetestDate: (date?: Date) => void;
   model: string;
-  setModel: (model: string) => void;
+  setModel: (value: string) => void;
   serialNumber: string;
-  setSerialNumber: (serialNumber: string) => void;
+  setSerialNumber: (value: string) => void;
   engineer: string;
-  setEngineer: (engineer: string) => void;
+  setEngineer: (value: string) => void;
   min: string;
-  setMin: (min: string) => void;
+  setMin: (value: string) => void;
   max: string;
-  setMax: (max: string) => void;
+  setMax: (value: string) => void;
   units: string;
-  setUnits: (units: string) => void;
+  setUnits: (value: string) => void;
   status: string;
-  setStatus: (status: string) => void;
+  setStatus: (value: string) => void;
   notes: string;
-  setNotes: (notes: string) => void;
+  setNotes: (value: string) => void;
   readings: Reading[];
   setReadings: (readings: Reading[]) => void;
   definitiveReadings: Reading[];
   setDefinitiveReadings: (readings: Reading[]) => void;
   result: string;
-  setResult: (result: string) => void;
+  setResult: (value: string) => void;
 }
