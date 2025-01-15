@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { parseISO } from "date-fns";
+import { parseISO, format } from "date-fns";
 import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
 
 interface FormState {
@@ -46,18 +46,28 @@ export const useDataLoader = (equipmentId: string | null, formState: FormState) 
       if (data) {
         formState.setCertNumber(data.cert_number || generateCertificateNumber());
         
+        // Handle last_service_date
         if (data.last_service_date) {
-          console.log("Setting last service date:", data.last_service_date);
-          const parsedDate = parseISO(data.last_service_date);
-          console.log("Parsed date:", parsedDate);
-          formState.setDate(parsedDate);
+          console.log("Raw last service date from DB:", data.last_service_date);
+          try {
+            const parsedDate = parseISO(data.last_service_date);
+            console.log("Parsed last service date:", parsedDate);
+            formState.setDate(parsedDate);
+          } catch (error) {
+            console.error("Error parsing last_service_date:", error);
+          }
         }
         
+        // Handle next_service_due
         if (data.next_service_due) {
-          console.log("Setting next service due:", data.next_service_due);
-          const parsedRetestDate = parseISO(data.next_service_due);
-          console.log("Parsed retest date:", parsedRetestDate);
-          formState.setRetestDate(parsedRetestDate);
+          console.log("Raw next service date from DB:", data.next_service_due);
+          try {
+            const parsedRetestDate = parseISO(data.next_service_due);
+            console.log("Parsed next service date:", parsedRetestDate);
+            formState.setRetestDate(parsedRetestDate);
+          } catch (error) {
+            console.error("Error parsing next_service_due:", error);
+          }
         }
         
         formState.setModel(data.model || "");
