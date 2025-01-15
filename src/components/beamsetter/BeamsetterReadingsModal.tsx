@@ -15,7 +15,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { BasicDetails } from "./readings-form/BasicDetails";
 import { NotesSection } from "./readings-form/NotesSection";
 import { FormActions } from "./readings-form/FormActions";
-import { format } from "date-fns";
+import { format, addDays } from "date-fns";
 
 interface BeamsetterReadingsModalProps {
   open: boolean;
@@ -58,6 +58,8 @@ export const BeamsetterReadingsModal = ({
     setIsSaving(true);
 
     try {
+      const nextServiceDate = addDays(data.lastServiceDate, 364);
+      
       const beamsetterData = {
         company_id: customerId,
         cert_number: data.certNumber,
@@ -67,6 +69,7 @@ export const BeamsetterReadingsModal = ({
         status: data.status,
         notes: data.notes,
         last_service_date: format(data.lastServiceDate, 'yyyy-MM-dd'),
+        next_service_due: format(nextServiceDate, 'yyyy-MM-dd'),
       };
 
       if (equipmentId) {
