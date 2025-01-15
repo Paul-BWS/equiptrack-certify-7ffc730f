@@ -15,12 +15,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { BasicDetails } from "./readings-form/BasicDetails";
 import { NotesSection } from "./readings-form/NotesSection";
 import { FormActions } from "./readings-form/FormActions";
-
-interface BeamsetterReadingsModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  equipmentId: string | null;
-}
+import { format } from "date-fns";
 
 export interface BeamsetterFormData {
   certNumber: string;
@@ -29,6 +24,7 @@ export interface BeamsetterFormData {
   engineer: string;
   status: string;
   notes: string;
+  lastServiceDate: Date;
 }
 
 export const BeamsetterReadingsModal = ({
@@ -47,6 +43,7 @@ export const BeamsetterReadingsModal = ({
       engineer: "",
       status: "ACTIVE",
       notes: "",
+      lastServiceDate: new Date(),
     },
   });
 
@@ -63,6 +60,7 @@ export const BeamsetterReadingsModal = ({
         engineer: data.engineer,
         status: data.status,
         notes: data.notes,
+        last_service_date: format(data.lastServiceDate, 'yyyy-MM-dd'),
       };
 
       if (equipmentId) {
