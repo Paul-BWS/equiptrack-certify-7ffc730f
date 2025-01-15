@@ -22,7 +22,7 @@ export const SerialNumberField = ({ form }: SerialNumberFieldProps) => {
         <FormItem>
           <FormLabel className="text-sm text-[#C8C8C9]">Serial Number</FormLabel>
           <FormControl>
-            <Input {...field} className="h-12 bg-white border-[#E5E7EB] border-[0.5px] rounded-md" />
+            <Input {...field} className="h-12 bg-white border-[#E5E7EB] border-[0.5px] rounded-md text-base" />
           </FormControl>
           <FormMessage />
         </FormItem>

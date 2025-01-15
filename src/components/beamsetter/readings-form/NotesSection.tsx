@@ -14,7 +14,7 @@ export const NotesSection = ({ form }: NotesSectionProps) => {
       <Textarea
         id="notes"
         {...form.register("notes")}
-        className="min-h-[100px] p-2 border-[#E5E7EB] border-[0.5px] rounded-md bg-white"
+        className="min-h-[100px] p-2 border-[#E5E7EB] border-[0.5px] rounded-md bg-white text-base"
         placeholder="Add any additional notes here..."
       />
     </div>

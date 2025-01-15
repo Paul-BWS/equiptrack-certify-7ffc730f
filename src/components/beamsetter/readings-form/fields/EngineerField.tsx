@@ -33,7 +33,7 @@ export const EngineerField = ({ form }: EngineerFieldProps) => {
           <FormLabel className="text-sm text-[#C8C8C9]">Engineer</FormLabel>
           <Select onValueChange={field.onChange} value={field.value}>
             <FormControl>
-              <SelectTrigger className="h-12 bg-white border-[#E5E7EB] border-[0.5px] rounded-md">
+              <SelectTrigger className="h-12 bg-white border-[#E5E7EB] border-[0.5px] rounded-md text-base">
                 {isLoadingStaff ? (
                   <div className="flex items-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -46,7 +46,7 @@ export const EngineerField = ({ form }: EngineerFieldProps) => {
             </FormControl>
             <SelectContent className="bg-white">
               {staff?.map((engineer) => (
-                <SelectItem key={engineer.id} value={engineer.name}>
+                <SelectItem key={engineer.id} value={engineer.name} className="text-base">
                   {engineer.name}
                 </SelectItem>
               ))}
