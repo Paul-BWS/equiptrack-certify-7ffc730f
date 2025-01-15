@@ -25,10 +25,8 @@ export const TorqueReadingsContent = ({
 }: TorqueReadingsContentProps) => {
   const isMobile = useIsMobile();
 
-  const handleDefinitiveReadingChange = (index: number, field: string, value: string) => {
-    const readingNumber = (index + 1).toString();
-    const defField = `def_${field}${readingNumber}` as keyof TorqueReadingsForm;
-    setReadings({ ...readings, [defField]: value });
+  const handleFieldChange = (field: keyof TorqueReadingsForm, value: string) => {
+    setReadings({ ...readings, [field]: value });
   };
 
   return (
@@ -39,10 +37,10 @@ export const TorqueReadingsContent = ({
         certNumber={readings.certNumber}
         status={readings.status}
         engineer={readings.engineer}
-        onDateChange={(value) => setReadings({ ...readings, date: value })}
-        onRetestDateChange={(value) => setReadings({ ...readings, retestDate: value })}
-        onStatusChange={(value) => setReadings({ ...readings, status: value })}
-        onEngineerChange={(value) => setReadings({ ...readings, engineer: value })}
+        onDateChange={(value) => handleFieldChange("date", value)}
+        onRetestDateChange={(value) => handleFieldChange("retestDate", value)}
+        onStatusChange={(value) => handleFieldChange("status", value)}
+        onEngineerChange={(value) => handleFieldChange("engineer", value)}
       />
 
       <EquipmentSection
@@ -50,9 +48,9 @@ export const TorqueReadingsContent = ({
         serialNumber={readings.serialNumber}
         engineer={readings.engineer}
         sentOn={readings.sentOn}
-        onModelChange={(value) => setReadings({ ...readings, model: value })}
-        onSerialNumberChange={(value) => setReadings({ ...readings, serialNumber: value })}
-        onEngineerChange={(value) => setReadings({ ...readings, engineer: value })}
+        onModelChange={(value) => handleFieldChange("model", value)}
+        onSerialNumberChange={(value) => handleFieldChange("serialNumber", value)}
+        onEngineerChange={(value) => handleFieldChange("engineer", value)}
       />
 
       <MeasurementsSection
@@ -60,10 +58,10 @@ export const TorqueReadingsContent = ({
         max={readings.max}
         units={readings.units}
         result={readings.result}
-        onMinChange={(value) => setReadings({ ...readings, min: value })}
-        onMaxChange={(value) => setReadings({ ...readings, max: value })}
-        onUnitsChange={(value) => setReadings({ ...readings, units: value })}
-        onResultChange={(value) => setReadings({ ...readings, result: value })}
+        onMinChange={(value) => handleFieldChange("min", value)}
+        onMaxChange={(value) => handleFieldChange("max", value)}
+        onUnitsChange={(value) => handleFieldChange("units", value)}
+        onResultChange={(value) => handleFieldChange("result", value)}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -75,7 +73,8 @@ export const TorqueReadingsContent = ({
         <ReadingsSection
           title="DEFINITIVE"
           readings={readings}
-          onChange={handleDefinitiveReadingChange}
+          onChange={handleReadingChange}
+          readOnly
         />
       </div>
 
@@ -83,7 +82,7 @@ export const TorqueReadingsContent = ({
         <label className="text-sm text-gray-500">Notes</label>
         <textarea
           value={readings.notes}
-          onChange={(e) => setReadings({ ...readings, notes: e.target.value })}
+          onChange={(e) => handleFieldChange("notes", e.target.value)}
           className="w-full min-h-[100px] rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           placeholder="Enter any additional notes..."
         />

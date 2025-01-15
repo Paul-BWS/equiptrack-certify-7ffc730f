@@ -30,20 +30,18 @@ export const ReadingsHandler = ({
 
     if (field === 'target') {
       updatedReadings[targetField] = value;
+      updatedReadings[defTargetField] = value;
       if (updatedReadings[actualField]) {
         const deviation = calculateDeviation(value, updatedReadings[actualField]);
         updatedReadings[deviationField] = deviation;
-        updatedReadings[defTargetField] = value;
-        updatedReadings[defActualField] = updatedReadings[actualField];
         updatedReadings[defDeviationField] = deviation;
       }
     } else if (field === 'actual') {
       updatedReadings[actualField] = value;
+      updatedReadings[defActualField] = value;
       if (updatedReadings[targetField]) {
         const deviation = calculateDeviation(updatedReadings[targetField], value);
         updatedReadings[deviationField] = deviation;
-        updatedReadings[defTargetField] = updatedReadings[targetField];
-        updatedReadings[defActualField] = value;
         updatedReadings[defDeviationField] = deviation;
       }
     }

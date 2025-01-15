@@ -23,23 +23,21 @@ export const ReadingsSection = ({
   };
 
   const handleReadingChange = (index: number, field: string, value: string) => {
-    if (onChange) {
-      const readingNumber = (index + 1).toString();
-      const prefix = title.toLowerCase().includes('definitive') ? 'def_' : '';
-      const fieldName = `${prefix}${field}${readingNumber}`;
-      
-      onChange(index, field, value);
+    if (!onChange) return;
 
-      // Calculate deviation if both target and actual are present
-      if (field === 'target' || field === 'actual') {
-        const target = field === 'target' ? value : getReadingValue(index, 'target');
-        const actual = field === 'actual' ? value : getReadingValue(index, 'actual');
-        
-        if (target && actual) {
-          const deviation = calculateDeviation(target, actual);
-          onChange(index, 'deviation', deviation);
-        }
-      }
+    const readingNumber = (index + 1).toString();
+    const prefix = title.toLowerCase().includes('definitive') ? 'def_' : '';
+    
+    // Update the current field
+    onChange(index, field, value);
+
+    // Calculate deviation if both target and actual are present
+    const target = field === 'target' ? value : getReadingValue(index, 'target');
+    const actual = field === 'actual' ? value : getReadingValue(index, 'actual');
+
+    if (target && actual) {
+      const deviation = calculateDeviation(target, actual);
+      onChange(index, 'deviation', deviation);
     }
   };
 
