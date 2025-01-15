@@ -28,6 +28,7 @@
     page-break-before: avoid !important;
     page-break-inside: avoid !important;
     background: white !important;
+    border-radius: 0 !important;
   }
 
   /* Hide all header and footer elements when printing */
@@ -47,6 +48,7 @@
     background-color: white !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    box-shadow: none !important;
   }
 
   /* Hide dialog close button in print */
