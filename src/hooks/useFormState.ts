@@ -26,10 +26,14 @@ export const useFormState = (equipmentId: string | null) => {
   ]);
   const [result, setResult] = useState("PASS");
 
+  // Add setCertNumber as a no-op function to satisfy the type
+  const setCertNumber = () => {};
+
   return {
     isSaving,
     setIsSaving,
     certNumber,
+    setCertNumber, // Include it in the return object
     date,
     setDate,
     retestDate,
