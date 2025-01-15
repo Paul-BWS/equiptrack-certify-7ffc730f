@@ -22,7 +22,7 @@ export const CertificateActions = ({
       >
         <X className="h-6 w-6" />
       </Button>
-      <div className="flex gap-4">
+      <div className="flex gap-4 mr-auto ml-8">
         <Button
           variant="outline"
           size="icon"
