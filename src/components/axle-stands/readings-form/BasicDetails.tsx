@@ -43,7 +43,7 @@ export const BasicDetails = ({
             value={model}
             onChange={(e) => onModelChange(e.target.value)}
             placeholder="e.g. AS500"
-            className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
+            className="h-12 bg-white border-[#E5E7EB] border-[0.5px] rounded-[4px] placeholder:text-[#C8C8C9]"
           />
         </div>
 
@@ -54,7 +54,7 @@ export const BasicDetails = ({
             value={serialNumber}
             onChange={(e) => onSerialNumberChange(e.target.value)}
             placeholder="e.g. AS123"
-            className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
+            className="h-12 bg-white border-[#E5E7EB] border-[0.5px] rounded-[4px] placeholder:text-[#C8C8C9]"
           />
         </div>
 
@@ -67,7 +67,7 @@ export const BasicDetails = ({
           >
             <SelectTrigger 
               id="engineer"
-              className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
+              className="h-12 bg-white border-[#E5E7EB] border-[0.5px] rounded-[4px] placeholder:text-[#C8C8C9]"
             >
               {isLoadingStaff ? (
                 <div className="flex items-center gap-2">
@@ -101,7 +101,7 @@ export const BasicDetails = ({
           >
             <SelectTrigger 
               id="result"
-              className="h-12 bg-white border-gray-200 placeholder:text-[#C8C8C9]"
+              className="h-12 bg-white border-[#E5E7EB] border-[0.5px] rounded-[4px] placeholder:text-[#C8C8C9]"
             >
               <SelectValue placeholder="Select result" />
             </SelectTrigger>
