@@ -7,19 +7,16 @@ import { LoadingScreen } from "@/components/auth/LoadingScreen";
 import { ErrorScreen } from "@/components/auth/ErrorScreen";
 import { AuthenticationScreen } from "@/components/auth/AuthenticationScreen";
 import { CompanyDashboard } from "@/components/dashboard/CompanyDashboard";
-import { useAuthCheck } from "@/hooks/useAuthCheck";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [authError, setAuthError] = useState<string | null>(null);
-  const { isAuthorized } = useAuthCheck();
 
   const { data: session, isLoading: isSessionLoading, error: sessionError } = useQuery({
     queryKey: ['session'],
     queryFn: async () => {
       const { data: { session }, error } = await supabase.auth.getSession();
       if (error) {
-        setAuthError(error.message);
+        console.error('Session error:', error);
         return null;
       }
       return session;
@@ -29,6 +26,8 @@ const Index = () => {
   const { data: companies = [], isLoading: isLoadingCompanies } = useQuery({
     queryKey: ['companies'],
     queryFn: async () => {
+      if (!session) return [];
+      
       console.log('Fetching companies...');
       const { data, error } = await supabase
         .from('companies')
@@ -37,6 +36,7 @@ const Index = () => {
       
       if (error) {
         console.error('Error fetching companies:', error);
+        toast.error("Failed to load companies");
         throw error;
       }
       
@@ -44,20 +44,14 @@ const Index = () => {
       return data;
     },
     enabled: !!session,
-    meta: {
-      onError: (error: Error) => {
-        console.error('Error fetching companies:', error);
-        toast.error("Failed to load companies");
-      }
-    }
   });
 
   if (isSessionLoading) {
     return <LoadingScreen />;
   }
 
-  if (sessionError || authError) {
-    return <ErrorScreen message={sessionError?.message || authError || "Authentication error occurred"} />;
+  if (sessionError) {
+    return <ErrorScreen message={sessionError.message || "Authentication error occurred"} />;
   }
 
   if (!session) {
