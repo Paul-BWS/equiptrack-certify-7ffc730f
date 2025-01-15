@@ -8,9 +8,8 @@ import { ReadingsSection } from "./tyre-gauge-readings/ReadingsSection";
 import { NotesSection } from "./tyre-gauge-readings/NotesSection";
 import { FormActions } from "./tyre-gauge-readings/FormActions";
 import { useTyreGaugeForm } from "@/hooks/useTyreGaugeForm";
-import { useParams, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 
 interface TyreGaugeReadingsModalProps {
   open: boolean;
@@ -23,8 +22,6 @@ export const TyreGaugeReadingsModal = ({
   onOpenChange,
   equipmentId,
 }: TyreGaugeReadingsModalProps) => {
-  const { customerId } = useParams();
-  const navigate = useNavigate();
   const {
     isSaving,
     setIsSaving,
@@ -55,6 +52,7 @@ export const TyreGaugeReadingsModal = ({
     setReadings,
     setDefinitiveReadings,
     setResult,
+    handleSubmit,
     resetForm
   } = useTyreGaugeForm(equipmentId);
 
@@ -83,58 +81,27 @@ export const TyreGaugeReadingsModal = ({
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSaving(true);
-    
-    try {
-      const formattedReadings = Array.isArray(readings) ? readings : [];
-      const formattedDefinitiveReadings = Array.isArray(definitiveReadings) ? definitiveReadings : [];
-
-      const tyreGaugeData = {
-        cert_number: certNumber,
-        last_service_date: date ? format(date, 'yyyy-MM-dd') : null,
-        next_service_due: retestDate ? format(retestDate, 'yyyy-MM-dd') : null,
-        model: model,
-        serial_number: serialNumber,
-        engineer: engineer,
-        min_pressure: min,
-        max_pressure: max,
-        units: units,
-        status: status,
-        notes: notes,
-        readings: formattedReadings,
-        definitive_readings: formattedDefinitiveReadings,
-        result: result,
-      };
-
-      if (equipmentId) {
-        const { error } = await supabase
-          .from('tyre_gauges')
-          .update(tyreGaugeData)
-          .eq('id', equipmentId);
-
-        if (error) throw error;
-      } else {
-        const { error } = await supabase
-          .from('tyre_gauges')
-          .insert([{
-            ...tyreGaugeData,
-            company_id: customerId,
-          }]);
-
-        if (error) throw error;
-      }
-      
-      toast.success(equipmentId ? "Tyre gauge updated successfully" : "New tyre gauge created successfully");
-      onOpenChange(false);
-      window.location.reload();
-    } catch (error) {
-      console.error('Error saving data:', error);
-      toast.error(equipmentId ? "Failed to update tyre gauge" : "Failed to create new tyre gauge");
-    } finally {
-      setIsSaving(false);
-    }
+    handleSubmit(
+      {
+        certNumber,
+        date,
+        retestDate,
+        model,
+        serialNumber,
+        engineer,
+        min,
+        max,
+        units,
+        status,
+        notes,
+        readings,
+        definitiveReadings,
+        result,
+      },
+      setIsSaving
+    );
   };
 
   return (
@@ -146,14 +113,14 @@ export const TyreGaugeReadingsModal = ({
           </DialogTitle>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={onSubmit} className="p-6 space-y-6">
           <HeaderSection
             certNumber={certNumber}
             date={date ? format(date, 'yyyy-MM-dd') : ''}
             retestDate={retestDate ? format(retestDate, 'yyyy-MM-dd') : ''}
             status={status}
-            onDateChange={(dateStr) => setDate(dateStr ? parseISO(dateStr) : undefined)}
-            onRetestDateChange={(dateStr) => setRetestDate(dateStr ? parseISO(dateStr) : undefined)}
+            onDateChange={(dateStr) => setDate(dateStr ? new Date(dateStr) : undefined)}
+            onRetestDateChange={(dateStr) => setRetestDate(dateStr ? new Date(dateStr) : undefined)}
             onStatusChange={setStatus}
           />
           
