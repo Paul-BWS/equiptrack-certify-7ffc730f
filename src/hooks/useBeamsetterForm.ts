@@ -15,16 +15,18 @@ export const useBeamsetterForm = (
   const { customerId } = useParams();
   const [isSaving, setIsSaving] = useState(false);
 
+  const defaultValues = {
+    certNumber: generateCertificateNumber(),
+    model: "",
+    serialNumber: "",
+    engineer: "",
+    status: "ACTIVE",
+    notes: "",
+    lastServiceDate: new Date(),
+  };
+
   const form = useForm<BeamsetterFormData>({
-    defaultValues: {
-      certNumber: generateCertificateNumber(),
-      model: "",
-      serialNumber: "",
-      engineer: "",
-      status: "ACTIVE",
-      notes: "",
-      lastServiceDate: new Date(),
-    },
+    defaultValues,
   });
 
   // Fetch existing beamsetter data if equipmentId is provided
@@ -50,9 +52,13 @@ export const useBeamsetterForm = (
     enabled: !!equipmentId,
   });
 
-  // Update form when existing data is loaded
+  // Reset form when modal opens/closes or when equipmentId changes
   useEffect(() => {
-    if (existingBeamsetter) {
+    if (!equipmentId) {
+      // Reset to default values for new beamsetter
+      form.reset(defaultValues);
+    } else if (existingBeamsetter) {
+      // Reset to existing beamsetter data
       form.reset({
         certNumber: existingBeamsetter.cert_number || generateCertificateNumber(),
         model: existingBeamsetter.model || "",
@@ -63,7 +69,7 @@ export const useBeamsetterForm = (
         lastServiceDate: existingBeamsetter.last_service_date ? parseISO(existingBeamsetter.last_service_date) : new Date(),
       });
     }
-  }, [existingBeamsetter, form]);
+  }, [equipmentId, existingBeamsetter, form]);
 
   const onSubmit = async (data: BeamsetterFormData) => {
     if (!customerId) return;
