@@ -8,19 +8,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
 import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
 import { supabase } from "@/lib/supabase";
 import { Toaster } from "@/components/ui/sonner";
+import { BasicDetails } from "./readings-form/BasicDetails";
+import { NotesSection } from "./readings-form/NotesSection";
+import { FormActions } from "./readings-form/FormActions";
 
 interface BeamsetterReadingsModalProps {
   open: boolean;
@@ -28,7 +22,7 @@ interface BeamsetterReadingsModalProps {
   equipmentId: string | null;
 }
 
-interface BeamsetterFormData {
+export interface BeamsetterFormData {
   certNumber: string;
   model: string;
   serialNumber: string;
@@ -112,89 +106,10 @@ export const BeamsetterReadingsModal = ({
             </DialogTitle>
           </DialogHeader>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="certNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Certificate Number</FormLabel>
-                    <FormControl>
-                      <Input {...field} readOnly />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="model"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Model</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="serialNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Serial Number</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="engineer"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Engineer</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="notes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Notes</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="flex justify-end space-x-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => onOpenChange(false)}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={isSaving}>
-                  {isSaving ? "Saving..." : "Save"}
-                </Button>
-              </div>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <BasicDetails form={form} />
+              <NotesSection form={form} />
+              <FormActions onCancel={() => onOpenChange(false)} isSaving={isSaving} />
             </form>
           </Form>
         </DialogContent>
