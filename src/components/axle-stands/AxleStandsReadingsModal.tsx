@@ -60,14 +60,14 @@ export const AxleStandsReadingsModal = ({
       const companyId = pathSegments[companyIdIndex];
 
       const axleStandData = {
-        id: equipmentId,
+        ...(equipmentId && { id: equipmentId }), // Only include ID for updates
         company_id: companyId,
         model: formData.model,
         serial_number: formData.serialNumber,
         engineer: formData.engineer,
         last_service_date: formData.date,
         next_service_due: formData.retestDate,
-        test_result: formData.result, // Changed from result to test_result
+        test_result: formData.result,
         cert_number: formData.certNumber,
         status: formData.status,
         notes: formData.notes,
