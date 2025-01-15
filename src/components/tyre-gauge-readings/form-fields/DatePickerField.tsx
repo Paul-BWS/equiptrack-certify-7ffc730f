@@ -3,9 +3,9 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface DatePickerFieldProps {
   label: string;
@@ -18,24 +18,42 @@ export const DatePickerField = ({
   date,
   onDateChange,
 }: DatePickerFieldProps) => {
-  const [inputValue, setInputValue] = useState(date ? format(new Date(date), "yyyy-MM-dd") : "");
+  const [inputValue, setInputValue] = useState("");
+
+  useEffect(() => {
+    if (date) {
+      try {
+        const parsedDate = new Date(date);
+        setInputValue(format(parsedDate, "dd-MM-yyyy"));
+      } catch (error) {
+        console.error("Error formatting date:", error);
+      }
+    }
+  }, [date]);
 
   const handleManualInput = (value: string) => {
     setInputValue(value);
-    if (isValidDate(value)) {
-      onDateChange(value);
+    try {
+      const parsedDate = parse(value, "dd-MM-yyyy", new Date());
+      if (isValidDate(parsedDate)) {
+        onDateChange(format(parsedDate, "yyyy-MM-dd"));
+      }
+    } catch (error) {
+      console.error("Error parsing manual date input:", error);
     }
   };
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
     if (!selectedDate) return;
-    const formattedDate = format(selectedDate, 'yyyy-MM-dd');
-    setInputValue(formattedDate);
-    onDateChange(formattedDate);
+    try {
+      setInputValue(format(selectedDate, "dd-MM-yyyy"));
+      onDateChange(format(selectedDate, "yyyy-MM-dd"));
+    } catch (error) {
+      console.error("Error handling date selection:", error);
+    }
   };
 
-  const isValidDate = (dateString: string) => {
-    const date = new Date(dateString);
+  const isValidDate = (date: Date) => {
     return date instanceof Date && !isNaN(date.getTime());
   };
 
@@ -44,9 +62,10 @@ export const DatePickerField = ({
       <label className="text-sm text-[#C8C8C9]">{label}</label>
       <div className="flex gap-2">
         <Input
-          type="date"
+          type="text"
           value={inputValue}
           onChange={(e) => handleManualInput(e.target.value)}
+          placeholder="dd-MM-yyyy"
           className={cn(
             "flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm",
             !date && "text-[#C8C8C9]"
