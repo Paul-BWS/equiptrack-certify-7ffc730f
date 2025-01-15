@@ -11,13 +11,23 @@ import { NotesSection } from "./readings-form/NotesSection";
 import { FormActions } from "./readings-form/FormActions";
 import { BeamsetterModalProps } from "@/types/beamsetter-form";
 import { useBeamsetterForm } from "@/hooks/useBeamsetterForm";
+import { useQueryClient } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 
 export const BeamsetterReadingsModal = ({
   open,
   onOpenChange,
   equipmentId,
 }: BeamsetterModalProps) => {
-  const { form, isSaving, onSubmit } = useBeamsetterForm(equipmentId, onOpenChange);
+  const queryClient = useQueryClient();
+  const { customerId } = useParams();
+  const { form, isSaving, onSubmit } = useBeamsetterForm(equipmentId, async () => {
+    // Invalidate the beamsetter list query after successful submission
+    await queryClient.invalidateQueries({
+      queryKey: ['equipment', customerId, 'beamsetter']
+    });
+    onOpenChange(false);
+  });
 
   return (
     <>
