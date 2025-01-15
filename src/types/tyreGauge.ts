@@ -29,6 +29,7 @@ export interface FormState {
   isSaving: boolean;
   setIsSaving: React.Dispatch<React.SetStateAction<boolean>>;
   certNumber: string;
+  setCertNumber: (value: string) => void;
   date?: Date;
   setDate: (date?: Date) => void;
   retestDate?: Date;
