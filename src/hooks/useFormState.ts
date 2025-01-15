@@ -4,8 +4,7 @@ import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
 
 export const useFormState = (equipmentId: string | null) => {
   const [isSaving, setIsSaving] = useState(false);
-  // Generate certificate number only once during initialization
-  const [certNumber] = useState(() => generateCertificateNumber());
+  const [certNumber, setCertNumber] = useState(() => generateCertificateNumber());
   const [date, setDate] = useState<Date>();
   const [retestDate, setRetestDate] = useState<Date>();
   const [model, setModel] = useState("");
@@ -26,14 +25,11 @@ export const useFormState = (equipmentId: string | null) => {
   ]);
   const [result, setResult] = useState("PASS");
 
-  // Add setCertNumber as a no-op function to satisfy the type
-  const setCertNumber = () => {};
-
   return {
     isSaving,
     setIsSaving,
     certNumber,
-    setCertNumber, // Include it in the return object
+    setCertNumber,
     date,
     setDate,
     retestDate,
