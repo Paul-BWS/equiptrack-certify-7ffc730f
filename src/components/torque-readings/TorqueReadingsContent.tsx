@@ -25,6 +25,12 @@ export const TorqueReadingsContent = ({
 }: TorqueReadingsContentProps) => {
   const isMobile = useIsMobile();
 
+  const handleDefinitiveReadingChange = (index: number, field: string, value: string) => {
+    const readingNumber = (index + 1).toString();
+    const defField = `def_${field}${readingNumber}` as keyof TorqueReadingsForm;
+    setReadings({ ...readings, [defField]: value });
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <HeaderSection
@@ -69,7 +75,7 @@ export const TorqueReadingsContent = ({
         <ReadingsSection
           title="DEFINITIVE"
           readings={readings}
-          readOnly
+          onChange={handleDefinitiveReadingChange}
         />
       </div>
 

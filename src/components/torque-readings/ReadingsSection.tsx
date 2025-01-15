@@ -22,6 +22,27 @@ export const ReadingsSection = ({
     return readings[fieldName] || '';
   };
 
+  const handleReadingChange = (index: number, field: string, value: string) => {
+    if (onChange) {
+      const readingNumber = (index + 1).toString();
+      const prefix = title.toLowerCase().includes('definitive') ? 'def_' : '';
+      const fieldName = `${prefix}${field}${readingNumber}`;
+      
+      onChange(index, field, value);
+
+      // Calculate deviation if both target and actual are present
+      if (field === 'target' || field === 'actual') {
+        const target = field === 'target' ? value : getReadingValue(index, 'target');
+        const actual = field === 'actual' ? value : getReadingValue(index, 'actual');
+        
+        if (target && actual) {
+          const deviation = calculateDeviation(parseFloat(target), parseFloat(actual));
+          onChange(index, 'deviation', deviation.toString());
+        }
+      }
+    }
+  };
+
   return (
     <div className="bg-[#F1F1F1] p-6 rounded-lg">
       <h3 className="font-semibold mb-4 text-base text-gray-900">{title}</h3>
@@ -33,7 +54,7 @@ export const ReadingsSection = ({
               <input
                 type="number"
                 value={getReadingValue(index, 'target')}
-                onChange={(e) => onChange?.(index, "target", e.target.value)}
+                onChange={(e) => handleReadingChange(index, 'target', e.target.value)}
                 className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base"
                 readOnly={readOnly}
               />
@@ -43,7 +64,7 @@ export const ReadingsSection = ({
               <input
                 type="number"
                 value={getReadingValue(index, 'actual')}
-                onChange={(e) => onChange?.(index, "actual", e.target.value)}
+                onChange={(e) => handleReadingChange(index, 'actual', e.target.value)}
                 className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base"
                 readOnly={readOnly}
               />
