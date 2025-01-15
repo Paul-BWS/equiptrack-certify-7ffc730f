@@ -10,6 +10,7 @@ import { FormActions } from "./tyre-gauge-readings/FormActions";
 import { useTyreGaugeForm } from "@/hooks/useTyreGaugeForm";
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { format } from "date-fns";
 
 interface TyreGaugeReadingsModalProps {
   open: boolean;
@@ -92,8 +93,8 @@ export const TyreGaugeReadingsModal = ({
 
       const tyreGaugeData = {
         cert_number: certNumber,
-        last_service_date: date?.toISOString(),
-        next_service_due: retestDate?.toISOString(),
+        last_service_date: date ? format(date, 'yyyy-MM-dd') : null,
+        next_service_due: retestDate ? format(retestDate, 'yyyy-MM-dd') : null,
         model: model,
         serial_number: serialNumber,
         engineer: engineer,
@@ -148,8 +149,8 @@ export const TyreGaugeReadingsModal = ({
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <HeaderSection
             certNumber={certNumber}
-            date={date ? date.toISOString() : ''}
-            retestDate={retestDate ? retestDate.toISOString() : ''}
+            date={date ? format(date, 'yyyy-MM-dd') : ''}
+            retestDate={retestDate ? format(retestDate, 'yyyy-MM-dd') : ''}
             status={status}
             onDateChange={(dateStr) => setDate(new Date(dateStr))}
             onRetestDateChange={(dateStr) => setRetestDate(new Date(dateStr))}

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
 import { Reading } from "@/types/tyreGauge";
 import { supabase } from "@/lib/supabase";
+import { parse } from "date-fns";
 
 export const useTyreGaugeForm = (equipmentId: string | null) => {
   const [isSaving, setIsSaving] = useState(false);
@@ -16,7 +17,6 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
   const [units, setUnits] = useState("psi");
   const [status, setStatus] = useState("ACTIVE");
   const [notes, setNotes] = useState("");
-  const [result, setResult] = useState("PASS");
   const [readings, setReadings] = useState<Reading[]>([
     { target: "", actual: "", deviation: "" },
     { target: "", actual: "", deviation: "" },
@@ -25,32 +25,7 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
     { target: "", actual: "", deviation: "" },
     { target: "", actual: "", deviation: "" },
   ]);
-
-  const resetForm = () => {
-    const today = new Date();
-    const nextYear = new Date();
-    nextYear.setFullYear(today.getFullYear() + 1);
-    
-    setDate(today);
-    setRetestDate(nextYear);
-    setModel("");
-    setSerialNumber("");
-    setEngineer("");
-    setMin("");
-    setMax("");
-    setUnits("psi");
-    setStatus("ACTIVE");
-    setResult("PASS");
-    setNotes("");
-    setReadings([
-      { target: "", actual: "", deviation: "" },
-      { target: "", actual: "", deviation: "" },
-    ]);
-    setDefinitiveReadings([
-      { target: "", actual: "", deviation: "" },
-      { target: "", actual: "", deviation: "" },
-    ]);
-  };
+  const [result, setResult] = useState("PASS");
 
   useEffect(() => {
     const loadData = async () => {
@@ -73,7 +48,7 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
       if (data) {
         setCertNumber(data.cert_number || generateCertificateNumber());
         
-        // Handle dates properly, keeping them undefined if not present
+        // Handle dates properly
         if (data.last_service_date) {
           setDate(new Date(data.last_service_date));
         }
@@ -104,6 +79,32 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
 
     loadData();
   }, [equipmentId]);
+
+  const resetForm = () => {
+    const today = new Date();
+    const nextYear = new Date();
+    nextYear.setFullYear(today.getFullYear() + 1);
+    
+    setDate(today);
+    setRetestDate(nextYear);
+    setModel("");
+    setSerialNumber("");
+    setEngineer("");
+    setMin("");
+    setMax("");
+    setUnits("psi");
+    setStatus("ACTIVE");
+    setResult("PASS");
+    setNotes("");
+    setReadings([
+      { target: "", actual: "", deviation: "" },
+      { target: "", actual: "", deviation: "" },
+    ]);
+    setDefinitiveReadings([
+      { target: "", actual: "", deviation: "" },
+      { target: "", actual: "", deviation: "" },
+    ]);
+  };
 
   return {
     isSaving,
