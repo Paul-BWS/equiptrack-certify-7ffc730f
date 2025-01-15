@@ -6,6 +6,28 @@ export interface Reading {
   deviation: string;
 }
 
+export interface TyreGauge {
+  id: string;
+  company_id: string;
+  cert_number: string;
+  model: string;
+  serial_number: string;
+  engineer: string;
+  min_pressure: number;
+  max_pressure: number;
+  units: string;
+  last_service_date: string | null;
+  next_service_due: string | null;
+  sent_on: string | null;
+  result: string;
+  readings: Reading[];
+  definitive_readings: Reading[];
+  notes: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface FormState {
   isSaving: boolean;
   setIsSaving: (value: boolean) => void;
