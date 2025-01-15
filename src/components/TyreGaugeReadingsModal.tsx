@@ -152,8 +152,8 @@ export const TyreGaugeReadingsModal = ({
             date={date ? format(date, 'yyyy-MM-dd') : ''}
             retestDate={retestDate ? format(retestDate, 'yyyy-MM-dd') : ''}
             status={status}
-            onDateChange={(dateStr) => setDate(dateStr ? new Date(dateStr) : undefined)}
-            onRetestDateChange={(dateStr) => setRetestDate(dateStr ? new Date(dateStr) : undefined)}
+            onDateChange={(dateStr) => setDate(dateStr ? parseISO(dateStr) : undefined)}
+            onRetestDateChange={(dateStr) => setRetestDate(dateStr ? parseISO(dateStr) : undefined)}
             onStatusChange={setStatus}
           />
           
