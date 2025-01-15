@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
-import { BeamsetterFormData } from "../BeamsetterReadingsModal";
+import { BeamsetterFormData } from "@/types/beamsetter-form";
 import { format } from "date-fns";
 
 interface BasicDetailsProps {

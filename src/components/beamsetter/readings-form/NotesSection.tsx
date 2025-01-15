@@ -1,7 +1,7 @@
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { UseFormReturn } from "react-hook-form";
-import { BeamsetterFormData } from "../BeamsetterReadingsModal";
+import { BeamsetterFormData } from "@/types/beamsetter-form";
 
 interface NotesSectionProps {
   form: UseFormReturn<BeamsetterFormData>;
