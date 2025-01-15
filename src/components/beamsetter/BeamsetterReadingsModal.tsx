@@ -13,6 +13,8 @@ import { BeamsetterModalProps } from "@/types/beamsetter-form";
 import { useBeamsetterForm } from "@/hooks/useBeamsetterForm";
 import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 
 export const BeamsetterReadingsModal = ({
   open,
@@ -28,6 +30,26 @@ export const BeamsetterReadingsModal = ({
     onOpenChange(false);
   });
 
+  const handleDelete = async () => {
+    try {
+      const { error } = await supabase
+        .from('beamsetter')
+        .delete()
+        .eq('id', equipmentId);
+
+      if (error) throw error;
+
+      toast.success("Beamsetter deleted successfully");
+      await queryClient.invalidateQueries({
+        queryKey: ['equipment', customerId, 'beamsetter']
+      });
+      onOpenChange(false);
+    } catch (error) {
+      console.error('Error deleting beamsetter:', error);
+      toast.error("Failed to delete beamsetter");
+    }
+  };
+
   return (
     <>
       <Toaster />
@@ -42,7 +64,12 @@ export const BeamsetterReadingsModal = ({
             <form onSubmit={onSubmit} className="space-y-6 p-6">
               <BasicDetails form={form} />
               <NotesSection form={form} />
-              <FormActions onCancel={() => onOpenChange(false)} isSaving={isSaving} />
+              <FormActions 
+                onCancel={() => onOpenChange(false)} 
+                onDelete={handleDelete}
+                isSaving={isSaving}
+                equipmentId={equipmentId}
+              />
             </form>
           </Form>
         </DialogContent>
