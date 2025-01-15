@@ -31,6 +31,15 @@ export const ModalForm = ({
     });
   };
 
+  const handleReadingChange = (index: number, field: string, value: string) => {
+    const readingNumber = (index + 1).toString();
+    const targetField = `${field}${readingNumber}` as keyof TorqueReadingsForm;
+    const defTargetField = `def_${field}${readingNumber}` as keyof TorqueReadingsForm;
+    
+    handleFieldChange(targetField, value);
+    handleFieldChange(defTargetField, value);
+  };
+
   return (
     <form onSubmit={onSubmit} className="p-6 space-y-6">
       <HeaderSection
@@ -59,16 +68,12 @@ export const ModalForm = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <ReadingsSection
           title="AS FOUND"
-          readings={readings.readings}
-          onChange={(index, field, value) => {
-            const newReadings = [...readings.readings];
-            newReadings[index] = { ...newReadings[index], [field]: value };
-            handleFieldChange("readings", newReadings);
-          }}
+          readings={readings}
+          onChange={handleReadingChange}
         />
         <ReadingsSection
           title="DEFINITIVE"
-          readings={readings.definitiveReadings}
+          readings={readings}
           readOnly
         />
       </div>

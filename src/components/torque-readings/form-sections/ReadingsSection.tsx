@@ -1,99 +1,63 @@
-import { Reading } from "@/types/equipment";
 import { FormField } from "@/components/torque-readings/FormField";
-import { calculateDeviation } from "@/utils/certificateDataPreparation";
+import { TorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
 
 interface ReadingsSectionProps {
-  readings: Reading[] | string;
-  definitiveReadings: Reading[] | string;
-  onChange: (field: string, value: Reading[]) => void;
+  title: string;
+  readings: TorqueReadingsForm;
+  onChange?: (index: number, field: string, value: string) => void;
+  readOnly?: boolean;
 }
 
 export const ReadingsSection = ({
+  title,
   readings,
-  definitiveReadings,
-  onChange
+  onChange,
+  readOnly,
 }: ReadingsSectionProps) => {
-  // Parse readings if they're strings
-  const parseReadings = (readingsData: Reading[] | string): Reading[] => {
-    if (typeof readingsData === 'string') {
-      try {
-        const parsed = JSON.parse(readingsData);
-        if (typeof parsed === 'string') {
-          return JSON.parse(parsed);
-        }
-        return parsed;
-      } catch (e) {
-        console.error('Error parsing readings:', e);
-        return Array(3).fill({ target: "", actual: "", deviation: "" });
-      }
-    }
-    return Array.isArray(readingsData) ? readingsData : Array(3).fill({ target: "", actual: "", deviation: "" });
-  };
-
-  const handleReadingChange = (index: number, field: keyof Reading, value: string, isDefinitive: boolean) => {
-    const readingsArray = isDefinitive ? parseReadings(definitiveReadings) : parseReadings(readings);
-    const reading = { ...readingsArray[index] };
-
-    if (field === "target" || field === "actual") {
-      reading[field] = value;
-      reading.deviation = calculateDeviation(
-        field === "target" ? value : reading.target,
-        field === "actual" ? value : reading.actual
-      );
-    } else {
-      reading[field] = value;
-    }
-
-    readingsArray[index] = reading;
-    onChange(isDefinitive ? "definitiveReadings" : "readings", readingsArray);
-
-    if (!isDefinitive) {
-      const definitiveArray = parseReadings(definitiveReadings);
-      definitiveArray[index] = { ...reading };
-      onChange("definitiveReadings", definitiveArray);
-    }
-  };
-
-  const renderReadingsGroup = (isDefinitive: boolean) => {
-    const currentReadings = parseReadings(isDefinitive ? definitiveReadings : readings);
-    const title = isDefinitive ? "Definitive Readings" : "Initial Readings";
-
-    return (
-      <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
-        <h3 className="text-lg font-semibold">{title}</h3>
-        {currentReadings.map((reading, index) => (
-          <div key={index} className="grid grid-cols-3 gap-4">
-            <FormField
-              id={`${isDefinitive ? "definitive" : "initial"}-target-${index}`}
-              label="Target"
-              value={reading.target}
-              onChange={(e) => handleReadingChange(index, "target", e.target.value, isDefinitive)}
-              type="number"
-            />
-            <FormField
-              id={`${isDefinitive ? "definitive" : "initial"}-actual-${index}`}
-              label="Actual"
-              value={reading.actual}
-              onChange={(e) => handleReadingChange(index, "actual", e.target.value, isDefinitive)}
-              type="number"
-            />
-            <FormField
-              id={`${isDefinitive ? "definitive" : "initial"}-deviation-${index}`}
-              label="Deviation (%)"
-              value={reading.deviation}
-              readOnly
-              className="bg-gray-50"
-            />
-          </div>
-        ))}
-      </div>
-    );
+  const getReadingValue = (index: number, field: string) => {
+    const readingNumber = (index + 1).toString();
+    const prefix = title.toLowerCase().includes('definitive') ? 'def_' : '';
+    const fieldName = `${prefix}${field}${readingNumber}` as keyof TorqueReadingsForm;
+    return readings[fieldName] || '';
   };
 
   return (
-    <div className="space-y-6">
-      {renderReadingsGroup(false)}
-      {renderReadingsGroup(true)}
+    <div className="bg-[#F1F1F1] p-6 rounded-lg">
+      <h3 className="font-semibold mb-4 text-base text-gray-900">{title}</h3>
+      <div className="space-y-4">
+        {[0, 1, 2].map((index) => (
+          <div key={`${title}-${index}`} className="grid grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <label className="text-base text-[#C8C8C9]">Target</label>
+              <input
+                type="number"
+                value={getReadingValue(index, 'target')}
+                onChange={(e) => onChange?.(index, "target", e.target.value)}
+                className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base"
+                readOnly={readOnly}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-base text-[#C8C8C9]">Actual</label>
+              <input
+                type="number"
+                value={getReadingValue(index, 'actual')}
+                onChange={(e) => onChange?.(index, "actual", e.target.value)}
+                className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base"
+                readOnly={readOnly}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-base text-[#C8C8C9]">Deviation (%)</label>
+              <input
+                value={getReadingValue(index, 'deviation')}
+                className="flex h-12 w-full rounded-md border border-gray-200 bg-[#F1F1F1] px-3 py-2 text-base"
+                readOnly
+              />
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

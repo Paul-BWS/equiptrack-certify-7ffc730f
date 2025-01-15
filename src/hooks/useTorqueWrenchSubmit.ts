@@ -47,9 +47,6 @@ export const useTorqueWrenchSubmit = (
       const now = new Date().toISOString();
       const dataToSave = {
         ...torqueWrenchData,
-        readings: JSON.stringify(torqueWrenchData.readings),
-        definitive_readings: JSON.stringify(torqueWrenchData.definitive_readings),
-        notes: torqueWrenchData.notes || null,
         updated_at: now
       };
 
