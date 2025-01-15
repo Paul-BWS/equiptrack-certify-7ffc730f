@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { Reading } from "@/types/tyreGauge";
-import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
 
-export const useFormState = (equipmentId: string | null) => {
+export const useFormState = (equipmentId: string | null, certNumber: string) => {
   const [isSaving, setIsSaving] = useState(false);
-  const [certNumber, setCertNumber] = useState(() => generateCertificateNumber());
   const [date, setDate] = useState<Date>();
   const [retestDate, setRetestDate] = useState<Date>();
   const [model, setModel] = useState("");
@@ -29,7 +27,6 @@ export const useFormState = (equipmentId: string | null) => {
     isSaving,
     setIsSaving,
     certNumber,
-    setCertNumber,
     date,
     setDate,
     retestDate,
