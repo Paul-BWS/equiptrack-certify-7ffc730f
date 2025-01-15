@@ -25,13 +25,13 @@ export const EquipmentTable = ({ equipment }: EquipmentTableProps) => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Model</TableHead>
-            <TableHead>Serial Number</TableHead>
-            <TableHead>Last Service</TableHead>
+            <TableHead className="w-[40%]">Model</TableHead>
+            <TableHead className="w-[20%]">Serial Number</TableHead>
+            <TableHead className="w-[20%]">Last Service</TableHead>
             {!isMobile && (
               <>
-                <TableHead>Next Service</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="w-[20%]">Next Service</TableHead>
+                <TableHead className="w-[100px] text-right">Actions</TableHead>
               </>
             )}
           </TableRow>
