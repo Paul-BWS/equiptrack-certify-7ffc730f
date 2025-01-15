@@ -20,9 +20,9 @@ export const SerialNumberField = ({ form }: SerialNumberFieldProps) => {
       name="serialNumber"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Serial Number</FormLabel>
+          <FormLabel className="text-sm text-[#C8C8C9]">Serial Number</FormLabel>
           <FormControl>
-            <Input {...field} />
+            <Input {...field} className="h-12 bg-white" />
           </FormControl>
           <FormMessage />
         </FormItem>

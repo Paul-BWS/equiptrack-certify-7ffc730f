@@ -20,9 +20,9 @@ export const ModelField = ({ form }: ModelFieldProps) => {
       name="model"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Model</FormLabel>
+          <FormLabel className="text-sm text-[#C8C8C9]">Model</FormLabel>
           <FormControl>
-            <Input {...field} />
+            <Input {...field} className="h-12 bg-white" />
           </FormControl>
           <FormMessage />
         </FormItem>

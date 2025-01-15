@@ -21,7 +21,7 @@ export const LastServiceDateField = ({ form }: LastServiceDateFieldProps) => {
       name="lastServiceDate"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Last Service Date</FormLabel>
+          <FormLabel className="text-sm text-[#C8C8C9]">Last Service Date</FormLabel>
           <FormControl>
             <Input
               type="date"
@@ -30,7 +30,7 @@ export const LastServiceDateField = ({ form }: LastServiceDateFieldProps) => {
                 const date = new Date(e.target.value);
                 field.onChange(date);
               }}
-              className="bg-white"
+              className="h-12 bg-white"
             />
           </FormControl>
           <FormMessage />

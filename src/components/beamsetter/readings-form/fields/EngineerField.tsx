@@ -30,10 +30,10 @@ export const EngineerField = ({ form }: EngineerFieldProps) => {
       name="engineer"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Engineer</FormLabel>
+          <FormLabel className="text-sm text-[#C8C8C9]">Engineer</FormLabel>
           <Select onValueChange={field.onChange} value={field.value}>
             <FormControl>
-              <SelectTrigger className="bg-white">
+              <SelectTrigger className="h-12 bg-white">
                 {isLoadingStaff ? (
                   <div className="flex items-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" />

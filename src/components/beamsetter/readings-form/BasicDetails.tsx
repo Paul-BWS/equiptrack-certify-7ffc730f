@@ -12,7 +12,7 @@ interface BasicDetailsProps {
 
 export const BasicDetails = ({ form }: BasicDetailsProps) => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
       <CertificateField form={form} />
       <ModelField form={form} />
       <SerialNumberField form={form} />

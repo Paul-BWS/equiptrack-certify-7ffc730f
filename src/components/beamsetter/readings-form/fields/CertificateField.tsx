@@ -20,9 +20,9 @@ export const CertificateField = ({ form }: CertificateFieldProps) => {
       name="certNumber"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Certificate Number</FormLabel>
+          <FormLabel className="text-sm text-[#C8C8C9]">Certificate Number</FormLabel>
           <FormControl>
-            <Input {...field} readOnly />
+            <Input {...field} readOnly className="h-12 bg-white" />
           </FormControl>
           <FormMessage />
         </FormItem>
