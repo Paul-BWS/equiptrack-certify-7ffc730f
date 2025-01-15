@@ -27,9 +27,11 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
   ]);
 
   const resetForm = () => {
-    setDate(new Date());
+    const today = new Date();
     const nextYear = new Date();
-    nextYear.setFullYear(nextYear.getFullYear() + 1);
+    nextYear.setFullYear(today.getFullYear() + 1);
+    
+    setDate(today);
     setRetestDate(nextYear);
     setModel("");
     setSerialNumber("");
@@ -70,8 +72,16 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
 
       if (data) {
         setCertNumber(data.cert_number || generateCertificateNumber());
-        setDate(data.last_service_date ? new Date(data.last_service_date) : undefined);
-        setRetestDate(data.next_service_due ? new Date(data.next_service_due) : undefined);
+        
+        // Handle dates properly, keeping them undefined if not present
+        if (data.last_service_date) {
+          setDate(new Date(data.last_service_date));
+        }
+        
+        if (data.next_service_due) {
+          setRetestDate(new Date(data.next_service_due));
+        }
+        
         setModel(data.model || "");
         setSerialNumber(data.serial_number || "");
         setEngineer(data.engineer || "");
