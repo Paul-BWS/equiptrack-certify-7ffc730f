@@ -36,7 +36,7 @@ export const ReadingsSection = ({
         const actual = field === 'actual' ? value : getReadingValue(index, 'actual');
         
         if (target && actual) {
-          const deviation = calculateDeviation(parseFloat(target), parseFloat(actual));
+          const deviation = calculateDeviation(target, actual);
           onChange(index, 'deviation', deviation.toString());
         }
       }
