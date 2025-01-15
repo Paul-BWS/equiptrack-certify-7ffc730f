@@ -79,7 +79,7 @@ export const BasicDetails = ({ form }: BasicDetailsProps) => {
             <FormLabel>Engineer</FormLabel>
             <Select onValueChange={field.onChange} value={field.value}>
               <FormControl>
-                <SelectTrigger>
+                <SelectTrigger className="bg-white">
                   {isLoadingStaff ? (
                     <div className="flex items-center gap-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -90,7 +90,7 @@ export const BasicDetails = ({ form }: BasicDetailsProps) => {
                   )}
                 </SelectTrigger>
               </FormControl>
-              <SelectContent>
+              <SelectContent className="bg-white">
                 {staff?.map((engineer) => (
                   <SelectItem key={engineer.id} value={engineer.name}>
                     {engineer.name}
