@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
 import { Reading } from "@/types/tyreGauge";
 import { supabase } from "@/lib/supabase";
-import { parse } from "date-fns";
+import { parseISO } from "date-fns";
 
 export const useTyreGaugeForm = (equipmentId: string | null) => {
   const [isSaving, setIsSaving] = useState(false);
@@ -48,13 +48,13 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
       if (data) {
         setCertNumber(data.cert_number || generateCertificateNumber());
         
-        // Handle dates properly
+        // Parse dates properly using parseISO
         if (data.last_service_date) {
-          setDate(new Date(data.last_service_date));
+          setDate(parseISO(data.last_service_date));
         }
         
         if (data.next_service_due) {
-          setRetestDate(new Date(data.next_service_due));
+          setRetestDate(parseISO(data.next_service_due));
         }
         
         setModel(data.model || "");
