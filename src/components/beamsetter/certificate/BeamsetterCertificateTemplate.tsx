@@ -14,27 +14,27 @@ export const BeamsetterCertificateTemplate = ({ equipment }: BeamsetterCertifica
   };
 
   return (
-    <div className="w-full bg-white border border-gray-200 print:border-0" id="certificate">
-      <div className="flex justify-between items-center mb-6 border-b pb-4">
+    <div className="w-[210mm] mx-auto bg-white border border-gray-200 print:border-0 p-8" id="certificate">
+      <div className="flex justify-between items-center mb-4 border-b pb-4">
         <div className="flex items-center gap-4">
           <img src={settings.logo} alt="Company Logo" className="h-16 w-auto" />
           <div>
             <h1 className="text-xl font-bold text-primary">CALIBRATION CERTIFICATE</h1>
-            <p className="text-xs text-gray-600">BS 10125</p>
+            <p className="text-xs text-gray-600">Tested in accordance with BS 10125</p>
           </div>
         </div>
-        <div className="text-right">
+        <div className="text-right mr-8">
           <p className="text-base font-semibold text-primary">Certificate No:</p>
           <p className="text-base">{equipment.cert_number}</p>
         </div>
       </div>
 
-      <div className="space-y-6 p-4">
+      <div className="space-y-6 px-4">
         <div className="grid grid-cols-2 gap-6 bg-gray-50 p-4 rounded-lg">
           <div className="space-y-3">
             <div>
               <h2 className="text-xs font-semibold text-gray-500 uppercase">Model</h2>
-              <p className="text-sm font-medium">{equipment.model}</p>
+              <p className="text-sm font-medium text-primary">{equipment.model}</p>
             </div>
             <div>
               <h2 className="text-xs font-semibold text-gray-500 uppercase">Serial Number</h2>
@@ -44,11 +44,11 @@ export const BeamsetterCertificateTemplate = ({ equipment }: BeamsetterCertifica
           <div className="space-y-3">
             <div>
               <h2 className="text-xs font-semibold text-gray-500 uppercase">Calibration Date</h2>
-              <p className="text-sm font-medium">{formatDate(equipment.last_service_date)}</p>
+              <p className="text-sm font-medium text-primary">{formatDate(equipment.last_service_date)}</p>
             </div>
             <div>
               <h2 className="text-xs font-semibold text-gray-500 uppercase">Next Due Date</h2>
-              <p className="text-sm font-medium">{formatDate(equipment.next_service_due)}</p>
+              <p className="text-sm font-medium text-primary">{formatDate(equipment.next_service_due)}</p>
             </div>
           </div>
         </div>
@@ -81,7 +81,7 @@ export const BeamsetterCertificateTemplate = ({ equipment }: BeamsetterCertifica
               www.basicwelding.co.uk
             </a>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 mr-8">
             <img 
               src={settings.digitalSignature} 
               alt="Digital Signature" 
