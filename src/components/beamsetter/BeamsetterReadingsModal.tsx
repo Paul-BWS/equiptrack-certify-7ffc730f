@@ -102,7 +102,7 @@ export const BeamsetterReadingsModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md bg-white">
         <DialogHeader>
           <DialogTitle>
             {equipmentId ? "Edit Beamsetter" : "Add New Beamsetter"}
