@@ -87,10 +87,26 @@ export const ModalContent = ({
       engineer: readings.engineer,
       result: readings.result,
       notes: readings.notes,
-      readings: readings.readings,
-      definitive_readings: readings.definitiveReadings,
       cert_number: readings.certNumber,
-      status: readings.status
+      status: readings.status,
+      target1: readings.target1,
+      actual1: readings.actual1,
+      deviation1: readings.deviation1,
+      target2: readings.target2,
+      actual2: readings.actual2,
+      deviation2: readings.deviation2,
+      target3: readings.target3,
+      actual3: readings.actual3,
+      deviation3: readings.deviation3,
+      def_target1: readings.def_target1,
+      def_actual1: readings.def_actual1,
+      def_deviation1: readings.def_deviation1,
+      def_target2: readings.def_target2,
+      def_actual2: readings.def_actual2,
+      def_deviation2: readings.def_deviation2,
+      def_target3: readings.def_target3,
+      def_actual3: readings.def_actual3,
+      def_deviation3: readings.def_deviation3
     };
 
     try {
