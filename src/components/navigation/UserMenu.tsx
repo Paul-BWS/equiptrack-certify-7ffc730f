@@ -62,8 +62,8 @@ export const UserMenu = ({ onSignOut }: UserMenuProps) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-10 w-10 rounded-full bg-white hover:bg-white/90">
-          <Avatar className="h-10 w-10 bg-white">
-            <AvatarFallback className="bg-white text-primary text-lg">
+          <Avatar className="h-10 w-10">
+            <AvatarFallback className="bg-white text-primary text-lg font-semibold">
               {userDetails.initials}
             </AvatarFallback>
           </Avatar>
