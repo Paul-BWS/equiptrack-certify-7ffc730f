@@ -1,11 +1,12 @@
 import { useForm } from "react-hook-form";
 import { BeamsetterFormData } from "@/types/beamsetter-form";
 import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
-import { format, addDays } from "date-fns";
+import { format, addDays, parseISO } from "date-fns";
 import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
 
 export const useBeamsetterForm = (
   equipmentId: string | null,
@@ -25,6 +26,44 @@ export const useBeamsetterForm = (
       lastServiceDate: new Date(),
     },
   });
+
+  // Fetch existing beamsetter data if equipmentId is provided
+  const { data: existingBeamsetter } = useQuery({
+    queryKey: ['beamsetter', equipmentId],
+    queryFn: async () => {
+      if (!equipmentId) return null;
+      
+      const { data, error } = await supabase
+        .from('beamsetter')
+        .select('*')
+        .eq('id', equipmentId)
+        .single();
+
+      if (error) {
+        console.error('Error fetching beamsetter:', error);
+        toast.error("Failed to load beamsetter data");
+        throw error;
+      }
+
+      return data;
+    },
+    enabled: !!equipmentId,
+  });
+
+  // Update form when existing data is loaded
+  useEffect(() => {
+    if (existingBeamsetter) {
+      form.reset({
+        certNumber: existingBeamsetter.cert_number || generateCertificateNumber(),
+        model: existingBeamsetter.model || "",
+        serialNumber: existingBeamsetter.serial_number || "",
+        engineer: existingBeamsetter.engineer || "",
+        status: existingBeamsetter.status || "ACTIVE",
+        notes: existingBeamsetter.notes || "",
+        lastServiceDate: existingBeamsetter.last_service_date ? parseISO(existingBeamsetter.last_service_date) : new Date(),
+      });
+    }
+  }, [existingBeamsetter, form]);
 
   const onSubmit = async (data: BeamsetterFormData) => {
     if (!customerId) return;
