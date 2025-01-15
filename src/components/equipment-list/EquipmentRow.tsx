@@ -3,6 +3,7 @@ import { format, parseISO } from "date-fns";
 import { TableActions } from "./TableActions";
 import { EquipmentWithActions } from "@/types/equipment-responses";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useProfileData } from "@/hooks/useProfileData";
 
 interface EquipmentRowProps {
   equipment: EquipmentWithActions;
@@ -10,6 +11,7 @@ interface EquipmentRowProps {
 
 export const EquipmentRow = ({ equipment }: EquipmentRowProps) => {
   const isMobile = useIsMobile();
+  const { isBWSUser } = useProfileData();
   
   const formatDate = (dateString: string) => {
     try {
@@ -20,16 +22,18 @@ export const EquipmentRow = ({ equipment }: EquipmentRowProps) => {
     }
   };
 
+  const handleRowClick = (e: React.MouseEvent) => {
+    if (isMobile && isBWSUser) {
+      e.preventDefault();
+      e.stopPropagation();
+      equipment.onViewReadings();
+    }
+  };
+
   return (
     <TableRow
-      className={isMobile ? "cursor-pointer hover:bg-accent/50" : undefined}
-      onClick={(e) => {
-        if (isMobile) {
-          e.preventDefault();
-          e.stopPropagation();
-          equipment.onViewReadings();
-        }
-      }}
+      className={isMobile && isBWSUser ? "cursor-pointer hover:bg-accent/50" : undefined}
+      onClick={handleRowClick}
     >
       <TableCell>{equipment.model}</TableCell>
       <TableCell>{equipment.serialNumber}</TableCell>
