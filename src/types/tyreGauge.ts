@@ -27,9 +27,9 @@ export interface Reading {
 
 export interface FormState {
   isSaving: boolean;
-  setIsSaving: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsSaving: (value: boolean) => void;
   certNumber: string;
-  setCertNumber: (value: string) => void;
+  setCertNumber?: (value: string) => void;  // Make this optional
   date?: Date;
   setDate: (date?: Date) => void;
   retestDate?: Date;
