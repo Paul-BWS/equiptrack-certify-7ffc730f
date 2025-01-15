@@ -34,6 +34,8 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
         return;
       }
 
+      console.log("Loading tyre gauge data for ID:", equipmentId);
+      
       const { data, error } = await supabase
         .from('tyre_gauges')
         .select('*')
@@ -45,16 +47,25 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
         return;
       }
 
+      console.log("Fetched tyre gauge data:", data);
+
       if (data) {
+        // Keep existing cert number or generate new one if none exists
         setCertNumber(data.cert_number || generateCertificateNumber());
         
         // Parse dates properly using parseISO
         if (data.last_service_date) {
-          setDate(parseISO(data.last_service_date));
+          console.log("Setting last service date:", data.last_service_date);
+          const parsedDate = parseISO(data.last_service_date);
+          console.log("Parsed date:", parsedDate);
+          setDate(parsedDate);
         }
         
         if (data.next_service_due) {
-          setRetestDate(parseISO(data.next_service_due));
+          console.log("Setting next service due:", data.next_service_due);
+          const parsedRetestDate = parseISO(data.next_service_due);
+          console.log("Parsed retest date:", parsedRetestDate);
+          setRetestDate(parsedRetestDate);
         }
         
         setModel(data.model || "");
@@ -85,6 +96,7 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
     const nextYear = new Date();
     nextYear.setFullYear(today.getFullYear() + 1);
     
+    setCertNumber(generateCertificateNumber());
     setDate(today);
     setRetestDate(nextYear);
     setModel("");
@@ -136,6 +148,6 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
     setReadings,
     setDefinitiveReadings,
     setResult,
-    resetForm,
+    resetForm
   };
 };
