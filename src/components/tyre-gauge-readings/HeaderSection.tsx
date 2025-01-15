@@ -6,7 +6,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { format } from "date-fns";
 
 interface HeaderSectionProps {
   certNumber: string;
@@ -29,7 +28,7 @@ export const HeaderSection = ({
 }: HeaderSectionProps) => {
   return (
     <div className="space-y-4 bg-[#F9F9F9] p-6 rounded-lg">
-      <div className="space-y-2">
+      <div className="space-y-2 sticky top-0 bg-[#F9F9F9] z-10">
         <label className="text-sm text-[#C8C8C9]">Certificate Number</label>
         <input
           type="text"
