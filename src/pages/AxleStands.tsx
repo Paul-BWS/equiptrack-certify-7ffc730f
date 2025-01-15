@@ -39,7 +39,19 @@ const AxleStands = () => {
     queryFn: async () => {
       const { data: equipmentData, error } = await supabase
         .from('axle_stands')
-        .select('*')
+        .select(`
+          id,
+          company_id,
+          model,
+          serial_number,
+          engineer,
+          last_service_date,
+          next_service_due,
+          test_result,
+          cert_number,
+          status,
+          notes
+        `)
         .eq('company_id', customerId)
         .order('created_at', { ascending: false });
 
@@ -68,7 +80,7 @@ const AxleStands = () => {
         .from('axle_stands')
         .select('*')
         .eq('id', selectedEquipmentId)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
       return data;
