@@ -10,6 +10,7 @@ import CustomerDashboard from "@/pages/CustomerDashboard";
 import Equipment from "@/pages/Equipment";
 import LiftingEquipment from "@/pages/LiftingEquipment";
 import AxleStands from "@/pages/AxleStands";
+import Beamsetter from "@/pages/Beamsetter";
 
 export const Routes = () => {
   return (
@@ -27,6 +28,7 @@ export const Routes = () => {
       <Route path="/customers/:customerId/equipment/tyre-gauges" element={<TyreGauges />} />
       <Route path="/customers/:customerId/equipment/lifting-equipment" element={<LiftingEquipment />} />
       <Route path="/customers/:customerId/equipment/axle-stands" element={<AxleStands />} />
+      <Route path="/customers/:customerId/equipment/beamsetter" element={<Beamsetter />} />
     </RouterRoutes>
   );
 };
