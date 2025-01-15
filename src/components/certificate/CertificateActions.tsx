@@ -13,7 +13,7 @@ export const CertificateActions = ({
   onPrint,
 }: CertificateActionsProps) => {
   return (
-    <div className="flex items-center gap-4 no-print">
+    <div className="flex items-center justify-between w-full print:hidden">
       <Button
         variant="ghost"
         size="icon"

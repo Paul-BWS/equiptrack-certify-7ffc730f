@@ -29,7 +29,7 @@ export const BeamsetterCertificateModal = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[210mm] min-h-[297mm] p-0 overflow-auto bg-white print:shadow-none print:min-h-0">
-        <div className="sticky top-0 z-50 bg-white p-4 border-b no-print">
+        <div className="sticky top-0 z-50 bg-white p-4 border-b print:hidden">
           <CertificateActions
             onClose={() => onOpenChange(false)}
             onEmail={handleEmail}
