@@ -13,7 +13,7 @@ export const CertificateActions = ({
   onPrint,
 }: CertificateActionsProps) => {
   return (
-    <div className="flex items-center justify-between w-full print:hidden">
+    <div className="flex justify-between gap-4 mb-4 sticky top-0 bg-white z-10 p-2 no-print">
       <Button
         variant="ghost"
         size="icon"
@@ -22,7 +22,7 @@ export const CertificateActions = ({
       >
         <X className="h-6 w-6" />
       </Button>
-      <div className="flex gap-2">
+      <div className="flex gap-4 mr-auto ml-8">
         <Button
           variant="outline"
           size="icon"
