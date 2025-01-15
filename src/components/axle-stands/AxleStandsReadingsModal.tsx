@@ -1,4 +1,4 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
@@ -42,7 +42,7 @@ export const AxleStandsReadingsModal = ({
         .from('axle_stands')
         .select('*')
         .eq('id', equipmentId)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
       return data;
@@ -67,7 +67,7 @@ export const AxleStandsReadingsModal = ({
         engineer: formData.engineer,
         last_service_date: formData.date,
         next_service_due: formData.retestDate,
-        result: formData.result,
+        test_result: formData.result, // Changed from result to test_result
         cert_number: formData.certNumber,
         status: formData.status,
         notes: formData.notes,
@@ -91,9 +91,9 @@ export const AxleStandsReadingsModal = ({
       }
 
       onOpenChange(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving axle stand:', error);
-      toast.error("Failed to save axle stand");
+      toast.error(error.message || "Failed to save axle stand");
     } finally {
       setIsSaving(false);
     }
@@ -102,6 +102,11 @@ export const AxleStandsReadingsModal = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 border shadow-lg">
+        <DialogHeader>
+          <DialogTitle>
+            {equipmentId ? 'Edit Axle Stand' : 'New Axle Stand'}
+          </DialogTitle>
+        </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6 p-6">
           <BasicDetails
             model={formData.model}
