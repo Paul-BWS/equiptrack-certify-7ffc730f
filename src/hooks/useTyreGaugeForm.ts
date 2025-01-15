@@ -5,7 +5,6 @@ import { supabase } from "@/lib/supabase";
 
 export const useTyreGaugeForm = (equipmentId: string | null) => {
   const [isSaving, setIsSaving] = useState(false);
-  // Initialize certNumber with generateCertificateNumber() only on first render
   const [certNumber, setCertNumber] = useState(() => generateCertificateNumber());
   const [date, setDate] = useState<Date>();
   const [retestDate, setRetestDate] = useState<Date>();
@@ -28,7 +27,6 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
   ]);
 
   const resetForm = () => {
-    // Don't generate a new certificate number here
     setDate(new Date());
     const nextYear = new Date();
     nextYear.setFullYear(nextYear.getFullYear() + 1);
@@ -55,7 +53,7 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
   useEffect(() => {
     const loadData = async () => {
       if (!equipmentId) {
-        // For new entries, we'll use the certificate number that was generated on first render
+        resetForm();
         return;
       }
 
@@ -72,8 +70,8 @@ export const useTyreGaugeForm = (equipmentId: string | null) => {
 
       if (data) {
         setCertNumber(data.cert_number || generateCertificateNumber());
-        setDate(data.last_service_date ? new Date(data.last_service_date) : new Date());
-        setRetestDate(data.next_service_due ? new Date(data.next_service_due) : new Date());
+        setDate(data.last_service_date ? new Date(data.last_service_date) : undefined);
+        setRetestDate(data.next_service_due ? new Date(data.next_service_due) : undefined);
         setModel(data.model || "");
         setSerialNumber(data.serial_number || "");
         setEngineer(data.engineer || "");

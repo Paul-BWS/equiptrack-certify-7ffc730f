@@ -90,12 +90,6 @@ export const TyreGaugeReadingsModal = ({
       const formattedReadings = Array.isArray(readings) ? readings : [];
       const formattedDefinitiveReadings = Array.isArray(definitiveReadings) ? definitiveReadings : [];
 
-      console.log('Submitting with dates:', {
-        last_service_date: date?.toISOString(),
-        next_service_due: retestDate?.toISOString(),
-        engineer: engineer
-      });
-
       const tyreGaugeData = {
         cert_number: certNumber,
         last_service_date: date?.toISOString(),
@@ -154,17 +148,11 @@ export const TyreGaugeReadingsModal = ({
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <HeaderSection
             certNumber={certNumber}
-            date={date?.toISOString() || ''}
-            retestDate={retestDate?.toISOString() || ''}
+            date={date ? date.toISOString() : ''}
+            retestDate={retestDate ? retestDate.toISOString() : ''}
             status={status}
-            onDateChange={(dateStr) => {
-              console.log('Setting date:', dateStr);
-              setDate(new Date(dateStr));
-            }}
-            onRetestDateChange={(dateStr) => {
-              console.log('Setting retest date:', dateStr);
-              setRetestDate(new Date(dateStr));
-            }}
+            onDateChange={(dateStr) => setDate(new Date(dateStr))}
+            onRetestDateChange={(dateStr) => setRetestDate(new Date(dateStr))}
             onStatusChange={setStatus}
           />
           
