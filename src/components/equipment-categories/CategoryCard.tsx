@@ -14,7 +14,9 @@ export const CategoryCard = ({ icon, title, description, type }: CategoryProps) 
 
   const handleClick = () => {
     if (customerId) {
-      navigate(`/customers/${customerId}/equipment/${type}`);
+      // Convert 'beam-setter' to 'beamsetter' for the route
+      const routeType = type === 'beam-setter' ? 'beamsetter' : type;
+      navigate(`/customers/${customerId}/equipment/${routeType}`);
     }
   };
 
