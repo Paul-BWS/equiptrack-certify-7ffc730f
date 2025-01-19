@@ -63,8 +63,8 @@ export const CustomerForm = () => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button 
-          className="gap-2 bg-white hover:bg-white/90 border-[#0EA5E9] text-[#0EA5E9] hover:text-[#0EA5E9]"
-          variant="outline"
+          className="gap-2"
+          variant="default"
         >
           <Plus className="h-4 w-4" />
           New Company
