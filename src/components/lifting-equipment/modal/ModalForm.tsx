@@ -64,7 +64,6 @@ export const ModalForm = ({
   const form = useForm({
     defaultValues: {
       notes: readings.notes || "",
-      // ... other form fields
     }
   });
 

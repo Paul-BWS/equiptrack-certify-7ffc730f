@@ -83,7 +83,7 @@ export const ModalContent = ({
       engineer: readings.engineer,
       last_service_date: readings.date,
       next_service_due: readings.retestDate,
-      test_result: readings.result, // Changed from result to test_result
+      test_result: readings.result,
       notes: readings.notes,
       status: readings.status,
       platform_condition: readings.platform_condition,
@@ -114,7 +114,7 @@ export const ModalContent = ({
         readings={readings}
         setReadings={setReadings}
         onSubmit={handleSubmit}
-        onClose={() => onOpenChange(false)}
+        onCancel={() => onOpenChange(false)}
         onDelete={handleDelete}
         isSaving={isSaving}
         equipmentId={equipmentId}
