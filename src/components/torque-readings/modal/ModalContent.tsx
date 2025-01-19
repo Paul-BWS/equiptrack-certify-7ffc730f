@@ -22,11 +22,11 @@ export const ModalContent = ({
   );
 
   if (isLoading && equipmentId) {
-    return <LoadingView />;
+    return <LoadingView open={open} onOpenChange={onOpenChange} />;
   }
 
   return (
-    <DialogContent className="max-w-3xl bg-white">
+    <div className="p-6">
       <ModalForm
         readings={readings}
         setReadings={setReadings}
@@ -35,6 +35,6 @@ export const ModalContent = ({
         isSaving={isSaving}
         equipmentId={equipmentId}
       />
-    </DialogContent>
+    </div>
   );
 };
