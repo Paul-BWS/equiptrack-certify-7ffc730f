@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { TorqueWrench } from "@/types/equipment";
 import { EquipmentList } from "@/components/EquipmentList";
 
 interface TorqueWrenchListProps {
@@ -22,16 +21,17 @@ export const TorqueWrenchList = ({
   onGenerateCertificate,
   onViewReadings,
 }: TorqueWrenchListProps) => {
-  if (torqueWrenches.length === 0) {
+  if (!torqueWrenches.length) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 text-center border rounded-lg bg-muted/10">
-        <p className="text-muted-foreground mb-4">No torque wrenches found for this customer.</p>
-        <Button 
+      <div className="text-center py-12">
+        <h3 className="text-lg font-semibold mb-2">No torque wrench equipment found</h3>
+        <p className="text-muted-foreground mb-4">Get started by adding your first torque wrench equipment.</p>
+        <button
           onClick={onNewTorqueWrench}
-          className="bg-primary hover:bg-primary/90"
+          className="text-primary hover:underline"
         >
-          Add First Torque Wrench
-        </Button>
+          Add Torque Wrench
+        </button>
       </div>
     );
   }
