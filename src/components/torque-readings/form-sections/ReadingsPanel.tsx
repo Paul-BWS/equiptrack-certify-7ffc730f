@@ -32,6 +32,15 @@ export const ReadingsPanel = ({
         if (match) {
           const index = parseInt(match[0]);
           updateDeviation(index);
+          
+          // Mirror values to definitive section if this is the "AS FOUND" section
+          if (!prefix) {
+            const defPrefix = 'def_';
+            const fieldType = name.includes('target') ? 'target' : 'actual';
+            const defField = `${defPrefix}${fieldType}${index}` as keyof TorqueWrenchFormData;
+            form.setValue(defField, value[name as keyof typeof value] || '');
+            updateDefDeviation(index);
+          }
         }
       }
     });
@@ -43,6 +52,20 @@ export const ReadingsPanel = ({
     const targetField = `${prefix}target${readingNumber}` as keyof TorqueWrenchFormData;
     const actualField = `${prefix}actual${readingNumber}` as keyof TorqueWrenchFormData;
     const deviationField = `${prefix}deviation${readingNumber}` as keyof TorqueWrenchFormData;
+
+    const target = form.getValues(targetField);
+    const actual = form.getValues(actualField);
+
+    if (target && actual) {
+      const deviation = calculateDeviation(target, actual);
+      form.setValue(deviationField, deviation);
+    }
+  };
+
+  const updateDefDeviation = (readingNumber: number) => {
+    const targetField = `def_target${readingNumber}` as keyof TorqueWrenchFormData;
+    const actualField = `def_actual${readingNumber}` as keyof TorqueWrenchFormData;
+    const deviationField = `def_deviation${readingNumber}` as keyof TorqueWrenchFormData;
 
     const target = form.getValues(targetField);
     const actual = form.getValues(actualField);
@@ -68,7 +91,6 @@ export const ReadingsPanel = ({
                     {...field}
                     type="number"
                     className="h-12 bg-white border-gray-200 text-base"
-                    disabled={readOnly}
                   />
                 </FormControl>
               </FormItem>
@@ -86,7 +108,6 @@ export const ReadingsPanel = ({
                     {...field}
                     type="number"
                     className="h-12 bg-white border-gray-200 text-base"
-                    disabled={readOnly}
                   />
                 </FormControl>
               </FormItem>
