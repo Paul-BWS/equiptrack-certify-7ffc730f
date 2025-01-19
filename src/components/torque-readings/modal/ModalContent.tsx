@@ -1,17 +1,12 @@
-import { DialogContent } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
 import { BasicDetails } from "../form-sections/BasicDetails";
 import { NotesSection } from "../form-sections/NotesSection";
 import { FormActions } from "../form-sections/FormActions";
-import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import { supabase } from "@/lib/supabase";
-import { toast } from "sonner";
-import { useTorqueWrenchSubmit } from "@/hooks/useTorqueWrenchSubmit";
 import { useEquipmentData } from "@/hooks/useEquipmentData";
-import { format, addDays } from "date-fns";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useCertificateNumber } from "@/hooks/useCertificateNumber";
+import { useTorqueWrenchForm } from "@/hooks/useTorqueWrenchForm";
 
 interface ModalContentProps {
   open: boolean;
@@ -24,51 +19,15 @@ export const ModalContent = ({
   onOpenChange,
   equipmentId,
 }: ModalContentProps) => {
-  const queryClient = useQueryClient();
   const { customerId } = useParams();
   const { data: equipment, isLoading } = useEquipmentData(equipmentId, open);
-  const [certNumber, setCertNumber] = useState<string>("");
-
-  const form = useForm({
-    defaultValues: {
-      certNumber: "",
-      model: "",
-      serialNumber: "",
-      engineer: "",
-      min: "",
-      max: "",
-      units: "nm",
-      lastServiceDate: new Date(),
-      status: "ACTIVE",
-      notes: "",
-    }
-  });
-
-  // Fetch certificate number for new equipment
-  useEffect(() => {
-    const fetchCertNumber = async () => {
-      if (!equipmentId && open) {
-        try {
-          const { data: newCertNumber, error } = await supabase
-            .rpc('get_next_certificate_number');
-          
-          if (error) {
-            console.error('Error fetching certificate number:', error);
-            throw error;
-          }
-          
-          setCertNumber(newCertNumber);
-        } catch (error) {
-          console.error('Error fetching certificate number:', error);
-          toast.error("Failed to generate certificate number");
-        }
-      } else if (equipment?.cert_number) {
-        setCertNumber(equipment.cert_number);
-      }
-    };
-
-    fetchCertNumber();
-  }, [equipmentId, equipment?.cert_number, open]);
+  const { certNumber, setCertNumber } = useCertificateNumber(equipmentId, open);
+  const { form, onSubmit, isSaving } = useTorqueWrenchForm(
+    equipmentId,
+    customerId,
+    () => onOpenChange(false),
+    certNumber
+  );
 
   // Update form when equipment data is loaded
   useEffect(() => {
@@ -76,7 +35,7 @@ export const ModalContent = ({
       form.reset({
         certNumber: equipment.cert_number || "",
         model: equipment.model || "",
-        serialNumber: equipment.serial_number || "", // This is now just the plain serial number
+        serialNumber: equipment.serial_number || "",
         engineer: equipment.engineer || "",
         min: equipment.min_torque?.toString() || "",
         max: equipment.max_torque?.toString() || "",
@@ -85,8 +44,11 @@ export const ModalContent = ({
         status: equipment.status || "ACTIVE",
         notes: equipment.notes || "",
       });
+      if (equipment.cert_number) {
+        setCertNumber(equipment.cert_number);
+      }
     }
-  }, [equipment, form]);
+  }, [equipment, form, setCertNumber]);
 
   // Update cert number in form when it changes
   useEffect(() => {
@@ -94,42 +56,6 @@ export const ModalContent = ({
       form.setValue('certNumber', certNumber);
     }
   }, [certNumber, form]);
-
-  const { handleSave, isSaving } = useTorqueWrenchSubmit(equipmentId, async () => {
-    await queryClient.invalidateQueries({
-      queryKey: ['equipment', customerId, 'torque-wrenches']
-    });
-    onOpenChange(false);
-  });
-
-  const onSubmit = async (data: any) => {
-    if (!customerId) return;
-
-    try {
-      const nextServiceDate = addDays(data.lastServiceDate, 364);
-      
-      const torqueWrenchData = {
-        id: equipmentId || undefined,
-        company_id: customerId,
-        cert_number: certNumber,
-        model: data.model,
-        serial_number: data.serialNumber, // This will now be the plain serial number
-        min_torque: parseFloat(data.min),
-        max_torque: parseFloat(data.max),
-        units: data.units,
-        engineer: data.engineer,
-        status: data.status,
-        notes: data.notes,
-        last_service_date: format(data.lastServiceDate, 'yyyy-MM-dd'),
-        next_service_due: format(nextServiceDate, 'yyyy-MM-dd'),
-      };
-
-      await handleSave(torqueWrenchData);
-    } catch (error) {
-      console.error('Error saving torque wrench:', error);
-      toast.error("Failed to save torque wrench data");
-    }
-  };
 
   if (isLoading && equipmentId) {
     return (
