@@ -44,6 +44,15 @@ export const ReadingsPanel = ({
           updateDefDeviation(parseInt(index));
         }
       }
+
+      // Calculate deviation if definitive fields are changed directly
+      if (name.includes('def_') && (name.includes('target') || name.includes('actual'))) {
+        const match = name.match(/\d+$/);
+        if (match) {
+          const index = parseInt(match[0]);
+          updateDefDeviation(index);
+        }
+      }
     });
 
     return () => subscription.unsubscribe();
