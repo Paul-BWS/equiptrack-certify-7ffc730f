@@ -38,7 +38,6 @@ export const TorqueReadingsContent = ({
         status={readings.status}
         engineer={readings.engineer}
         onDateChange={(value) => handleFieldChange("date", value)}
-        onRetestDateChange={(value) => handleFieldChange("retestDate", value)}
         onStatusChange={(value) => handleFieldChange("status", value)}
         onEngineerChange={(value) => handleFieldChange("engineer", value)}
       />
