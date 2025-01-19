@@ -16,7 +16,6 @@ interface TorqueReadingsFormProps {
 }
 
 export const TorqueReadingsForm = ({ equipment, onCancel }: TorqueReadingsFormProps) => {
-  const initialCertNumber = equipment?.cert_number || `BWS-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   const today = new Date();
   const nextServiceDate = format(addDays(today, 364), 'yyyy-MM-dd');
 
@@ -32,7 +31,7 @@ export const TorqueReadingsForm = ({ equipment, onCancel }: TorqueReadingsFormPr
     notes: equipment?.notes || "",
     status: equipment?.status || "ACTIVE",
     result: equipment?.result || "PASS",
-    certNumber: initialCertNumber,
+    certNumber: equipment?.cert_number || "",
     sentOn: equipment?.last_service_date || format(today, 'yyyy-MM-dd'),
     target1: equipment?.target1 || "",
     actual1: equipment?.actual1 || "",
