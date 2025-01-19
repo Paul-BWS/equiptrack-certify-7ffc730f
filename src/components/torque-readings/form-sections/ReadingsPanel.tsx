@@ -69,7 +69,7 @@ export const ReadingsPanel = ({
                       {...field}
                       type="number"
                       className="h-12 bg-white border-gray-200 text-base"
-                      readOnly={readOnly}
+                      disabled={readOnly}
                     />
                   </FormControl>
                 </FormItem>
@@ -87,7 +87,7 @@ export const ReadingsPanel = ({
                       {...field}
                       type="number"
                       className="h-12 bg-white border-gray-200 text-base"
-                      readOnly={readOnly}
+                      disabled={readOnly}
                     />
                   </FormControl>
                 </FormItem>
