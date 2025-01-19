@@ -41,9 +41,9 @@ export const ModalForm = ({
   };
 
   return (
-    <form onSubmit={onSubmit} className="p-6 space-y-6">
+    <form onSubmit={onSubmit} className="space-y-6 p-6">
       <div className="space-y-6">
-        <div className="bg-[#F9F9F9] p-6 rounded-lg space-y-4">
+        <div className="bg-[#F9F9F9] p-6 rounded-lg">
           <HeaderSection
             date={readings.date}
             retestDate={readings.retestDate}
@@ -57,7 +57,7 @@ export const ModalForm = ({
           />
         </div>
         
-        <div className="bg-[#F9F9F9] p-6 rounded-lg space-y-4">
+        <div className="bg-[#F9F9F9] p-6 rounded-lg">
           <MeasurementsSection
             min={readings.min}
             max={readings.max}
@@ -72,7 +72,6 @@ export const ModalForm = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="bg-[#F9F9F9] p-6 rounded-lg">
-            <h3 className="font-semibold mb-4 text-gray-900">AS FOUND</h3>
             <ReadingsSection
               title="AS FOUND"
               readings={readings}
@@ -80,7 +79,6 @@ export const ModalForm = ({
             />
           </div>
           <div className="bg-[#F9F9F9] p-6 rounded-lg">
-            <h3 className="font-semibold mb-4 text-gray-900">DEFINITIVE</h3>
             <ReadingsSection
               title="DEFINITIVE"
               readings={readings}

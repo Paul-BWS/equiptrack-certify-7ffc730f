@@ -1,4 +1,3 @@
-import { DialogContent } from "@/components/ui/dialog";
 import { useModalForm } from "@/hooks/useModalForm";
 import { LoadingView } from "./LoadingView";
 import { ModalForm } from "./ModalForm";
@@ -26,7 +25,7 @@ export const ModalContent = ({
   }
 
   return (
-    <div className="p-6">
+    <div className="flex-1 overflow-y-auto">
       <ModalForm
         readings={readings}
         setReadings={setReadings}
