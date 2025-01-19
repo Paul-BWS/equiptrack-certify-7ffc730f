@@ -1,4 +1,3 @@
-import { DatePickerField } from "./form-fields/DatePickerField";
 import {
   Select,
   SelectContent,
@@ -8,7 +7,7 @@ import {
 } from "@/components/ui/select";
 import { useStaffMembers } from "@/hooks/useStaffMembers";
 import { Loader2 } from "lucide-react";
-import { format } from "date-fns";
+import { format, addDays } from "date-fns";
 
 interface HeaderSectionProps {
   certNumber: string;
@@ -33,6 +32,10 @@ export const HeaderSection = ({
 }: HeaderSectionProps) => {
   const { data: staff, isLoading: isLoadingStaff } = useStaffMembers();
 
+  const handleDateChange = (newDate: string) => {
+    onDateChange(newDate);
+  };
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 gap-4">
@@ -52,7 +55,7 @@ export const HeaderSection = ({
             <input
               type="date"
               value={date}
-              onChange={(e) => onDateChange(e.target.value)}
+              onChange={(e) => handleDateChange(e.target.value)}
               className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base"
             />
           </div>

@@ -4,6 +4,7 @@ import { MeasurementsSection } from "../MeasurementsSection";
 import { ReadingsSection } from "../ReadingsSection";
 import { NotesSection } from "../NotesSection";
 import { FormActions } from "./form-sections/FormActions";
+import { addDays, format } from "date-fns";
 
 interface ModalFormProps {
   readings: TorqueReadingsForm;
@@ -25,10 +26,21 @@ export const ModalForm = ({
   equipmentId
 }: ModalFormProps) => {
   const handleFieldChange = (field: keyof TorqueReadingsForm, value: any) => {
-    setReadings({
-      ...readings,
-      [field]: value
-    });
+    if (field === "date") {
+      // When the date changes, automatically update the retest date
+      const newDate = new Date(value);
+      const newRetestDate = addDays(newDate, 364);
+      setReadings({
+        ...readings,
+        date: value,
+        retestDate: format(newRetestDate, 'yyyy-MM-dd')
+      });
+    } else {
+      setReadings({
+        ...readings,
+        [field]: value
+      });
+    }
   };
 
   const handleReadingChange = (index: number, field: string, value: string) => {
@@ -51,7 +63,6 @@ export const ModalForm = ({
             certNumber={readings.certNumber}
             engineer={readings.engineer}
             onDateChange={(value) => handleFieldChange("date", value)}
-            onRetestDateChange={(value) => handleFieldChange("retestDate", value)}
             onStatusChange={(value) => handleFieldChange("status", value)}
             onEngineerChange={(value) => handleFieldChange("engineer", value)}
           />
