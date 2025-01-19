@@ -75,6 +75,7 @@ export const CertificateModal = ({
       toast.success(`Certificate ${certificate.certification_number} created successfully`, {
         description: `For: ${equipment.model} (${equipment.serial_number})`,
       });
+      onOpenChange(false);
     } catch (error: any) {
       console.error('Error in handleEmail:', error);
       toast.error(error.message || "Failed to create certificate");
