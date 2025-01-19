@@ -29,6 +29,22 @@ export const ModalContent = ({
   const { data: equipment, isLoading } = useEquipmentData(equipmentId, open);
   const [certNumber, setCertNumber] = useState<string>("");
 
+  const form = useForm({
+    defaultValues: {
+      certNumber: "",
+      model: "",
+      serialNumber: "",
+      engineer: "",
+      min: "",
+      max: "",
+      units: "nm",
+      lastServiceDate: new Date(),
+      status: "ACTIVE",
+      notes: "",
+    }
+  });
+
+  // Fetch certificate number for new equipment
   useEffect(() => {
     const fetchCertNumber = async () => {
       if (!equipmentId && open) {
@@ -55,21 +71,25 @@ export const ModalContent = ({
     fetchCertNumber();
   }, [equipmentId, equipment?.cert_number, open]);
 
-  const form = useForm({
-    defaultValues: {
-      certNumber: certNumber,
-      model: equipment?.model || "",
-      serialNumber: equipment?.serial_number || "",
-      engineer: equipment?.engineer || "",
-      min: equipment?.min_torque?.toString() || "",
-      max: equipment?.max_torque?.toString() || "",
-      units: equipment?.units || "nm",
-      lastServiceDate: equipment?.last_service_date ? new Date(equipment.last_service_date) : new Date(),
-      status: equipment?.status || "ACTIVE",
-      notes: equipment?.notes || "",
+  // Update form when equipment data is loaded
+  useEffect(() => {
+    if (equipment) {
+      form.reset({
+        certNumber: equipment.cert_number || "",
+        model: equipment.model || "",
+        serialNumber: equipment.serial_number || "",
+        engineer: equipment.engineer || "",
+        min: equipment.min_torque?.toString() || "",
+        max: equipment.max_torque?.toString() || "",
+        units: equipment.units || "nm",
+        lastServiceDate: equipment.last_service_date ? new Date(equipment.last_service_date) : new Date(),
+        status: equipment.status || "ACTIVE",
+        notes: equipment.notes || "",
+      });
     }
-  });
+  }, [equipment, form]);
 
+  // Update cert number in form when it changes
   useEffect(() => {
     if (certNumber) {
       form.setValue('certNumber', certNumber);
