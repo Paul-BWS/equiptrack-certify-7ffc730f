@@ -1,14 +1,16 @@
 import { DialogContent } from "@/components/ui/dialog";
-import { ModalHeader } from "./ModalHeader";
-import { LoadingView } from "./LoadingView";
-import { ModalForm } from "./ModalForm";
-import { useEquipmentData } from "@/hooks/useEquipmentData";
-import { useTorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
-import { useTorqueWrenchSubmit } from "@/hooks/useTorqueWrenchSubmit";
-import { validateForm } from "@/utils/torqueReadingsValidation";
-import { toast } from "sonner";
+import { Form } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { BasicDetails } from "../form-sections/BasicDetails";
+import { NotesSection } from "../form-sections/NotesSection";
+import { FormActions } from "../form-sections/FormActions";
+import { useQueryClient } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
-import { addDays, format } from "date-fns";
+import { toast } from "sonner";
+import { useTorqueWrenchSubmit } from "@/hooks/useTorqueWrenchSubmit";
+import { useEquipmentData } from "@/hooks/useEquipmentData";
+import { format, addDays } from "date-fns";
 
 interface ModalContentProps {
   open: boolean;
@@ -21,35 +23,45 @@ export const ModalContent = ({
   onOpenChange,
   equipmentId,
 }: ModalContentProps) => {
-  const { data: equipment, isLoading, error } = useEquipmentData(equipmentId, open);
-  const { readings, setReadings } = useTorqueReadingsForm(equipment, open);
-  const { handleSave, isSaving } = useTorqueWrenchSubmit(equipmentId, () => {
-    toast.success("Torque wrench data saved successfully");
+  const queryClient = useQueryClient();
+  const { customerId } = useParams();
+  const { data: equipment, isLoading } = useEquipmentData(equipmentId, open);
+
+  const form = useForm({
+    defaultValues: {
+      certNumber: equipment?.cert_number || `BWS-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      model: equipment?.model || "",
+      serialNumber: equipment?.serial_number || "",
+      engineer: equipment?.engineer || "",
+      min: equipment?.min_torque?.toString() || "",
+      max: equipment?.max_torque?.toString() || "",
+      units: equipment?.units || "nm",
+      lastServiceDate: equipment?.last_service_date ? new Date(equipment.last_service_date) : new Date(),
+      status: equipment?.status || "ACTIVE",
+      notes: equipment?.notes || "",
+    }
+  });
+
+  const { handleSave, isSaving } = useTorqueWrenchSubmit(equipmentId, async () => {
+    await queryClient.invalidateQueries({
+      queryKey: ['equipment', customerId, 'torque-wrenches']
+    });
     onOpenChange(false);
   });
 
-  if (error) {
-    console.error('Error loading equipment:', error);
-    toast.error("Failed to load equipment data");
-    return null;
-  }
-
-  if (isLoading && equipmentId) {
-    return <LoadingView open={open} onOpenChange={onOpenChange} />;
-  }
-
   const handleDelete = async () => {
-    if (!equipmentId) return;
-
     try {
-      const { error: deleteError } = await supabase
+      const { error } = await supabase
         .from('torque_wrench')
         .delete()
         .eq('id', equipmentId);
 
-      if (deleteError) throw deleteError;
+      if (error) throw error;
 
       toast.success("Torque wrench deleted successfully");
+      await queryClient.invalidateQueries({
+        queryKey: ['equipment', customerId, 'torque-wrenches']
+      });
       onOpenChange(false);
     } catch (error) {
       console.error('Error deleting torque wrench:', error);
@@ -57,84 +69,54 @@ export const ModalContent = ({
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!validateForm(readings)) {
-      return;
-    }
-
-    const pathSegments = window.location.pathname.split('/');
-    const customersIndex = pathSegments.indexOf('customers');
-    const companyId = pathSegments[customersIndex + 1];
-
-    if (!companyId) {
-      console.error('No company ID found in URL');
-      toast.error("Company ID not found");
-      return;
-    }
-
-    // Calculate next service date (1 year from last service date)
-    const lastServiceDate = new Date(readings.date);
-    const nextServiceDate = addDays(lastServiceDate, 364);
-
-    const torqueWrenchData = {
-      id: equipmentId || undefined,
-      company_id: companyId,
-      cert_number: readings.certNumber,
-      model: readings.model,
-      serial_number: readings.serialNumber,
-      min_torque: parseFloat(readings.min),
-      max_torque: parseFloat(readings.max),
-      units: readings.units,
-      last_service_date: format(lastServiceDate, 'yyyy-MM-dd'),
-      next_service_due: format(nextServiceDate, 'yyyy-MM-dd'),
-      engineer: readings.engineer,
-      result: readings.result,
-      notes: readings.notes,
-      status: readings.status,
-      target1: readings.target1,
-      actual1: readings.actual1,
-      deviation1: readings.deviation1,
-      target2: readings.target2,
-      actual2: readings.actual2,
-      deviation2: readings.deviation2,
-      target3: readings.target3,
-      actual3: readings.actual3,
-      deviation3: readings.deviation3,
-      def_target1: readings.def_target1,
-      def_actual1: readings.def_actual1,
-      def_deviation1: readings.def_deviation1,
-      def_target2: readings.def_target2,
-      def_actual2: readings.def_actual2,
-      def_deviation2: readings.def_deviation2,
-      def_target3: readings.def_target3,
-      def_actual3: readings.def_actual3,
-      def_deviation3: readings.def_deviation3
-    };
+  const onSubmit = async (data: any) => {
+    if (!customerId) return;
 
     try {
+      const nextServiceDate = addDays(data.lastServiceDate, 364);
+      
+      const torqueWrenchData = {
+        company_id: customerId,
+        cert_number: data.certNumber,
+        model: data.model,
+        serial_number: data.serialNumber,
+        min_torque: parseFloat(data.min),
+        max_torque: parseFloat(data.max),
+        units: data.units,
+        engineer: data.engineer,
+        status: data.status,
+        notes: data.notes,
+        last_service_date: format(data.lastServiceDate, 'yyyy-MM-dd'),
+        next_service_due: format(nextServiceDate, 'yyyy-MM-dd'),
+      };
+
       await handleSave(torqueWrenchData);
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('Error saving torque wrench:', error);
       toast.error("Failed to save torque wrench data");
     }
   };
 
+  if (isLoading && equipmentId) {
+    return (
+      <div className="flex items-center justify-center h-[60vh]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900" />
+      </div>
+    );
+  }
+
   return (
-    <DialogContent className="sm:max-w-[800px] lg:max-w-[1000px] max-h-[90vh] overflow-y-auto bg-white p-0">
-      <ModalHeader />
-      <div className="flex-1 overflow-auto">
-        <ModalForm
-          readings={readings}
-          setReadings={setReadings}
-          onSubmit={handleSubmit}
-          onClose={() => onOpenChange(false)}
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 p-6">
+        <BasicDetails form={form} />
+        <NotesSection form={form} />
+        <FormActions 
+          onCancel={() => onOpenChange(false)} 
           onDelete={handleDelete}
           isSaving={isSaving}
           equipmentId={equipmentId}
         />
-      </div>
-    </DialogContent>
+      </form>
+    </Form>
   );
 };

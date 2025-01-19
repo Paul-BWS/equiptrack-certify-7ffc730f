@@ -1,17 +1,20 @@
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { UseFormReturn } from "react-hook-form";
+
 interface NotesSectionProps {
-  notes: string;
-  onChange: (notes: string) => void;
+  form: UseFormReturn<any>;
 }
 
-export const NotesSection = ({ notes, onChange }: NotesSectionProps) => {
+export const NotesSection = ({ form }: NotesSectionProps) => {
   return (
-    <div className="space-y-2 bg-[#F9F9F9] p-6 rounded-lg">
-      <label className="text-sm text-[#C8C8C9]">Notes</label>
-      <textarea
-        value={notes}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full min-h-[100px] rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-        placeholder="Enter any additional notes..."
+    <div className="bg-[#F9F9F9] p-6 rounded-lg space-y-2">
+      <Label htmlFor="notes" className="text-sm text-[#C8C8C9]">Notes</Label>
+      <Textarea
+        id="notes"
+        {...form.register("notes")}
+        className="min-h-[100px] p-2 border-[#E5E7EB] border-[0.5px] rounded-md bg-white text-base"
+        placeholder="Add any additional notes here..."
       />
     </div>
   );
