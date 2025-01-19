@@ -106,63 +106,65 @@ export const TyreGaugeReadingsModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[800px] lg:max-w-[1000px] max-h-[90vh] overflow-y-auto bg-white p-0">
-        <DialogHeader className="p-6 border-b">
+      <DialogContent className="sm:max-w-[800px] lg:max-w-[1000px] h-[90vh] bg-white p-0 overflow-hidden">
+        <DialogHeader className="px-6 py-4 border-b">
           <DialogTitle className="text-xl font-semibold">
             {equipmentId ? 'Edit Tyre Gauge' : 'New Tyre Gauge'}
           </DialogTitle>
         </DialogHeader>
         
-        <form onSubmit={onSubmit} className="p-6 space-y-6">
-          <HeaderSection
-            certNumber={certNumber}
-            date={date ? format(date, 'yyyy-MM-dd') : ''}
-            retestDate={retestDate ? format(retestDate, 'yyyy-MM-dd') : ''}
-            status={status}
-            onDateChange={(dateStr) => setDate(dateStr ? new Date(dateStr) : undefined)}
-            onRetestDateChange={(dateStr) => setRetestDate(dateStr ? new Date(dateStr) : undefined)}
-            onStatusChange={setStatus}
-          />
-          
-          <BasicDetails
-            model={model}
-            serialNumber={serialNumber}
-            engineer={engineer}
-            result={result}
-            onModelChange={setModel}
-            onSerialNumberChange={setSerialNumber}
-            onEngineerChange={setEngineer}
-            onResultChange={setResult}
-          />
-          
-          <MeasurementsSection
-            min={min}
-            max={max}
-            units={units}
-            onMinChange={setMin}
-            onMaxChange={setMax}
-            onUnitsChange={setUnits}
-          />
+        <div className="flex-1 overflow-auto h-[calc(90vh-5rem)]">
+          <form onSubmit={onSubmit} className="p-6 space-y-6">
+            <HeaderSection
+              certNumber={certNumber}
+              date={date ? format(date, 'yyyy-MM-dd') : ''}
+              retestDate={retestDate ? format(retestDate, 'yyyy-MM-dd') : ''}
+              status={status}
+              onDateChange={(dateStr) => setDate(dateStr ? new Date(dateStr) : undefined)}
+              onRetestDateChange={(dateStr) => setRetestDate(dateStr ? new Date(dateStr) : undefined)}
+              onStatusChange={setStatus}
+            />
+            
+            <BasicDetails
+              model={model}
+              serialNumber={serialNumber}
+              engineer={engineer}
+              result={result}
+              onModelChange={setModel}
+              onSerialNumberChange={setSerialNumber}
+              onEngineerChange={setEngineer}
+              onResultChange={setResult}
+            />
+            
+            <MeasurementsSection
+              min={min}
+              max={max}
+              units={units}
+              onMinChange={setMin}
+              onMaxChange={setMax}
+              onUnitsChange={setUnits}
+            />
 
-          <ReadingsSection
-            readings={readings}
-            definitiveReadings={definitiveReadings}
-            onReadingsChange={setReadings}
-            onDefinitiveReadingsChange={setDefinitiveReadings}
-          />
+            <ReadingsSection
+              readings={readings}
+              definitiveReadings={definitiveReadings}
+              onReadingsChange={setReadings}
+              onDefinitiveReadingsChange={setDefinitiveReadings}
+            />
 
-          <NotesSection
-            notes={notes}
-            onChange={setNotes}
-          />
+            <NotesSection
+              notes={notes}
+              onChange={setNotes}
+            />
 
-          <FormActions
-            onCancel={() => onOpenChange(false)}
-            onDelete={handleDelete}
-            showDelete={!!equipmentId}
-            isSaving={isSaving}
-          />
-        </form>
+            <FormActions
+              onCancel={() => onOpenChange(false)}
+              onDelete={handleDelete}
+              showDelete={!!equipmentId}
+              isSaving={isSaving}
+            />
+          </form>
+        </div>
       </DialogContent>
     </Dialog>
   );
