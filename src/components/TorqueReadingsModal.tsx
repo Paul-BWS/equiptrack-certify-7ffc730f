@@ -29,10 +29,6 @@ export const TorqueReadingsModal = ({
 }: TorqueReadingsModalProps) => {
   const { form, onSubmit, isSaving } = useTorqueWrenchReadingsForm(equipmentId, onOpenChange);
 
-  const handleSubmit = async (data: TorqueWrenchFormData) => {
-    await onSubmit(data);
-  };
-
   return (
     <>
       <Toaster />
@@ -49,7 +45,7 @@ export const TorqueReadingsModal = ({
           </DialogHeader>
           
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6 p-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 p-6">
               <BasicDetailsSection form={form} />
               <MeasurementsSection form={form} />
               

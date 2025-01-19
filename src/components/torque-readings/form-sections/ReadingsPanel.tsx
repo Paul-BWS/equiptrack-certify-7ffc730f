@@ -49,7 +49,6 @@ export const ReadingsPanel = ({ form, title, readOnly }: ReadingsPanelProps) => 
 
   return (
     <div className="space-y-6 rounded-lg bg-[#F9F9F9] p-4 md:p-6">
-      <h3 className="text-base font-medium text-gray-900">{title}</h3>
       <div className="space-y-6">
         {[1, 2, 3].map((index) => {
           const prefix = title.toLowerCase().includes('definitive') ? 'def_' : '';

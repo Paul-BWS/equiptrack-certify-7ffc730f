@@ -11,6 +11,7 @@ interface ReadingsSectionProps {
 export const ReadingsSection = ({ form, title, readOnly }: ReadingsSectionProps) => {
   return (
     <div className="w-full">
+      <h3 className="text-base font-medium text-gray-900 mb-4">{title}</h3>
       <ReadingsPanel
         form={form}
         title={title}
