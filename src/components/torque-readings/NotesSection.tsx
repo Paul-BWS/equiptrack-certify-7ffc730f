@@ -5,7 +5,7 @@ interface NotesSectionProps {
 
 export const NotesSection = ({ notes, onChange }: NotesSectionProps) => {
   return (
-    <div className="space-y-2 bg-[#F1F1F1] p-6 rounded-lg">
+    <div className="space-y-2">
       <label className="text-base text-[#C8C8C9]">Notes</label>
       <textarea
         value={notes}
