@@ -1,12 +1,4 @@
 import { UseFormReturn } from "react-hook-form";
-import { CertificateField } from "./fields/CertificateField";
-import { ModelField } from "./fields/ModelField";
-import { SerialNumberField } from "./fields/SerialNumberField";
-import { EngineerField } from "./fields/EngineerField";
-import { LastServiceDateField } from "./fields/LastServiceDateField";
-import { MinTorqueField } from "./fields/MinTorqueField";
-import { MaxTorqueField } from "./fields/MaxTorqueField";
-import { UnitsField } from "./fields/UnitsField";
 
 interface BasicDetailsProps {
   form: UseFormReturn<any>;
@@ -14,19 +6,22 @@ interface BasicDetailsProps {
 
 export const BasicDetails = ({ form }: BasicDetailsProps) => {
   return (
-    <div className="space-y-6">
-      <div className="bg-[#F9F9F9] p-6 rounded-lg space-y-4">
-        <CertificateField form={form} />
+    <div className="bg-[#F9F9F9] p-6 rounded-lg space-y-4">
+      <div className="space-y-2">
+        <label className="text-sm text-[#C8C8C9]">Model</label>
+        <input
+          {...form.register("model")}
+          className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
+          placeholder="Enter model"
+        />
       </div>
-      
-      <div className="bg-[#F9F9F9] p-6 rounded-lg space-y-4">
-        <ModelField form={form} />
-        <SerialNumberField form={form} />
-        <EngineerField form={form} />
-        <LastServiceDateField form={form} />
-        <MinTorqueField form={form} />
-        <MaxTorqueField form={form} />
-        <UnitsField form={form} />
+      <div className="space-y-2">
+        <label className="text-sm text-[#C8C8C9]">Serial Number</label>
+        <input
+          {...form.register("serialNumber")}
+          className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
+          placeholder="Enter serial number"
+        />
       </div>
     </div>
   );

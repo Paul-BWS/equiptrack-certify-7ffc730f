@@ -1,93 +1,26 @@
-import { Button } from "@/components/ui/button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Loader2, Trash2 } from "lucide-react";
-
 interface FormActionsProps {
   onCancel: () => void;
-  onDelete?: () => void;
   isSaving: boolean;
   equipmentId: string | null;
 }
 
-export const FormActions = ({
-  onCancel,
-  onDelete,
-  isSaving,
-  equipmentId,
-}: FormActionsProps) => {
+export const FormActions = ({ onCancel, isSaving, equipmentId }: FormActionsProps) => {
   return (
     <div className="flex justify-end gap-4">
-      {equipmentId && onDelete && (
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button
-              type="button"
-              variant="outline"
-              size="lg"
-              className="border-destructive text-destructive hover:bg-destructive/10"
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              Delete
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent className="bg-white">
-            <AlertDialogHeader>
-              <AlertDialogTitle className="text-xl font-semibold">
-                Delete Equipment
-              </AlertDialogTitle>
-              <AlertDialogDescription className="text-base text-gray-500">
-                Are you sure you want to delete this equipment? This action cannot be undone 
-                and will permanently remove all associated data.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter className="gap-2">
-              <AlertDialogCancel className="mt-0 border-gray-200">
-                Cancel
-              </AlertDialogCancel>
-              <AlertDialogAction
-                onClick={onDelete}
-                className="bg-destructive hover:bg-destructive/90 text-base font-medium"
-              >
-                Delete Equipment
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )}
-      <Button
+      <button
         type="button"
-        variant="outline"
-        size="lg"
         onClick={onCancel}
-        className="bg-white hover:bg-gray-50 border-gray-200 text-base font-medium"
+        className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
       >
         Cancel
-      </Button>
-      <Button
+      </button>
+      <button
         type="submit"
-        size="lg"
         disabled={isSaving}
-        className="bg-primary hover:bg-primary/90 text-base font-medium"
+        className="px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 disabled:opacity-50"
       >
-        {isSaving ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Saving...
-          </>
-        ) : (
-          'Save'
-        )}
-      </Button>
+        {isSaving ? "Saving..." : "Save"}
+      </button>
     </div>
   );
 };

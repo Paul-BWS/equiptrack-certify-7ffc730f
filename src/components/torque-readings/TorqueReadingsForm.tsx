@@ -1,9 +1,8 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { TorqueWrench } from "@/types/equipment";
 import { BasicDetails } from "./form-sections/BasicDetails";
 import { ReadingsSection } from "./form-sections/ReadingsSection";
 import { CertificateSection } from "./form-sections/CertificateSection";
-import { NotesSection } from "./form-sections/NotesSection";
 import { FormActions } from "./form-sections/FormActions";
 import { useTorqueWrenchSubmit } from "@/hooks/useTorqueWrenchSubmit";
 import { toast } from "sonner";
@@ -115,22 +114,6 @@ export const TorqueReadingsForm = ({ equipment, onCancel }: TorqueReadingsFormPr
     }
   };
 
-  const form = useForm({
-    defaultValues: {
-      notes: formData.notes || "",
-      model: formData.model || "",
-      serialNumber: formData.serialNumber || "",
-      engineer: formData.engineer || "",
-      min: formData.min || "",
-      max: formData.max || "",
-      units: formData.units || "nm",
-      date: formData.date || format(today, 'yyyy-MM-dd'),
-      retestDate: formData.retestDate || nextServiceDate,
-      result: formData.result || "PASS",
-      status: formData.status || "ACTIVE",
-    }
-  });
-
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <CertificateSection
@@ -138,7 +121,6 @@ export const TorqueReadingsForm = ({ equipment, onCancel }: TorqueReadingsFormPr
         onChange={(field, value) => {
           setFormData(prev => {
             const newData = { ...prev, [field]: value };
-            // Update retestDate when date changes
             if (field === 'date') {
               newData.retestDate = format(addDays(new Date(value), 364), 'yyyy-MM-dd');
             }
@@ -147,9 +129,7 @@ export const TorqueReadingsForm = ({ equipment, onCancel }: TorqueReadingsFormPr
         }}
       />
       
-      <BasicDetails
-        form={form}
-      />
+      <BasicDetails form={formData} />
       
       <ReadingsSection
         title="AS FOUND"
@@ -166,8 +146,6 @@ export const TorqueReadingsForm = ({ equipment, onCancel }: TorqueReadingsFormPr
         readings={formData}
         readOnly
       />
-
-      <NotesSection form={form} />
 
       <FormActions
         onCancel={onCancel}
