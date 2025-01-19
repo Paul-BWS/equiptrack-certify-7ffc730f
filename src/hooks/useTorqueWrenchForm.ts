@@ -11,6 +11,7 @@ export const useTorqueWrenchForm = (
   certNumber: string
 ) => {
   const queryClient = useQueryClient();
+  const today = new Date();
   
   const form = useForm({
     defaultValues: {
@@ -21,7 +22,8 @@ export const useTorqueWrenchForm = (
       min: "",
       max: "",
       units: "nm",
-      lastServiceDate: new Date(),
+      lastServiceDate: today,
+      retestDate: addDays(today, 364),
       status: "ACTIVE",
       notes: "",
     }
@@ -38,8 +40,6 @@ export const useTorqueWrenchForm = (
     if (!customerId) return;
 
     try {
-      const nextServiceDate = addDays(data.lastServiceDate, 364);
-      
       const torqueWrenchData = {
         id: equipmentId || undefined,
         company_id: customerId,
@@ -53,7 +53,7 @@ export const useTorqueWrenchForm = (
         status: data.status,
         notes: data.notes,
         last_service_date: format(data.lastServiceDate, 'yyyy-MM-dd'),
-        next_service_due: format(nextServiceDate, 'yyyy-MM-dd'),
+        next_service_due: format(data.retestDate, 'yyyy-MM-dd'),
       };
 
       await handleSave(torqueWrenchData);
