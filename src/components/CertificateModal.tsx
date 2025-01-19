@@ -22,7 +22,12 @@ export const CertificateModal = ({
   serviceRecord,
 }: CertificateModalProps) => {
   const handlePrint = () => {
-    handleCertificatePrint(certificate.certification_number);
+    handleCertificatePrint(
+      certificate.certification_number,
+      equipment.model,
+      equipment.serial_number,
+      serviceRecord.service_date
+    );
   };
 
   const handleEmail = async () => {

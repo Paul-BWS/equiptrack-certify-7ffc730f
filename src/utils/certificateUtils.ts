@@ -1,17 +1,25 @@
-import { toast } from "sonner";
-
-export const handleCertificatePrint = (certificationNumber: string) => {
+export const handleCertificatePrint = (
+  certNumber: string,
+  model?: string,
+  serialNumber?: string,
+  serviceDate?: string
+) => {
   const timestamp = new Date().toISOString();
-  console.log("Certificate printed on:", timestamp);
+  const formattedDate = serviceDate ? new Date(serviceDate).toLocaleDateString('en-GB') : '';
+  const filename = `BWS_Certificate_${model || ''}_${serialNumber || ''}_${formattedDate}`.replace(/\s+/g, '_');
   
-  // Set document title for filename
-  const originalTitle = document.title;
-  document.title = certificationNumber;
+  const printHandler = () => {
+    window.print();
+  };
+
+  // Set the document title which will be used as the default filename
+  document.title = filename;
   
-  window.print();
+  // Print the document
+  printHandler();
   
-  // Clean up
-  document.title = originalTitle;
-  
-  toast.success(`Certificate ${certificationNumber} printed at ${new Date(timestamp).toLocaleString()}`);
+  // Reset the document title after printing
+  setTimeout(() => {
+    document.title = 'BWS Calibration System';
+  }, 100);
 };
