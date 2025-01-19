@@ -53,61 +53,59 @@ export const ReadingsPanel = ({ form, title, readOnly }: ReadingsPanelProps) => 
         {[1, 2, 3].map((index) => {
           const prefix = title.toLowerCase().includes('definitive') ? 'def_' : '';
           return (
-            <div key={`${title}-${index}`} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <FormField
-                  control={form.control}
-                  name={`${prefix}target${index}` as keyof TorqueWrenchFormData}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm text-[#C8C8C9]">Target</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          type="number"
-                          readOnly={readOnly}
-                          className="h-12 bg-white border-[#E5E7EB] border-[0.5px] rounded-md text-base touch-manipulation"
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
+            <div key={`${title}-${index}`} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <FormField
+                control={form.control}
+                name={`${prefix}target${index}` as keyof TorqueWrenchFormData}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm text-[#C8C8C9]">Target</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="number"
+                        readOnly={readOnly}
+                        className="h-12 bg-white border-[#E5E7EB] border-[0.5px] rounded-md text-base touch-manipulation"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={form.control}
-                  name={`${prefix}actual${index}` as keyof TorqueWrenchFormData}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm text-[#C8C8C9]">Actual</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          type="number"
-                          readOnly={readOnly}
-                          className="h-12 bg-white border-[#E5E7EB] border-[0.5px] rounded-md text-base touch-manipulation"
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                control={form.control}
+                name={`${prefix}actual${index}` as keyof TorqueWrenchFormData}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm text-[#C8C8C9]">Actual</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="number"
+                        readOnly={readOnly}
+                        className="h-12 bg-white border-[#E5E7EB] border-[0.5px] rounded-md text-base touch-manipulation"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={form.control}
-                  name={`${prefix}deviation${index}` as keyof TorqueWrenchFormData}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm text-[#C8C8C9]">Deviation (%)</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          readOnly
-                          className="h-12 bg-gray-50 border-[#E5E7EB] border-[0.5px] rounded-md text-base"
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <FormField
+                control={form.control}
+                name={`${prefix}deviation${index}` as keyof TorqueWrenchFormData}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm text-[#C8C8C9]">Deviation (%)</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        readOnly
+                        className="h-12 bg-gray-50 border-[#E5E7EB] border-[0.5px] rounded-md text-base"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
             </div>
           );
         })}

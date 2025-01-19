@@ -14,7 +14,6 @@ import { ReadingsSection } from "./torque-readings/form-sections/ReadingsSection
 import { NotesSection } from "./torque-readings/form-sections/NotesSection";
 import { FormActions } from "./torque-readings/form-sections/FormActions";
 import { useTorqueWrenchReadingsForm } from "@/hooks/useTorqueWrenchReadingsForm";
-import { TorqueWrenchFormData } from "@/hooks/useTorqueWrenchReadingsForm";
 
 interface TorqueReadingsModalProps {
   open: boolean;
