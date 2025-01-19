@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { TorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
 import { Dispatch, SetStateAction } from "react";
+import { supabase } from "@/lib/supabase";
 
 interface FormInitializerProps {
   equipmentId: string | null;
@@ -12,18 +13,28 @@ export const FormInitializer = ({ equipmentId, open, setReadings }: FormInitiali
   const hasInitialized = useRef(false);
 
   useEffect(() => {
-    if (!equipmentId && open && !hasInitialized.current) {
-      const timestamp = new Date().getTime();
-      const randomNum = Math.floor(Math.random() * 1000);
-      const newCertNumber = `BWS-${timestamp}-${randomNum}`;
-      
-      setReadings(prev => ({
-        ...prev,
-        certNumber: newCertNumber
-      }));
-      
-      hasInitialized.current = true;
-    }
+    const initializeForm = async () => {
+      if (!equipmentId && open && !hasInitialized.current) {
+        try {
+          // Use the Supabase function to get the next certificate number
+          const { data: certNumber, error } = await supabase
+            .rpc('get_next_certificate_number');
+
+          if (error) throw error;
+
+          setReadings(prev => ({
+            ...prev,
+            certNumber: certNumber
+          }));
+          
+          hasInitialized.current = true;
+        } catch (error) {
+          console.error('Error getting certificate number:', error);
+        }
+      }
+    };
+
+    initializeForm();
 
     // Reset the ref when the modal closes
     if (!open) {
