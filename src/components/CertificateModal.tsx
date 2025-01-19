@@ -61,15 +61,15 @@ export const CertificateModal = ({
         expiry_date: new Date(certificate.expiry_date).toISOString()
       };
 
-      const { data, error } = await supabase
+      console.log('Inserting certificate with data:', certificateData);
+
+      const { error } = await supabase
         .from('certificates')
-        .insert([certificateData])
-        .select('*')
-        .single();
+        .insert([certificateData]);
 
       if (error) {
         console.error('Database error:', error);
-        throw new Error(error.message);
+        throw error;
       }
 
       toast.success(`Certificate ${certificate.certification_number} created successfully`, {
