@@ -31,15 +31,17 @@ export const ReadingsPanel = ({
       if (!name.includes('def_') && (name.includes('target') || name.includes('actual'))) {
         const match = name.match(/\d+$/);
         if (match) {
-          const index = parseInt(match[0]);
-          updateDeviation(index);
+          const index = match[0];
+          const fieldType = name.includes('target') ? 'target' : 'actual';
           
           // Mirror values to definitive section
-          const fieldType = name.includes('target') ? 'target' : 'actual';
           const defField = `def_${fieldType}${index}` as keyof TorqueWrenchFormData;
           const sourceValue = form.getValues(name as keyof TorqueWrenchFormData);
           form.setValue(defField, sourceValue);
-          updateDefDeviation(index);
+
+          // Update both deviations
+          updateDeviation(parseInt(index));
+          updateDefDeviation(parseInt(index));
         }
       }
     });

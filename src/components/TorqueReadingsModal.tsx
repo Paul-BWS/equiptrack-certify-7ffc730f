@@ -44,7 +44,7 @@ export const TorqueReadingsModal = ({
           </DialogHeader>
           
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 p-6">
+            <form onSubmit={onSubmit} className="space-y-6 p-6">
               <BasicDetailsSection form={form} />
               <MeasurementsSection form={form} />
               
