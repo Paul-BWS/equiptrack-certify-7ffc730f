@@ -23,8 +23,23 @@ export const ReadingsPanel = ({
 }: ReadingsPanelProps) => {
   const prefix = title.toLowerCase().includes('definitive') ? 'def_' : '';
 
-  const updateDeviation = (index: number) => {
-    const readingNumber = (index + 1).toString();
+  useEffect(() => {
+    const subscription = form.watch((value, { name }) => {
+      if (!name?.includes(prefix)) return;
+      
+      if (name?.includes('target') || name?.includes('actual')) {
+        const match = name.match(/\d+$/);
+        if (match) {
+          const index = parseInt(match[0]);
+          updateDeviation(index);
+        }
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [form, prefix]);
+
+  const updateDeviation = (readingNumber: number) => {
     const targetField = `${prefix}target${readingNumber}` as keyof TorqueWrenchFormData;
     const actualField = `${prefix}actual${readingNumber}` as keyof TorqueWrenchFormData;
     const deviationField = `${prefix}deviation${readingNumber}` as keyof TorqueWrenchFormData;
@@ -38,81 +53,64 @@ export const ReadingsPanel = ({
     }
   };
 
-  useEffect(() => {
-    const subscription = form.watch((value, { name }) => {
-      if (name?.includes('target') || name?.includes('actual')) {
-        const match = name.match(/\d+$/);
-        if (match) {
-          const index = parseInt(match[0]) - 1;
-          updateDeviation(index);
-        }
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [form]);
-
   return (
     <div className="space-y-6">
-      {[0, 1, 2].map((index) => {
-        const readingNumber = (index + 1).toString();
-        return (
-          <div key={`${title}-${index}`} className="grid grid-cols-3 gap-4">
-            <FormField
-              control={form.control}
-              name={`${prefix}target${readingNumber}` as keyof TorqueWrenchFormData}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base text-[#C8C8C9]">Target</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="number"
-                      className="h-12 bg-white border-gray-200 text-base"
-                      disabled={readOnly}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+      {[1, 2, 3].map((readingNumber) => (
+        <div key={`${title}-${readingNumber}`} className="grid grid-cols-3 gap-4">
+          <FormField
+            control={form.control}
+            name={`${prefix}target${readingNumber}` as keyof TorqueWrenchFormData}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-base text-[#C8C8C9]">Target</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="number"
+                    className="h-12 bg-white border-gray-200 text-base"
+                    disabled={readOnly}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name={`${prefix}actual${readingNumber}` as keyof TorqueWrenchFormData}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base text-[#C8C8C9]">Actual</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="number"
-                      className="h-12 bg-white border-gray-200 text-base"
-                      disabled={readOnly}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name={`${prefix}actual${readingNumber}` as keyof TorqueWrenchFormData}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-base text-[#C8C8C9]">Actual</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="number"
+                    className="h-12 bg-white border-gray-200 text-base"
+                    disabled={readOnly}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name={`${prefix}deviation${readingNumber}` as keyof TorqueWrenchFormData}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base text-[#C8C8C9]">Deviation (%)</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      readOnly
-                      className="h-12 bg-gray-50 border-gray-200 text-base"
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          </div>
-        );
-      })}
+          <FormField
+            control={form.control}
+            name={`${prefix}deviation${readingNumber}` as keyof TorqueWrenchFormData}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-base text-[#C8C8C9]">Deviation (%)</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    readOnly
+                    className="h-12 bg-gray-50 border-gray-200 text-base"
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
+      ))}
     </div>
   );
 };
