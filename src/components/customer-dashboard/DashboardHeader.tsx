@@ -10,7 +10,7 @@ export const DashboardHeader = ({ id }: DashboardHeaderProps) => {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-[#266bec]">
+    <div className="bg-[#4c6fbf]">
       <div className="container mx-auto py-4">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
