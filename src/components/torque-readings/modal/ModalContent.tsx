@@ -76,6 +76,7 @@ export const ModalContent = ({
       const nextServiceDate = addDays(data.lastServiceDate, 364);
       
       const torqueWrenchData = {
+        id: equipmentId || undefined,
         company_id: customerId,
         cert_number: data.certNumber,
         model: data.model,
