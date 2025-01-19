@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { TorqueWrenchHeader } from "@/components/torque-wrenches/TorqueWrenchHeader";
 import { TorqueWrenchList } from "@/components/torque-wrenches/TorqueWrenchList";
-import { TorqueReadingsModal } from "@/components/TorqueReadingsModal";
+import { TorqueReadingsModal } from "@/components/torque-readings/modal/TorqueReadingsModal";
 import { CertificateModal } from "@/components/CertificateModal";
 
 const TorqueWrenches = () => {

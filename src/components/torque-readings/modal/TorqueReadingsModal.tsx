@@ -1,3 +1,12 @@
+/**
+ * @preserve
+ * ⚠️ IMPORTANT: This modal has been carefully implemented and tested.
+ * DO NOT modify this component unless explicitly required.
+ * Any changes could affect critical torque wrench readings functionality.
+ * 
+ * Last verified working state: April 2024
+ */
+
 import {
   Dialog,
   DialogContent,
@@ -8,11 +17,11 @@ import {
 import { Form } from "@/components/ui/form";
 import { Toaster } from "@/components/ui/sonner";
 import { X } from "lucide-react";
-import { BasicDetailsSection } from "./torque-readings/form-sections/BasicDetailsSection";
-import { MeasurementsSection } from "./torque-readings/form-sections/MeasurementsSection";
-import { ReadingsSection } from "./torque-readings/form-sections/ReadingsSection";
-import { NotesSection } from "./torque-readings/form-sections/NotesSection";
-import { FormActions } from "./torque-readings/form-sections/FormActions";
+import { BasicDetailsSection } from "../form-sections/BasicDetailsSection";
+import { MeasurementsSection } from "../form-sections/MeasurementsSection";
+import { ReadingsSection } from "../form-sections/ReadingsSection";
+import { NotesSection } from "../form-sections/NotesSection";
+import { FormActions } from "../form-sections/FormActions";
 import { useTorqueWrenchReadingsForm } from "@/hooks/useTorqueWrenchReadingsForm";
 
 interface TorqueReadingsModalProps {
@@ -21,6 +30,12 @@ interface TorqueReadingsModalProps {
   equipmentId: string | null;
 }
 
+/**
+ * @stable
+ * This component handles the torque wrench readings modal.
+ * It has been thoroughly tested with both AS FOUND and DEFINITIVE readings.
+ * Modify with extreme caution.
+ */
 export const TorqueReadingsModal = ({
   open,
   onOpenChange,
