@@ -15,7 +15,7 @@ interface NotesSectionProps {
 
 export const NotesSection = ({ form }: NotesSectionProps) => {
   return (
-    <div className="bg-[#F9F9F9] p-6 rounded-lg space-y-2">
+    <div className="bg-[#F9F9F9] p-6 rounded-lg">
       <FormField
         control={form.control}
         name="notes"

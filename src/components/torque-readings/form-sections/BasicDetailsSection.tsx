@@ -17,6 +17,7 @@ import { UseFormReturn } from "react-hook-form";
 import { useStaffMembers } from "@/hooks/useStaffMembers";
 import { Loader2 } from "lucide-react";
 import { TorqueWrenchFormData } from "@/hooks/useTorqueWrenchReadingsForm";
+import { format } from "date-fns";
 
 interface BasicDetailsSectionProps {
   form: UseFormReturn<TorqueWrenchFormData>;
@@ -91,7 +92,7 @@ export const BasicDetailsSection = ({ form }: BasicDetailsSectionProps) => {
                     )}
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   {staff?.map((engineer) => (
                     <SelectItem key={engineer.id} value={engineer.name} className="text-base">
                       {engineer.name}
@@ -99,6 +100,28 @@ export const BasicDetailsSection = ({ form }: BasicDetailsSectionProps) => {
                   ))}
                 </SelectContent>
               </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="date"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-sm text-[#C8C8C9]">Last Service Date</FormLabel>
+              <FormControl>
+                <Input
+                  type="date"
+                  value={field.value ? format(new Date(field.value), 'yyyy-MM-dd') : ''}
+                  onChange={(e) => {
+                    const date = new Date(e.target.value);
+                    field.onChange(format(date, 'yyyy-MM-dd'));
+                  }}
+                  className="h-12 bg-white border-[#E5E7EB] border-[0.5px] rounded-md text-base"
+                />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}

@@ -35,16 +35,18 @@ export const ReadingsSection = ({ form, title, readOnly }: ReadingsSectionProps)
   };
 
   useEffect(() => {
-    [1, 2, 3].forEach(index => {
-      const readingNumber = index.toString();
-      const prefix = title.toLowerCase().includes('definitive') ? 'def_' : '';
-      
-      form.watch([
-        `${prefix}target${readingNumber}`,
-        `${prefix}actual${readingNumber}`
-      ], () => updateDeviation(index));
+    const subscription = form.watch((value, { name }) => {
+      if (name?.includes('target') || name?.includes('actual')) {
+        const match = name.match(/\d+$/);
+        if (match) {
+          const index = parseInt(match[0]);
+          updateDeviation(index);
+        }
+      }
     });
-  }, [form, title]);
+
+    return () => subscription.unsubscribe();
+  }, [form]);
 
   return (
     <div className="bg-[#F9F9F9] p-6 rounded-lg space-y-6">

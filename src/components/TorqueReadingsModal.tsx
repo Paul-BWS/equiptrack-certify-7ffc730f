@@ -44,7 +44,7 @@ export const TorqueReadingsModal = ({
           </DialogHeader>
           
           <Form {...form}>
-            <form onSubmit={onSubmit} className="space-y-6 p-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 p-6">
               <BasicDetailsSection form={form} />
               <MeasurementsSection form={form} />
               
@@ -56,7 +56,7 @@ export const TorqueReadingsModal = ({
               <NotesSection form={form} />
               
               <FormActions
-                onClose={() => onOpenChange(false)}
+                onCancel={() => onOpenChange(false)}
                 isSaving={isSaving}
                 equipmentId={equipmentId}
               />
