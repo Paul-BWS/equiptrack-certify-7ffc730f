@@ -8,7 +8,11 @@ interface ReadingsSectionProps {
   readOnly?: boolean;
 }
 
-export const ReadingsSection = ({ form, title, readOnly }: ReadingsSectionProps) => {
+export const ReadingsSection = ({
+  form,
+  title,
+  readOnly = false,
+}: ReadingsSectionProps) => {
   return (
     <div className="w-full">
       <h3 className="text-base font-medium text-gray-900 mb-4">{title}</h3>

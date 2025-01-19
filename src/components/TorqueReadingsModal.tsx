@@ -15,7 +15,6 @@ import { NotesSection } from "./torque-readings/form-sections/NotesSection";
 import { FormActions } from "./torque-readings/form-sections/FormActions";
 import { useTorqueWrenchReadingsForm } from "@/hooks/useTorqueWrenchReadingsForm";
 import { TorqueWrenchFormData } from "@/hooks/useTorqueWrenchReadingsForm";
-import { SubmitHandler } from "react-hook-form";
 
 interface TorqueReadingsModalProps {
   open: boolean;
@@ -29,10 +28,6 @@ export const TorqueReadingsModal = ({
   equipmentId,
 }: TorqueReadingsModalProps) => {
   const { form, onSubmit, isSaving } = useTorqueWrenchReadingsForm(equipmentId, onOpenChange);
-
-  const handleSubmit: SubmitHandler<TorqueWrenchFormData> = async (data) => {
-    await onSubmit(data);
-  };
 
   return (
     <>
@@ -50,7 +45,7 @@ export const TorqueReadingsModal = ({
           </DialogHeader>
           
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6 p-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 p-6">
               <BasicDetailsSection form={form} />
               <MeasurementsSection form={form} />
               
