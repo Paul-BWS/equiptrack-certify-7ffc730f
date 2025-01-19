@@ -28,7 +28,7 @@ export const TorqueReadingsContent = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6 bg-[#F1F1F1] p-4 rounded-lg">
       <HeaderDetails 
         readings={readings}
         onFieldChange={handleFieldChange}
