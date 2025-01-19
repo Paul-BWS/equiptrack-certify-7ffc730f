@@ -11,6 +11,7 @@ import { validateForm } from "@/utils/torqueReadingsValidation";
 import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
 import { TorqueReadingsForm as TorqueReadingsFormType } from "@/hooks/useTorqueReadingsForm";
 import { useForm } from "react-hook-form";
+import { addDays, format } from "date-fns";
 
 interface TorqueReadingsFormProps {
   equipment: TorqueWrench | null;
@@ -19,6 +20,8 @@ interface TorqueReadingsFormProps {
 
 export const TorqueReadingsForm = ({ equipment, onCancel }: TorqueReadingsFormProps) => {
   const initialCertNumber = equipment?.cert_number || `BWS-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+  const today = new Date();
+  const nextServiceDate = format(addDays(today, 364), 'yyyy-MM-dd');
   
   const [formData, setFormData] = useState<TorqueReadingsFormType>({
     model: equipment?.model || "",
@@ -27,13 +30,13 @@ export const TorqueReadingsForm = ({ equipment, onCancel }: TorqueReadingsFormPr
     min: equipment?.min_torque?.toString() || "",
     max: equipment?.max_torque?.toString() || "",
     units: equipment?.units || "nm",
-    date: equipment?.last_service_date || new Date().toISOString().split('T')[0],
-    retestDate: equipment?.next_service_due || "",
+    date: equipment?.last_service_date || format(today, 'yyyy-MM-dd'),
+    retestDate: equipment?.next_service_due || nextServiceDate,
     notes: equipment?.notes || "",
     status: equipment?.status || "ACTIVE",
     result: equipment?.result || "PASS",
     certNumber: initialCertNumber,
-    sentOn: equipment?.last_service_date || new Date().toISOString().split('T')[0],
+    sentOn: equipment?.last_service_date || format(today, 'yyyy-MM-dd'),
     target1: equipment?.target1 || "",
     actual1: equipment?.actual1 || "",
     deviation1: equipment?.deviation1 || "",
@@ -79,7 +82,7 @@ export const TorqueReadingsForm = ({ equipment, onCancel }: TorqueReadingsFormPr
       max_torque: parseFloat(formData.max),
       units: formData.units,
       last_service_date: formData.date,
-      next_service_due: formData.retestDate,
+      next_service_due: format(addDays(new Date(formData.date), 364), 'yyyy-MM-dd'),
       engineer: formData.engineer,
       result: formData.result,
       notes: formData.notes,
@@ -121,8 +124,8 @@ export const TorqueReadingsForm = ({ equipment, onCancel }: TorqueReadingsFormPr
       min: formData.min || "",
       max: formData.max || "",
       units: formData.units || "nm",
-      date: formData.date || new Date().toISOString().split('T')[0],
-      retestDate: formData.retestDate || "",
+      date: formData.date || format(today, 'yyyy-MM-dd'),
+      retestDate: formData.retestDate || nextServiceDate,
       result: formData.result || "PASS",
       status: formData.status || "ACTIVE",
     }
@@ -132,7 +135,16 @@ export const TorqueReadingsForm = ({ equipment, onCancel }: TorqueReadingsFormPr
     <form onSubmit={handleSubmit} className="space-y-6">
       <CertificateSection
         formData={formData}
-        onChange={(field, value) => setFormData(prev => ({ ...prev, [field]: value }))}
+        onChange={(field, value) => {
+          setFormData(prev => {
+            const newData = { ...prev, [field]: value };
+            // Update retestDate when date changes
+            if (field === 'date') {
+              newData.retestDate = format(addDays(new Date(value), 364), 'yyyy-MM-dd');
+            }
+            return newData;
+          });
+        }}
       />
       
       <BasicDetails
