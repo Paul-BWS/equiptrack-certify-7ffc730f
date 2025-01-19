@@ -1,14 +1,12 @@
 import { DialogContent } from "@/components/ui/dialog";
-import { ModalHeader } from "./ModalHeader";
-import { LoadingView } from "./LoadingView";
-import { ModalForm } from "./ModalForm";
-import { useEquipmentData } from "@/hooks/useEquipmentData";
-import { useLiftingEquipmentForm } from "@/hooks/useLiftingEquipmentForm";
-import { useLiftingEquipmentSubmit } from "@/hooks/useLiftingEquipmentSubmit";
-import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
-import { validateLiftingEquipmentForm } from "@/utils/liftingEquipmentValidation";
-import { toast } from "sonner";
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
+import { ModalForm } from "./ModalForm";
+import { LiftingEquipmentReadings } from "@/types/lifting-equipment-form";
+import { useEquipmentData } from "@/hooks/useEquipmentData";
 
 interface ModalContentProps {
   open: boolean;
@@ -21,42 +19,98 @@ export const ModalContent = ({
   onOpenChange,
   equipmentId,
 }: ModalContentProps) => {
-  const { data: equipment, isLoading, error } = useEquipmentData(equipmentId, open);
-  const { readings, setReadings } = useLiftingEquipmentForm(equipment, open);
-  const { handleSave, isSaving } = useLiftingEquipmentSubmit(equipmentId, () => {
-    toast.success("Lifting equipment data saved successfully");
-    onOpenChange(false);
+  const queryClient = useQueryClient();
+  const { customerId } = useParams();
+  const [isSaving, setIsSaving] = useState(false);
+  const { data: equipment, isLoading } = useEquipmentData(equipmentId, open);
+
+  const [readings, setReadings] = useState<LiftingEquipmentReadings>({
+    certNumber: equipment?.cert_number || `BWS-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+    model: equipment?.model || "",
+    serialNumber: equipment?.serial_number || "",
+    engineer: equipment?.engineer || "",
+    date: equipment?.last_service_date || new Date().toISOString(),
+    retestDate: equipment?.next_service_due || "",
+    capacity: equipment?.capacity?.toString() || "",
+    units: equipment?.units || "",
+    result: equipment?.test_result || "",
+    status: equipment?.status || "ACTIVE",
+    notes: equipment?.notes || "",
+    platform_condition: equipment?.platform_condition || "PASS",
+    control_box_condition: equipment?.control_box_condition || "PASS",
+    hydraulic_hoses_condition: equipment?.hydraulic_hoses_condition || "PASS",
+    main_structure_inspection: equipment?.main_structure_inspection || "PASS",
+    oil_levels: equipment?.oil_levels || "PASS",
+    rollers_and_guides: equipment?.rollers_and_guides || "PASS",
+    safety_mechanism: equipment?.safety_mechanism || "PASS",
+    scissor_operation: equipment?.scissor_operation || "PASS",
+    securing_bolts: equipment?.securing_bolts || "PASS",
+    toe_guards: equipment?.toe_guards || "PASS",
+    lubrication_moving_parts: equipment?.lubrication_moving_parts || "PASS"
   });
 
-  // Generate certificate number for new entries
-  if (!equipmentId && !readings.certNumber) {
-    setReadings(prev => ({
-      ...prev,
-      certNumber: generateCertificateNumber()
-    }));
-  }
-
-  if (error) {
-    toast.error("Failed to load equipment data");
-    return null;
-  }
-
-  if (isLoading && equipmentId) {
-    return <LoadingView open={open} onOpenChange={onOpenChange} />;
-  }
-
-  const handleDelete = async () => {
-    if (!equipmentId) return;
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaving(true);
 
     try {
-      const { error: deleteError } = await supabase
+      const data = {
+        id: equipmentId || undefined,
+        company_id: customerId,
+        cert_number: readings.certNumber,
+        model: readings.model,
+        serial_number: readings.serialNumber,
+        engineer: readings.engineer,
+        last_service_date: readings.date,
+        next_service_due: readings.retestDate,
+        test_result: readings.result,
+        notes: readings.notes,
+        status: readings.status,
+        platform_condition: readings.platform_condition,
+        control_box_condition: readings.control_box_condition,
+        hydraulic_hoses_condition: readings.hydraulic_hoses_condition,
+        main_structure_inspection: readings.main_structure_inspection,
+        oil_levels: readings.oil_levels,
+        rollers_and_guides: readings.rollers_and_guides,
+        safety_mechanism: readings.safety_mechanism,
+        scissor_operation: readings.scissor_operation,
+        securing_bolts: readings.securing_bolts,
+        toe_guards: readings.toe_guards,
+        lubrication_moving_parts: readings.lubrication_moving_parts
+      };
+
+      const { error } = equipmentId
+        ? await supabase.from('lifting_equipment').update(data).eq('id', equipmentId)
+        : await supabase.from('lifting_equipment').insert(data);
+
+      if (error) throw error;
+
+      toast.success(equipmentId ? "Equipment updated successfully" : "Equipment added successfully");
+      await queryClient.invalidateQueries({
+        queryKey: ['equipment', customerId, 'lifting-equipment']
+      });
+      onOpenChange(false);
+    } catch (error) {
+      console.error('Error saving lifting equipment:', error);
+      toast.error("Failed to save lifting equipment");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const { error } = await supabase
         .from('lifting_equipment')
         .delete()
         .eq('id', equipmentId);
 
-      if (deleteError) throw deleteError;
+      if (error) throw error;
 
-      toast.success("Lifting equipment deleted successfully");
+      toast.success("Equipment deleted successfully");
+      await queryClient.invalidateQueries({
+        queryKey: ['equipment', customerId, 'lifting-equipment']
+      });
       onOpenChange(false);
     } catch (error) {
       console.error('Error deleting lifting equipment:', error);
@@ -64,52 +118,16 @@ export const ModalContent = ({
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!validateLiftingEquipmentForm(readings)) {
-      return;
-    }
-
-    const pathSegments = window.location.pathname.split('/');
-    const companyIdIndex = pathSegments.indexOf('customers') + 1;
-    const companyId = pathSegments[companyIdIndex];
-
-    const liftingEquipmentData = {
-      company_id: companyId,
-      cert_number: readings.certNumber,
-      model: readings.model,
-      serial_number: readings.serialNumber,
-      engineer: readings.engineer,
-      last_service_date: readings.date,
-      next_service_due: readings.retestDate,
-      test_result: readings.result,
-      notes: readings.notes,
-      status: readings.status,
-      platform_condition: readings.platform_condition,
-      control_box_condition: readings.control_box_condition,
-      hydraulic_hoses_condition: readings.hydraulic_hoses_condition,
-      main_structure_inspection: readings.main_structure_inspection,
-      oil_levels: readings.oil_levels,
-      rollers_and_guides: readings.rollers_and_guides,
-      safety_mechanism: readings.safety_mechanism,
-      scissor_operation: readings.scissor_operation,
-      securing_bolts: readings.securing_bolts,
-      toe_guards: readings.toe_guards,
-      lubrication_moving_parts: readings.lubrication_moving_parts
-    };
-
-    try {
-      await handleSave(liftingEquipmentData);
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      toast.error("Failed to save lifting equipment data");
-    }
-  };
+  if (isLoading && equipmentId) {
+    return (
+      <div className="flex items-center justify-center h-[60vh]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900" />
+      </div>
+    );
+  }
 
   return (
-    <DialogContent className="sm:max-w-[800px] lg:max-w-[1000px] max-h-[90vh] overflow-y-auto bg-white p-0">
-      <ModalHeader />
+    <DialogContent className="max-w-3xl">
       <ModalForm
         readings={readings}
         setReadings={setReadings}
