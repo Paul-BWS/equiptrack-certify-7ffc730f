@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect } from "react";
+import { Navigation } from "@/components/Navigation";
 import { DashboardHeader } from "@/components/customer-dashboard/DashboardHeader";
 import { DashboardContent } from "@/components/customer-dashboard/DashboardContent";
 import { LoadingState } from "@/components/customer-dashboard/LoadingState";
@@ -76,6 +77,7 @@ const CustomerDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Navigation />
       <DashboardHeader id={company.id} />
       <DashboardContent company={company} />
     </div>
