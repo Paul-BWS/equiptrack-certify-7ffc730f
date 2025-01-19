@@ -117,16 +117,19 @@ export const ModalContent = ({
   };
 
   return (
-    <div className="flex-1 overflow-auto">
-      <ModalForm
-        readings={readings}
-        setReadings={setReadings}
-        onSubmit={handleSubmit}
-        onClose={() => onOpenChange(false)}
-        onDelete={handleDelete}
-        isSaving={isSaving}
-        equipmentId={equipmentId}
-      />
-    </div>
+    <DialogContent className="sm:max-w-[800px] lg:max-w-[1000px] max-h-[90vh] overflow-y-auto bg-white p-0">
+      <ModalHeader />
+      <div className="flex-1 overflow-auto">
+        <ModalForm
+          readings={readings}
+          setReadings={setReadings}
+          onSubmit={handleSubmit}
+          onClose={() => onOpenChange(false)}
+          onDelete={handleDelete}
+          isSaving={isSaving}
+          equipmentId={equipmentId}
+        />
+      </div>
+    </DialogContent>
   );
 };

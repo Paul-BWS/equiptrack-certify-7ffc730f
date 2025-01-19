@@ -69,14 +69,16 @@ export const ModalForm = ({
         <div className="bg-[#F9F9F9] p-6 rounded-lg">
           <h3 className="font-semibold mb-4 text-gray-900">AS FOUND</h3>
           <ReadingsSection
-            formData={readings}
+            title="AS FOUND"
+            readings={readings}
             onChange={handleReadingChange}
           />
         </div>
         <div className="bg-[#F9F9F9] p-6 rounded-lg">
           <h3 className="font-semibold mb-4 text-gray-900">DEFINITIVE</h3>
           <ReadingsSection
-            formData={readings}
+            title="DEFINITIVE"
+            readings={readings}
             onChange={handleReadingChange}
             readOnly
           />
