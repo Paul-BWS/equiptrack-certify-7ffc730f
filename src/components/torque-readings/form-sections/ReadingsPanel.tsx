@@ -25,28 +25,27 @@ export const ReadingsPanel = ({
 
   useEffect(() => {
     const subscription = form.watch((value, { name }) => {
-      if (!name?.includes(prefix)) return;
+      if (!name) return;
       
-      if (name?.includes('target') || name?.includes('actual')) {
+      // Only proceed if this is an AS FOUND field (no prefix)
+      if (!name.includes('def_') && (name.includes('target') || name.includes('actual'))) {
         const match = name.match(/\d+$/);
         if (match) {
           const index = parseInt(match[0]);
           updateDeviation(index);
           
-          // Mirror values to definitive section if this is the "AS FOUND" section
-          if (!prefix) {
-            const defPrefix = 'def_';
-            const fieldType = name.includes('target') ? 'target' : 'actual';
-            const defField = `${defPrefix}${fieldType}${index}` as keyof TorqueWrenchFormData;
-            form.setValue(defField, value[name as keyof typeof value] || '');
-            updateDefDeviation(index);
-          }
+          // Mirror values to definitive section
+          const fieldType = name.includes('target') ? 'target' : 'actual';
+          const defField = `def_${fieldType}${index}` as keyof TorqueWrenchFormData;
+          const sourceValue = form.getValues(name as keyof TorqueWrenchFormData);
+          form.setValue(defField, sourceValue);
+          updateDefDeviation(index);
         }
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [form, prefix]);
+  }, [form]);
 
   const updateDeviation = (readingNumber: number) => {
     const targetField = `${prefix}target${readingNumber}` as keyof TorqueWrenchFormData;
@@ -91,6 +90,7 @@ export const ReadingsPanel = ({
                     {...field}
                     type="number"
                     className="h-12 bg-white border-gray-200 text-base"
+                    readOnly={readOnly}
                   />
                 </FormControl>
               </FormItem>
@@ -108,6 +108,7 @@ export const ReadingsPanel = ({
                     {...field}
                     type="number"
                     className="h-12 bg-white border-gray-200 text-base"
+                    readOnly={readOnly}
                   />
                 </FormControl>
               </FormItem>

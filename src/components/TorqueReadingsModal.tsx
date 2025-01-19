@@ -14,7 +14,6 @@ import { ReadingsSection } from "./torque-readings/form-sections/ReadingsSection
 import { NotesSection } from "./torque-readings/form-sections/NotesSection";
 import { FormActions } from "./torque-readings/form-sections/FormActions";
 import { useTorqueWrenchReadingsForm } from "@/hooks/useTorqueWrenchReadingsForm";
-import { TorqueWrenchFormData } from "@/hooks/useTorqueWrenchReadingsForm";
 
 interface TorqueReadingsModalProps {
   open: boolean;
@@ -51,7 +50,7 @@ export const TorqueReadingsModal = ({
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <ReadingsSection form={form} title="AS FOUND" />
-                <ReadingsSection form={form} title="DEFINITIVE" readOnly />
+                <ReadingsSection form={form} title="DEFINITIVE" readOnly={false} />
               </div>
               
               <NotesSection form={form} />
