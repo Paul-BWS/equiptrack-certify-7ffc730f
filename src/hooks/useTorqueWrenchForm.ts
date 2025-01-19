@@ -22,8 +22,8 @@ export const useTorqueWrenchForm = (
       min: "",
       max: "",
       units: "nm",
-      lastServiceDate: today,
-      retestDate: addDays(today, 364),
+      date: format(today, 'yyyy-MM-dd'),
+      retestDate: format(addDays(today, 364), 'yyyy-MM-dd'),
       status: "ACTIVE",
       notes: "",
     }
@@ -52,8 +52,8 @@ export const useTorqueWrenchForm = (
         engineer: data.engineer,
         status: data.status,
         notes: data.notes,
-        last_service_date: format(data.lastServiceDate, 'yyyy-MM-dd'),
-        next_service_due: format(data.retestDate, 'yyyy-MM-dd'),
+        last_service_date: data.date,
+        next_service_due: data.retestDate,
       };
 
       await handleSave(torqueWrenchData);

@@ -8,15 +8,15 @@ import {
 } from "@/components/ui/select";
 import { useStaffMembers } from "@/hooks/useStaffMembers";
 import { Loader2 } from "lucide-react";
+import { format } from "date-fns";
 
 interface HeaderSectionProps {
   certNumber: string;
-  date: string | undefined;
-  retestDate: string | undefined;
+  date: string;
+  retestDate: string;
   status: string;
   engineer: string;
   onDateChange: (date: string) => void;
-  onRetestDateChange: (date: string) => void;
   onStatusChange?: (value: string) => void;
   onEngineerChange?: (value: string) => void;
 }
@@ -28,7 +28,6 @@ export const HeaderSection = ({
   status,
   engineer,
   onDateChange,
-  onRetestDateChange,
   onStatusChange,
   onEngineerChange,
 }: HeaderSectionProps) => {
@@ -50,21 +49,21 @@ export const HeaderSection = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <label className="text-base text-[#C8C8C9]">Test Date</label>
-            <DatePickerField
-              label="Date"
-              date={date}
-              onDateChange={onDateChange}
-              className="w-full text-base"
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => onDateChange(e.target.value)}
+              className="flex h-12 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-base"
             />
           </div>
           
           <div className="space-y-2">
             <label className="text-base text-[#C8C8C9]">Retest Date</label>
-            <DatePickerField
-              label="Retest Date"
-              date={retestDate}
-              onDateChange={onRetestDateChange}
-              className="w-full text-base"
+            <input
+              type="text"
+              value={format(new Date(retestDate), 'dd MMM yyyy')}
+              readOnly
+              className="flex h-12 w-full rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-base"
             />
           </div>
         </div>
