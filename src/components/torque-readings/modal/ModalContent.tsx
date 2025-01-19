@@ -36,7 +36,12 @@ export const ModalContent = ({
           const { data: newCertNumber, error } = await supabase
             .rpc('get_next_certificate_number');
           
-          if (error) throw error;
+          if (error) {
+            console.error('Error fetching certificate number:', error);
+            throw error;
+          }
+          
+          console.log('New certificate number:', newCertNumber);
           setCertNumber(newCertNumber);
         } catch (error) {
           console.error('Error fetching certificate number:', error);
@@ -77,26 +82,6 @@ export const ModalContent = ({
     });
     onOpenChange(false);
   });
-
-  const handleDelete = async () => {
-    try {
-      const { error } = await supabase
-        .from('torque_wrench')
-        .delete()
-        .eq('id', equipmentId);
-
-      if (error) throw error;
-
-      toast.success("Torque wrench deleted successfully");
-      await queryClient.invalidateQueries({
-        queryKey: ['equipment', customerId, 'torque-wrenches']
-      });
-      onOpenChange(false);
-    } catch (error) {
-      console.error('Error deleting torque wrench:', error);
-      toast.error("Failed to delete torque wrench");
-    }
-  };
 
   const onSubmit = async (data: any) => {
     if (!customerId) return;
@@ -142,7 +127,7 @@ export const ModalContent = ({
         <NotesSection form={form} />
         <FormActions 
           onCancel={() => onOpenChange(false)} 
-          onDelete={handleDelete}
+          onDelete={undefined}
           isSaving={isSaving}
           equipmentId={equipmentId}
         />

@@ -142,6 +142,44 @@ export type Database = {
         }
         Relationships: []
       }
+      certificates: {
+        Row: {
+          certification_number: string
+          created_at: string
+          expiry_date: string
+          id: string
+          issue_date: string
+          torque_wrench_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          certification_number: string
+          created_at?: string
+          expiry_date: string
+          id?: string
+          issue_date: string
+          torque_wrench_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          certification_number?: string
+          created_at?: string
+          expiry_date?: string
+          id?: string
+          issue_date?: string
+          torque_wrench_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "certificates_torque_wrench_id_fkey"
+            columns: ["torque_wrench_id"]
+            isOneToOne: false
+            referencedRelation: "torque_wrench"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       companies: {
         Row: {
           address: string
