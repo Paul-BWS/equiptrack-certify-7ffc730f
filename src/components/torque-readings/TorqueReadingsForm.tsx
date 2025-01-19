@@ -7,9 +7,7 @@ import { FormActions } from "./form-sections/FormActions";
 import { useTorqueWrenchSubmit } from "@/hooks/useTorqueWrenchSubmit";
 import { toast } from "sonner";
 import { validateForm } from "@/utils/torqueReadingsValidation";
-import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
 import { TorqueReadingsForm as TorqueReadingsFormType } from "@/hooks/useTorqueReadingsForm";
-import { useForm } from "react-hook-form";
 import { addDays, format } from "date-fns";
 
 interface TorqueReadingsFormProps {
@@ -21,7 +19,7 @@ export const TorqueReadingsForm = ({ equipment, onCancel }: TorqueReadingsFormPr
   const initialCertNumber = equipment?.cert_number || `BWS-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   const today = new Date();
   const nextServiceDate = format(addDays(today, 364), 'yyyy-MM-dd');
-  
+
   const [formData, setFormData] = useState<TorqueReadingsFormType>({
     model: equipment?.model || "",
     serialNumber: equipment?.serial_number || "",
@@ -129,7 +127,10 @@ export const TorqueReadingsForm = ({ equipment, onCancel }: TorqueReadingsFormPr
         }}
       />
       
-      <BasicDetails form={formData} />
+      <BasicDetails 
+        formData={formData} 
+        onChange={(field, value) => setFormData(prev => ({ ...prev, [field]: value }))}
+      />
       
       <ReadingsSection
         title="AS FOUND"
