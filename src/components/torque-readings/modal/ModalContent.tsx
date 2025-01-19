@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { ModalForm } from "./ModalForm";
-import { LiftingEquipmentReadings } from "@/types/lifting-equipment-form";
+import { TorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
 import { useEquipmentData } from "@/hooks/useEquipmentData";
 
 interface ModalContentProps {
@@ -24,29 +24,38 @@ export const ModalContent = ({
   const [isSaving, setIsSaving] = useState(false);
   const { data: equipment, isLoading } = useEquipmentData(equipmentId, open);
 
-  const [readings, setReadings] = useState<LiftingEquipmentReadings>({
+  const [readings, setReadings] = useState<TorqueReadingsForm>({
     certNumber: equipment?.cert_number || `BWS-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
     model: equipment?.model || "",
     serialNumber: equipment?.serial_number || "",
-    engineer: "",  // Initialize as empty string
+    engineer: equipment?.engineer || "",
     date: equipment?.last_service_date || new Date().toISOString(),
     retestDate: equipment?.next_service_due || "",
-    capacity: equipment?.capacity?.toString() || "",
-    units: equipment?.units || "",
-    result: equipment?.test_result || "",
+    min: equipment?.min_torque?.toString() || "",
+    max: equipment?.max_torque?.toString() || "",
+    units: equipment?.units || "nm",
+    result: equipment?.result || "PASS",
     status: equipment?.status || "ACTIVE",
     notes: equipment?.notes || "",
-    platform_condition: equipment?.platform_condition || "PASS",
-    control_box_condition: equipment?.control_box_condition || "PASS",
-    hydraulic_hoses_condition: equipment?.hydraulic_hoses_condition || "PASS",
-    main_structure_inspection: equipment?.main_structure_inspection || "PASS",
-    oil_levels: equipment?.oil_levels || "PASS",
-    rollers_and_guides: equipment?.rollers_and_guides || "PASS",
-    safety_mechanism: equipment?.safety_mechanism || "PASS",
-    scissor_operation: equipment?.scissor_operation || "PASS",
-    securing_bolts: equipment?.securing_bolts || "PASS",
-    toe_guards: equipment?.toe_guards || "PASS",
-    lubrication_moving_parts: equipment?.lubrication_moving_parts || "PASS"
+    sentOn: equipment?.last_service_date || new Date().toISOString(),
+    target1: equipment?.target1 || "",
+    actual1: equipment?.actual1 || "",
+    deviation1: equipment?.deviation1 || "",
+    target2: equipment?.target2 || "",
+    actual2: equipment?.actual2 || "",
+    deviation2: equipment?.deviation2 || "",
+    target3: equipment?.target3 || "",
+    actual3: equipment?.actual3 || "",
+    deviation3: equipment?.deviation3 || "",
+    def_target1: equipment?.def_target1 || "",
+    def_actual1: equipment?.def_actual1 || "",
+    def_deviation1: equipment?.def_deviation1 || "",
+    def_target2: equipment?.def_target2 || "",
+    def_actual2: equipment?.def_actual2 || "",
+    def_deviation2: equipment?.def_deviation2 || "",
+    def_target3: equipment?.def_target3 || "",
+    def_actual3: equipment?.def_actual3 || "",
+    def_deviation3: equipment?.def_deviation3 || ""
   });
 
   // Update readings when equipment data is loaded
@@ -56,7 +65,34 @@ export const ModalContent = ({
         ...prev,
         model: equipment.model || "",
         serialNumber: equipment.serial_number || "",
-        engineer: equipment.engineer || "",  // Set engineer from equipment data
+        engineer: equipment.engineer || "",
+        min: equipment.min_torque?.toString() || "",
+        max: equipment.max_torque?.toString() || "",
+        units: equipment.units || "nm",
+        date: equipment.last_service_date || new Date().toISOString(),
+        retestDate: equipment.next_service_due || "",
+        result: equipment.result || "PASS",
+        status: equipment.status || "ACTIVE",
+        notes: equipment.notes || "",
+        certNumber: equipment.cert_number || `BWS-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+        target1: equipment.target1 || "",
+        actual1: equipment.actual1 || "",
+        deviation1: equipment.deviation1 || "",
+        target2: equipment.target2 || "",
+        actual2: equipment.actual2 || "",
+        deviation2: equipment.deviation2 || "",
+        target3: equipment.target3 || "",
+        actual3: equipment.actual3 || "",
+        deviation3: equipment.deviation3 || "",
+        def_target1: equipment.def_target1 || "",
+        def_actual1: equipment.def_actual1 || "",
+        def_deviation1: equipment.def_deviation1 || "",
+        def_target2: equipment.def_target2 || "",
+        def_actual2: equipment.def_actual2 || "",
+        def_deviation2: equipment.def_deviation2 || "",
+        def_target3: equipment.def_target3 || "",
+        def_actual3: equipment.def_actual3 || "",
+        def_deviation3: equipment.def_deviation3 || ""
       }));
     }
   }, [equipment]);
@@ -73,60 +109,50 @@ export const ModalContent = ({
         model: readings.model,
         serial_number: readings.serialNumber,
         engineer: readings.engineer,
+        min_torque: parseFloat(readings.min),
+        max_torque: parseFloat(readings.max),
+        units: readings.units,
         last_service_date: readings.date,
         next_service_due: readings.retestDate,
-        test_result: readings.result,
+        result: readings.result,
         notes: readings.notes,
         status: readings.status,
-        platform_condition: readings.platform_condition,
-        control_box_condition: readings.control_box_condition,
-        hydraulic_hoses_condition: readings.hydraulic_hoses_condition,
-        main_structure_inspection: readings.main_structure_inspection,
-        oil_levels: readings.oil_levels,
-        rollers_and_guides: readings.rollers_and_guides,
-        safety_mechanism: readings.safety_mechanism,
-        scissor_operation: readings.scissor_operation,
-        securing_bolts: readings.securing_bolts,
-        toe_guards: readings.toe_guards,
-        lubrication_moving_parts: readings.lubrication_moving_parts
+        target1: readings.target1,
+        actual1: readings.actual1,
+        deviation1: readings.deviation1,
+        target2: readings.target2,
+        actual2: readings.actual2,
+        deviation2: readings.deviation2,
+        target3: readings.target3,
+        actual3: readings.actual3,
+        deviation3: readings.deviation3,
+        def_target1: readings.def_target1,
+        def_actual1: readings.def_actual1,
+        def_deviation1: readings.def_deviation1,
+        def_target2: readings.def_target2,
+        def_actual2: readings.def_actual2,
+        def_deviation2: readings.def_deviation2,
+        def_target3: readings.def_target3,
+        def_actual3: readings.def_actual3,
+        def_deviation3: readings.def_deviation3
       };
 
       const { error } = equipmentId
-        ? await supabase.from('lifting_equipment').update(data).eq('id', equipmentId)
-        : await supabase.from('lifting_equipment').insert(data);
+        ? await supabase.from('torque_wrench').update(data).eq('id', equipmentId)
+        : await supabase.from('torque_wrench').insert(data);
 
       if (error) throw error;
 
       toast.success(equipmentId ? "Equipment updated successfully" : "Equipment added successfully");
       await queryClient.invalidateQueries({
-        queryKey: ['equipment', customerId, 'lifting-equipment']
+        queryKey: ['equipment', customerId, 'torque-wrenches']
       });
       onOpenChange(false);
     } catch (error) {
-      console.error('Error saving lifting equipment:', error);
-      toast.error("Failed to save lifting equipment");
+      console.error('Error saving torque wrench:', error);
+      toast.error("Failed to save torque wrench");
     } finally {
       setIsSaving(false);
-    }
-  };
-
-  const handleDelete = async () => {
-    try {
-      const { error } = await supabase
-        .from('lifting_equipment')
-        .delete()
-        .eq('id', equipmentId);
-
-      if (error) throw error;
-
-      toast.success("Equipment deleted successfully");
-      await queryClient.invalidateQueries({
-        queryKey: ['equipment', customerId, 'lifting-equipment']
-      });
-      onOpenChange(false);
-    } catch (error) {
-      console.error('Error deleting lifting equipment:', error);
-      toast.error("Failed to delete lifting equipment");
     }
   };
 
@@ -139,13 +165,12 @@ export const ModalContent = ({
   }
 
   return (
-    <DialogContent className="max-w-3xl">
+    <DialogContent className="max-w-3xl bg-white">
       <ModalForm
         readings={readings}
         setReadings={setReadings}
         onSubmit={handleSubmit}
-        onCancel={() => onOpenChange(false)}
-        onDelete={handleDelete}
+        onClose={() => onOpenChange(false)}
         isSaving={isSaving}
         equipmentId={equipmentId}
       />
