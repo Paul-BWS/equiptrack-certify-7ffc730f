@@ -42,53 +42,59 @@ export const ModalForm = ({
 
   return (
     <form onSubmit={onSubmit} className="p-6 space-y-6">
-      <HeaderSection
-        date={readings.date}
-        status={readings.status}
-        retestDate={readings.retestDate}
-        certNumber={readings.certNumber}
-        engineer={readings.engineer}
-        onDateChange={(value) => handleFieldChange("date", value)}
-        onRetestDateChange={(value) => handleFieldChange("retestDate", value)}
-        onStatusChange={(value) => handleFieldChange("status", value)}
-        onEngineerChange={(value) => handleFieldChange("engineer", value)}
-      />
-      
-      <MeasurementsSection
-        min={readings.min}
-        max={readings.max}
-        units={readings.units}
-        result={readings.result}
-        onMinChange={(value) => handleFieldChange("min", value)}
-        onMaxChange={(value) => handleFieldChange("max", value)}
-        onUnitsChange={(value) => handleFieldChange("units", value)}
-        onResultChange={(value) => handleFieldChange("result", value)}
-      />
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="bg-[#F9F9F9] p-6 rounded-lg">
-          <h3 className="font-semibold mb-4 text-gray-900">AS FOUND</h3>
-          <ReadingsSection
-            title="AS FOUND"
-            readings={readings}
-            onChange={handleReadingChange}
+      <div className="space-y-6">
+        <div className="bg-[#F9F9F9] p-6 rounded-lg space-y-4">
+          <HeaderSection
+            date={readings.date}
+            status={readings.status}
+            certNumber={readings.certNumber}
+            engineer={readings.engineer}
+            onDateChange={(value) => handleFieldChange("date", value)}
+            onStatusChange={(value) => handleFieldChange("status", value)}
+            onEngineerChange={(value) => handleFieldChange("engineer", value)}
           />
         </div>
+        
+        <div className="bg-[#F9F9F9] p-6 rounded-lg space-y-4">
+          <MeasurementsSection
+            min={readings.min}
+            max={readings.max}
+            units={readings.units}
+            result={readings.result}
+            onMinChange={(value) => handleFieldChange("min", value)}
+            onMaxChange={(value) => handleFieldChange("max", value)}
+            onUnitsChange={(value) => handleFieldChange("units", value)}
+            onResultChange={(value) => handleFieldChange("result", value)}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="bg-[#F9F9F9] p-6 rounded-lg">
+            <h3 className="font-semibold mb-4 text-gray-900">AS FOUND</h3>
+            <ReadingsSection
+              title="AS FOUND"
+              readings={readings}
+              onChange={handleReadingChange}
+            />
+          </div>
+          <div className="bg-[#F9F9F9] p-6 rounded-lg">
+            <h3 className="font-semibold mb-4 text-gray-900">DEFINITIVE</h3>
+            <ReadingsSection
+              title="DEFINITIVE"
+              readings={readings}
+              onChange={handleReadingChange}
+              readOnly
+            />
+          </div>
+        </div>
+
         <div className="bg-[#F9F9F9] p-6 rounded-lg">
-          <h3 className="font-semibold mb-4 text-gray-900">DEFINITIVE</h3>
-          <ReadingsSection
-            title="DEFINITIVE"
-            readings={readings}
-            onChange={handleReadingChange}
-            readOnly
+          <NotesSection
+            notes={readings.notes}
+            onChange={(value) => handleFieldChange("notes", value)}
           />
         </div>
       </div>
-
-      <NotesSection
-        notes={readings.notes}
-        onChange={(value) => handleFieldChange("notes", value)}
-      />
 
       <FormActions
         onClose={onClose}

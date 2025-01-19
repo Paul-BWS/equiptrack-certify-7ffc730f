@@ -8,6 +8,7 @@ import { useTorqueWrenchSubmit } from "@/hooks/useTorqueWrenchSubmit";
 import { validateForm } from "@/utils/torqueReadingsValidation";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
+import { addDays, format } from "date-fns";
 
 interface ModalContentProps {
   open: boolean;
@@ -73,6 +74,10 @@ export const ModalContent = ({
       return;
     }
 
+    // Calculate next service date (1 year from last service date)
+    const lastServiceDate = new Date(readings.date);
+    const nextServiceDate = addDays(lastServiceDate, 364);
+
     const torqueWrenchData = {
       id: equipmentId || undefined,
       company_id: companyId,
@@ -82,8 +87,8 @@ export const ModalContent = ({
       min_torque: parseFloat(readings.min),
       max_torque: parseFloat(readings.max),
       units: readings.units,
-      last_service_date: readings.date,
-      next_service_due: readings.retestDate,
+      last_service_date: format(lastServiceDate, 'yyyy-MM-dd'),
+      next_service_due: format(nextServiceDate, 'yyyy-MM-dd'),
       engineer: readings.engineer,
       result: readings.result,
       notes: readings.notes,
