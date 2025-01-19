@@ -46,10 +46,12 @@ export const ModalForm = ({
         <div className="bg-[#F9F9F9] p-6 rounded-lg space-y-4">
           <HeaderSection
             date={readings.date}
+            retestDate={readings.retestDate}
             status={readings.status}
             certNumber={readings.certNumber}
             engineer={readings.engineer}
             onDateChange={(value) => handleFieldChange("date", value)}
+            onRetestDateChange={(value) => handleFieldChange("retestDate", value)}
             onStatusChange={(value) => handleFieldChange("status", value)}
             onEngineerChange={(value) => handleFieldChange("engineer", value)}
           />
