@@ -52,7 +52,7 @@ export const EquipmentTable = ({ equipment }: EquipmentTableProps) => {
         {equipment.map((item) => (
           <TableRow key={item.id}>
             <TableCell className="font-medium">{item.model}</TableCell>
-            <TableCell>{`BWS-${item.serialNumber}`}</TableCell>
+            <TableCell>{item.serialNumber}</TableCell>
             <TableCell>{formatDate(item.lastServiceDate)}</TableCell>
             <TableCell>{formatDate(item.nextServiceDue)}</TableCell>
             <TableCell className="text-right">
