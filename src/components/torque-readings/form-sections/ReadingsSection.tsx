@@ -4,7 +4,7 @@ import { ReadingsPanel } from "./ReadingsPanel";
 import { TorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
 
 interface ReadingsSectionProps {
-  form: UseFormReturn<TorqueWrenchFormData>;
+  form?: UseFormReturn<TorqueWrenchFormData>;
   title: string;
   readOnly?: boolean;
   readings?: TorqueReadingsForm;
