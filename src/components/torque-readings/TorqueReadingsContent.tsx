@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { HeaderSection } from "./HeaderSection";
-import { EquipmentSection } from "./EquipmentSection";
-import { MeasurementsSection } from "./MeasurementsSection";
-import { ReadingsSection } from "./ReadingsSection";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { TorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
+import { HeaderDetails } from "./form-sections/HeaderDetails";
+import { EquipmentDetails } from "./form-sections/EquipmentDetails";
+import { MeasurementDetails } from "./form-sections/MeasurementDetails";
+import { ReadingsDetails } from "./form-sections/ReadingsDetails";
+import { NotesSection } from "./NotesSection";
 
 interface TorqueReadingsContentProps {
   readings: TorqueReadingsForm;
@@ -23,69 +23,36 @@ export const TorqueReadingsContent = ({
   isSaving,
   handleReadingChange,
 }: TorqueReadingsContentProps) => {
-  const isMobile = useIsMobile();
-
   const handleFieldChange = (field: keyof TorqueReadingsForm, value: string) => {
     setReadings({ ...readings, [field]: value });
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <HeaderSection
-        date={readings.date}
-        retestDate={readings.retestDate}
-        certNumber={readings.certNumber}
-        status={readings.status}
-        engineer={readings.engineer}
-        onDateChange={(value) => handleFieldChange("date", value)}
-        onStatusChange={(value) => handleFieldChange("status", value)}
-        onEngineerChange={(value) => handleFieldChange("engineer", value)}
+      <HeaderDetails 
+        readings={readings}
+        onFieldChange={handleFieldChange}
       />
 
-      <EquipmentSection
-        model={readings.model}
-        serialNumber={readings.serialNumber}
-        engineer={readings.engineer}
-        sentOn={readings.sentOn}
-        onModelChange={(value) => handleFieldChange("model", value)}
-        onSerialNumberChange={(value) => handleFieldChange("serialNumber", value)}
-        onEngineerChange={(value) => handleFieldChange("engineer", value)}
+      <EquipmentDetails
+        readings={readings}
+        onFieldChange={handleFieldChange}
       />
 
-      <MeasurementsSection
-        min={readings.min}
-        max={readings.max}
-        units={readings.units}
-        result={readings.result}
-        onMinChange={(value) => handleFieldChange("min", value)}
-        onMaxChange={(value) => handleFieldChange("max", value)}
-        onUnitsChange={(value) => handleFieldChange("units", value)}
-        onResultChange={(value) => handleFieldChange("result", value)}
+      <MeasurementDetails
+        readings={readings}
+        onFieldChange={handleFieldChange}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <ReadingsSection
-          title="AS FOUND"
-          readings={readings}
-          onChange={handleReadingChange}
-        />
-        <ReadingsSection
-          title="DEFINITIVE"
-          readings={readings}
-          onChange={handleReadingChange}
-          readOnly
-        />
-      </div>
+      <ReadingsDetails
+        readings={readings}
+        onReadingChange={handleReadingChange}
+      />
 
-      <div className="space-y-2">
-        <label className="text-sm text-gray-500">Notes</label>
-        <textarea
-          value={readings.notes}
-          onChange={(e) => handleFieldChange("notes", e.target.value)}
-          className="w-full min-h-[100px] rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-          placeholder="Enter any additional notes..."
-        />
-      </div>
+      <NotesSection
+        notes={readings.notes}
+        onChange={(value) => handleFieldChange("notes", value)}
+      />
 
       <div className="flex justify-end gap-4 mt-8">
         <Button 
