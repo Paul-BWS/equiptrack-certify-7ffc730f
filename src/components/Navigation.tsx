@@ -76,7 +76,7 @@ export const Navigation = () => {
   };
 
   return (
-    <nav className="border-b bg-[#266bec]">
+    <nav className="border-b bg-[#4c6fbf]">
       <div className="flex h-16 items-center px-4">
         <div className="flex items-center space-x-4">
           {isCustomerRoute && (
