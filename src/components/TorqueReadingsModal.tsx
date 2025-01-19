@@ -8,7 +8,12 @@ import {
 import { Form } from "@/components/ui/form";
 import { Toaster } from "@/components/ui/sonner";
 import { X } from "lucide-react";
-import { ModalContent } from "./torque-readings/modal/ModalContent";
+import { BasicDetailsSection } from "./torque-readings/form-sections/BasicDetailsSection";
+import { MeasurementsSection } from "./torque-readings/form-sections/MeasurementsSection";
+import { ReadingsSection } from "./torque-readings/form-sections/ReadingsSection";
+import { NotesSection } from "./torque-readings/form-sections/NotesSection";
+import { FormActions } from "./torque-readings/form-sections/FormActions";
+import { useTorqueWrenchReadingsForm } from "@/hooks/useTorqueWrenchReadingsForm";
 
 interface TorqueReadingsModalProps {
   open: boolean;
@@ -21,6 +26,8 @@ export const TorqueReadingsModal = ({
   onOpenChange,
   equipmentId,
 }: TorqueReadingsModalProps) => {
+  const { form, onSubmit, isSaving } = useTorqueWrenchReadingsForm(equipmentId, onOpenChange);
+
   return (
     <>
       <Toaster />
@@ -35,11 +42,26 @@ export const TorqueReadingsModal = ({
               {equipmentId ? "Edit Torque Wrench" : "Add New Torque Wrench"}
             </DialogTitle>
           </DialogHeader>
-          <ModalContent
-            open={open}
-            onOpenChange={onOpenChange}
-            equipmentId={equipmentId}
-          />
+          
+          <Form {...form}>
+            <form onSubmit={onSubmit} className="space-y-6 p-6">
+              <BasicDetailsSection form={form} />
+              <MeasurementsSection form={form} />
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <ReadingsSection form={form} title="AS FOUND" />
+                <ReadingsSection form={form} title="DEFINITIVE" readOnly />
+              </div>
+              
+              <NotesSection form={form} />
+              
+              <FormActions
+                onClose={() => onOpenChange(false)}
+                isSaving={isSaving}
+                equipmentId={equipmentId}
+              />
+            </form>
+          </Form>
         </DialogContent>
       </Dialog>
     </>
