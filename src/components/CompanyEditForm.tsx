@@ -83,7 +83,7 @@ export const CompanyEditForm = ({ company }: CompanyEditFormProps) => {
         <Button 
           variant="outline" 
           size="icon"
-          className="bg-white hover:bg-white/90 border-[#0EA5E9] text-[#0EA5E9] hover:text-[#0EA5E9]"
+          className="bg-[#7b96d4] hover:bg-[#4c6fbf] text-white"
         >
           <Pencil className="h-4 w-4" />
         </Button>
@@ -95,7 +95,7 @@ export const CompanyEditForm = ({ company }: CompanyEditFormProps) => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <CompanyFormFields form={form} />
-            <Button type="submit" className="w-full" disabled={isPending}>
+            <Button type="submit" className="w-full bg-[#7b96d4] text-white hover:bg-[#4c6fbf]" disabled={isPending}>
               {isPending ? "Updating..." : "Update Company"}
             </Button>
           </form>
