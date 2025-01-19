@@ -53,10 +53,7 @@ export const MeasurementsSection = ({
         </div>
         <div className="space-y-2">
           <label className="text-base text-[#C8C8C9]">Units</label>
-          <Select
-            value={units}
-            onValueChange={onUnitsChange}
-          >
+          <Select value={units} onValueChange={onUnitsChange}>
             <SelectTrigger className="h-12 bg-white border-gray-200 text-base">
               <SelectValue />
             </SelectTrigger>
@@ -68,10 +65,7 @@ export const MeasurementsSection = ({
         </div>
         <div className="space-y-2">
           <label className="text-base text-[#C8C8C9]">Result</label>
-          <Select
-            value={result}
-            onValueChange={onResultChange}
-          >
+          <Select value={result} onValueChange={onResultChange}>
             <SelectTrigger className={`h-12 bg-white border-gray-200 text-base ${
               result === 'PASS' ? 'text-green-500' : 'text-red-500'
             }`}>

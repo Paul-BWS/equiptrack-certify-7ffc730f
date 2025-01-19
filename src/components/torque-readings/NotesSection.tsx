@@ -1,6 +1,6 @@
 interface NotesSectionProps {
   notes: string;
-  onChange: (notes: string) => void;
+  onChange: (value: string) => void;
 }
 
 export const NotesSection = ({ notes, onChange }: NotesSectionProps) => {
@@ -10,7 +10,7 @@ export const NotesSection = ({ notes, onChange }: NotesSectionProps) => {
       <textarea
         value={notes}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full min-h-[100px] rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        className="w-full min-h-[100px] rounded-md border border-gray-200 bg-white px-3 py-2 text-base"
         placeholder="Enter any additional notes..."
       />
     </div>

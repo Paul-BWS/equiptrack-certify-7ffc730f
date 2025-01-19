@@ -24,6 +24,9 @@ export const ReadingsSection = ({
 
   return (
     <div className="space-y-4">
+      {title && (
+        <h3 className="text-base font-medium text-gray-900">{title}</h3>
+      )}
       {[0, 1, 2].map((index) => (
         <div key={`${title}-${index}`} className="grid grid-cols-3 gap-4">
           <div className="space-y-2">
