@@ -106,7 +106,7 @@ const TorqueWrenches = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#F1F1F1]">
       <Navigation />
       <main className="container mx-auto py-8">
         <div className="space-y-6">
