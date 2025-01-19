@@ -37,16 +37,6 @@ export const EquipmentTable = ({ equipment }: EquipmentTableProps) => {
     }
   };
 
-  const formatSerialNumber = (serialNumber: string) => {
-    // If serial number already starts with BWS-, return as is
-    if (serialNumber.startsWith('BWS-')) {
-      return serialNumber;
-    }
-    // Otherwise, format it to match the modal format
-    const numericPart = serialNumber.replace(/\D/g, '').slice(0, 5);
-    return numericPart ? `BWS-${numericPart.padStart(5, '0')}` : serialNumber;
-  };
-
   return (
     <Table>
       <TableHeader>
@@ -62,7 +52,7 @@ export const EquipmentTable = ({ equipment }: EquipmentTableProps) => {
         {equipment.map((item) => (
           <TableRow key={item.id}>
             <TableCell className="font-medium">{item.model}</TableCell>
-            <TableCell>{formatSerialNumber(item.serialNumber)}</TableCell>
+            <TableCell>{`BWS-${item.serialNumber}`}</TableCell>
             <TableCell>{formatDate(item.lastServiceDate)}</TableCell>
             <TableCell>{formatDate(item.nextServiceDue)}</TableCell>
             <TableCell className="text-right">
