@@ -57,7 +57,6 @@ export const ModalContent = ({
             throw error;
           }
           
-          console.log('New certificate number:', newCertNumber);
           setCertNumber(newCertNumber);
         } catch (error) {
           console.error('Error fetching certificate number:', error);
@@ -77,7 +76,7 @@ export const ModalContent = ({
       form.reset({
         certNumber: equipment.cert_number || "",
         model: equipment.model || "",
-        serialNumber: equipment.serial_number || "",
+        serialNumber: equipment.serial_number || "", // This is now just the plain serial number
         engineer: equipment.engineer || "",
         min: equipment.min_torque?.toString() || "",
         max: equipment.max_torque?.toString() || "",
@@ -114,7 +113,7 @@ export const ModalContent = ({
         company_id: customerId,
         cert_number: certNumber,
         model: data.model,
-        serial_number: data.serialNumber,
+        serial_number: data.serialNumber, // This will now be the plain serial number
         min_torque: parseFloat(data.min),
         max_torque: parseFloat(data.max),
         units: data.units,
