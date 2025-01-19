@@ -124,6 +124,24 @@ export type Database = {
           },
         ]
       }
+      certificate_counters: {
+        Row: {
+          counter_type: string
+          id: string
+          last_number: number
+        }
+        Insert: {
+          counter_type: string
+          id?: string
+          last_number?: number
+        }
+        Update: {
+          counter_type?: string
+          id?: string
+          last_number?: number
+        }
+        Relationships: []
+      }
       companies: {
         Row: {
           address: string
@@ -686,6 +704,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_next_certificate_number: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       get_user_data: {
         Args: Record<PropertyKey, never>
         Returns: {

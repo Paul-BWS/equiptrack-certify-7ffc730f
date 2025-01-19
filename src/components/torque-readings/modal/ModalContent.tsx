@@ -29,7 +29,7 @@ export const ModalContent = ({
 
   const form = useForm({
     defaultValues: {
-      certNumber: equipment?.cert_number || `BWS-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+      certNumber: equipment?.cert_number || "",
       model: equipment?.model || "",
       serialNumber: equipment?.serial_number || "",
       engineer: equipment?.engineer || "",
@@ -75,10 +75,20 @@ export const ModalContent = ({
     try {
       const nextServiceDate = addDays(data.lastServiceDate, 364);
       
+      // Get new certificate number if this is a new record
+      let certNumber = data.certNumber;
+      if (!equipmentId) {
+        const { data: newCertNumber, error: certError } = await supabase
+          .rpc('get_next_certificate_number');
+        
+        if (certError) throw certError;
+        certNumber = newCertNumber;
+      }
+      
       const torqueWrenchData = {
         id: equipmentId || undefined,
         company_id: customerId,
-        cert_number: data.certNumber,
+        cert_number: certNumber,
         model: data.model,
         serial_number: data.serialNumber,
         min_torque: parseFloat(data.min),
