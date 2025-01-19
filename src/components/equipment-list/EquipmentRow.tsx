@@ -22,16 +22,6 @@ export const EquipmentRow = ({ equipment }: EquipmentRowProps) => {
     }
   };
 
-  const formatSerialNumber = (serialNumber: string) => {
-    // If serial number already starts with BWS-, return as is
-    if (serialNumber.startsWith('BWS-')) {
-      return serialNumber;
-    }
-    // Otherwise, format it to match the modal format
-    const numericPart = serialNumber.replace(/\D/g, '').slice(0, 5);
-    return numericPart ? `BWS-${numericPart.padStart(5, '0')}` : serialNumber;
-  };
-
   const handleRowClick = (e: React.MouseEvent) => {
     if (isMobile && isBWSUser) {
       e.preventDefault();
@@ -46,7 +36,7 @@ export const EquipmentRow = ({ equipment }: EquipmentRowProps) => {
       onClick={handleRowClick}
     >
       <TableCell>{equipment.model}</TableCell>
-      <TableCell>{formatSerialNumber(equipment.serialNumber)}</TableCell>
+      <TableCell>{equipment.serialNumber}</TableCell>
       <TableCell>{formatDate(equipment.lastServiceDate)}</TableCell>
       {!isMobile && (
         <>
