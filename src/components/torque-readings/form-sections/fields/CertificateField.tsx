@@ -21,7 +21,7 @@ export const CertificateField = ({ form }: CertificateFieldProps) => {
         <FormItem>
           <FormLabel className="text-sm text-[#C8C8C9]">Certificate Number</FormLabel>
           <FormControl>
-            <Input {...field} readOnly className="h-12 bg-white border-[#E5E7EB] border-[0.5px] rounded-md text-base" />
+            <Input {...field} readOnly className="h-12 bg-gray-50 border-[#E5E7EB] border-[0.5px] rounded-md text-base cursor-not-allowed" />
           </FormControl>
           <FormMessage />
         </FormItem>

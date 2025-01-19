@@ -1,8 +1,7 @@
 export const generateCertificateNumber = () => {
-  const prefix = 'BWS';
-  const timestamp = Date.now().toString().slice(-6); // Take last 6 digits of timestamp
-  const randomNum = Math.floor(Math.random() * 100); // 0-99
-  return `${prefix}${timestamp}${randomNum.toString().padStart(2, '0')}`;
+  const prefix = 'BWS-';
+  const randomNum = Math.floor(Math.random() * 100000).toString().padStart(5, '0');
+  return `${prefix}${randomNum}`;
 };
 
 export const generateUUID = () => {
