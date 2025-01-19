@@ -3,14 +3,14 @@ import { calculateDeviation } from "@/utils/deviationCalculator";
 import { TorqueReadingsForm } from "@/hooks/useTorqueReadingsForm";
 
 interface ReadingsSectionProps {
-  title: string;
+  title?: string;
   readings: TorqueReadingsForm;
   onChange?: (index: number, field: string, value: string) => void;
   readOnly?: boolean;
 }
 
 export const ReadingsSection = ({
-  title,
+  title = '',
   readings,
   onChange,
   readOnly,
