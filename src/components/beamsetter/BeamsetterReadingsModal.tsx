@@ -3,6 +3,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { Toaster } from "@/components/ui/sonner";
@@ -15,6 +16,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import { X } from "lucide-react";
 
 export const BeamsetterReadingsModal = ({
   open,
@@ -55,6 +57,10 @@ export const BeamsetterReadingsModal = ({
       <Toaster />
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="max-w-3xl bg-white p-0">
+          <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+            <X className="h-4 w-4" />
+            <span className="sr-only">Close</span>
+          </DialogClose>
           <DialogHeader className="p-6 border-b">
             <DialogTitle className="text-xl font-semibold">
               {equipmentId ? "Edit Beamsetter" : "Add New Beamsetter"}
