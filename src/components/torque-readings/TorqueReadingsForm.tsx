@@ -10,13 +10,14 @@ import { toast } from "sonner";
 import { validateForm } from "@/utils/torqueReadingsValidation";
 import { generateCertificateNumber } from "@/utils/certificateDataPreparation";
 import { TorqueReadingsForm as TorqueReadingsFormType } from "@/hooks/useTorqueReadingsForm";
+import { useForm } from "react-hook-form";
 
 interface TorqueReadingsFormProps {
   equipment: TorqueWrench | null;
-  onClose: () => void;
+  onCancel: () => void;
 }
 
-export const TorqueReadingsForm = ({ equipment, onClose }: TorqueReadingsFormProps) => {
+export const TorqueReadingsForm = ({ equipment, onCancel }: TorqueReadingsFormProps) => {
   const initialCertNumber = equipment?.cert_number || `BWS-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   
   const [formData, setFormData] = useState<TorqueReadingsFormType>({
@@ -55,7 +56,7 @@ export const TorqueReadingsForm = ({ equipment, onClose }: TorqueReadingsFormPro
 
   const { handleSave, isSaving } = useTorqueWrenchSubmit(equipment?.id || null, () => {
     toast.success("Torque wrench data saved successfully");
-    onClose();
+    onCancel();
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -111,6 +112,22 @@ export const TorqueReadingsForm = ({ equipment, onClose }: TorqueReadingsFormPro
     }
   };
 
+  const form = useForm({
+    defaultValues: {
+      notes: formData.notes || "",
+      model: formData.model || "",
+      serialNumber: formData.serialNumber || "",
+      engineer: formData.engineer || "",
+      min: formData.min || "",
+      max: formData.max || "",
+      units: formData.units || "nm",
+      date: formData.date || new Date().toISOString().split('T')[0],
+      retestDate: formData.retestDate || "",
+      result: formData.result || "PASS",
+      status: formData.status || "ACTIVE",
+    }
+  });
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <CertificateSection
@@ -119,8 +136,7 @@ export const TorqueReadingsForm = ({ equipment, onClose }: TorqueReadingsFormPro
       />
       
       <BasicDetails
-        formData={formData}
-        onChange={(field, value) => setFormData(prev => ({ ...prev, [field]: value }))}
+        form={form}
       />
       
       <ReadingsSection
@@ -139,13 +155,10 @@ export const TorqueReadingsForm = ({ equipment, onClose }: TorqueReadingsFormPro
         readOnly
       />
 
-      <NotesSection
-        notes={formData.notes}
-        onChange={(notes) => setFormData(prev => ({ ...prev, notes }))}
-      />
+      <NotesSection form={form} />
 
       <FormActions
-        onClose={onClose}
+        onCancel={onCancel}
         isSaving={isSaving}
         equipmentId={equipment?.id || null}
       />

@@ -43,10 +43,10 @@ export const FormActions = ({
           <AlertDialogContent className="bg-white">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-xl font-semibold">
-                Delete Torque Wrench
+                Delete Equipment
               </AlertDialogTitle>
               <AlertDialogDescription className="text-base text-gray-500">
-                Are you sure you want to delete this torque wrench? This action cannot be undone 
+                Are you sure you want to delete this equipment? This action cannot be undone 
                 and will permanently remove all associated data.
               </AlertDialogDescription>
             </AlertDialogHeader>
@@ -58,7 +58,7 @@ export const FormActions = ({
                 onClick={onDelete}
                 className="bg-destructive hover:bg-destructive/90 text-base font-medium"
               >
-                Delete Torque Wrench
+                Delete Equipment
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

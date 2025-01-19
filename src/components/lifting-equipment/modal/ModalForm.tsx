@@ -3,6 +3,7 @@ import { NotesSection } from "@/components/torque-readings/form-sections/NotesSe
 import { Dispatch, SetStateAction } from "react";
 import { BasicDetailsSection } from "./form-sections/BasicDetailsSection";
 import { InspectionChecklist } from "./form-sections/InspectionChecklist";
+import { UseFormReturn, useForm } from "react-hook-form";
 
 interface LiftingEquipmentReadings {
   date: string;
@@ -31,7 +32,7 @@ interface ModalFormProps {
   readings: LiftingEquipmentReadings;
   setReadings: Dispatch<SetStateAction<LiftingEquipmentReadings>>;
   onSubmit: (e: React.FormEvent) => void;
-  onClose: () => void;
+  onCancel: () => void;
   onDelete?: () => void;
   isSaving: boolean;
   equipmentId: string | null;
@@ -55,16 +56,22 @@ export const ModalForm = ({
   readings,
   setReadings,
   onSubmit,
-  onClose,
+  onCancel,
   onDelete,
   isSaving,
   equipmentId,
 }: ModalFormProps) => {
+  const form = useForm({
+    defaultValues: {
+      notes: readings.notes || "",
+      // ... other form fields
+    }
+  });
+
   const handleFieldChange = (field: keyof LiftingEquipmentReadings, value: string) => {
     setReadings(prev => ({ ...prev, [field]: value }));
   };
 
-  // Create an object with only the inspection-related fields
   const inspectionValues: Partial<Record<string, string>> = {
     platform_condition: readings.platform_condition,
     control_box_condition: readings.control_box_condition,
@@ -97,13 +104,10 @@ export const ModalForm = ({
         onFieldChange={handleFieldChange}
       />
 
-      <NotesSection
-        notes={readings.notes || ""}
-        onChange={(value) => handleFieldChange("notes", value)}
-      />
+      <NotesSection form={form} />
 
       <FormActions
-        onClose={onClose}
+        onCancel={onCancel}
         onDelete={onDelete}
         isSaving={isSaving}
         equipmentId={equipmentId}
