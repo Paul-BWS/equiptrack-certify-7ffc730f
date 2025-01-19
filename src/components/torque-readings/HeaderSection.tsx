@@ -35,7 +35,7 @@ export const HeaderSection = ({
   const { data: staff, isLoading: isLoadingStaff } = useStaffMembers();
 
   return (
-    <div className="space-y-4 bg-[#F1F1F1] p-6 rounded-lg">
+    <div className="space-y-4">
       <div className="grid grid-cols-1 gap-4">
         <div className="space-y-2">
           <label className="text-base text-[#C8C8C9]">Certificate Number</label>
