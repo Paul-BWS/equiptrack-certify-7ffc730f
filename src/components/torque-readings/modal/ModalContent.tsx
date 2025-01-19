@@ -117,8 +117,7 @@ export const ModalContent = ({
   };
 
   return (
-    <DialogContent className="sm:max-w-[800px] lg:max-w-[1000px] max-h-[90vh] overflow-y-auto bg-white p-0">
-      <ModalHeader />
+    <div className="flex-1 overflow-auto">
       <ModalForm
         readings={readings}
         setReadings={setReadings}
@@ -128,6 +127,6 @@ export const ModalContent = ({
         isSaving={isSaving}
         equipmentId={equipmentId}
       />
-    </DialogContent>
+    </div>
   );
 };
