@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { useTorqueWrenchSubmit } from "@/hooks/useTorqueWrenchSubmit";
 import { useEquipmentData } from "@/hooks/useEquipmentData";
 import { format, addDays } from "date-fns";
+import { useEffect, useState } from "react";
 
 interface ModalContentProps {
   open: boolean;
@@ -26,10 +27,32 @@ export const ModalContent = ({
   const queryClient = useQueryClient();
   const { customerId } = useParams();
   const { data: equipment, isLoading } = useEquipmentData(equipmentId, open);
+  const [certNumber, setCertNumber] = useState<string>("");
+
+  useEffect(() => {
+    const fetchCertNumber = async () => {
+      if (!equipmentId && open) {
+        try {
+          const { data: newCertNumber, error } = await supabase
+            .rpc('get_next_certificate_number');
+          
+          if (error) throw error;
+          setCertNumber(newCertNumber);
+        } catch (error) {
+          console.error('Error fetching certificate number:', error);
+          toast.error("Failed to generate certificate number");
+        }
+      } else if (equipment?.cert_number) {
+        setCertNumber(equipment.cert_number);
+      }
+    };
+
+    fetchCertNumber();
+  }, [equipmentId, equipment?.cert_number, open]);
 
   const form = useForm({
     defaultValues: {
-      certNumber: equipment?.cert_number || "",
+      certNumber: certNumber,
       model: equipment?.model || "",
       serialNumber: equipment?.serial_number || "",
       engineer: equipment?.engineer || "",
@@ -41,6 +64,12 @@ export const ModalContent = ({
       notes: equipment?.notes || "",
     }
   });
+
+  useEffect(() => {
+    if (certNumber) {
+      form.setValue('certNumber', certNumber);
+    }
+  }, [certNumber, form]);
 
   const { handleSave, isSaving } = useTorqueWrenchSubmit(equipmentId, async () => {
     await queryClient.invalidateQueries({
@@ -74,16 +103,6 @@ export const ModalContent = ({
 
     try {
       const nextServiceDate = addDays(data.lastServiceDate, 364);
-      
-      // Get new certificate number if this is a new record
-      let certNumber = data.certNumber;
-      if (!equipmentId) {
-        const { data: newCertNumber, error: certError } = await supabase
-          .rpc('get_next_certificate_number');
-        
-        if (certError) throw certError;
-        certNumber = newCertNumber;
-      }
       
       const torqueWrenchData = {
         id: equipmentId || undefined,
