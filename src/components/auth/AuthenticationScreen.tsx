@@ -75,8 +75,8 @@ export const AuthenticationScreen = () => {
 
   return (
     <div className="min-h-screen bg-[#4c6fbf] flex items-center justify-center p-4">
-      <div className="w-full max-w-6xl flex flex-col-reverse md:flex-row items-center gap-8">
-        <div className="w-full md:w-1/2 flex justify-center md:justify-end">
+      <div className="w-full max-w-6xl flex flex-col md:flex-row items-center gap-8">
+        <div className="w-full md:w-1/2 order-1 md:order-none">
           <RobotImage />
         </div>
         
