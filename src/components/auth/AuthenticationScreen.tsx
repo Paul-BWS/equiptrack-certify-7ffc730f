@@ -81,7 +81,7 @@ export const AuthenticationScreen = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center p-4">
+      <div className="flex-1 flex items-start md:items-center justify-center p-4 md:p-8">
         <div className="w-full max-w-6xl flex flex-col md:flex-row items-center gap-8">
           {/* Hide robot image on mobile since it's in the header */}
           <div className="hidden md:flex w-full md:w-1/2 justify-center">
