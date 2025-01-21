@@ -10,19 +10,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { UserPlus } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { supabase } from "@/lib/supabase";
 import { contactSchema, ContactFormData } from "@/schemas/contactSchema";
-
-const contactSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().min(1, "Phone number is required"),
-  mobile_phone: z.string().optional(),
-  is_primary: z.boolean().default(false),
-});
-
-type ContactFormData = z.infer<typeof contactSchema>;
 
 interface ContactFormProps {
   companyId: string;
