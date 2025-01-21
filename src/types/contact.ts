@@ -4,6 +4,7 @@ export interface Contact {
   name: string;
   email: string;
   phone: string;
+  mobile_phone?: string;
   is_primary: boolean;
   role: "viewer" | "editor" | "admin";
   created_at: string;

@@ -12,11 +12,13 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { supabase } from "@/lib/supabase";
+import { contactSchema, ContactFormData } from "@/schemas/contactSchema";
 
 const contactSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email address"),
   phone: z.string().min(1, "Phone number is required"),
+  mobile_phone: z.string().optional(),
   is_primary: z.boolean().default(false),
 });
 
@@ -37,7 +39,9 @@ export const ContactForm = ({ companyId }: ContactFormProps) => {
       name: "",
       email: "",
       phone: "",
+      mobile_phone: "",
       is_primary: false,
+      role: "viewer",
     },
   });
 
@@ -131,6 +135,19 @@ export const ContactForm = ({ companyId }: ContactFormProps) => {
                   <FormLabel>Phone</FormLabel>
                   <FormControl>
                     <Input placeholder="Enter phone number" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="mobile_phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Mobile Phone</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter mobile phone number" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

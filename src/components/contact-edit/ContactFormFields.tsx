@@ -53,6 +53,19 @@ export const ContactFormFields = ({ form }: ContactFormFieldsProps) => {
       />
       <FormField
         control={form.control}
+        name="mobile_phone"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Mobile Phone</FormLabel>
+            <FormControl>
+              <Input placeholder="Enter mobile phone number" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
         name="role"
         render={({ field }) => (
           <FormItem>
