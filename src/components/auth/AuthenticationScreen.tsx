@@ -74,14 +74,23 @@ export const AuthenticationScreen = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#4c6fbf] flex items-center justify-center p-4">
-      <div className="w-full max-w-6xl flex flex-col-reverse md:flex-row items-center gap-8">
-        <div className="w-full md:w-1/2 flex justify-center">
-          <RobotImage />
-        </div>
-        
-        <div className="w-full md:w-1/2">
-          <LoginCard />
+    <div className="min-h-screen bg-[#4c6fbf] flex flex-col">
+      {/* Mobile Header */}
+      <div className="md:hidden bg-[#3a5aa9] py-8 px-4 flex justify-center items-center">
+        <RobotImage />
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex items-center justify-center p-4">
+        <div className="w-full max-w-6xl flex flex-col md:flex-row items-center gap-8">
+          {/* Hide robot image on mobile since it's in the header */}
+          <div className="hidden md:flex w-full md:w-1/2 justify-center">
+            <RobotImage />
+          </div>
+          
+          <div className="w-full md:w-1/2">
+            <LoginCard />
+          </div>
         </div>
       </div>
     </div>
