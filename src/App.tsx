@@ -21,7 +21,9 @@ const queryClient = new QueryClient({
             console.error('Query error:', error);
             if (error.message === 'Failed to fetch') {
               toast.error('Connection error. Please check your internet connection and try refreshing the page.');
-            } else if (error.code === 'PGRST301') {
+            } else if (error.code === 'PGRST301' || error.message.includes('refresh_token_not_found')) {
+              console.log('Session expired, redirecting to login');
+              supabase.auth.signOut(); // Clear the invalid session
               toast.error('Session expired. Please sign in again.');
             } else {
               toast.error('An error occurred. Please try again.');
@@ -45,7 +47,12 @@ function AppContent() {
         const { data: { session }, error } = await supabase.auth.getSession();
         if (error) {
           console.error('Session check error:', error);
-          toast.error('Authentication error. Please try signing in again.');
+          if (error.message.includes('refresh_token_not_found')) {
+            await supabase.auth.signOut(); // Clear the invalid session
+            toast.error('Session expired. Please sign in again.');
+          } else {
+            toast.error('Authentication error. Please try signing in again.');
+          }
           setSession(null);
         } else {
           setSession(session);
@@ -72,6 +79,9 @@ function AppContent() {
         console.info('User signed in');
         setSession(session);
         queryClient.clear(); // Clear cache to ensure fresh data load
+      } else if (event === 'TOKEN_REFRESHED' && session) {
+        console.info('Token refreshed successfully');
+        setSession(session);
       }
     });
 
