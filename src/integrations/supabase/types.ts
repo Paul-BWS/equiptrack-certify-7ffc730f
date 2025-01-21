@@ -254,6 +254,7 @@ export type Database = {
           is_primary: boolean | null
           name: string
           phone: string
+          role: Database["public"]["Enums"]["contact_role"]
         }
         Insert: {
           company_id?: string | null
@@ -263,6 +264,7 @@ export type Database = {
           is_primary?: boolean | null
           name: string
           phone: string
+          role?: Database["public"]["Enums"]["contact_role"]
         }
         Update: {
           company_id?: string | null
@@ -272,6 +274,7 @@ export type Database = {
           is_primary?: boolean | null
           name?: string
           phone?: string
+          role?: Database["public"]["Enums"]["contact_role"]
         }
         Relationships: [
           {
@@ -761,7 +764,7 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      contact_role: "viewer" | "editor" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
