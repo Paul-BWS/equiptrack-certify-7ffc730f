@@ -5,6 +5,7 @@ export const contactSchema = z.object({
   email: z.string().email("Invalid email address"),
   phone: z.string().min(1, "Phone number is required"),
   is_primary: z.boolean().default(false),
+  role: z.enum(["viewer", "editor", "admin"]).default("viewer"),
 });
 
 export type ContactFormData = z.infer<typeof contactSchema>;

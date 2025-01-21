@@ -5,5 +5,6 @@ export interface Contact {
   email: string;
   phone: string;
   is_primary: boolean;
+  role: "viewer" | "editor" | "admin";
   created_at: string;
 }
