@@ -10,14 +10,17 @@ import { toast } from "sonner";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 1,
+      retry: 2,
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
       refetchOnWindowFocus: false,
       meta: {
-        onSettled: (error: any) => {
+        onSettled: (data: any, error: any) => {
           if (error) {
             console.error('Query error:', error);
             if (error.message === 'Failed to fetch') {
-              toast.error('Connection error. Please check your internet connection.');
+              toast.error('Connection error. Please check your internet connection and try refreshing the page.');
+            } else if (error.code === 'PGRST301') {
+              toast.error('Session expired. Please sign in again.');
             } else {
               toast.error('An error occurred. Please try again.');
             }
@@ -32,14 +35,28 @@ function AppContent() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_OUT') {
-        console.info('User signed out, forcing navigation to root');
-        navigate('/');
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED' && !session) {
+        console.info('User signed out or session expired, clearing cache and redirecting');
         queryClient.clear();
+        navigate('/');
+      } else if (event === 'SIGNED_IN') {
+        console.info('User signed in');
+        queryClient.clear(); // Clear cache to ensure fresh data load
       }
       console.info('Auth state changed:', event);
     });
+
+    // Check initial session
+    const checkSession = async () => {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (error || !session) {
+        console.info('No active session, redirecting to root');
+        navigate('/');
+      }
+    };
+    
+    checkSession();
 
     return () => {
       subscription.unsubscribe();
