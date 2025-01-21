@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Navigation } from "@/components/Navigation";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
@@ -10,6 +10,22 @@ import { CompanyDashboard } from "@/components/dashboard/CompanyDashboard";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsAuthenticated(!!session);
+    };
+    
+    checkAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const { data: session, isLoading: isSessionLoading, error: sessionError } = useQuery({
     queryKey: ['session'],
@@ -23,10 +39,10 @@ const Index = () => {
     },
   });
 
-  const { data: companies = [], isLoading: isLoadingCompanies } = useQuery({
+  const { data: companies = [], isLoading: isLoadingCompanies, error: companiesError } = useQuery({
     queryKey: ['companies'],
     queryFn: async () => {
-      if (!session) return [];
+      if (!isAuthenticated) return [];
       
       console.log('Fetching companies...');
       const { data, error } = await supabase
@@ -43,7 +59,7 @@ const Index = () => {
       console.log('Companies fetched:', data);
       return data;
     },
-    enabled: !!session,
+    enabled: isAuthenticated,
   });
 
   if (isSessionLoading) {
@@ -54,8 +70,12 @@ const Index = () => {
     return <ErrorScreen message={sessionError.message || "Authentication error occurred"} />;
   }
 
-  if (!session) {
+  if (!isAuthenticated) {
     return <AuthenticationScreen />;
+  }
+
+  if (companiesError) {
+    return <ErrorScreen message="Failed to load companies. Please try again later." />;
   }
 
   const filteredCompanies = companies.filter((company) =>
