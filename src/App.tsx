@@ -14,16 +14,18 @@ export default function App() {
     defaultOptions: {
       queries: {
         retry: 1,
-        onError: (error: any) => {
-          console.error('Query error:', error);
-          const errorMessage = getAuthErrorMessage(error);
-          
-          if (isRefreshTokenError(error) || error.code === 'PGRST301') {
-            console.log('Session expired, redirecting to login');
-            supabase.auth.signOut(); // Clear the invalid session
-          }
-          
-          toast.error(errorMessage);
+        meta: {
+          onError: (error: any) => {
+            console.error('Query error:', error);
+            const errorMessage = getAuthErrorMessage(error);
+            
+            if (isRefreshTokenError(error) || error.code === 'PGRST301') {
+              console.log('Session expired, redirecting to login');
+              supabase.auth.signOut(); // Clear the invalid session
+            }
+            
+            toast.error(errorMessage);
+          },
         },
       },
     },
