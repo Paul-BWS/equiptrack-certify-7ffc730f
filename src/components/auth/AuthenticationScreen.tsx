@@ -76,7 +76,7 @@ export const AuthenticationScreen = () => {
   return (
     <div className="min-h-screen bg-[#4c6fbf] flex flex-col">
       {/* Mobile Header */}
-      <div className="md:hidden bg-[#3a5aa9] py-8 px-4 flex justify-center items-center">
+      <div className="md:hidden bg-[#4c6fbf] py-8 px-4 flex justify-center items-center">
         <RobotImage />
       </div>
 
