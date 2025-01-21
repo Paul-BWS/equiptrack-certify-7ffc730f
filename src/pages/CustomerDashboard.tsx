@@ -8,12 +8,14 @@ import { DashboardContent } from "@/components/customer-dashboard/DashboardConte
 import { LoadingState } from "@/components/customer-dashboard/LoadingState";
 import { AuthenticationScreen } from "@/components/auth/AuthenticationScreen";
 import { ErrorScreen } from "@/components/auth/ErrorScreen";
+import { useProfileData } from "@/hooks/useProfileData";
 
 const CustomerDashboard = () => {
   const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { isBWSUser } = useProfileData();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -30,7 +32,6 @@ const CustomerDashboard = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Redirect to home if no ID or invalid ID
   useEffect(() => {
     if (!id || id === 'undefined') {
       toast({
@@ -64,6 +65,20 @@ const CustomerDashboard = () => {
 
       if (!data) {
         throw new Error('Company not found');
+      }
+
+      // Check if user has access to this company
+      if (!isBWSUser) {
+        const { data: userCompany } = await supabase
+          .from('user_companies')
+          .select('company_id')
+          .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
+          .eq('company_id', id)
+          .maybeSingle();
+
+        if (!userCompany) {
+          throw new Error('Access denied');
+        }
       }
 
       console.log('Company data fetched:', data);

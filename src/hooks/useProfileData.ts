@@ -30,7 +30,7 @@ export const useProfileData = () => {
         setEmail(session.user.email || "");
         setName(session.user.user_metadata?.name || "");
 
-        // First get the user's company
+        // Get user's company
         const { data: userCompanyData, error: userCompanyError } = await supabase
           .from('user_companies')
           .select('company_id')
@@ -43,7 +43,7 @@ export const useProfileData = () => {
         }
 
         if (userCompanyData?.company_id) {
-          // Then get the company details
+          // Get company details
           const { data: companyData, error: companyError } = await supabase
             .from('companies')
             .select('name')
