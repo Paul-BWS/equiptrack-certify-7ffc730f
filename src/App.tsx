@@ -1,65 +1,53 @@
-import { BrowserRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "@/components/ui/toaster";
-import { Routes } from "./Routes";
 import { useEffect, useState } from "react";
-import { supabase } from "./lib/supabase";
-import { useNavigate } from "react-router-dom";
+import { Session } from "@supabase/supabase-js";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { LoadingScreen } from "./components/auth/LoadingScreen";
-import { AuthenticationScreen } from "./components/auth/AuthenticationScreen";
+import { supabase } from "@/lib/supabase";
+import { Routes } from "./Routes";
+import { isRefreshTokenError, getAuthErrorMessage } from "@/utils/authErrors";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 2,
-      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-      refetchOnWindowFocus: false,
-      meta: {
-        onSettled: (data: any, error: any) => {
-          if (error) {
-            console.error('Query error:', error);
-            if (error.message === 'Failed to fetch') {
-              toast.error('Connection error. Please check your internet connection and try refreshing the page.');
-            } else if (error.code === 'PGRST301' || error.message.includes('refresh_token_not_found')) {
-              console.log('Session expired, redirecting to login');
-              supabase.auth.signOut(); // Clear the invalid session
-              toast.error('Session expired. Please sign in again.');
-            } else {
-              toast.error('An error occurred. Please try again.');
-            }
-          }
-        }
-      }
-    },
-  },
-});
-
-function AppContent() {
-  const navigate = useNavigate();
+export default function App() {
+  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [session, setSession] = useState(null);
+
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: 1,
+        onError: (error: any) => {
+          console.error('Query error:', error);
+          const errorMessage = getAuthErrorMessage(error);
+          
+          if (isRefreshTokenError(error) || error.code === 'PGRST301') {
+            console.log('Session expired, redirecting to login');
+            supabase.auth.signOut(); // Clear the invalid session
+          }
+          
+          toast.error(errorMessage);
+        },
+      },
+    },
+  });
 
   useEffect(() => {
-    // Initial session check
     const checkSession = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
+        
         if (error) {
           console.error('Session check error:', error);
-          if (error.message.includes('refresh_token_not_found')) {
-            await supabase.auth.signOut(); // Clear the invalid session
-            toast.error('Session expired. Please sign in again.');
-          } else {
-            toast.error('Authentication error. Please try signing in again.');
+          if (isRefreshTokenError(error)) {
+            await supabase.auth.signOut();
           }
+          toast.error(getAuthErrorMessage(error));
           setSession(null);
         } else {
           setSession(session);
         }
-      } catch (err) {
-        console.error('Unexpected error during session check:', err);
-        toast.error('An unexpected error occurred. Please refresh the page.');
+      } catch (error) {
+        console.error('Session check failed:', error);
+        toast.error('Failed to check authentication status');
+        setSession(null);
       } finally {
         setIsLoading(false);
       }
@@ -67,18 +55,19 @@ function AppContent() {
 
     checkSession();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.info('Auth state changed:', event);
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state changed:', event);
       
-      if (event === 'SIGNED_OUT' || (event === 'TOKEN_REFRESHED' && !session)) {
-        console.info('User signed out or session expired, clearing cache and redirecting');
-        queryClient.clear();
+      if (event === 'SIGNED_OUT') {
+        console.info('User signed out');
         setSession(null);
-        navigate('/');
-      } else if (event === 'SIGNED_IN') {
+        queryClient.clear();
+      } else if (event === 'SIGNED_IN' && session) {
         console.info('User signed in');
         setSession(session);
-        queryClient.clear(); // Clear cache to ensure fresh data load
+        queryClient.clear();
       } else if (event === 'TOKEN_REFRESHED' && session) {
         console.info('Token refreshed successfully');
         setSession(session);
@@ -88,32 +77,15 @@ function AppContent() {
     return () => {
       subscription.unsubscribe();
     };
-  }, [navigate]);
+  }, [queryClient]);
 
   if (isLoading) {
-    return <LoadingScreen />;
+    return <div>Loading...</div>;
   }
 
-  if (!session) {
-    return <AuthenticationScreen />;
-  }
-
-  return (
-    <>
-      <Routes />
-      <Toaster />
-    </>
-  );
-}
-
-function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
+      <Routes session={session} />
     </QueryClientProvider>
   );
 }
-
-export default App;
