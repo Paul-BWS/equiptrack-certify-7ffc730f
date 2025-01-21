@@ -12,12 +12,16 @@ const queryClient = new QueryClient({
     queries: {
       retry: 1,
       refetchOnWindowFocus: false,
-      onError: (error: any) => {
-        console.error('Query error:', error);
-        if (error.message === 'Failed to fetch') {
-          toast.error('Connection error. Please check your internet connection.');
-        } else {
-          toast.error('An error occurred. Please try again.');
+      meta: {
+        onSettled: (error: any) => {
+          if (error) {
+            console.error('Query error:', error);
+            if (error.message === 'Failed to fetch') {
+              toast.error('Connection error. Please check your internet connection.');
+            } else {
+              toast.error('An error occurred. Please try again.');
+            }
+          }
         }
       }
     },
