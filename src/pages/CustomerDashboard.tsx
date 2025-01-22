@@ -21,6 +21,10 @@ const CustomerDashboard = () => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setIsAuthenticated(!!session);
+      
+      if (session) {
+        console.log('User authenticated:', session.user.id);
+      }
     };
     
     checkAuth();
@@ -51,8 +55,22 @@ const CustomerDashboard = () => {
         throw new Error('Invalid customer ID');
       }
 
-      console.log('Fetching company data...');
+      console.log('Fetching company data for ID:', id);
       try {
+        // First check if we have a valid session
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError) {
+          console.error('Session error:', sessionError);
+          throw new Error('Authentication error. Please sign in again.');
+        }
+
+        if (!session) {
+          console.error('No active session');
+          throw new Error('Please sign in to continue');
+        }
+
+        console.log('Using session user:', session.user.id);
+
         const { data, error } = await supabase
           .from('companies')
           .select('*, contacts(*)')
@@ -65,15 +83,17 @@ const CustomerDashboard = () => {
         }
 
         if (!data) {
+          console.error('Company not found:', id);
           throw new Error('Company not found');
         }
 
         // Check if user has access to this company
         if (!isBWSUser) {
+          console.log('Checking company access for non-BWS user');
           const { data: userCompany, error: accessError } = await supabase
             .from('user_companies')
             .select('company_id')
-            .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
+            .eq('user_id', session.user.id)
             .eq('company_id', id)
             .maybeSingle();
 
@@ -83,14 +103,15 @@ const CustomerDashboard = () => {
           }
 
           if (!userCompany) {
+            console.error('Access denied for user:', session.user.id);
             throw new Error('Access denied');
           }
         }
 
-        console.log('Company data fetched:', data);
+        console.log('Company data fetched successfully:', data.id);
         return data;
       } catch (err) {
-        console.error('Error in company fetch:', err);
+        console.error('Detailed error in company fetch:', err);
         throw err;
       }
     },
