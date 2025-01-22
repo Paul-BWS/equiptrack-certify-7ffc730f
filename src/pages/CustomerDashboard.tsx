@@ -12,9 +12,9 @@ const CustomerDashboard = () => {
   const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
   const navigate = useNavigate();
+
   const isMobile = useMediaQuery("(max-width: 768px)");
 
-  // Redirect to home if no ID or invalid ID
   useEffect(() => {
     if (!id || id === 'undefined') {
       toast({
