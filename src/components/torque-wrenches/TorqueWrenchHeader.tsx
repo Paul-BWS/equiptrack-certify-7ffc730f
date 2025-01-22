@@ -1,3 +1,4 @@
+import { useProfileData } from "@/hooks/useProfileData";
 import { NewTorqueButton } from "./NewTorqueButton";
 
 interface TorqueWrenchHeaderProps {
@@ -11,22 +12,21 @@ export const TorqueWrenchHeader = ({
   customerName,
   onNewTorqueWrench,
 }: TorqueWrenchHeaderProps) => {
+  const { isBWSUser } = useProfileData();
+
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-          </div>
-          <NewTorqueButton onClick={onNewTorqueWrench} />
-        </div>
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div>
+        <h1 className="text-2xl font-bold">Torque Wrenches</h1>
         {customerName && (
-          <div className="flex flex-col gap-1">
-            <h1 className="text-3xl font-bold">
-              {customerName}
-            </h1>
-          </div>
+          <p className="text-muted-foreground">
+            Viewing torque wrenches for {customerName}
+          </p>
         )}
       </div>
+      {isBWSUser && (
+        <NewTorqueButton onClick={onNewTorqueWrench} />
+      )}
     </div>
   );
 };
