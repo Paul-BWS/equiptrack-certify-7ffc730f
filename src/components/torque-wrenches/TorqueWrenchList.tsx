@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { EquipmentList } from "@/components/EquipmentList";
+import { useProfileData } from "@/hooks/useProfileData";
 
 interface TorqueWrenchListProps {
   torqueWrenches: Array<{
@@ -21,17 +22,25 @@ export const TorqueWrenchList = ({
   onGenerateCertificate,
   onViewReadings,
 }: TorqueWrenchListProps) => {
+  const { isBWSUser } = useProfileData();
+
   if (!torqueWrenches.length) {
     return (
       <div className="text-center py-12">
         <h3 className="text-lg font-semibold mb-2">No torque wrench equipment found</h3>
-        <p className="text-muted-foreground mb-4">Get started by adding your first torque wrench equipment.</p>
-        <button
-          onClick={onNewTorqueWrench}
-          className="text-primary hover:underline"
-        >
-          Add Torque Wrench
-        </button>
+        <p className="text-muted-foreground mb-4">
+          {isBWSUser 
+            ? "Get started by adding your first torque wrench equipment."
+            : "No torque wrench equipment has been added yet."}
+        </p>
+        {isBWSUser && (
+          <button
+            onClick={onNewTorqueWrench}
+            className="text-primary hover:underline"
+          >
+            Add Torque Wrench
+          </button>
+        )}
       </div>
     );
   }
