@@ -5,7 +5,12 @@ export interface Company {
   name: string;
   industry: string;
   website: string;
-  address: string;
+  address1: string;
+  address2?: string;
+  city?: string;
+  state?: string;
+  postcode?: string;
+  country?: string;
   useSeparateBillingAddress: boolean;
   billingaddress: string;
   notes: string;
