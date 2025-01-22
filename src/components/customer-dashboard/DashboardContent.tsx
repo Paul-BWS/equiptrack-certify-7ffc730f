@@ -1,5 +1,4 @@
 import { CompanyCard } from "./CompanyCard";
-import { ContactsList } from "./ContactsList";
 import { EquipmentServiceList } from "./EquipmentServiceList";
 import { Company } from "@/types/company";
 import { Card, CardContent } from "@/components/ui/card";
@@ -37,10 +36,7 @@ export const DashboardContent = ({ company }: DashboardContentProps) => {
       </a>
 
       <CompanyCard company={company} />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <ContactsList contacts={company.contacts || []} companyId={company.id} />
-        <EquipmentServiceList companyId={company.id} />
-      </div>
+      <EquipmentServiceList companyId={company.id} />
 
       {/* Support Section */}
       <Card className="bg-gradient-to-r from-primary/5 to-primary/10">
