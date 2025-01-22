@@ -64,24 +64,30 @@ export const AccessCheck = ({
               attempt: retryCount + 1
             });
             
-            const { data: userCompany, error: companyError } = await supabase
+            const response = await supabase
               .from('user_companies')
               .select('company_id')
               .eq('user_id', sessionData.session.user.id)
               .eq('company_id', company.id)
               .maybeSingle();
 
-            if (companyError) {
-              console.error('Company access error:', companyError);
-              throw companyError;
+            // Check if we got a 500 error response
+            if (response.status === 500) {
+              console.error('Server error (500):', response);
+              throw new Error('Server error: The service is temporarily unavailable');
+            }
+
+            if (response.error) {
+              console.error('Company access error:', response.error);
+              throw response.error;
             }
 
             console.log('Access check result:', {
-              hasAccess: !!userCompany,
-              companyData: userCompany
+              hasAccess: !!response.data,
+              companyData: response.data
             });
 
-            onAccessChange(!!userCompany);
+            onAccessChange(!!response.data);
             onLoadingChange(false);
             setRetryCount(0); // Reset retry count on success
           } catch (error) {
@@ -102,7 +108,7 @@ export const AccessCheck = ({
                 maxRetries
               });
               
-              toast.error(`Connection issue. Retrying... (${retryCount + 1}/${maxRetries})`);
+              toast.error(`Server error. Retrying... (${retryCount + 1}/${maxRetries})`);
               
               setTimeout(checkCompanyAccess, delay);
             } else {
@@ -110,9 +116,9 @@ export const AccessCheck = ({
                 attempts: retryCount,
                 maxRetries
               });
-              onError("Unable to verify access. Please check your internet connection and try again.");
+              onError("The service is temporarily unavailable. Please try again later.");
               onLoadingChange(false);
-              toast.error("Connection error. Please refresh the page or try again later.");
+              toast.error("Server error. Please try again later.");
             }
           }
         };
