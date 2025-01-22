@@ -17,11 +17,10 @@ export const TorqueWrenchHeader = ({
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div>
-        <h1 className="text-2xl font-bold">Torque Wrenches</h1>
         {customerName && (
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl font-bold">
             {customerName}
-          </p>
+          </h1>
         )}
       </div>
       {isBWSUser && (
