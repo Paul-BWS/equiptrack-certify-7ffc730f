@@ -1,4 +1,7 @@
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 import { EquipmentList } from "@/components/EquipmentList";
+import { useProfileData } from "@/hooks/useProfileData";
 
 interface BeamsetterListProps {
   beamsetters: Array<{
@@ -19,17 +22,33 @@ export const BeamsetterList = ({
   onGenerateCertificate,
   onViewReadings,
 }: BeamsetterListProps) => {
-  if (!beamsetters.length) {
+  const { isBWSUser } = useProfileData();
+  
+  const handleNewBeamsetter = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onNewBeamsetter();
+  };
+
+  if (beamsetters.length === 0 && isBWSUser) {
     return (
-      <div className="text-center py-12">
-        <h3 className="text-lg font-semibold mb-2">No beamsetter equipment found</h3>
-        <p className="text-muted-foreground mb-4">Get started by adding your first beamsetter equipment.</p>
-        <button
-          onClick={onNewBeamsetter}
-          className="text-primary hover:underline"
+      <div className="flex flex-col items-center justify-center p-8 text-center border rounded-lg bg-muted/10">
+        <p className="text-muted-foreground mb-4">No beamsetters found for this customer.</p>
+        <Button 
+          onClick={handleNewBeamsetter}
+          className="bg-primary hover:bg-primary/90"
         >
-          Add Beamsetter
-        </button>
+          <Plus className="h-4 w-4 mr-2" />
+          Add First Beamsetter
+        </Button>
+      </div>
+    );
+  }
+
+  if (beamsetters.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center p-8 text-center border rounded-lg bg-muted/10">
+        <p className="text-muted-foreground mb-4">No beamsetters found for this customer.</p>
       </div>
     );
   }

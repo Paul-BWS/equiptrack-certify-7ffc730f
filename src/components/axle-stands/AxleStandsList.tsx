@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { EquipmentList } from "@/components/EquipmentList";
+import { useProfileData } from "@/hooks/useProfileData";
 
 interface AxleStandsListProps {
   axleStands: Array<{
@@ -21,13 +22,15 @@ export const AxleStandsList = ({
   onGenerateCertificate,
   onViewReadings,
 }: AxleStandsListProps) => {
+  const { isBWSUser } = useProfileData();
+  
   const handleNewAxleStand = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     onNewAxleStand();
   };
 
-  if (axleStands.length === 0) {
+  if (axleStands.length === 0 && isBWSUser) {
     return (
       <div className="flex flex-col items-center justify-center p-8 text-center border rounded-lg bg-muted/10">
         <p className="text-muted-foreground mb-4">No axle stands found for this customer.</p>
@@ -38,6 +41,14 @@ export const AxleStandsList = ({
           <Plus className="h-4 w-4 mr-2" />
           Add First Axle Stand
         </Button>
+      </div>
+    );
+  }
+
+  if (axleStands.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center p-8 text-center border rounded-lg bg-muted/10">
+        <p className="text-muted-foreground mb-4">No axle stands found for this customer.</p>
       </div>
     );
   }
