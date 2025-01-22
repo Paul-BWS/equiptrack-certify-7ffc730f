@@ -57,16 +57,12 @@ const Index = () => {
     retry: false // Disable retries for this query
   });
 
-  if (isSessionLoading) {
-    return <LoadingScreen />;
-  }
-
-  if (sessionError) {
-    return <ErrorScreen message={sessionError.message || "Authentication error occurred"} />;
-  }
-
   if (!isAuthenticated) {
     return <AuthenticationScreen />;
+  }
+
+  if (isLoadingCompanies) {
+    return <LoadingScreen />;
   }
 
   if (companiesError) {
