@@ -11,11 +11,26 @@ import { CompanyDashboard } from "@/components/dashboard/CompanyDashboard";
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
+  const [authError, setAuthError] = useState<Error | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setIsAuthenticated(!!session);
+      try {
+        setIsAuthLoading(true);
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          setAuthError(error);
+          return;
+        }
+        
+        setIsAuthenticated(!!session);
+      } catch (error) {
+        setAuthError(error as Error);
+      } finally {
+        setIsAuthLoading(false);
+      }
     };
     
     checkAuth();
@@ -54,8 +69,16 @@ const Index = () => {
       }
     },
     enabled: isAuthenticated,
-    retry: false // Disable retries for this query
+    retry: false
   });
+
+  if (isAuthLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (authError) {
+    return <ErrorScreen message={authError.message || "Authentication error occurred"} />;
+  }
 
   if (!isAuthenticated) {
     return <AuthenticationScreen />;
