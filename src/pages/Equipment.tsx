@@ -2,9 +2,14 @@ import { Navigation } from "@/components/Navigation";
 import { CustomerEquipmentList } from "@/components/customer-equipment/CustomerEquipmentList";
 import { EquipmentList } from "@/components/EquipmentList";
 import { useProfileData } from "@/hooks/useProfileData";
+import { LoadingScreen } from "@/components/auth/LoadingScreen";
 
 const Equipment = () => {
-  const { isBWSUser } = useProfileData();
+  const { isBWSUser, isLoading } = useProfileData();
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <div className="min-h-screen bg-background">
