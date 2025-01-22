@@ -27,39 +27,34 @@ const Index = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const { data: session, isLoading: isSessionLoading, error: sessionError } = useQuery({
-    queryKey: ['session'],
-    queryFn: async () => {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      if (error) {
-        console.error('Session error:', error);
-        return null;
-      }
-      return session;
-    },
-  });
-
   const { data: companies = [], isLoading: isLoadingCompanies, error: companiesError } = useQuery({
     queryKey: ['companies'],
     queryFn: async () => {
       if (!isAuthenticated) return [];
       
       console.log('Fetching companies...');
-      const { data, error } = await supabase
-        .from('companies')
-        .select('*')
-        .order('name');
-      
-      if (error) {
+      try {
+        const { data, error } = await supabase
+          .from('companies')
+          .select('*')
+          .order('name');
+        
+        if (error) {
+          console.error('Error fetching companies:', error);
+          toast.error("Failed to load companies");
+          throw error;
+        }
+        
+        console.log('Companies fetched:', data);
+        return data || [];
+      } catch (error: any) {
         console.error('Error fetching companies:', error);
         toast.error("Failed to load companies");
         throw error;
       }
-      
-      console.log('Companies fetched:', data);
-      return data;
     },
     enabled: isAuthenticated,
+    retry: false // Disable retries for this query
   });
 
   if (isSessionLoading) {
