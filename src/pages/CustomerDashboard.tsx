@@ -6,11 +6,13 @@ import { useEffect } from "react";
 import { DashboardHeader } from "@/components/customer-dashboard/DashboardHeader";
 import { DashboardContent } from "@/components/customer-dashboard/DashboardContent";
 import { LoadingState } from "@/components/customer-dashboard/LoadingState";
+import { useMediaQuery } from "@/hooks/use-mobile";
 
 const CustomerDashboard = () => {
   const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   // Redirect to home if no ID or invalid ID
   useEffect(() => {
@@ -61,6 +63,19 @@ const CustomerDashboard = () => {
     },
     enabled: !!id && id !== 'undefined',
   });
+
+  if (isMobile) {
+    return (
+      <div className="flex items-center justify-center h-screen p-4">
+        <div className="text-center space-y-4">
+          <h1 className="text-2xl font-bold text-gray-900">Desktop Only View</h1>
+          <p className="text-gray-600">
+            This dashboard is optimized for desktop viewing. Please access it from a larger screen.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoadingCompany) {
     return <LoadingState />;
