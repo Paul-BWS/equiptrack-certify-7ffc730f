@@ -17,7 +17,7 @@ export const DashboardHeader = ({ id }: DashboardHeaderProps) => {
           <Button
             variant="ghost"
             onClick={() => navigate(`/customers/${id}/equipment`)}
-            className="text-white hover:text-white hover:bg-white/20 border border-white"
+            className="text-white hover:text-white hover:bg-white/20"
           >
             <Grid className="mr-2 h-5 w-5" />
             Equipment List
