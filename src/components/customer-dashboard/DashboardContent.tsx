@@ -7,6 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 
 interface DashboardContentProps {
   company: Company;
@@ -26,26 +27,40 @@ export const DashboardContent = ({ company }: DashboardContentProps) => {
           return;
         }
 
-        const { data: sessionData } = await supabase.auth.getSession();
-        if (!sessionData?.session?.user) {
+        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError) {
+          console.error('Session error:', sessionError);
+          setError("Authentication error");
+          return;
+        }
+
+        if (!sessionData?.session) {
+          console.log('No active session');
           setError("Authentication required");
           return;
         }
 
-        const { data: userCompany, error: companyError } = await supabase
-          .from('user_companies')
-          .select('company_id')
-          .eq('user_id', sessionData.session.user.id)
-          .eq('company_id', company.id)
-          .maybeSingle();
+        try {
+          const { data: userCompany, error: companyError } = await supabase
+            .from('user_companies')
+            .select('company_id')
+            .eq('user_id', sessionData.session.id)
+            .eq('company_id', company.id)
+            .maybeSingle();
 
-        if (companyError) {
-          console.error('Error checking company access:', companyError);
-          setError("Error verifying access permissions");
-          return;
+          if (companyError) {
+            console.error('Error checking company access:', companyError);
+            setError("Error verifying access permissions");
+            return;
+          }
+
+          setHasAccess(!!userCompany);
+        } catch (fetchError) {
+          console.error('Network error checking access:', fetchError);
+          toast.error("Network error. Please check your connection and try again.");
+          setError("Network error checking access permissions");
         }
-
-        setHasAccess(!!userCompany);
       } catch (err) {
         console.error('Error in checkAccess:', err);
         setError("An unexpected error occurred");
