@@ -24,6 +24,7 @@ export const DashboardContent = ({ company }: DashboardContentProps) => {
       try {
         if (isBWSUser) {
           setHasAccess(true);
+          setIsLoading(false);
           return;
         }
 
@@ -31,39 +32,51 @@ export const DashboardContent = ({ company }: DashboardContentProps) => {
         
         if (sessionError) {
           console.error('Session error:', sessionError);
-          setError("Authentication error");
+          setError("Please sign in again to continue");
+          toast.error("Your session has expired. Please sign in again.");
           return;
         }
 
         if (!sessionData?.session) {
-          console.log('No active session');
-          setError("Authentication required");
+          setError("Please sign in to continue");
           return;
         }
 
-        try {
-          const { data: userCompany, error: companyError } = await supabase
-            .from('user_companies')
-            .select('company_id')
-            .eq('user_id', sessionData.session.id)
-            .eq('company_id', company.id)
-            .maybeSingle();
+        const maxRetries = 3;
+        let retryCount = 0;
+        let success = false;
 
-          if (companyError) {
-            console.error('Error checking company access:', companyError);
-            setError("Error verifying access permissions");
-            return;
+        while (retryCount < maxRetries && !success) {
+          try {
+            const { data: userCompany, error: companyError } = await supabase
+              .from('user_companies')
+              .select('company_id')
+              .eq('user_id', sessionData.session.user.id)
+              .eq('company_id', company.id)
+              .maybeSingle();
+
+            if (companyError) {
+              throw companyError;
+            }
+
+            setHasAccess(!!userCompany);
+            success = true;
+          } catch (fetchError) {
+            retryCount++;
+            if (retryCount === maxRetries) {
+              console.error('Error checking company access:', fetchError);
+              setError("Unable to verify access. Please try again later.");
+              toast.error("Connection error. Please check your internet connection.");
+            } else {
+              // Wait before retrying (exponential backoff)
+              await new Promise(resolve => setTimeout(resolve, Math.pow(2, retryCount) * 1000));
+            }
           }
-
-          setHasAccess(!!userCompany);
-        } catch (fetchError) {
-          console.error('Network error checking access:', fetchError);
-          toast.error("Network error. Please check your connection and try again.");
-          setError("Network error checking access permissions");
         }
       } catch (err) {
         console.error('Error in checkAccess:', err);
-        setError("An unexpected error occurred");
+        setError("Unable to load company information");
+        toast.error("An error occurred while loading company information");
       } finally {
         setIsLoading(false);
       }
@@ -88,8 +101,13 @@ export const DashboardContent = ({ company }: DashboardContentProps) => {
       <div className="container mx-auto py-6">
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
+          <AlertTitle>Unable to Load Dashboard</AlertTitle>
+          <AlertDescription className="space-y-4">
+            <p>{error}</p>
+            <p className="text-sm">
+              If this problem persists, please try refreshing the page or contact support.
+            </p>
+          </AlertDescription>
         </Alert>
       </div>
     );
@@ -103,6 +121,7 @@ export const DashboardContent = ({ company }: DashboardContentProps) => {
           <AlertTitle>Access Denied</AlertTitle>
           <AlertDescription>
             You don't have permission to view this company's information.
+            If you believe this is a mistake, please contact your administrator.
           </AlertDescription>
         </Alert>
       </div>
