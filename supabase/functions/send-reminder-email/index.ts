@@ -34,7 +34,7 @@ serve(async (req) => {
     if (companyError) throw companyError
 
     // For testing, we'll send all emails to your verified email
-    const testEmail = 'admin@bwsequiptrack.com'
+    const testEmail = 'sales@basicwelding.co.uk'
 
     // Fetch equipment due for service
     const thirtyDaysFromNow = new Date()
@@ -120,8 +120,8 @@ serve(async (req) => {
         'Authorization': `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'BWS Calibration <admin@bwsequiptrack.com>',
-        to: [testEmail],
+        from: 'BWS Calibration <onboarding@resend.dev>',
+        to: [testEmail], // During testing, all emails go to your verified email
         subject: `Equipment Service Reminder - ${company.name}`,
         html: emailHtml,
       }),

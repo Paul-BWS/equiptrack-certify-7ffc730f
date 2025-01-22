@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Navigation } from "@/components/Navigation";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
@@ -10,85 +10,52 @@ import { CompanyDashboard } from "@/components/dashboard/CompanyDashboard";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isAuthLoading, setIsAuthLoading] = useState(true);
-  const [authError, setAuthError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        setIsAuthLoading(true);
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
-        if (error) {
-          console.error("Auth error:", error);
-          setAuthError(error);
-          return;
-        }
-        
-        setIsAuthenticated(!!session);
-      } catch (error) {
-        console.error("Auth check error:", error);
-        setAuthError(error as Error);
-      } finally {
-        setIsAuthLoading(false);
+  const { data: session, isLoading: isSessionLoading, error: sessionError } = useQuery({
+    queryKey: ['session'],
+    queryFn: async () => {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (error) {
+        console.error('Session error:', error);
+        return null;
       }
-    };
-    
-    checkAuth();
+      return session;
+    },
+  });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsAuthenticated(!!session);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const { data: companies = [], isLoading: isLoadingCompanies, error: companiesError } = useQuery({
+  const { data: companies = [], isLoading: isLoadingCompanies } = useQuery({
     queryKey: ['companies'],
     queryFn: async () => {
-      if (!isAuthenticated) return [];
+      if (!session) return [];
       
       console.log('Fetching companies...');
-      try {
-        const { data, error } = await supabase
-          .from('companies')
-          .select('*')
-          .order('name');
-        
-        if (error) {
-          console.error('Error fetching companies:', error);
-          toast.error("Failed to load companies");
-          throw error;
-        }
-        
-        console.log('Companies fetched:', data);
-        return data || [];
-      } catch (error: any) {
+      const { data, error } = await supabase
+        .from('companies')
+        .select('*')
+        .order('name');
+      
+      if (error) {
         console.error('Error fetching companies:', error);
         toast.error("Failed to load companies");
         throw error;
       }
+      
+      console.log('Companies fetched:', data);
+      return data;
     },
-    enabled: isAuthenticated,
-    retry: 1
+    enabled: !!session,
   });
 
-  if (isAuthLoading) {
+  if (isSessionLoading) {
     return <LoadingScreen />;
   }
 
-  if (authError) {
-    return <ErrorScreen message={authError.message || "Authentication error occurred"} />;
+  if (sessionError) {
+    return <ErrorScreen message={sessionError.message || "Authentication error occurred"} />;
   }
 
-  if (!isAuthenticated) {
+  if (!session) {
     return <AuthenticationScreen />;
-  }
-
-  if (companiesError) {
-    console.error("Companies error details:", companiesError);
-    return <ErrorScreen message="Failed to load companies. Please try again later." />;
   }
 
   const filteredCompanies = companies.filter((company) =>

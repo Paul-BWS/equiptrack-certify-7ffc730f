@@ -22,12 +22,7 @@ export const CustomerForm = () => {
       name: "",
       website: "",
       industry: "",
-      address1: "",
-      address2: "",
-      city: "",
-      state: "",
-      postcode: "",
-      country: "",
+      address: "",
       useSeparateBillingAddress: false,
       billingaddress: "",
       notes: "",
@@ -37,7 +32,7 @@ export const CustomerForm = () => {
   const { mutate: createCompany, isPending } = useMutation({
     mutationFn: async (data: CompanyFormData) => {
       if (!data.useSeparateBillingAddress) {
-        data.billingaddress = data.address1;
+        data.billingaddress = data.address;
       }
       return await companyService.createCompany(data);
     },

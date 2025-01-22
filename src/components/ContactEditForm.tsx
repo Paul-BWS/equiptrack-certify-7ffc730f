@@ -27,9 +27,7 @@ export const ContactEditForm = ({ contact }: ContactEditFormProps) => {
       name: contact.name,
       email: contact.email,
       phone: contact.phone,
-      mobile_phone: contact.mobile_phone || "",
       is_primary: contact.is_primary,
-      role: contact.role,
     },
   });
 
@@ -41,9 +39,7 @@ export const ContactEditForm = ({ contact }: ContactEditFormProps) => {
           name: data.name,
           email: data.email,
           phone: data.phone,
-          mobile_phone: data.mobile_phone,
           is_primary: data.is_primary,
-          role: data.role,
         })
         .eq('id', contact.id)
         .select()

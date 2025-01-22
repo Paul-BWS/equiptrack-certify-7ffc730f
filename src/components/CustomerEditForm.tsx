@@ -19,12 +19,7 @@ const customerSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email address"),
   phone: z.string().min(1, "Phone number is required"),
-  address1: z.string().min(1, "Address line 1 is required"),
-  address2: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  postcode: z.string().optional(),
-  country: z.string().optional(),
+  address: z.string().min(1, "Site address is required"),
   useSeparateBillingAddress: z.boolean(),
   billingAddress: z.string().optional(),
   company: z.string().min(1, "Company name is required"),
@@ -48,12 +43,7 @@ export const CustomerEditForm = ({ customer }: CustomerEditFormProps) => {
       name: customer.name,
       email: customer.email,
       phone: customer.phone,
-      address1: customer.address1,
-      address2: customer.address2,
-      city: customer.city,
-      state: customer.state,
-      postcode: customer.postcode,
-      country: customer.country,
+      address: customer.address,
       useSeparateBillingAddress: customer.useSeparateBillingAddress,
       billingAddress: customer.billingAddress,
       company: customer.company,
@@ -67,7 +57,7 @@ export const CustomerEditForm = ({ customer }: CustomerEditFormProps) => {
     mutationFn: async (data: CustomerFormData) => {
       const customerData = {
         ...data,
-        billingAddress: data.useSeparateBillingAddress ? data.billingAddress : data.address1,
+        billingAddress: data.useSeparateBillingAddress ? data.billingAddress : data.address,
       };
       
       const { data: updatedCustomer, error } = await supabase

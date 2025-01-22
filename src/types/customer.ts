@@ -3,12 +3,7 @@ export interface Customer {
   name: string;
   email: string;
   phone: string;
-  address1: string;
-  address2?: string;
-  city?: string;
-  state?: string;
-  postcode?: string;
-  country?: string;
+  address: string;
   billingAddress: string;
   useSeparateBillingAddress: boolean;
   company: string;
@@ -21,12 +16,7 @@ export type CustomerFormData = {
   name: string;
   email: string;
   phone: string;
-  address1: string;
-  address2?: string;
-  city?: string;
-  state?: string;
-  postcode?: string;
-  country?: string;
+  address: string;
   useSeparateBillingAddress: boolean;
   billingAddress?: string;
   company: string;

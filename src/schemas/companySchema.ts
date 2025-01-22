@@ -23,12 +23,7 @@ export const companySchema = z.object({
       },
       { message: "Invalid website URL" }
     ),
-  address1: z.string().min(1, "Address is required"),
-  address2: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  postcode: z.string().optional(),
-  country: z.string().optional(),
+  address: z.string().min(1, "Site address is required"),
   useSeparateBillingAddress: z.boolean().default(false),
   billingaddress: z.string().min(1, "Billing address is required").optional(),
   notes: z.string(),

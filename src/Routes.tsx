@@ -1,5 +1,4 @@
 import { Routes as RouterRoutes, Route } from "react-router-dom";
-import { Session } from "@supabase/supabase-js";
 import Index from "@/pages/Index";
 import Profile from "@/pages/Profile";
 import Settings from "@/pages/Settings";
@@ -13,11 +12,7 @@ import LiftingEquipment from "@/pages/LiftingEquipment";
 import AxleStands from "@/pages/AxleStands";
 import Beamsetter from "@/pages/Beamsetter";
 
-interface RoutesProps {
-  session: Session | null;
-}
-
-export const Routes = ({ session }: RoutesProps) => {
+export const Routes = () => {
   return (
     <RouterRoutes>
       <Route path="/" element={<Index />} />

@@ -55,77 +55,12 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
       />
       <FormField
         control={form.control}
-        name="address1"
+        name="address"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Address Line 1</FormLabel>
+            <FormLabel>Site Address</FormLabel>
             <FormControl>
-              <Input placeholder="Enter address line 1" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="address2"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Address Line 2</FormLabel>
-            <FormControl>
-              <Input placeholder="Enter address line 2 (optional)" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="city"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>City</FormLabel>
-            <FormControl>
-              <Input placeholder="Enter city" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="state"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>State</FormLabel>
-            <FormControl>
-              <Input placeholder="Enter state" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="postcode"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Postcode</FormLabel>
-            <FormControl>
-              <Input placeholder="Enter postcode" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="country"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Country</FormLabel>
-            <FormControl>
-              <Input placeholder="Enter country" {...field} />
+              <Input placeholder="Enter site address" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>

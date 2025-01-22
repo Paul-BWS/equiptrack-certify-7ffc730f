@@ -252,10 +252,8 @@ export type Database = {
           email: string
           id: string
           is_primary: boolean | null
-          mobile_phone: string | null
           name: string
           phone: string
-          role: Database["public"]["Enums"]["contact_role"]
         }
         Insert: {
           company_id?: string | null
@@ -263,10 +261,8 @@ export type Database = {
           email: string
           id?: string
           is_primary?: boolean | null
-          mobile_phone?: string | null
           name: string
           phone: string
-          role?: Database["public"]["Enums"]["contact_role"]
         }
         Update: {
           company_id?: string | null
@@ -274,10 +270,8 @@ export type Database = {
           email?: string
           id?: string
           is_primary?: boolean | null
-          mobile_phone?: string | null
           name?: string
           phone?: string
-          role?: Database["public"]["Enums"]["contact_role"]
         }
         Relationships: [
           {
@@ -291,43 +285,28 @@ export type Database = {
       }
       customers: {
         Row: {
-          address1: string
-          address2: string | null
-          city: string | null
-          country: string | null
+          address: string
           created_at: string
           email: string
           id: string
           name: string
           phone: string
-          postcode: string | null
-          state: string | null
         }
         Insert: {
-          address1: string
-          address2?: string | null
-          city?: string | null
-          country?: string | null
+          address: string
           created_at?: string
           email: string
           id?: string
           name: string
           phone: string
-          postcode?: string | null
-          state?: string | null
         }
         Update: {
-          address1?: string
-          address2?: string | null
-          city?: string | null
-          country?: string | null
+          address?: string
           created_at?: string
           email?: string
           id?: string
           name?: string
           phone?: string
-          postcode?: string | null
-          state?: string | null
         }
         Relationships: []
       }
@@ -782,7 +761,7 @@ export type Database = {
       }
     }
     Enums: {
-      contact_role: "viewer" | "editor" | "admin"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
