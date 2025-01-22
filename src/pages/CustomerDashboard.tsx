@@ -52,40 +52,51 @@ const CustomerDashboard = () => {
       }
 
       console.log('Fetching company data...');
-      const { data, error } = await supabase
-        .from('companies')
-        .select('*, contacts(*)')
-        .eq('id', id)
-        .maybeSingle();
-
-      if (error) {
-        console.error('Error fetching company:', error);
-        throw error;
-      }
-
-      if (!data) {
-        throw new Error('Company not found');
-      }
-
-      // Check if user has access to this company
-      if (!isBWSUser) {
-        const { data: userCompany } = await supabase
-          .from('user_companies')
-          .select('company_id')
-          .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
-          .eq('company_id', id)
+      try {
+        const { data, error } = await supabase
+          .from('companies')
+          .select('*, contacts(*)')
+          .eq('id', id)
           .maybeSingle();
 
-        if (!userCompany) {
-          throw new Error('Access denied');
+        if (error) {
+          console.error('Error fetching company:', error);
+          throw error;
         }
-      }
 
-      console.log('Company data fetched:', data);
-      return data;
+        if (!data) {
+          throw new Error('Company not found');
+        }
+
+        // Check if user has access to this company
+        if (!isBWSUser) {
+          const { data: userCompany, error: accessError } = await supabase
+            .from('user_companies')
+            .select('company_id')
+            .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
+            .eq('company_id', id)
+            .maybeSingle();
+
+          if (accessError) {
+            console.error('Error checking company access:', accessError);
+            throw new Error('Error verifying access permissions');
+          }
+
+          if (!userCompany) {
+            throw new Error('Access denied');
+          }
+        }
+
+        console.log('Company data fetched:', data);
+        return data;
+      } catch (err) {
+        console.error('Error in company fetch:', err);
+        throw err;
+      }
     },
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     enabled: !!id && id !== 'undefined' && isAuthenticated,
-    retry: 1,
   });
 
   if (!isAuthenticated) {
@@ -97,11 +108,13 @@ const CustomerDashboard = () => {
   }
 
   if (error) {
-    return (
-      <ErrorScreen 
-        message={error instanceof Error ? error.message : "Failed to load company data. Please try again later."} 
-      />
-    );
+    const errorMessage = error instanceof Error 
+      ? error.message 
+      : "Failed to load company data. Please try again later.";
+    
+    console.error('Detailed error:', error);
+    
+    return <ErrorScreen message={errorMessage} />;
   }
 
   if (!company) {
