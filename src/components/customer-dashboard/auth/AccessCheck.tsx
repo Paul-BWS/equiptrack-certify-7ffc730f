@@ -79,40 +79,33 @@ export const AccessCheck = ({
               attempt: retryCount + 1
             });
             
-            const response = await supabase
+            const { data: userCompanies, error: accessError } = await supabase
               .from('user_companies')
               .select('company_id')
               .eq('user_id', sessionData.session.user.id)
-              .eq('company_id', company.id)
-              .maybeSingle();
+              .eq('company_id', company.id);
 
-            // Log the raw response for debugging
-            console.log('📝 Raw response:', response);
-
-            if (response.status === 500) {
-              console.error('❌ Server error (500):', response);
-              throw new Error('Server error: The service is temporarily unavailable');
+            if (accessError) {
+              console.error('❌ Company access error:', accessError);
+              throw accessError;
             }
 
-            if (response.error) {
-              console.error('❌ Company access error:', response.error);
-              throw response.error;
-            }
-
+            const hasAccess = userCompanies && userCompanies.length > 0;
             console.log('✅ Access check result:', {
-              hasAccess: !!response.data,
-              companyData: response.data
+              hasAccess,
+              userCompanies
             });
 
-            onAccessChange(!!response.data);
+            onAccessChange(hasAccess);
             onLoadingChange(false);
             setRetryCount(0);
+
+            if (!hasAccess) {
+              toast.error("You don't have access to this company");
+            }
+
           } catch (error) {
-            console.error('❌ Error checking company access:', {
-              error,
-              attempt: retryCount + 1,
-              maxRetries
-            });
+            console.error('❌ Error checking company access:', error);
             
             if (retryCount < maxRetries) {
               const delay = Math.min(1000 * Math.pow(2, retryCount), 8000);
@@ -124,17 +117,11 @@ export const AccessCheck = ({
                 maxRetries
               });
               
-              toast.error(`Server error. Retrying... (${retryCount + 1}/${maxRetries})`);
-              
               setTimeout(checkCompanyAccess, delay);
             } else {
-              console.error('❌ Max retries reached:', {
-                attempts: retryCount,
-                maxRetries
-              });
-              onError("The service is temporarily unavailable. Please try again later.");
+              onError("Unable to verify company access. Please try again later.");
               onLoadingChange(false);
-              toast.error("Server error. Please try again later.");
+              toast.error("Error verifying company access");
             }
           }
         };
