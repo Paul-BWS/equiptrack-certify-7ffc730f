@@ -21,12 +21,14 @@ const Index = () => {
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
+          console.error("Auth error:", error);
           setAuthError(error);
           return;
         }
         
         setIsAuthenticated(!!session);
       } catch (error) {
+        console.error("Auth check error:", error);
         setAuthError(error as Error);
       } finally {
         setIsAuthLoading(false);
@@ -69,7 +71,7 @@ const Index = () => {
       }
     },
     enabled: isAuthenticated,
-    retry: false
+    retry: 1
   });
 
   if (isAuthLoading) {
@@ -84,11 +86,8 @@ const Index = () => {
     return <AuthenticationScreen />;
   }
 
-  if (isLoadingCompanies) {
-    return <LoadingScreen />;
-  }
-
   if (companiesError) {
+    console.error("Companies error details:", companiesError);
     return <ErrorScreen message="Failed to load companies. Please try again later." />;
   }
 
