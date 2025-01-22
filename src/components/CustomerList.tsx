@@ -9,7 +9,20 @@ interface CustomerListProps {
 export const CustomerList = ({ customers }: CustomerListProps) => {
   const navigate = useNavigate();
 
-  const openInGoogleMaps = (address: string) => {
+  const formatAddress = (customer: Company) => {
+    const parts = [
+      customer.address1,
+      customer.address2,
+      customer.city,
+      customer.state,
+      customer.postcode,
+      customer.country
+    ].filter(Boolean);
+    return parts.join(", ");
+  };
+
+  const openInGoogleMaps = (customer: Company) => {
+    const address = formatAddress(customer);
     const encodedAddress = encodeURIComponent(address);
     window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
   };
@@ -58,16 +71,16 @@ export const CustomerList = ({ customers }: CustomerListProps) => {
             <div className="flex items-center gap-3">
               <div 
                 className="bg-blue-50 p-2 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors"
-                onClick={() => openInGoogleMaps(company.address)}
+                onClick={() => openInGoogleMaps(company)}
                 title="Open in Google Maps"
               >
                 <MapPin className="h-5 w-5 text-primary" />
               </div>
               <span 
                 className="text-gray-600 cursor-pointer hover:text-primary"
-                onClick={() => openInGoogleMaps(company.address)}
+                onClick={() => openInGoogleMaps(company)}
               >
-                {company.address}
+                {formatAddress(company)}
               </span>
             </div>
           </div>

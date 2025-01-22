@@ -13,17 +13,86 @@ export const CustomerAddressInfo = ({ form }: CustomerAddressInfoProps) => {
     <>
       <FormField
         control={form.control}
-        name="address"
+        name="address1"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Site Address</FormLabel>
+            <FormLabel>Address Line 1</FormLabel>
             <FormControl>
-              <Input placeholder="Enter site address" {...field} />
+              <Input placeholder="Enter address line 1" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
         )}
       />
+      <FormField
+        control={form.control}
+        name="address2"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Address Line 2 (Optional)</FormLabel>
+            <FormControl>
+              <Input placeholder="Enter address line 2" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <div className="grid grid-cols-2 gap-4">
+        <FormField
+          control={form.control}
+          name="city"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>City</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter city" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="state"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>State</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter state" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <FormField
+          control={form.control}
+          name="postcode"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Postcode</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter postcode" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="country"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Country</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter country" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
       <FormField
         control={form.control}
         name="useSeparateBillingAddress"
