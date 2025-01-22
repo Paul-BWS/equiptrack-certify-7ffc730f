@@ -19,8 +19,8 @@ export const AuthenticationScreen = () => {
         return;
       }
       if (session) {
-        console.log("Existing session found, redirecting to home");
-        window.location.href = '/';
+        console.log("Existing session found, redirecting...");
+        redirectUserBasedOnProfile(session.user.id);
       }
     };
 
@@ -31,9 +31,9 @@ export const AuthenticationScreen = () => {
       console.log("Auth state changed:", event);
       
       if (event === 'SIGNED_IN' && session) {
-        console.log("User signed in, redirecting to home");
+        console.log("User signed in, checking profile...");
         toast.success("Welcome back!");
-        window.location.href = '/';
+        await redirectUserBasedOnProfile(session.user.id);
       }
       
       if (event === 'SIGNED_OUT') {
@@ -62,6 +62,52 @@ export const AuthenticationScreen = () => {
       subscription.unsubscribe();
     };
   }, [navigate]);
+
+  const redirectUserBasedOnProfile = async (userId: string) => {
+    try {
+      // First get the user's profile to get their company_id
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('company_id')
+        .eq('id', userId)
+        .single();
+
+      if (profileError) {
+        console.error("Error fetching profile:", profileError);
+        throw profileError;
+      }
+
+      if (!profileData?.company_id) {
+        console.log("No company associated with user");
+        toast.error("No company associated with your account");
+        return;
+      }
+
+      // Then get the company details
+      const { data: companyData, error: companyError } = await supabase
+        .from('companies')
+        .select('name')
+        .eq('id', profileData.company_id)
+        .single();
+
+      if (companyError) {
+        console.error("Error fetching company:", companyError);
+        throw companyError;
+      }
+
+      // If the user is from BWS, redirect to the main dashboard
+      if (companyData.name === 'BWS') {
+        window.location.href = '/';
+      } else {
+        // For all other companies, redirect to their customer dashboard
+        window.location.href = `/customers/${profileData.company_id}`;
+      }
+    } catch (error) {
+      console.error("Error in redirect:", error);
+      toast.error("Failed to process login. Please try again.");
+      navigate('/');
+    }
+  };
 
   const getErrorMessage = (error: AuthError) => {
     if (error.message.includes("refresh_token_not_found")) {
