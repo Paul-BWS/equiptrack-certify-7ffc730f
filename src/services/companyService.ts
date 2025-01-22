@@ -8,8 +8,13 @@ export const companyService = {
       name: data.name,
       industry: data.industry,
       website: data.website,
-      address: data.address,
-      billingaddress: data.useSeparateBillingAddress ? data.billingaddress : data.address,
+      address1: data.address1,
+      address2: data.address2,
+      city: data.city,
+      state: data.state,
+      postcode: data.postcode,
+      country: data.country,
+      billingaddress: data.useSeparateBillingAddress ? data.billingaddress : data.address1,
       notes: data.notes,
     };
     
