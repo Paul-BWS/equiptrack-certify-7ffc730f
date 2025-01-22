@@ -20,7 +20,7 @@ export const TorqueWrenchHeader = ({
         <h1 className="text-2xl font-bold">Torque Wrenches</h1>
         {customerName && (
           <p className="text-muted-foreground">
-            Viewing torque wrenches for {customerName}
+            {customerName}
           </p>
         )}
       </div>
