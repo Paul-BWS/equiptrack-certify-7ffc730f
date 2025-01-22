@@ -51,6 +51,9 @@ export const AccessCheck = ({
         // Check company access with retry logic
         const checkCompanyAccess = async () => {
           try {
+            console.log('Checking company access for user:', sessionData.session?.user.id);
+            console.log('Company ID:', company.id);
+            
             const { data: userCompany, error: companyError } = await supabase
               .from('user_companies')
               .select('company_id')
@@ -59,9 +62,11 @@ export const AccessCheck = ({
               .maybeSingle();
 
             if (companyError) {
+              console.error('Company access error:', companyError);
               throw companyError;
             }
 
+            console.log('User company data:', userCompany);
             onAccessChange(!!userCompany);
             onLoadingChange(false);
             setRetryCount(0); // Reset retry count on success
@@ -69,11 +74,11 @@ export const AccessCheck = ({
             console.error('Error checking company access:', error);
             
             if (retryCount < maxRetries) {
-              // Exponential backoff
+              // Exponential backoff with a maximum delay of 8 seconds
               const delay = Math.min(1000 * Math.pow(2, retryCount), 8000);
               setRetryCount(prev => prev + 1);
               
-              console.log(`Retrying in ${delay}ms... (Attempt ${retryCount + 1}/${maxRetries})`);
+              console.log(`Connection issue. Retrying in ${delay}ms... (Attempt ${retryCount + 1}/${maxRetries})`);
               toast.error(`Connection issue. Retrying... (${retryCount + 1}/${maxRetries})`);
               
               setTimeout(checkCompanyAccess, delay);
