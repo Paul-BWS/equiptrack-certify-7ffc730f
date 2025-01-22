@@ -26,8 +26,8 @@ export const DashboardContent = ({ company }: DashboardContentProps) => {
           return;
         }
 
-        const { data: session } = await supabase.auth.getSession();
-        if (!session?.user) {
+        const { data: sessionData } = await supabase.auth.getSession();
+        if (!sessionData?.session?.user) {
           setError("Authentication required");
           return;
         }
@@ -35,7 +35,7 @@ export const DashboardContent = ({ company }: DashboardContentProps) => {
         const { data: userCompany, error: companyError } = await supabase
           .from('user_companies')
           .select('company_id')
-          .eq('user_id', session.user.id)
+          .eq('user_id', sessionData.session.user.id)
           .eq('company_id', company.id)
           .maybeSingle();
 
