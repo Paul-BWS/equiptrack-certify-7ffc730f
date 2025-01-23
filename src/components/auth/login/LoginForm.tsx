@@ -14,9 +14,10 @@ export const LoginForm = () => {
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    console.log('Attempting sign in...');
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
@@ -24,12 +25,24 @@ export const LoginForm = () => {
       if (error) {
         console.error('Sign in error:', error);
         toast.error(error.message);
-        setLoading(false); // Make sure to reset loading state on error
+        setLoading(false);
+        return;
       }
+
+      if (!data.user) {
+        console.error('No user data returned');
+        toast.error('Login failed - please try again');
+        setLoading(false);
+        return;
+      }
+
+      console.log('Sign in successful:', data.user);
+      // Don't reset loading here - let the redirect handle it
+      
     } catch (error) {
       console.error('Unexpected error:', error);
       toast.error('An unexpected error occurred');
-      setLoading(false); // Make sure to reset loading state on unexpected error
+      setLoading(false);
     }
   };
 
