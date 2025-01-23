@@ -16,7 +16,7 @@ export const Navigation = () => {
   const { customerId } = useParams();
   const [isMounted, setIsMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const handleSignOut = useSignOut();
+  const { handleSignOut } = useSignOut();
 
   useEffect(() => {
     setIsMounted(true);
