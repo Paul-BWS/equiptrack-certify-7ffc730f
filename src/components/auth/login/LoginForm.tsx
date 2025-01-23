@@ -13,6 +13,8 @@ export const LoginForm = () => {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return; // Prevent multiple submissions
+    
     setLoading(true);
     console.log('Attempting sign in...');
 
@@ -37,7 +39,7 @@ export const LoginForm = () => {
       }
 
       console.log('Sign in successful:', data.user);
-      // Don't reset loading here - let the redirect handle it
+      // Loading state will be handled by redirect
       
     } catch (error) {
       console.error('Unexpected error:', error);

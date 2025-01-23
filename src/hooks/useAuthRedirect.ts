@@ -71,12 +71,14 @@ export const useAuthRedirect = () => {
       try {
         console.log("Checking for existing session...");
         const { data: { session }, error } = await supabase.auth.getSession();
+        
         if (error) {
           console.error("Session check error:", error);
           toast.error(getErrorMessage(error));
           return;
         }
-        if (session) {
+
+        if (session?.user) {
           console.log("Existing session found, redirecting...");
           await redirectUserBasedOnProfile(session.user.id);
         }
