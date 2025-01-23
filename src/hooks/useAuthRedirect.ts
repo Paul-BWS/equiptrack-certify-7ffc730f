@@ -18,13 +18,17 @@ export const useAuthRedirect = () => {
 
       if (profileError) {
         console.error("Error fetching profile:", profileError);
-        throw profileError;
+        toast.error("Error loading user profile");
+        await supabase.auth.signOut();
+        navigate('/auth');
+        return;
       }
 
       if (!profileData?.company_id) {
         console.log("No company associated with user");
-        toast.error("No company associated with your account");
+        toast.error("No company associated with your account. Please contact support.");
         await supabase.auth.signOut();
+        navigate('/auth');
         return;
       }
 
@@ -37,7 +41,10 @@ export const useAuthRedirect = () => {
 
       if (companyError) {
         console.error("Error fetching company:", companyError);
-        throw companyError;
+        toast.error("Error loading company information");
+        await supabase.auth.signOut();
+        navigate('/auth');
+        return;
       }
 
       console.log("Company data:", companyData);
@@ -67,11 +74,15 @@ export const useAuthRedirect = () => {
   };
 
   useEffect(() => {
+    let mounted = true;
+
     const checkSession = async () => {
       try {
         console.log("Checking for existing session...");
         const { data: { session }, error } = await supabase.auth.getSession();
         
+        if (!mounted) return;
+
         if (error) {
           console.error("Session check error:", error);
           toast.error(getErrorMessage(error));
@@ -84,13 +95,17 @@ export const useAuthRedirect = () => {
         }
       } catch (error) {
         console.error("Unexpected error during session check:", error);
-        toast.error("An unexpected error occurred while checking your session");
+        if (mounted) {
+          toast.error("An unexpected error occurred while checking your session");
+        }
       }
     };
 
     checkSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (!mounted) return;
+      
       console.log("Auth state changed:", event, session);
       
       if (event === 'SIGNED_IN' && session) {
@@ -105,6 +120,7 @@ export const useAuthRedirect = () => {
     });
 
     return () => {
+      mounted = false;
       subscription.unsubscribe();
     };
   }, [navigate]);
