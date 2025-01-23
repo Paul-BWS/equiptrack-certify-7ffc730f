@@ -6,10 +6,7 @@ export const useSignOut = () => {
 
   const handleSignOut = async () => {
     try {
-      // First invalidate the session
-      await supabase.auth.invalidateSession();
-      
-      // Then sign out
+      // Sign out using the signOut method
       const { error } = await supabase.auth.signOut({
         scope: 'local'  // Only clear local session
       });
