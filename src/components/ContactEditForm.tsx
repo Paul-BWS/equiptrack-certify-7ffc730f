@@ -115,7 +115,7 @@ export const ContactEditForm = ({ contact }: ContactEditFormProps) => {
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <ContactFormFields form={form} />
+            <ContactFormFields form={form} onSubmit={onSubmit} />
             <div className="flex flex-col gap-2">
               <Button type="submit" className="w-full" disabled={isUpdating}>
                 {isUpdating ? "Updating..." : "Update Contact"}

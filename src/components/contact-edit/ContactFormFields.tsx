@@ -7,13 +7,19 @@ import { Button } from "@/components/ui/button";
 
 interface ContactFormFieldsProps {
   form: UseFormReturn<ContactFormData>;
-  onSubmit: (data: ContactFormData) => void;
+  onSubmit?: (data: ContactFormData) => void;
 }
 
 export const ContactFormFields = ({ form, onSubmit }: ContactFormFieldsProps) => {
+  const handleSubmit = (data: ContactFormData) => {
+    if (onSubmit) {
+      onSubmit(data);
+    }
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="name"
@@ -60,7 +66,7 @@ export const ContactFormFields = ({ form, onSubmit }: ContactFormFieldsProps) =>
             <FormItem>
               <FormLabel>Role</FormLabel>
               <FormControl>
-                <Input placeholder="Enter role" {...field} />
+                <Input placeholder="Enter role" {...field} value={field.value || ''} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -83,7 +89,7 @@ export const ContactFormFields = ({ form, onSubmit }: ContactFormFieldsProps) =>
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">Add Contact</Button>
+        {onSubmit && <Button type="submit" className="w-full">Add Contact</Button>}
       </form>
     </Form>
   );

@@ -6,7 +6,7 @@ import { ContactFormFields } from "./contact-edit/ContactFormFields";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
-import { ContactFormData, contactFormSchema } from "@/schemas/contactSchema";
+import { ContactFormData, contactSchema } from "@/schemas/contactSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 interface ContactFormProps {
@@ -16,7 +16,7 @@ interface ContactFormProps {
 export const ContactForm = ({ companyId }: ContactFormProps) => {
   const [open, setOpen] = useState(false);
   const form = useForm<ContactFormData>({
-    resolver: zodResolver(contactFormSchema),
+    resolver: zodResolver(contactSchema),
     defaultValues: {
       name: "",
       email: "",
