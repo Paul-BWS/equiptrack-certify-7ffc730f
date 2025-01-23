@@ -3,14 +3,37 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { UseFormReturn } from "react-hook-form";
 import { ContactFormData } from "@/schemas/contactSchema";
+import { Button } from "@/components/ui/button";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { contactSchema } from "@/schemas/contactSchema";
 
 interface ContactFormFieldsProps {
-  form: UseFormReturn<ContactFormData>;
+  form?: UseFormReturn<ContactFormData>;
+  onSubmit?: (data: ContactFormData) => void;
 }
 
-export const ContactFormFields = ({ form }: ContactFormFieldsProps) => {
+export const ContactFormFields = ({ form: externalForm, onSubmit }: ContactFormFieldsProps) => {
+  const internalForm = useForm<ContactFormData>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      is_primary: false,
+    },
+  });
+
+  const form = externalForm || internalForm;
+
+  const handleSubmit = form.handleSubmit((data) => {
+    if (onSubmit) {
+      onSubmit(data);
+    }
+  });
+
   return (
-    <>
+    <form onSubmit={handleSubmit} className="space-y-4">
       <FormField
         control={form.control}
         name="name"
@@ -67,6 +90,11 @@ export const ContactFormFields = ({ form }: ContactFormFieldsProps) => {
           </FormItem>
         )}
       />
-    </>
+      {onSubmit && (
+        <Button type="submit" className="w-full">
+          Add Contact
+        </Button>
+      )}
+    </form>
   );
 };
