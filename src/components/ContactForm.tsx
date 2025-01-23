@@ -5,6 +5,9 @@ import { useState } from "react";
 import { ContactFormFields } from "./contact-edit/ContactFormFields";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import { ContactFormData, contactFormSchema } from "@/schemas/contactSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface ContactFormProps {
   companyId: string;
@@ -12,16 +15,26 @@ interface ContactFormProps {
 
 export const ContactForm = ({ companyId }: ContactFormProps) => {
   const [open, setOpen] = useState(false);
+  const form = useForm<ContactFormData>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      role: "",
+      is_primary: false
+    }
+  });
 
-  const handleSubmit = async (formData: FormData) => {
+  const handleSubmit = async (data: ContactFormData) => {
     try {
       const { error } = await supabase.from('contacts').insert({
         company_id: companyId,
-        name: formData.get('name'),
-        email: formData.get('email'),
-        phone: formData.get('phone'),
-        role: formData.get('role'),
-        is_primary: formData.get('is_primary') === 'true'
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        role: data.role,
+        is_primary: data.is_primary
       });
 
       if (error) throw error;
@@ -47,7 +60,7 @@ export const ContactForm = ({ companyId }: ContactFormProps) => {
           <DialogHeader>
             <DialogTitle>Add New Contact</DialogTitle>
           </DialogHeader>
-          <ContactFormFields onSubmit={handleSubmit} />
+          <ContactFormFields form={form} onSubmit={handleSubmit} />
         </DialogContent>
       </Dialog>
     </>
