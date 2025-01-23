@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Loader2, LogIn } from "lucide-react";
+import { Label } from "@/components/ui/label";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -23,21 +24,23 @@ export const LoginForm = () => {
       if (error) {
         console.error('Sign in error:', error);
         toast.error(error.message);
+        setLoading(false); // Make sure to reset loading state on error
       }
     } catch (error) {
       console.error('Unexpected error:', error);
       toast.error('An unexpected error occurred');
-    } finally {
-      setLoading(false);
+      setLoading(false); // Make sure to reset loading state on unexpected error
     }
   };
 
   return (
     <form onSubmit={handleSignIn} className="space-y-4">
-      <div>
+      <div className="space-y-2">
+        <Label htmlFor="email">Email address</Label>
         <Input
+          id="email"
           type="email"
-          placeholder="Email address"
+          placeholder="Enter your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -46,10 +49,12 @@ export const LoginForm = () => {
           autoComplete="email"
         />
       </div>
-      <div>
+      <div className="space-y-2">
+        <Label htmlFor="password">Password</Label>
         <Input
+          id="password"
           type="password"
-          placeholder="Password"
+          placeholder="Enter your password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
