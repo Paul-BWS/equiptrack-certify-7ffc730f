@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
-import { fetchUserCompany, fetchCompanyDetails, getErrorMessage } from "@/utils/authUtils";
 
 export const useAuthRedirect = () => {
   const navigate = useNavigate();
@@ -17,7 +16,7 @@ export const useAuthRedirect = () => {
         console.log("BWS user detected, redirecting to main dashboard");
         navigate('/');
       } else {
-        console.log("Customer user detected, redirecting to customer dashboard");
+        console.log("Customer user detected, redirecting to customer dashboard:", companyId);
         navigate(`/customers/${companyId}`);
       }
     } catch (error) {
@@ -31,17 +30,37 @@ export const useAuthRedirect = () => {
   const redirectUserBasedOnProfile = async (userId: string) => {
     try {
       console.log("Fetching user company association for user:", userId);
-      const companyId = await fetchUserCompany(userId);
       
-      if (!companyId) {
+      // Get user's company association
+      const { data: userCompanyData, error: userCompanyError } = await supabase
+        .from('user_companies')
+        .select('company_id')
+        .eq('user_id', userId)
+        .single();
+
+      if (userCompanyError || !userCompanyData?.company_id) {
         throw new Error("No company association found");
       }
-      
-      const companyData = await fetchCompanyDetails(companyId);
+
+      const companyId = userCompanyData.company_id;
+      console.log("Found company ID:", companyId);
+
+      // Get company details
+      const { data: companyData, error: companyError } = await supabase
+        .from('companies')
+        .select('name')
+        .eq('id', companyId)
+        .single();
+
+      if (companyError || !companyData) {
+        throw new Error("Failed to fetch company details");
+      }
+
+      console.log("Company data:", companyData);
       await handleRedirect(companyId, companyData.name);
     } catch (error) {
       console.error("Error in redirect:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to process login. Please try again.");
+      toast.error(error instanceof Error ? error.message : "Failed to process login");
       await supabase.auth.signOut();
       navigate('/auth');
     }
@@ -59,7 +78,7 @@ export const useAuthRedirect = () => {
 
         if (error) {
           console.error("Session check error:", error);
-          toast.error(getErrorMessage(error));
+          toast.error("Session check failed");
           return;
         }
 
