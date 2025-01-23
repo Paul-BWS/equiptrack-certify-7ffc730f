@@ -3,7 +3,7 @@ import { EquipmentServiceList } from "./EquipmentServiceList";
 import { Company } from "@/types/company";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Robot } from "lucide-react";
+import { Bot } from "lucide-react";
 
 interface DashboardContentProps {
   company: Company;
@@ -33,7 +33,7 @@ export const DashboardContent = ({ company }: DashboardContentProps) => {
                 onClick={() => window.location.href = 'mailto:support@basicwelding.co.uk'}
                 className="bg-[#4c6fbf] hover:bg-[#4c6fbf]/90"
               >
-                <Robot className="mr-2 h-4 w-4" />
+                <Bot className="mr-2 h-4 w-4" />
                 Request Engineer
               </Button>
             </div>
