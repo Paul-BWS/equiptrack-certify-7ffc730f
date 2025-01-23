@@ -10,8 +10,8 @@ export const useSignOut = () => {
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
-        console.log("No active session found, redirecting to home");
-        window.location.href = '/';
+        console.log("No active session found, redirecting to auth");
+        window.location.href = '/auth';
         return;
       }
 
@@ -40,8 +40,8 @@ export const useSignOut = () => {
         });
       }
       
-      // Always redirect to home page after sign out attempt
-      window.location.href = '/';
+      // Always redirect to auth page after sign out attempt
+      window.location.href = '/auth';
       
     } catch (err) {
       console.error("Unexpected error during sign out:", err);
@@ -50,8 +50,8 @@ export const useSignOut = () => {
         description: "An unexpected error occurred while signing out",
         variant: "destructive",
       });
-      // Force redirect to login page even if there's an error
-      window.location.href = '/';
+      // Redirect to auth page even if there's an error
+      window.location.href = '/auth';
     }
   };
 
