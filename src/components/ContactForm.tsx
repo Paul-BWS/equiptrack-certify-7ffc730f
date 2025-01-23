@@ -21,7 +21,7 @@ export const ContactForm = ({ companyId }: ContactFormProps) => {
       name: "",
       email: "",
       phone: "",
-      role: "",
+      role: "viewer", // Set default role to "viewer" to match the enum
       is_primary: false
     }
   });
@@ -33,7 +33,7 @@ export const ContactForm = ({ companyId }: ContactFormProps) => {
         name: data.name,
         email: data.email,
         phone: data.phone,
-        role: data.role,
+        role: data.role.toLowerCase(), // Ensure role is lowercase when sending to the database
         is_primary: data.is_primary
       });
 
