@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -20,33 +21,11 @@ export const LoginForm = () => {
       });
 
       if (error) {
+        console.error('Sign in error:', error);
         toast.error(error.message);
       }
     } catch (error) {
-      console.error('Sign in error:', error);
-      toast.error('An unexpected error occurred');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-
-      if (error) {
-        toast.error(error.message);
-      } else {
-        toast.success('Check your email for the confirmation link');
-      }
-    } catch (error) {
-      console.error('Sign up error:', error);
+      console.error('Unexpected error:', error);
       toast.error('An unexpected error occurred');
     } finally {
       setLoading(false);
@@ -55,55 +34,52 @@ export const LoginForm = () => {
 
   return (
     <form onSubmit={handleSignIn} className="space-y-4">
-      <div className="space-y-2">
+      <div>
         <Input
           type="email"
           placeholder="Email address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="w-full"
+          className="w-full bg-white"
+          disabled={loading}
         />
       </div>
-      <div className="space-y-2">
+      <div>
         <Input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="w-full"
+          className="w-full bg-white"
+          disabled={loading}
         />
       </div>
       <Button
         type="submit"
-        className="w-full bg-[#4c6fbf] hover:bg-[#3d5ba6]"
+        className="w-full bg-[#4c6fbf] hover:bg-[#3d5ba6] h-10"
         disabled={loading}
       >
-        {loading ? 'Loading...' : 'Sign in'}
+        {loading ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Loading...
+          </>
+        ) : (
+          'Sign in'
+        )}
       </Button>
-      <div className="text-center space-y-2">
+      <div className="text-center">
         <button
           type="button"
           onClick={() => {
-            // TODO: Implement password reset
-            toast.info('Password reset functionality coming soon');
+            toast.info('Please contact your administrator to reset your password');
           }}
           className="text-sm text-gray-600 hover:text-[#4c6fbf]"
         >
           Forgot your password?
         </button>
-        <div className="text-sm text-gray-600">
-          Don't have an account?{' '}
-          <button
-            type="button"
-            onClick={handleSignUp}
-            className="text-[#4c6fbf] hover:underline"
-            disabled={loading}
-          >
-            Sign up
-          </button>
-        </div>
       </div>
     </form>
   );
