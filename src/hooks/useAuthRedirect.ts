@@ -8,12 +8,22 @@ export const useAuthRedirect = () => {
   const navigate = useNavigate();
 
   const handleRedirect = async (companyId: string, companyName: string) => {
-    if (companyName === 'BWS') {
-      console.log("BWS user detected, redirecting to main dashboard");
-      navigate('/');
-    } else {
-      console.log("Customer user detected, redirecting to customer dashboard");
-      navigate(`/customers/${companyId}`);
+    try {
+      if (companyName === 'BWS') {
+        console.log("BWS user detected, redirecting to main dashboard");
+        navigate('/');
+      } else {
+        console.log("Customer user detected, redirecting to customer dashboard");
+        if (!companyId) {
+          throw new Error("No company ID available for redirection");
+        }
+        navigate(`/customers/${companyId}`);
+      }
+    } catch (error) {
+      console.error("Error in redirect:", error);
+      toast.error("Failed to redirect to dashboard");
+      await supabase.auth.signOut();
+      navigate('/auth');
     }
   };
 
@@ -21,6 +31,11 @@ export const useAuthRedirect = () => {
     try {
       console.log("Fetching user company association for user:", userId);
       const companyId = await fetchUserCompany(userId);
+      
+      if (!companyId) {
+        throw new Error("No company association found");
+      }
+      
       const companyData = await fetchCompanyDetails(companyId);
       await handleRedirect(companyId, companyData.name);
     } catch (error) {
