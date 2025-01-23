@@ -9,22 +9,22 @@ export const useAuthRedirect = () => {
 
   const redirectUserBasedOnProfile = async (userId: string) => {
     try {
-      console.log("Fetching profile for user:", userId);
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
+      console.log("Fetching user company association for user:", userId);
+      const { data: userCompanyData, error: userCompanyError } = await supabase
+        .from('user_companies')
         .select('company_id')
-        .eq('id', userId)
+        .eq('user_id', userId)
         .single();
 
-      if (profileError) {
-        console.error("Error fetching profile:", profileError);
+      if (userCompanyError) {
+        console.error("Error fetching user company:", userCompanyError);
         toast.error("Error loading user profile");
         await supabase.auth.signOut();
         navigate('/auth');
         return;
       }
 
-      if (!profileData?.company_id) {
+      if (!userCompanyData?.company_id) {
         console.log("No company associated with user");
         toast.error("No company associated with your account. Please contact support.");
         await supabase.auth.signOut();
@@ -32,11 +32,11 @@ export const useAuthRedirect = () => {
         return;
       }
 
-      console.log("Found company ID:", profileData.company_id);
+      console.log("Found company ID:", userCompanyData.company_id);
       const { data: companyData, error: companyError } = await supabase
         .from('companies')
         .select('name')
-        .eq('id', profileData.company_id)
+        .eq('id', userCompanyData.company_id)
         .single();
 
       if (companyError) {
@@ -53,7 +53,7 @@ export const useAuthRedirect = () => {
         navigate('/');
       } else {
         console.log("Customer user detected, redirecting to customer dashboard");
-        navigate(`/customers/${profileData.company_id}`);
+        navigate(`/customers/${userCompanyData.company_id}`);
       }
     } catch (error) {
       console.error("Error in redirect:", error);
