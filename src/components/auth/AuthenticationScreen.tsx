@@ -97,10 +97,10 @@ export const AuthenticationScreen = () => {
 
       // If the user is from BWS, redirect to the main dashboard
       if (companyData.name === 'BWS') {
-        window.location.href = '/';
+        navigate('/');
       } else {
         // For all other companies, redirect to their customer dashboard
-        window.location.href = `/customers/${profileData.company_id}`;
+        navigate(`/customers/${profileData.company_id}`);
       }
     } catch (error) {
       console.error("Error in redirect:", error);
