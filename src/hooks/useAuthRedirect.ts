@@ -51,6 +51,7 @@ export const useAuthRedirect = () => {
         
         if (!session?.user) {
           console.log("No active session");
+          navigate('/auth');
           return;
         }
 
@@ -68,11 +69,12 @@ export const useAuthRedirect = () => {
         console.error("Session check error:", error);
         toast.error("Failed to process login");
         await supabase.auth.signOut();
-        navigate('/auth');
+        window.location.replace('/auth');
       }
     };
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    // Remove any existing subscription
+    let { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("Auth state changed:", event);
       
       if (event === 'SIGNED_IN' && session) {
@@ -90,13 +92,13 @@ export const useAuthRedirect = () => {
           console.error("Error handling sign in:", error);
           toast.error("Failed to process login");
           await supabase.auth.signOut();
-          navigate('/auth');
+          window.location.replace('/auth');
         }
       }
       
       if (event === 'SIGNED_OUT') {
         console.log("User signed out, redirecting to auth");
-        navigate('/auth');
+        window.location.replace('/auth');
       }
     });
 

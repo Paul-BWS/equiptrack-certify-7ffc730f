@@ -4,6 +4,10 @@ import { toast } from "sonner";
 export const useSignOut = () => {
   const handleSignOut = async () => {
     try {
+      // First clear any stored session data
+      localStorage.removeItem('supabase.auth.token');
+      sessionStorage.clear();
+      
       const { error } = await supabase.auth.signOut();
       
       if (error) {
@@ -14,12 +18,12 @@ export const useSignOut = () => {
         }
       }
 
-      // Force a full page reload to clear any cached state
-      window.location.href = '/auth';
+      // Force a complete page reload and redirect
+      window.location.replace('/auth');
     } catch (error) {
       console.error("Unexpected error during sign out:", error);
       // Force navigation even if there's an error
-      window.location.href = '/auth';
+      window.location.replace('/auth');
     }
   };
 
