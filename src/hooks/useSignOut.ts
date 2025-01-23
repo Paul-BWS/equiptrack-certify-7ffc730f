@@ -7,8 +7,18 @@ export const useSignOut = () => {
   const handleSignOut = async () => {
     try {
       // First check if we have a session
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       
+      if (sessionError) {
+        console.error("Session check error:", sessionError);
+        toast({
+          title: "Session Error",
+          description: "Unable to verify your session. Redirecting to login.",
+        });
+        window.location.href = '/auth';
+        return;
+      }
+
       if (!session) {
         console.log("No active session found, redirecting to auth");
         window.location.href = '/auth';
