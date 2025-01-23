@@ -1,4 +1,4 @@
-import { useToast } from "./use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 
 export const useSignOut = () => {
@@ -6,31 +6,13 @@ export const useSignOut = () => {
 
   const handleSignOut = async () => {
     try {
-      // First check if we have a session
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      // First invalidate the session
+      await supabase.auth.invalidateSession();
       
-      if (sessionError) {
-        console.error("Session check error:", sessionError);
-        toast({
-          title: "Session error",
-          description: "Your session has expired. Redirecting to login.",
-        });
-        window.location.href = '/';
-        return;
-      }
-
-      if (!session) {
-        console.log("No active session found");
-        toast({
-          title: "No active session",
-          description: "You are already signed out. Redirecting to login.",
-        });
-        window.location.href = '/';
-        return;
-      }
-
-      // If we have a session, attempt to sign out
-      const { error } = await supabase.auth.signOut();
+      // Then sign out
+      const { error } = await supabase.auth.signOut({
+        scope: 'local'  // Only clear local session
+      });
       
       if (error) {
         console.error("Sign out error:", error);
