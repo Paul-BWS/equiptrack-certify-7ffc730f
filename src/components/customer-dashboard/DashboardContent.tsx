@@ -1,4 +1,5 @@
 import { CompanyCard } from "./CompanyCard";
+import { ContactsList } from "./ContactsList";
 import { EquipmentServiceList } from "./EquipmentServiceList";
 import { Company } from "@/types/company";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,7 +13,11 @@ interface DashboardContentProps {
 export const DashboardContent = ({ company }: DashboardContentProps) => {
   return (
     <div className="container mx-auto py-6 space-y-6">
-      <CompanyCard company={company} />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <CompanyCard company={company} />
+        <ContactsList contacts={company.contacts || []} companyId={company.id} />
+      </div>
+      
       <EquipmentServiceList companyId={company.id} />
 
       {/* Report a Fault Section */}
