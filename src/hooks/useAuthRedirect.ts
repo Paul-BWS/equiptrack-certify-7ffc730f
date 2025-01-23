@@ -24,6 +24,7 @@ export const useAuthRedirect = () => {
       if (!profileData?.company_id) {
         console.log("No company associated with user");
         toast.error("No company associated with your account");
+        await supabase.auth.signOut();
         return;
       }
 
@@ -50,6 +51,7 @@ export const useAuthRedirect = () => {
     } catch (error) {
       console.error("Error in redirect:", error);
       toast.error("Failed to process login. Please try again.");
+      await supabase.auth.signOut();
       navigate('/auth');
     }
   };
@@ -91,12 +93,7 @@ export const useAuthRedirect = () => {
       
       if (event === 'SIGNED_IN' && session) {
         console.log("User signed in, checking profile...");
-        try {
-          await redirectUserBasedOnProfile(session.user.id);
-        } catch (error) {
-          console.error("Error during redirect:", error);
-          toast.error("Failed to process login. Please try again.");
-        }
+        await redirectUserBasedOnProfile(session.user.id);
       }
       
       if (event === 'SIGNED_OUT') {
