@@ -9,12 +9,42 @@ export const useAuthRedirect = () => {
   const getUserCompany = async (userId: string) => {
     console.log("Fetching company for user:", userId);
     
-    // Get the user's company association
+    // First check if user has a profile
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('company_id')
+      .eq('id', userId)
+      .maybeSingle();
+
+    if (profileError) {
+      console.error("Error fetching user profile:", profileError);
+      throw new Error("Failed to fetch user profile");
+    }
+
+    // If profile exists and has company_id, get company details
+    if (profile?.company_id) {
+      console.log("Found company ID in profile:", profile.company_id);
+      const { data: company, error: companyError } = await supabase
+        .from('companies')
+        .select('id, name')
+        .eq('id', profile.company_id)
+        .single();
+
+      if (companyError || !company) {
+        console.error("Error fetching company:", companyError);
+        throw new Error("Failed to fetch company details");
+      }
+
+      console.log("Found company:", company);
+      return company;
+    }
+
+    // If no company in profile, check user_companies table
     const { data: userCompany, error: userCompanyError } = await supabase
       .from('user_companies')
       .select('company_id')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle();
 
     if (userCompanyError) {
       console.error("Error fetching user company:", userCompanyError);
@@ -26,7 +56,7 @@ export const useAuthRedirect = () => {
       throw new Error("No company association found");
     }
 
-    console.log("Found company ID:", userCompany.company_id);
+    console.log("Found company ID in user_companies:", userCompany.company_id);
 
     // Get the company details
     const { data: company, error: companyError } = await supabase
@@ -38,6 +68,19 @@ export const useAuthRedirect = () => {
     if (companyError || !company) {
       console.error("Error fetching company:", companyError);
       throw new Error("Failed to fetch company details");
+    }
+
+    // Update profile with company_id if not set
+    if (!profile?.company_id) {
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ company_id: company.id })
+        .eq('id', userId);
+
+      if (updateError) {
+        console.error("Error updating profile:", updateError);
+        // Don't throw here, just log the error as it's not critical
+      }
     }
 
     console.log("Found company:", company);
