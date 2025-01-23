@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Contact } from "@/types/contact";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Pencil } from "lucide-react";
+import { Pencil, UserPlus } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { supabase } from "@/lib/supabase";
@@ -31,7 +31,7 @@ export const ContactEditForm = ({ contact }: ContactEditFormProps) => {
     },
   });
 
-  const { mutate: updateContact, isPending } = useMutation({
+  const { mutate: updateContact, isPending: isUpdating } = useMutation({
     mutationFn: async (data: ContactFormData) => {
       const { data: updatedContact, error } = await supabase
         .from("contacts")
@@ -66,6 +66,34 @@ export const ContactEditForm = ({ contact }: ContactEditFormProps) => {
     },
   });
 
+  const { mutate: createLogin, isPending: isCreatingLogin } = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.functions.invoke('create-contact-login', {
+        body: {
+          email: contact.email,
+          name: contact.name,
+          companyId: contact.company_id,
+        },
+      });
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Login account created successfully. The contact will receive an email to set their password.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to create login account. Please try again.",
+        variant: "destructive",
+      });
+      console.error("Error creating login:", error);
+    },
+  });
+
   const onSubmit = (data: ContactFormData) => {
     updateContact(data);
   };
@@ -88,9 +116,21 @@ export const ContactEditForm = ({ contact }: ContactEditFormProps) => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <ContactFormFields form={form} />
-            <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending ? "Updating..." : "Update Contact"}
-            </Button>
+            <div className="flex flex-col gap-2">
+              <Button type="submit" className="w-full" disabled={isUpdating}>
+                {isUpdating ? "Updating..." : "Update Contact"}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={() => createLogin()}
+                disabled={isCreatingLogin}
+              >
+                <UserPlus className="h-4 w-4 mr-2" />
+                {isCreatingLogin ? "Creating Login..." : "Create Login Account"}
+              </Button>
+            </div>
           </form>
         </Form>
       </DialogContent>
