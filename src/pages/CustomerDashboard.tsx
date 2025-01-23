@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useEffect } from "react";
 import { DashboardHeader } from "@/components/customer-dashboard/DashboardHeader";
 import { DashboardContent } from "@/components/customer-dashboard/DashboardContent";
+import { AdminDashboardContent } from "@/components/customer-dashboard/AdminDashboardContent";
 import { LoadingState } from "@/components/customer-dashboard/LoadingState";
 import { useMediaQuery } from "@/hooks/use-mobile";
 
@@ -12,8 +13,19 @@ const CustomerDashboard = () => {
   const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
   const navigate = useNavigate();
-
   const isMobile = useMediaQuery("(max-width: 768px)");
+
+  const { data: isBWSUser } = useQuery({
+    queryKey: ['is-bws-user'],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('is_bws_user');
+      if (error) {
+        console.error('Error checking BWS user status:', error);
+        return false;
+      }
+      return data;
+    },
+  });
 
   useEffect(() => {
     if (!id || id === 'undefined') {
@@ -92,7 +104,11 @@ const CustomerDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <DashboardHeader id={company.id} />
-      <DashboardContent company={company} />
+      {isBWSUser ? (
+        <AdminDashboardContent company={company} />
+      ) : (
+        <DashboardContent company={company} />
+      )}
     </div>
   );
 };
