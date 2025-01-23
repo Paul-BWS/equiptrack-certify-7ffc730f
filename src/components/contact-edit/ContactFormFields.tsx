@@ -28,7 +28,11 @@ export const ContactFormFields = ({ form, onSubmit }: ContactFormFieldsProps) =>
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Enter contact name" {...field} />
+                <Input 
+                  placeholder="Enter contact name" 
+                  {...field} 
+                  className="border-[0.5px] rounded-md bg-white"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -41,7 +45,12 @@ export const ContactFormFields = ({ form, onSubmit }: ContactFormFieldsProps) =>
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="Enter email address" {...field} />
+                <Input 
+                  type="email" 
+                  placeholder="Enter email address" 
+                  {...field} 
+                  className="border-[0.5px] rounded-md bg-white"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -54,7 +63,11 @@ export const ContactFormFields = ({ form, onSubmit }: ContactFormFieldsProps) =>
             <FormItem>
               <FormLabel>Phone</FormLabel>
               <FormControl>
-                <Input placeholder="Enter phone number" {...field} />
+                <Input 
+                  placeholder="Enter phone number" 
+                  {...field} 
+                  className="border-[0.5px] rounded-md bg-white"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -68,7 +81,7 @@ export const ContactFormFields = ({ form, onSubmit }: ContactFormFieldsProps) =>
               <FormLabel>Role</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger className="bg-white">
+                  <SelectTrigger className="bg-white border-[0.5px] rounded-md">
                     <SelectValue placeholder="Select a role" />
                   </SelectTrigger>
                 </FormControl>
