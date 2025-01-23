@@ -49,7 +49,7 @@ export const AuthenticationScreen = () => {
       
       if (event === 'SIGNED_OUT') {
         console.log("User signed out");
-        navigate('/');
+        navigate('/auth');
       }
       
       if (event === 'TOKEN_REFRESHED') {
@@ -121,7 +121,7 @@ export const AuthenticationScreen = () => {
     } catch (error) {
       console.error("Error in redirect:", error);
       toast.error("Failed to process login. Please try again.");
-      navigate('/');
+      navigate('/auth');
     }
   };
 
