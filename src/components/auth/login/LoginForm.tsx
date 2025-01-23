@@ -3,7 +3,7 @@ import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, LogIn } from "lucide-react";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -43,6 +43,7 @@ export const LoginForm = () => {
           required
           className="w-full bg-white"
           disabled={loading}
+          autoComplete="email"
         />
       </div>
       <div>
@@ -54,6 +55,7 @@ export const LoginForm = () => {
           required
           className="w-full bg-white"
           disabled={loading}
+          autoComplete="current-password"
         />
       </div>
       <Button
@@ -64,10 +66,13 @@ export const LoginForm = () => {
         {loading ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Loading...
+            Signing in...
           </>
         ) : (
-          'Sign in'
+          <>
+            <LogIn className="mr-2 h-4 w-4" />
+            Sign in
+          </>
         )}
       </Button>
       <div className="text-center">
