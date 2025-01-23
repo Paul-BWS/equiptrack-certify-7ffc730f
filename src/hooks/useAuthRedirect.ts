@@ -12,6 +12,8 @@ export const useAuthRedirect = () => {
         throw new Error("No company ID available for redirection");
       }
 
+      console.log("Handling redirect for company:", companyName, "with ID:", companyId);
+      
       if (companyName === 'BWS') {
         console.log("BWS user detected, redirecting to main dashboard");
         navigate('/');
