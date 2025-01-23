@@ -1,5 +1,5 @@
 import { CompanyCard } from "./CompanyCard";
-import { ContactsList } from "@/components/ContactsList";
+import { ContactsList } from "./ContactsList";
 import { Company } from "@/types/company";
 
 interface AdminDashboardContentProps {
