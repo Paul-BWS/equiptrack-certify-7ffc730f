@@ -9,7 +9,6 @@ import { useState, useEffect } from "react";
 import { ArrowLeft, Users, ClipboardList } from "lucide-react";
 import { Button } from "./ui/button";
 import { supabase } from "@/lib/supabase";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 export const Navigation = () => {
   const { toast } = useToast();
@@ -18,7 +17,6 @@ export const Navigation = () => {
   const { customerId } = useParams();
   const [isMounted, setIsMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const isMobile = useIsMobile();
 
   useEffect(() => {
     setIsMounted(true);
@@ -39,6 +37,17 @@ export const Navigation = () => {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) {
+        // Check if it's a session not found error
+        if (error.message.includes('session_not_found')) {
+          console.log('Session already expired, redirecting to login');
+          toast({
+            title: "Session expired",
+            description: "Your session has expired. Please sign in again.",
+          });
+          window.location.href = '/';
+          return;
+        }
+        
         toast({
           title: "Error signing out",
           description: error.message,
@@ -58,6 +67,8 @@ export const Navigation = () => {
         description: "An unexpected error occurred while signing out",
         variant: "destructive",
       });
+      // Force redirect to login page even if there's an error
+      window.location.href = '/';
     }
   };
 
