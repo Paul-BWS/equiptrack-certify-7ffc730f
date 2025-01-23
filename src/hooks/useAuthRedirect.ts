@@ -7,57 +7,62 @@ import { AuthError } from '@supabase/supabase-js';
 export const useAuthRedirect = () => {
   const navigate = useNavigate();
 
+  const fetchUserCompany = async (userId: string) => {
+    const { data, error } = await supabase
+      .from('user_companies')
+      .select('company_id')
+      .eq('user_id', userId)
+      .single();
+
+    if (error) {
+      console.error("Error fetching user company:", error);
+      throw new Error("Error loading user profile");
+    }
+
+    if (!data?.company_id) {
+      console.log("No company associated with user");
+      throw new Error("No company associated with your account. Please contact support.");
+    }
+
+    console.log("Found company ID:", data.company_id);
+    return data.company_id;
+  };
+
+  const fetchCompanyDetails = async (companyId: string) => {
+    const { data, error } = await supabase
+      .from('companies')
+      .select('name')
+      .eq('id', companyId)
+      .single();
+
+    if (error) {
+      console.error("Error fetching company:", error);
+      throw new Error("Error loading company information");
+    }
+
+    console.log("Company data:", data);
+    return data;
+  };
+
+  const handleRedirect = async (companyId: string, companyName: string) => {
+    if (companyName === 'BWS') {
+      console.log("BWS user detected, redirecting to main dashboard");
+      navigate('/');
+    } else {
+      console.log("Customer user detected, redirecting to customer dashboard");
+      navigate(`/customers/${companyId}`);
+    }
+  };
+
   const redirectUserBasedOnProfile = async (userId: string) => {
     try {
       console.log("Fetching user company association for user:", userId);
-      const { data: userCompanyData, error: userCompanyError } = await supabase
-        .from('user_companies')
-        .select('company_id')
-        .eq('user_id', userId)
-        .single();
-
-      if (userCompanyError) {
-        console.error("Error fetching user company:", userCompanyError);
-        toast.error("Error loading user profile");
-        await supabase.auth.signOut();
-        navigate('/auth');
-        return;
-      }
-
-      if (!userCompanyData?.company_id) {
-        console.log("No company associated with user");
-        toast.error("No company associated with your account. Please contact support.");
-        await supabase.auth.signOut();
-        navigate('/auth');
-        return;
-      }
-
-      console.log("Found company ID:", userCompanyData.company_id);
-      const { data: companyData, error: companyError } = await supabase
-        .from('companies')
-        .select('name')
-        .eq('id', userCompanyData.company_id)
-        .single();
-
-      if (companyError) {
-        console.error("Error fetching company:", companyError);
-        toast.error("Error loading company information");
-        await supabase.auth.signOut();
-        navigate('/auth');
-        return;
-      }
-
-      console.log("Company data:", companyData);
-      if (companyData.name === 'BWS') {
-        console.log("BWS user detected, redirecting to main dashboard");
-        navigate('/');
-      } else {
-        console.log("Customer user detected, redirecting to customer dashboard");
-        navigate(`/customers/${userCompanyData.company_id}`);
-      }
+      const companyId = await fetchUserCompany(userId);
+      const companyData = await fetchCompanyDetails(companyId);
+      await handleRedirect(companyId, companyData.name);
     } catch (error) {
       console.error("Error in redirect:", error);
-      toast.error("Failed to process login. Please try again.");
+      toast.error(error instanceof Error ? error.message : "Failed to process login. Please try again.");
       await supabase.auth.signOut();
       navigate('/auth');
     }
