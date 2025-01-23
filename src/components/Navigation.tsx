@@ -5,7 +5,7 @@ import { UserMenu } from "./navigation/UserMenu";
 import { NavigationTitle } from "./navigation/NavigationTitle";
 import { NavigationLinks } from "./navigation/NavigationLinks";
 import { BackButton } from "./navigation/BackButton";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useSignOut } from "@/hooks/useSignOut";
@@ -14,6 +14,7 @@ import { toast } from "sonner";
 export const Navigation = () => {
   const location = useLocation();
   const { customerId } = useParams();
+  const navigate = useNavigate();
   const [isMounted, setIsMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { handleSignOut } = useSignOut();
@@ -23,15 +24,14 @@ export const Navigation = () => {
   }, []);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'SIGNED_OUT') {
-        console.log('User signed out, redirecting to auth');
-        window.location.href = '/auth';
+        navigate('/auth');
       }
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [navigate]);
 
   if (!isMounted) {
     return null;

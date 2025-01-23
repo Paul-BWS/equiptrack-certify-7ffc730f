@@ -6,119 +6,93 @@ import { toast } from "sonner";
 export const useAuthRedirect = () => {
   const navigate = useNavigate();
 
-  const handleRedirect = async (companyId: string, companyName: string) => {
-    try {
-      if (!companyId) {
-        throw new Error("No company ID available for redirection");
-      }
+  const getUserCompany = async (userId: string) => {
+    // First get the user's company association
+    const { data: userCompany, error: userCompanyError } = await supabase
+      .from('user_companies')
+      .select('company_id')
+      .eq('user_id', userId)
+      .single();
 
-      console.log("Handling redirect for company:", companyName, "with ID:", companyId);
-      
-      if (companyName === 'BWS') {
-        console.log("BWS user detected, redirecting to main dashboard");
-        navigate('/');
-      } else {
-        console.log("Customer user detected, redirecting to customer dashboard:", companyId);
-        navigate(`/customers/${companyId}`);
-      }
-    } catch (error) {
-      console.error("Error in redirect:", error);
-      toast.error("Failed to redirect to dashboard");
-      await supabase.auth.signOut();
-      navigate('/auth');
+    if (userCompanyError || !userCompany?.company_id) {
+      console.error("Error fetching user company:", userCompanyError);
+      throw new Error("No company association found");
     }
-  };
 
-  const redirectUserBasedOnProfile = async (userId: string) => {
-    try {
-      console.log("Fetching user company association for user:", userId);
-      
-      // Get user's company association
-      const { data: userCompanyData, error: userCompanyError } = await supabase
-        .from('user_companies')
-        .select('company_id')
-        .eq('user_id', userId)
-        .single();
+    // Then get the company details
+    const { data: company, error: companyError } = await supabase
+      .from('companies')
+      .select('id, name')
+      .eq('id', userCompany.company_id)
+      .single();
 
-      if (userCompanyError || !userCompanyData?.company_id) {
-        throw new Error("No company association found");
-      }
-
-      const companyId = userCompanyData.company_id;
-      console.log("Found company ID:", companyId);
-
-      // Get company details
-      const { data: companyData, error: companyError } = await supabase
-        .from('companies')
-        .select('name')
-        .eq('id', companyId)
-        .single();
-
-      if (companyError || !companyData) {
-        throw new Error("Failed to fetch company details");
-      }
-
-      console.log("Company data:", companyData);
-      await handleRedirect(companyId, companyData.name);
-    } catch (error) {
-      console.error("Error in redirect:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to process login");
-      await supabase.auth.signOut();
-      navigate('/auth');
+    if (companyError || !company) {
+      console.error("Error fetching company:", companyError);
+      throw new Error("Failed to fetch company details");
     }
+
+    return company;
   };
 
   useEffect(() => {
-    let mounted = true;
-
     const checkSession = async () => {
       try {
-        console.log("Checking for existing session...");
-        const { data: { session }, error } = await supabase.auth.getSession();
+        const { data: { session } } = await supabase.auth.getSession();
         
-        if (!mounted) return;
-
-        if (error) {
-          console.error("Session check error:", error);
-          toast.error("Session check failed");
+        if (!session?.user) {
+          console.log("No active session");
           return;
         }
 
-        if (session?.user) {
-          console.log("Existing session found, redirecting...");
-          await redirectUserBasedOnProfile(session.user.id);
+        const company = await getUserCompany(session.user.id);
+        
+        if (company.name === 'BWS') {
+          console.log("BWS user detected, redirecting to admin dashboard");
+          navigate('/');
+        } else {
+          console.log("Customer user detected, redirecting to:", `/customers/${company.id}`);
+          navigate(`/customers/${company.id}`);
         }
       } catch (error) {
-        console.error("Unexpected error during session check:", error);
-        if (mounted) {
-          toast.error("An unexpected error occurred while checking your session");
-        }
+        console.error("Session check error:", error);
+        toast.error("Failed to process login");
+        await supabase.auth.signOut();
+        navigate('/auth');
       }
     };
 
-    checkSession();
-
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (!mounted) return;
-      
-      console.log("Auth state changed:", event, session);
+      console.log("Auth state changed:", event);
       
       if (event === 'SIGNED_IN' && session) {
-        console.log("User signed in, checking profile...");
-        await redirectUserBasedOnProfile(session.user.id);
+        try {
+          const company = await getUserCompany(session.user.id);
+          
+          if (company.name === 'BWS') {
+            console.log("BWS user detected, redirecting to admin dashboard");
+            navigate('/');
+          } else {
+            console.log("Customer user detected, redirecting to:", `/customers/${company.id}`);
+            navigate(`/customers/${company.id}`);
+          }
+        } catch (error) {
+          console.error("Error handling sign in:", error);
+          toast.error("Failed to process login");
+          await supabase.auth.signOut();
+          navigate('/auth');
+        }
       }
       
       if (event === 'SIGNED_OUT') {
-        console.log("User signed out");
+        console.log("User signed out, redirecting to auth");
         navigate('/auth');
       }
     });
 
+    checkSession();
+
     return () => {
-      mounted = false;
       subscription.unsubscribe();
     };
   }, [navigate]);
-
-  return { redirectUserBasedOnProfile };
 };
