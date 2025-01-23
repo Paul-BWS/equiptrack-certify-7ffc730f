@@ -7,19 +7,28 @@ export const useAuthRedirect = () => {
   const navigate = useNavigate();
 
   const getUserCompany = async (userId: string) => {
-    // First get the user's company association
+    console.log("Fetching company for user:", userId);
+    
+    // Get the user's company association
     const { data: userCompany, error: userCompanyError } = await supabase
       .from('user_companies')
       .select('company_id')
       .eq('user_id', userId)
       .single();
 
-    if (userCompanyError || !userCompany?.company_id) {
+    if (userCompanyError) {
       console.error("Error fetching user company:", userCompanyError);
       throw new Error("No company association found");
     }
 
-    // Then get the company details
+    if (!userCompany?.company_id) {
+      console.error("No company_id found for user");
+      throw new Error("No company association found");
+    }
+
+    console.log("Found company ID:", userCompany.company_id);
+
+    // Get the company details
     const { data: company, error: companyError } = await supabase
       .from('companies')
       .select('id, name')
@@ -31,6 +40,7 @@ export const useAuthRedirect = () => {
       throw new Error("Failed to fetch company details");
     }
 
+    console.log("Found company:", company);
     return company;
   };
 
@@ -44,6 +54,7 @@ export const useAuthRedirect = () => {
           return;
         }
 
+        console.log("Checking session for user:", session.user.email);
         const company = await getUserCompany(session.user.id);
         
         if (company.name === 'BWS') {
