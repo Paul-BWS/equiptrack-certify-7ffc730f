@@ -38,7 +38,7 @@ const CustomerDashboard = () => {
         .from('companies')
         .select('*, contacts(*)')
         .eq('id', id)
-        .maybeSingle();
+        .single();
 
       if (error) {
         console.error('Error fetching company:', error);
