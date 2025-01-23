@@ -5,7 +5,6 @@ import { useState } from "react";
 import { ContactFormFields } from "./contact-edit/ContactFormFields";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
-import { ContactFormData } from "@/schemas/contactSchema";
 
 interface ContactFormProps {
   companyId: string;
@@ -14,14 +13,15 @@ interface ContactFormProps {
 export const ContactForm = ({ companyId }: ContactFormProps) => {
   const [open, setOpen] = useState(false);
 
-  const handleSubmit = async (data: ContactFormData) => {
+  const handleSubmit = async (formData: FormData) => {
     try {
       const { error } = await supabase.from('contacts').insert({
         company_id: companyId,
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        is_primary: data.is_primary
+        name: formData.get('name'),
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        role: formData.get('role'),
+        is_primary: formData.get('is_primary') === 'true'
       });
 
       if (error) throw error;
