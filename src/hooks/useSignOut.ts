@@ -7,6 +7,7 @@ export const useSignOut = () => {
 
   const handleSignOut = async () => {
     try {
+      // First clear any existing session
       const { error } = await supabase.auth.signOut();
       
       if (error) {
@@ -16,10 +17,12 @@ export const useSignOut = () => {
         }
       }
 
-      navigate('/auth');
+      // Force navigation to auth page after signout
+      window.location.href = '/auth';
     } catch (error) {
       console.error("Unexpected error during sign out:", error);
-      navigate('/auth');
+      // Force navigation even if there's an error
+      window.location.href = '/auth';
     }
   };
 
