@@ -12,15 +12,21 @@ export const AuthenticationScreen = () => {
   useEffect(() => {
     // Check for existing session first
     const checkSession = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      if (error) {
-        console.error("Session check error:", error);
-        toast.error(getErrorMessage(error));
-        return;
-      }
-      if (session) {
-        console.log("Existing session found, redirecting...");
-        redirectUserBasedOnProfile(session.user.id);
+      try {
+        console.log("Checking for existing session...");
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error("Session check error:", error);
+          toast.error(getErrorMessage(error));
+          return;
+        }
+        if (session) {
+          console.log("Existing session found, redirecting...");
+          await redirectUserBasedOnProfile(session.user.id);
+        }
+      } catch (error) {
+        console.error("Unexpected error during session check:", error);
+        toast.error("An unexpected error occurred while checking your session");
       }
     };
 
@@ -28,12 +34,17 @@ export const AuthenticationScreen = () => {
 
     // Then set up auth state change listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log("Auth state changed:", event);
+      console.log("Auth state changed:", event, session);
       
       if (event === 'SIGNED_IN' && session) {
         console.log("User signed in, checking profile...");
         toast.success("Welcome back!");
-        await redirectUserBasedOnProfile(session.user.id);
+        try {
+          await redirectUserBasedOnProfile(session.user.id);
+        } catch (error) {
+          console.error("Error during redirect:", error);
+          toast.error("Failed to process login. Please try again.");
+        }
       }
       
       if (event === 'SIGNED_OUT') {
@@ -65,6 +76,7 @@ export const AuthenticationScreen = () => {
 
   const redirectUserBasedOnProfile = async (userId: string) => {
     try {
+      console.log("Fetching profile for user:", userId);
       // First get the user's profile to get their company_id
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
@@ -83,6 +95,7 @@ export const AuthenticationScreen = () => {
         return;
       }
 
+      console.log("Found company ID:", profileData.company_id);
       // Then get the company details
       const { data: companyData, error: companyError } = await supabase
         .from('companies')
@@ -95,11 +108,14 @@ export const AuthenticationScreen = () => {
         throw companyError;
       }
 
+      console.log("Company data:", companyData);
       // If the user is from BWS, redirect to the main dashboard
       if (companyData.name === 'BWS') {
+        console.log("BWS user detected, redirecting to main dashboard");
         navigate('/');
       } else {
         // For all other companies, redirect to their customer dashboard
+        console.log("Customer user detected, redirecting to customer dashboard");
         navigate(`/customers/${profileData.company_id}`);
       }
     } catch (error) {
