@@ -6,31 +6,10 @@ export const useSignOut = () => {
 
   const handleSignOut = async () => {
     try {
-      // First check if we have a session
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-      
-      if (sessionError) {
-        console.error("Session check error:", sessionError);
-        toast({
-          title: "Session Error",
-          description: "Unable to verify your session. Redirecting to login.",
-        });
-        window.location.href = '/auth';
-        return;
-      }
-
-      if (!session) {
-        console.log("No active session found, redirecting to auth");
-        window.location.href = '/auth';
-        return;
-      }
-
-      // Proceed with sign out if we have a session
       const { error } = await supabase.auth.signOut();
       
       if (error) {
         console.error("Sign out error:", error);
-        // If it's a session not found error, handle it gracefully
         if (error.message.includes('session_not_found')) {
           toast({
             title: "Session expired",

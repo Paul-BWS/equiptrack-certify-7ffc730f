@@ -9,6 +9,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useSignOut } from "@/hooks/useSignOut";
+import { toast } from "sonner";
 
 export const Navigation = () => {
   const location = useLocation();
@@ -22,10 +23,10 @@ export const Navigation = () => {
   }, []);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') {
-        console.log('User signed out, forcing navigation to root');
-        window.location.href = '/';
+        console.log('User signed out, redirecting to auth');
+        window.location.href = '/auth';
       }
     });
 
