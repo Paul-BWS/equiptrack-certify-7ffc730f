@@ -9,14 +9,15 @@ export const useAuthRedirect = () => {
 
   const handleRedirect = async (companyId: string, companyName: string) => {
     try {
+      if (!companyId) {
+        throw new Error("No company ID available for redirection");
+      }
+
       if (companyName === 'BWS') {
         console.log("BWS user detected, redirecting to main dashboard");
         navigate('/');
       } else {
         console.log("Customer user detected, redirecting to customer dashboard");
-        if (!companyId) {
-          throw new Error("No company ID available for redirection");
-        }
         navigate(`/customers/${companyId}`);
       }
     } catch (error) {

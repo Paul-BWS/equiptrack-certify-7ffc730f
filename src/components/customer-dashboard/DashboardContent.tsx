@@ -3,7 +3,7 @@ import { EquipmentServiceList } from "./EquipmentServiceList";
 import { Company } from "@/types/company";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { WrenchIcon } from "lucide-react";
+import { Robot } from "lucide-react";
 
 interface DashboardContentProps {
   company: Company;
@@ -12,48 +12,31 @@ interface DashboardContentProps {
 export const DashboardContent = ({ company }: DashboardContentProps) => {
   return (
     <div className="container mx-auto py-6 space-y-6">
-      {/* Promotional Banner */}
-      <a 
-        href="https://www.basicwelding.co.uk/torque-wrenches" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        className="block"
-      >
-        <Card className="bg-blue-50 hover:bg-blue-100 transition-colors">
-          <CardContent className="p-6 flex items-center justify-between">
-            <div className="space-y-2">
-              <h3 className="text-xl font-semibold text-blue-900">Looking for a New Torque Wrench?</h3>
-              <p className="text-blue-700">
-                Explore our professional range of torque wrenches at competitive prices
-              </p>
-            </div>
-            <Button className="bg-blue-600 hover:bg-blue-700">
-              <WrenchIcon className="mr-2 h-4 w-4" />
-              Shop Now
-            </Button>
-          </CardContent>
-        </Card>
-      </a>
-
       <CompanyCard company={company} />
       <EquipmentServiceList companyId={company.id} />
 
-      {/* Support Section */}
-      <Card className="bg-gradient-to-r from-primary/5 to-primary/10">
+      {/* Report a Fault Section */}
+      <Card className="bg-white border-none shadow-sm">
         <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div className="space-y-2">
-              <h3 className="text-xl font-semibold text-gray-900">Need Technical Support?</h3>
-              <p className="text-gray-600">
-                Our engineers are ready to help with any equipment issues
-              </p>
+          <div className="flex items-center gap-6">
+            <div className="flex-shrink-0">
+              <img 
+                src="/robot.png" 
+                alt="Robot Assistant" 
+                className="w-24 h-24"
+              />
             </div>
-            <Button 
-              onClick={() => window.location.href = 'mailto:support@basicwelding.co.uk'}
-              className="bg-primary hover:bg-primary/90"
-            >
-              Request Engineer
-            </Button>
+            <div className="flex-grow space-y-2">
+              <h2 className="text-2xl font-bold">REPORT A FAULT</h2>
+              <p className="text-gray-600">Do you need an engineer?</p>
+              <Button 
+                onClick={() => window.location.href = 'mailto:support@basicwelding.co.uk'}
+                className="bg-[#4c6fbf] hover:bg-[#4c6fbf]/90"
+              >
+                <Robot className="mr-2 h-4 w-4" />
+                Request Engineer
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
