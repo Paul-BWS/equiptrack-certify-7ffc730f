@@ -1,8 +1,9 @@
-import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 export const useSignOut = () => {
-  const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleSignOut = async () => {
     try {
@@ -10,39 +11,20 @@ export const useSignOut = () => {
       
       if (error) {
         console.error("Sign out error:", error);
-        if (error.message.includes('session_not_found')) {
-          toast({
-            title: "Session expired",
-            description: "Your session has expired. Redirecting to login.",
-          });
-        } else {
-          toast({
-            title: "Error signing out",
-            description: error.message,
-            variant: "destructive",
-          });
+        // Don't show error to user if it's just a session not found error
+        if (!error.message.includes('session_not_found')) {
+          toast.error("Failed to sign out properly");
         }
-      } else {
-        toast({
-          title: "Signed out successfully",
-          description: "You have been signed out of your account",
-        });
       }
-      
+
       // Always redirect to auth page after sign out attempt
-      window.location.href = '/auth';
-      
-    } catch (err) {
-      console.error("Unexpected error during sign out:", err);
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred while signing out",
-        variant: "destructive",
-      });
-      // Redirect to auth page even if there's an error
-      window.location.href = '/auth';
+      navigate('/auth');
+    } catch (error) {
+      console.error("Unexpected error during sign out:", error);
+      // Still redirect to auth page even if there's an error
+      navigate('/auth');
     }
   };
 
-  return handleSignOut;
+  return { handleSignOut };
 };
