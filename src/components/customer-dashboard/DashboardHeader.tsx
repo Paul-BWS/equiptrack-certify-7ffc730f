@@ -18,7 +18,7 @@ export const DashboardHeader = ({ id }: DashboardHeaderProps) => {
               variant="ghost"
               size="icon"
               onClick={() => navigate('/')}
-              className="rounded-full text-white hover:text-white hover:bg-white/20"
+              className="rounded-full text-white hover:text-white hover:bg-white/20 border border-white"
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
@@ -28,14 +28,14 @@ export const DashboardHeader = ({ id }: DashboardHeaderProps) => {
             <Button
               variant="ghost"
               onClick={() => navigate(`/customers/${id}/equipment`)}
-              className="text-white hover:text-white hover:bg-white/20"
+              className="text-white hover:text-white hover:bg-white/20 border border-white rounded-full"
             >
               <Grid className="mr-2 h-5 w-5" />
               Equipment List
             </Button>
             <Button
               variant="ghost"
-              className="text-white hover:text-white hover:bg-white/20"
+              className="text-white hover:text-white hover:bg-white/20 border border-white rounded-full"
             >
               <Users className="mr-2 h-5 w-5" />
               Personnel List

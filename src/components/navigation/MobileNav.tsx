@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ClipboardList, LayoutDashboard, Users, LogOut } from "lucide-react";
+import { ClipboardList, Users, LogOut } from "lucide-react";
 import { Button } from "../ui/button";
 
 interface MobileNavProps {
@@ -15,7 +15,7 @@ export const MobileNav = ({ isOpen, onClose, onSignOut }: MobileNavProps) => {
     <div className="md:hidden absolute top-16 right-0 left-0 bg-[#266bec] p-4 flex flex-col gap-4 z-50">
       <Link
         to="/"
-        className="text-white hover:text-accent flex items-center gap-2 border border-white rounded-lg p-2"
+        className="text-white hover:text-accent flex items-center gap-2 border border-white rounded-full p-2"
         onClick={onClose}
       >
         <Users size={20} />
@@ -23,7 +23,7 @@ export const MobileNav = ({ isOpen, onClose, onSignOut }: MobileNavProps) => {
       </Link>
       <Link
         to="/all-equipment"
-        className="text-white hover:text-accent flex items-center gap-2 border border-white rounded-lg p-2"
+        className="text-white hover:text-accent flex items-center gap-2 border border-white rounded-full p-2"
         onClick={onClose}
       >
         <ClipboardList size={20} />
@@ -31,7 +31,7 @@ export const MobileNav = ({ isOpen, onClose, onSignOut }: MobileNavProps) => {
       </Link>
       <Button
         variant="ghost"
-        className="text-white hover:text-accent flex items-center gap-2 justify-start p-2 border border-white rounded-lg"
+        className="text-white hover:text-accent flex items-center gap-2 justify-start p-2 border border-white rounded-full"
         onClick={onSignOut}
       >
         <LogOut size={20} />
