@@ -6,7 +6,16 @@ export const useSignOut = () => {
 
   const handleSignOut = async () => {
     try {
-      // Sign out using the signOut method
+      // First check if we have a session
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        console.log("No active session found, redirecting to home");
+        window.location.href = '/';
+        return;
+      }
+
+      // Proceed with sign out if we have a session
       const { error } = await supabase.auth.signOut();
       
       if (error) {
