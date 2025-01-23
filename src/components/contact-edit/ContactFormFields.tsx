@@ -68,11 +68,11 @@ export const ContactFormFields = ({ form, onSubmit }: ContactFormFieldsProps) =>
               <FormLabel>Role</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-white">
                     <SelectValue placeholder="Select a role" />
                   </SelectTrigger>
                 </FormControl>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   <SelectItem value="viewer">Viewer</SelectItem>
                   <SelectItem value="editor">Editor</SelectItem>
                   <SelectItem value="admin">Admin</SelectItem>
