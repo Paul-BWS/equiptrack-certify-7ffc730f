@@ -76,7 +76,7 @@ const CustomerDashboard = () => {
     enabled: !!id && id !== 'undefined',
   });
 
-  if (isMobile) {
+  if (isMobile && !isBWSUser) {
     return (
       <div className="flex items-center justify-center h-screen p-4">
         <div className="text-center space-y-4">
