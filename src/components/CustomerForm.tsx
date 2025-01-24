@@ -7,7 +7,7 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CompanyFormFields } from "./CompanyFormFields";
+import { CompanyFormFields } from "./company-edit/CompanyFormFields";
 import { companySchema, type CompanyFormData } from "@/schemas/companySchema";
 import { companyService } from "@/services/companyService";
 
@@ -63,14 +63,21 @@ export const CustomerForm = () => {
     },
   });
 
-  const onSubmit = (data: CompanyFormData) => {
-    console.log("Form submitted, validation passed with data:", data);
+  const onSubmit = async (data: CompanyFormData) => {
+    console.log("Form submitted with data:", data);
     console.log("Form state:", form.formState);
+    
     if (Object.keys(form.formState.errors).length > 0) {
       console.log("Form validation errors:", form.formState.errors);
       return;
     }
-    createCompany(data);
+    
+    try {
+      console.log("Calling createCompany with data:", data);
+      await createCompany(data);
+    } catch (error) {
+      console.error("Error in onSubmit:", error);
+    }
   };
 
   return (
