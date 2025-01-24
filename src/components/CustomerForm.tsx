@@ -61,13 +61,14 @@ export const CustomerForm = (): ReactElement => {
   }, [watchAddress, toast]);
 
   const onSubmit = async (data: CompanyFormData) => {
+    console.log("Form submission started with data:", data);
+    
     if (isSubmitting) {
       console.log("Preventing double submission");
       return;
     }
 
     setIsSubmitting(true);
-    console.log("Form submission started with data:", data);
 
     try {
       toast({
@@ -132,7 +133,6 @@ export const CustomerForm = (): ReactElement => {
     if (!newOpen) {
       form.reset();
     } else {
-      // Show toast when modal is opened
       toast({
         title: "New Company Form",
         description: "Please fill in the required company details",
