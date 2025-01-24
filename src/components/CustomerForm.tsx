@@ -33,72 +33,81 @@ export const CustomerForm = () => {
 
   const { mutate: createCompany, isPending } = useMutation({
     mutationFn: async (data: CompanyFormData) => {
+      console.log("Step 1: Starting company creation process");
       toast({
-        title: "Starting Process",
-        description: "Initiating company creation...",
+        title: "Processing",
+        description: "Starting company creation process...",
       });
-      
-      console.log("Step 1: Form submitted with data:", data);
 
+      // Validate required fields
       if (!data.name || !data.industry || !data.address) {
-        const error = new Error("Required fields are missing");
+        console.log("Step 2: Validation failed - missing required fields");
         toast({
-          title: "Validation Error",
+          title: "Error",
           description: "Please fill in all required fields",
           variant: "destructive",
         });
-        throw error;
+        throw new Error("Required fields are missing");
       }
 
+      console.log("Step 3: Attempting database connection");
       toast({
-        title: "Connecting",
+        title: "Processing",
         description: "Connecting to database...",
       });
 
-      console.log("Step 2: Attempting Supabase insert");
-      
-      const { data: newCompany, error } = await supabase
-        .from('companies')
-        .insert([{
-          name: data.name,
-          industry: data.industry,
-          website: data.website || null,
-          address: data.address,
-          useseparatebillingaddress: data.useSeparateBillingAddress,
-          billingaddress: data.useSeparateBillingAddress ? data.billingaddress : data.address,
-          notes: data.notes || null,
-          phone: data.phone || null,
-          mobile_phone: data.mobilePhone || null,
-        }])
-        .select()
-        .single();
+      try {
+        const { data: newCompany, error } = await supabase
+          .from('companies')
+          .insert([{
+            name: data.name,
+            industry: data.industry,
+            website: data.website || null,
+            address: data.address,
+            useseparatebillingaddress: data.useSeparateBillingAddress,
+            billingaddress: data.useSeparateBillingAddress ? data.billingaddress : data.address,
+            notes: data.notes || null,
+            phone: data.phone || null,
+            mobile_phone: data.mobilePhone || null,
+          }])
+          .select()
+          .single();
 
-      if (error) {
-        console.error("Database error:", error);
+        if (error) {
+          console.error("Step 4: Database error:", error);
+          toast({
+            title: "Error",
+            description: error.message,
+            variant: "destructive",
+          });
+          throw error;
+        }
+
+        console.log("Step 5: Company created successfully:", newCompany);
+        toast({
+          title: "Success",
+          description: "Company created successfully!",
+        });
+
+        return newCompany;
+      } catch (error) {
+        console.error("Step 4: Error during company creation:", error);
         toast({
           title: "Error",
-          description: error.message,
+          description: "Failed to create company",
           variant: "destructive",
         });
         throw error;
       }
-
-      toast({
-        title: "Success",
-        description: "Company data saved successfully",
-      });
-
-      console.log("Step 3: Company created:", newCompany);
-      return newCompany;
     },
     onSuccess: (data) => {
-      console.log("Step 4: Success callback triggered");
+      console.log("Step 6: Handling successful creation");
       queryClient.invalidateQueries({ queryKey: ["companies"] });
       form.reset();
       setOpen(false);
       toast({
-        title: "Complete",
-        description: "New company has been created",
+        title: "Success",
+        description: "Company has been created and saved",
       });
     },
     onError: (error) => {
@@ -112,22 +121,12 @@ export const CustomerForm = () => {
   });
 
   const onSubmit = (data: CompanyFormData) => {
-    console.log("Form submission started", data);
+    console.log("Form submitted with data:", data);
     toast({
       title: "Processing",
-      description: "Processing your request...",
+      description: "Submitting company details...",
     });
-    
-    try {
-      createCompany(data);
-    } catch (error) {
-      console.error("Error in onSubmit:", error);
-      toast({
-        title: "Submission Error",
-        description: "Failed to process form submission",
-        variant: "destructive",
-      });
-    }
+    createCompany(data);
   };
 
   return (
