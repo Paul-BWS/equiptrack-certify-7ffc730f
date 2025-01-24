@@ -31,6 +31,7 @@ export const CustomerForm = () => {
 
   const { mutate: createCompany, isPending } = useMutation({
     mutationFn: async (data: CompanyFormData) => {
+      console.log("Submitting form data:", data);
       if (!data.useSeparateBillingAddress) {
         data.billingaddress = data.address;
       }
@@ -46,16 +47,17 @@ export const CustomerForm = () => {
       setOpen(false);
     },
     onError: (error) => {
+      console.error("Error creating company:", error);
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to create company. Please try again.",
         variant: "destructive",
       });
-      console.error("Error creating company:", error);
     },
   });
 
   const onSubmit = (data: CompanyFormData) => {
+    console.log("Form submitted with data:", data);
     createCompany(data);
   };
 
