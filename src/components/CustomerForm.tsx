@@ -33,19 +33,28 @@ export const CustomerForm = () => {
 
   const { mutate: createCompany, isPending } = useMutation({
     mutationFn: async (data: CompanyFormData) => {
-      console.log("Form submitted with data:", data);
+      console.log("Step 1: Form submitted with data:", data);
       
       toast({
-        title: "Starting company creation...",
-        description: "Connecting to Supabase",
+        title: "Step 1",
+        description: "Starting company creation process",
       });
 
       if (!data.name || !data.industry || !data.address) {
-        console.error("Required fields missing:", { data });
+        console.error("Step 2: Required fields missing:", { data });
+        toast({
+          title: "Validation Error",
+          description: "Please fill in all required fields",
+          variant: "destructive",
+        });
         throw new Error("Required fields are missing");
       }
 
-      console.log("Attempting Supabase insert with data:", data);
+      console.log("Step 3: Attempting Supabase insert with data:", data);
+      toast({
+        title: "Step 3",
+        description: "Connecting to Supabase",
+      });
       
       const { data: newCompany, error } = await supabase
         .from('companies')
@@ -64,20 +73,20 @@ export const CustomerForm = () => {
         .single();
 
       if (error) {
-        console.error("Supabase error:", error);
+        console.error("Step 4 Error: Supabase error:", error);
         toast({
-          title: "Error creating company",
+          title: "Database Error",
           description: error.message,
           variant: "destructive",
         });
         throw error;
       }
 
-      console.log("Company created successfully:", newCompany);
+      console.log("Step 4 Success: Company created:", newCompany);
       return newCompany;
     },
     onSuccess: (data) => {
-      console.log("Mutation successful, company created:", data);
+      console.log("Step 5: Mutation successful, company created:", data);
       toast({
         title: "Success",
         description: "Company has been created successfully",
@@ -87,7 +96,7 @@ export const CustomerForm = () => {
       setOpen(false);
     },
     onError: (error) => {
-      console.error("Error in mutation:", error);
+      console.error("Step 5 Error: Error in mutation:", error);
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to create company",
@@ -97,7 +106,7 @@ export const CustomerForm = () => {
   });
 
   const onSubmit = async (data: CompanyFormData) => {
-    console.log("onSubmit called with data:", data);
+    console.log("onSubmit triggered with data:", data);
     
     if (Object.keys(form.formState.errors).length > 0) {
       console.log("Form validation errors:", form.formState.errors);
@@ -122,6 +131,10 @@ export const CustomerForm = () => {
         <Button 
           className="flex items-center gap-2 bg-primary hover:bg-primary/90"
           variant="default"
+          onClick={() => {
+            console.log("New Company button clicked");
+            setOpen(true);
+          }}
         >
           <Plus className="h-4 w-4" />
           New Company
@@ -141,6 +154,7 @@ export const CustomerForm = () => {
               type="submit" 
               className="w-full bg-primary hover:bg-primary/90 mt-6" 
               disabled={isPending}
+              onClick={() => console.log("Submit button clicked")}
             >
               {isPending ? "Creating..." : "Create Company"}
             </Button>
