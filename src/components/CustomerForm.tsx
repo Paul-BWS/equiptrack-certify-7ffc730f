@@ -31,37 +31,37 @@ export const CustomerForm = () => {
   });
 
   const onSubmit = async (data: CompanyFormData) => {
-    if (isSubmitting) return;
-    
+    if (isSubmitting) {
+      console.log("Preventing double submission");
+      return;
+    }
+
+    setIsSubmitting(true);
+    console.log("Form submission started with data:", data);
+
     try {
-      console.log("Step 1: Starting form submission");
-      setIsSubmitting(true);
-      console.log("Form data to be submitted:", data);
-      
-      // Show initial processing toast
       toast({
         title: "Processing",
         description: "Creating new company...",
-        duration: 3000,
+        duration: 5000,
       });
-      
-      // Reset form before submission to prevent data persistence
-      form.reset();
-      
-      // Attempt to insert the company
-      const { error, data: newCompany } = await supabase.from('companies').insert([{
-        name: data.name,
-        industry: data.industry,
-        website: data.website || null,
-        address: data.address,
-        useseparatebillingaddress: data.useSeparateBillingAddress,
-        billingaddress: data.useSeparateBillingAddress ? data.billingaddress : data.address,
-        notes: data.notes || null,
-        phone: data.phone || null,
-        mobile_phone: data.mobilePhone || null,
-      }]).select();
 
-      console.log("Step 3: Supabase response received", { error, newCompany });
+      const { error, data: newCompany } = await supabase
+        .from('companies')
+        .insert([{
+          name: data.name,
+          industry: data.industry,
+          website: data.website || null,
+          address: data.address,
+          useseparatebillingaddress: data.useSeparateBillingAddress,
+          billingaddress: data.useSeparateBillingAddress ? data.billingaddress : data.address,
+          notes: data.notes || null,
+          phone: data.phone || null,
+          mobile_phone: data.mobilePhone || null,
+        }])
+        .select();
+
+      console.log("Supabase response:", { error, newCompany });
 
       if (error) {
         console.error("Error creating company:", error);
@@ -69,57 +69,52 @@ export const CustomerForm = () => {
           title: "Error",
           description: error.message || "Failed to create company",
           variant: "destructive",
-          duration: 5000,
+          duration: 7000,
         });
         return;
       }
 
-      console.log("Step 4: Company created successfully");
+      console.log("Company created successfully");
       
+      // Only reset and close if successful
+      form.reset();
+      setOpen(false);
+
       toast({
         title: "Success",
         description: "Company created successfully!",
-        duration: 3000,
+        duration: 5000,
       });
 
-      // Close the modal after successful submission
-      setOpen(false);
-      
     } catch (error) {
       console.error("Caught error in form submission:", error);
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to create company",
         variant: "destructive",
-        duration: 5000,
+        duration: 7000,
       });
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const handleOpenChange = (newOpen: boolean) => {
+    if (!newOpen) {
+      form.reset();
+    }
+    setOpen(newOpen);
+  };
+
   return (
-    <Dialog 
-      open={open} 
-      onOpenChange={(newOpen) => {
-        if (!newOpen) {
-          // Reset form when dialog is closed
-          form.reset();
-        }
-        setOpen(newOpen);
-      }}
-    >
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button 
           className="flex items-center gap-2 bg-primary hover:bg-primary/90"
           variant="default"
           onClick={() => {
             console.log("New Company button clicked");
-            toast({
-              title: "Form Opened",
-              description: "Please fill in the company details",
-              duration: 3000,
-            });
+            form.reset(); // Reset form when opening
             setOpen(true);
           }}
         >
