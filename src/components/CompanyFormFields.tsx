@@ -24,7 +24,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
               <Input 
                 placeholder="Enter company name" 
                 {...field} 
-                className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white text-[#282828] text-[16px] px-4"
+                className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white text-[#282828] text-[16px] px-4 placeholder:text-[14px] placeholder:text-[#B3B3B3]"
               />
             </FormControl>
             <FormMessage />
@@ -41,7 +41,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
               <Input 
                 placeholder="Enter industry" 
                 {...field} 
-                className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white text-[#282828] text-[16px] px-4"
+                className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white text-[#282828] text-[16px] px-4 placeholder:text-[14px] placeholder:text-[#B3B3B3]"
               />
             </FormControl>
             <FormMessage />
@@ -58,7 +58,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
               <Input 
                 placeholder="Enter website URL (optional)" 
                 {...field} 
-                className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white text-[#282828] text-[16px] px-4"
+                className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white text-[#282828] text-[16px] px-4 placeholder:text-[14px] placeholder:text-[#B3B3B3]"
               />
             </FormControl>
             <FormMessage />
@@ -75,7 +75,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
               <Input 
                 placeholder="Enter site address" 
                 {...field} 
-                className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white text-[#282828] text-[16px] px-4"
+                className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white text-[#282828] text-[16px] px-4 placeholder:text-[14px] placeholder:text-[#B3B3B3]"
               />
             </FormControl>
             <FormMessage />
@@ -110,7 +110,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
                 <Input 
                   placeholder="Enter billing address" 
                   {...field} 
-                  className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white text-[#282828] text-[16px] px-4"
+                  className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white text-[#282828] text-[16px] px-4 placeholder:text-[14px] placeholder:text-[#B3B3B3]"
                 />
               </FormControl>
               <FormMessage />
@@ -127,7 +127,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
             <FormControl>
               <Textarea 
                 placeholder="Enter any additional notes"
-                className="resize-none border-gray-200 rounded-lg focus-visible:ring-1 bg-white text-[#282828] text-[16px] px-4"
+                className="resize-none border-gray-200 rounded-lg focus-visible:ring-1 bg-white text-[#282828] text-[16px] px-4 placeholder:text-[14px] placeholder:text-[#B3B3B3]"
                 {...field}
               />
             </FormControl>
