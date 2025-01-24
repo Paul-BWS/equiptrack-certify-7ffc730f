@@ -84,14 +84,14 @@ export const CustomerForm = () => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button 
-          className="gap-2"
+          className="gap-2 bg-primary hover:bg-primary/90"
           variant="default"
         >
           <Plus className="h-4 w-4" />
           New Company
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-[#f9fafb]">
+      <DialogContent className="sm:max-w-[425px] bg-background">
         <DialogHeader>
           <DialogTitle>Add New Company</DialogTitle>
           <DialogDescription>
@@ -101,7 +101,11 @@ export const CustomerForm = () => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <CompanyFormFields form={form} />
-            <Button type="submit" className="w-full" disabled={isPending}>
+            <Button 
+              type="submit" 
+              className="w-full bg-primary hover:bg-primary/90" 
+              disabled={isPending}
+            >
               {isPending ? "Creating..." : "Create Company"}
             </Button>
           </form>
