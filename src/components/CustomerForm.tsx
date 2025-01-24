@@ -7,7 +7,7 @@ import { Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CompanyFormFields } from "./CompanyFormFields";
+import { CompanyFormFields } from "./company-edit/CompanyFormFields";
 import { companySchema, type CompanyFormData } from "@/schemas/companySchema";
 import { supabase } from "@/lib/supabase";
 
