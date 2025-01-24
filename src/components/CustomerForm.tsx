@@ -33,28 +33,29 @@ export const CustomerForm = () => {
 
   const { mutate: createCompany, isPending } = useMutation({
     mutationFn: async (data: CompanyFormData) => {
-      console.log("Step 1: Form submitted with data:", data);
-      
       toast({
-        title: "Step 1",
-        description: "Starting company creation process",
+        title: "Starting Process",
+        description: "Initiating company creation...",
       });
+      
+      console.log("Step 1: Form submitted with data:", data);
 
       if (!data.name || !data.industry || !data.address) {
-        console.error("Step 2: Required fields missing:", { data });
+        const error = new Error("Required fields are missing");
         toast({
           title: "Validation Error",
           description: "Please fill in all required fields",
           variant: "destructive",
         });
-        throw new Error("Required fields are missing");
+        throw error;
       }
 
-      console.log("Step 3: Attempting Supabase insert with data:", data);
       toast({
-        title: "Step 3",
-        description: "Connecting to Supabase",
+        title: "Connecting",
+        description: "Connecting to database...",
       });
+
+      console.log("Step 2: Attempting Supabase insert");
       
       const { data: newCompany, error } = await supabase
         .from('companies')
@@ -73,30 +74,35 @@ export const CustomerForm = () => {
         .single();
 
       if (error) {
-        console.error("Step 4 Error: Supabase error:", error);
+        console.error("Database error:", error);
         toast({
-          title: "Database Error",
+          title: "Error",
           description: error.message,
           variant: "destructive",
         });
         throw error;
       }
 
-      console.log("Step 4 Success: Company created:", newCompany);
+      toast({
+        title: "Success",
+        description: "Company data saved successfully",
+      });
+
+      console.log("Step 3: Company created:", newCompany);
       return newCompany;
     },
     onSuccess: (data) => {
-      console.log("Step 5: Mutation successful, company created:", data);
-      toast({
-        title: "Success",
-        description: "Company has been created successfully",
-      });
+      console.log("Step 4: Success callback triggered");
       queryClient.invalidateQueries({ queryKey: ["companies"] });
       form.reset();
       setOpen(false);
+      toast({
+        title: "Complete",
+        description: "New company has been created",
+      });
     },
     onError: (error) => {
-      console.error("Step 5 Error: Error in mutation:", error);
+      console.error("Error in mutation:", error);
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to create company",
@@ -105,23 +111,22 @@ export const CustomerForm = () => {
     },
   });
 
-  const onSubmit = async (data: CompanyFormData) => {
-    console.log("onSubmit triggered with data:", data);
-    
-    if (Object.keys(form.formState.errors).length > 0) {
-      console.log("Form validation errors:", form.formState.errors);
-      toast({
-        title: "Validation Error",
-        description: "Please check all required fields",
-        variant: "destructive",
-      });
-      return;
-    }
+  const onSubmit = (data: CompanyFormData) => {
+    console.log("Form submission started", data);
+    toast({
+      title: "Processing",
+      description: "Processing your request...",
+    });
     
     try {
-      await createCompany(data);
+      createCompany(data);
     } catch (error) {
       console.error("Error in onSubmit:", error);
+      toast({
+        title: "Submission Error",
+        description: "Failed to process form submission",
+        variant: "destructive",
+      });
     }
   };
 
@@ -133,6 +138,10 @@ export const CustomerForm = () => {
           variant="default"
           onClick={() => {
             console.log("New Company button clicked");
+            toast({
+              title: "Form Opened",
+              description: "Please fill in the company details",
+            });
             setOpen(true);
           }}
         >
@@ -154,7 +163,6 @@ export const CustomerForm = () => {
               type="submit" 
               className="w-full bg-primary hover:bg-primary/90 mt-6" 
               disabled={isPending}
-              onClick={() => console.log("Submit button clicked")}
             >
               {isPending ? "Creating..." : "Create Company"}
             </Button>
