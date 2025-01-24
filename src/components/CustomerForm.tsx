@@ -31,7 +31,7 @@ export const CustomerForm = () => {
   });
 
   const onSubmit = async (data: CompanyFormData) => {
-    if (isSubmitting) return; // Prevent double submission
+    if (isSubmitting) return;
     
     try {
       console.log("Step 1: Starting form submission");
@@ -42,10 +42,12 @@ export const CustomerForm = () => {
       toast({
         title: "Processing",
         description: "Creating new company...",
-        duration: 3000, // Show for 3 seconds
+        duration: 3000,
       });
-      console.log("Step 2: Initial toast shown");
-
+      
+      // Reset form before submission to prevent data persistence
+      form.reset();
+      
       // Attempt to insert the company
       const { error, data: newCompany } = await supabase.from('companies').insert([{
         name: data.name,
@@ -67,39 +69,46 @@ export const CustomerForm = () => {
           title: "Error",
           description: error.message || "Failed to create company",
           variant: "destructive",
-          duration: 5000, // Show error for longer
+          duration: 5000,
         });
-        console.log("Step 4a: Error toast shown");
         return;
       }
 
-      console.log("Step 4b: Company created successfully");
-      // Show success toast and reset form
+      console.log("Step 4: Company created successfully");
+      
       toast({
         title: "Success",
         description: "Company created successfully!",
         duration: 3000,
       });
 
-      form.reset();
+      // Close the modal after successful submission
       setOpen(false);
+      
     } catch (error) {
       console.error("Caught error in form submission:", error);
-      // Show error toast for unexpected errors
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to create company. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to create company",
         variant: "destructive",
         duration: 5000,
       });
     } finally {
-      console.log("Step 5: Form submission completed");
       setIsSubmitting(false);
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog 
+      open={open} 
+      onOpenChange={(newOpen) => {
+        if (!newOpen) {
+          // Reset form when dialog is closed
+          form.reset();
+        }
+        setOpen(newOpen);
+      }}
+    >
       <DialogTrigger asChild>
         <Button 
           className="flex items-center gap-2 bg-primary hover:bg-primary/90"
