@@ -30,6 +30,35 @@ export const CustomerForm = () => {
     },
   });
 
+  // Watch form fields for changes
+  const watchName = form.watch("name");
+  const watchIndustry = form.watch("industry");
+  const watchAddress = form.watch("address");
+
+  // Show toasts when required fields are filled
+  const handleFieldComplete = (field: string, value: string) => {
+    if (value && value.trim() !== "") {
+      toast({
+        title: "Field Completed",
+        description: `${field} has been entered`,
+        duration: 2000,
+      });
+    }
+  };
+
+  // React to changes in watched fields
+  React.useEffect(() => {
+    if (watchName) handleFieldComplete("Company Name", watchName);
+  }, [watchName]);
+
+  React.useEffect(() => {
+    if (watchIndustry) handleFieldComplete("Industry", watchIndustry);
+  }, [watchIndustry]);
+
+  React.useEffect(() => {
+    if (watchAddress) handleFieldComplete("Site Address", watchAddress);
+  }, [watchAddress]);
+
   const onSubmit = async (data: CompanyFormData) => {
     if (isSubmitting) {
       console.log("Preventing double submission");
@@ -76,7 +105,6 @@ export const CustomerForm = () => {
 
       console.log("Company created successfully");
       
-      // Only reset and close if successful
       form.reset();
       setOpen(false);
 
@@ -102,6 +130,13 @@ export const CustomerForm = () => {
   const handleOpenChange = (newOpen: boolean) => {
     if (!newOpen) {
       form.reset();
+    } else {
+      // Show toast when modal is opened
+      toast({
+        title: "New Company Form",
+        description: "Please fill in the required company details",
+        duration: 3000,
+      });
     }
     setOpen(newOpen);
   };
@@ -114,7 +149,7 @@ export const CustomerForm = () => {
           variant="default"
           onClick={() => {
             console.log("New Company button clicked");
-            form.reset(); // Reset form when opening
+            form.reset();
             setOpen(true);
           }}
         >
@@ -127,6 +162,8 @@ export const CustomerForm = () => {
           <DialogTitle className="text-xl font-semibold">Add New Company</DialogTitle>
           <DialogDescription className="text-[#B3B3B3]">
             Fill in the company details below. All fields marked with * are required.
+            <br />
+            Site Address should include: Street, City, Postcode
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
