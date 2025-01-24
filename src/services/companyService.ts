@@ -11,6 +11,7 @@ export const companyService = {
       address: data.address,
       billingaddress: data.useSeparateBillingAddress ? data.billingaddress : data.address,
       notes: data.notes,
+      phone: data.phone,
       mobile_phone: data.mobilePhone,
     };
     

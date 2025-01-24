@@ -27,6 +27,7 @@ export const companySchema = z.object({
   useSeparateBillingAddress: z.boolean().default(false),
   billingaddress: z.string().min(1, "Billing address is required").optional(),
   notes: z.string(),
+  phone: z.string().optional(),
   mobilePhone: z.string().optional(),
 });
 
