@@ -188,6 +188,7 @@ export type Database = {
           group_id: string | null
           id: string
           industry: string
+          mobile_phone: string | null
           name: string
           notes: string | null
           useseparatebillingaddress: boolean | null
@@ -200,6 +201,7 @@ export type Database = {
           group_id?: string | null
           id?: string
           industry: string
+          mobile_phone?: string | null
           name: string
           notes?: string | null
           useseparatebillingaddress?: boolean | null
@@ -212,6 +214,7 @@ export type Database = {
           group_id?: string | null
           id?: string
           industry?: string
+          mobile_phone?: string | null
           name?: string
           notes?: string | null
           useseparatebillingaddress?: boolean | null

@@ -67,6 +67,23 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
       />
       <FormField
         control={form.control}
+        name="mobilePhone"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-[#B3B3B3] text-[12px]">Mobile Number</FormLabel>
+            <FormControl>
+              <Input 
+                placeholder="Enter mobile number (optional)" 
+                {...field} 
+                className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white text-[#282828] text-[16px] px-4 placeholder:text-[14px] placeholder:text-[#B3B3B3]"
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
         name="address"
         render={({ field }) => (
           <FormItem>

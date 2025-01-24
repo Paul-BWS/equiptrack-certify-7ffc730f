@@ -1,6 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import { CompanyFormData } from "@/schemas/companySchema";
-import { Company } from "@/types/models";
+import { Company } from "@/types/company";
 
 export const companyService = {
   async createCompany(data: CompanyFormData): Promise<Company> {
@@ -11,6 +11,7 @@ export const companyService = {
       address: data.address,
       billingaddress: data.useSeparateBillingAddress ? data.billingaddress : data.address,
       notes: data.notes,
+      mobile_phone: data.mobilePhone,
     };
     
     const { data: company, error } = await supabase

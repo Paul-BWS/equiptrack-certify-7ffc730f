@@ -26,6 +26,7 @@ export const CustomerForm = () => {
       useSeparateBillingAddress: false,
       billingaddress: "",
       notes: "",
+      mobilePhone: "",
     },
   });
 
