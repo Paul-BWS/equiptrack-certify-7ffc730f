@@ -84,26 +84,26 @@ export const CustomerForm = () => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button 
-          className="gap-2 bg-primary hover:bg-primary/90"
+          className="flex items-center gap-2 bg-primary hover:bg-primary/90"
           variant="default"
         >
           <Plus className="h-4 w-4" />
           New Company
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-background">
-        <DialogHeader>
-          <DialogTitle>Add New Company</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="sm:max-w-[425px] bg-background p-6">
+        <DialogHeader className="mb-4">
+          <DialogTitle className="text-xl font-semibold">Add New Company</DialogTitle>
+          <DialogDescription className="text-muted-foreground">
             Fill in the company details below. All fields marked with * are required.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <CompanyFormFields form={form} />
             <Button 
               type="submit" 
-              className="w-full bg-primary hover:bg-primary/90" 
+              className="w-full bg-primary hover:bg-primary/90 mt-6" 
               disabled={isPending}
             >
               {isPending ? "Creating..." : "Create Company"}
