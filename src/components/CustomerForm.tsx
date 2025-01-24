@@ -63,7 +63,8 @@ export const CustomerForm = () => {
     },
   });
 
-  const onSubmit = async (data: CompanyFormData) => {
+  const onSubmit = async (data: CompanyFormData, e: React.BaseSyntheticEvent) => {
+    e.preventDefault();
     console.log("Form submitted with data:", data);
     console.log("Form state:", form.formState);
     
