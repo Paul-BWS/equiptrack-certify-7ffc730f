@@ -4,6 +4,8 @@ import { Company } from "@/types/company";
 
 export const companyService = {
   async createCompany(data: CompanyFormData): Promise<Company> {
+    console.log("Creating company with data:", data);
+    
     const companyData = {
       name: data.name,
       industry: data.industry,
@@ -13,8 +15,9 @@ export const companyService = {
       notes: data.notes,
       phone: data.phone,
       mobile_phone: data.mobilePhone,
+      useseparatebillingaddress: data.useSeparateBillingAddress,
     };
-    
+
     const { data: company, error } = await supabase
       .from("companies")
       .insert([companyData])
