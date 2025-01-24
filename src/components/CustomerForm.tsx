@@ -33,12 +33,19 @@ export const CustomerForm = () => {
 
   const { mutate: createCompany, isPending } = useMutation({
     mutationFn: async (data: CompanyFormData) => {
+      console.log("Form submitted with data:", data);
+      
       toast({
-        title: "Connecting to Supabase...",
-        description: "Attempting to create company",
+        title: "Starting company creation...",
+        description: "Connecting to Supabase",
       });
 
-      console.log("Starting company creation with data:", data);
+      if (!data.name || !data.industry || !data.address) {
+        console.error("Required fields missing:", { data });
+        throw new Error("Required fields are missing");
+      }
+
+      console.log("Attempting Supabase insert with data:", data);
       
       const { data: newCompany, error } = await supabase
         .from('companies')
@@ -58,45 +65,51 @@ export const CustomerForm = () => {
 
       if (error) {
         console.error("Supabase error:", error);
+        toast({
+          title: "Error creating company",
+          description: error.message,
+          variant: "destructive",
+        });
         throw error;
       }
 
       console.log("Company created successfully:", newCompany);
       return newCompany;
     },
-    onSuccess: () => {
-      console.log("Mutation successful, invalidating queries");
-      queryClient.invalidateQueries({ queryKey: ["companies"] });
+    onSuccess: (data) => {
+      console.log("Mutation successful, company created:", data);
       toast({
         title: "Success",
         description: "Company has been created successfully",
       });
+      queryClient.invalidateQueries({ queryKey: ["companies"] });
       form.reset();
       setOpen(false);
     },
     onError: (error) => {
-      console.error("Detailed error in onError:", error);
+      console.error("Error in mutation:", error);
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to create company. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to create company",
         variant: "destructive",
       });
-      // Don't close the modal on error
-      // setOpen(false); - removed this line
     },
   });
 
   const onSubmit = async (data: CompanyFormData) => {
-    console.log("Form submitted with data:", data);
-    console.log("Form state:", form.formState);
+    console.log("onSubmit called with data:", data);
     
     if (Object.keys(form.formState.errors).length > 0) {
       console.log("Form validation errors:", form.formState.errors);
+      toast({
+        title: "Validation Error",
+        description: "Please check all required fields",
+        variant: "destructive",
+      });
       return;
     }
     
     try {
-      console.log("Calling createCompany with data:", data);
       await createCompany(data);
     } catch (error) {
       console.error("Error in onSubmit:", error);
