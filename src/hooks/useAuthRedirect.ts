@@ -2,102 +2,120 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
-import { 
-  checkBWSUser, 
-  getProfileCompany, 
-  getCompanyDetails,
-  getUserCompanyFromUserCompanies,
-  updateProfileCompany,
-  handleAuthError
-} from "@/utils/authUtils";
 
 export const useAuthRedirect = () => {
   const navigate = useNavigate();
 
-  const getUserCompany = async (userId: string) => {
-    console.log("Fetching company for user:", userId);
-    
-    // Check if user is BWS user first
-    const isBWSUser = await checkBWSUser();
-    if (isBWSUser) {
-      return { id: null, name: 'BWS' };
+  const checkBWSUser = async () => {
+    console.log("Checking if user is BWS user");
+    const { data, error } = await supabase.rpc('is_bws_user');
+    if (error) {
+      console.error('Error checking BWS user status:', error);
+      return false;
+    }
+    console.log("BWS user check result:", data);
+    return data;
+  };
+
+  const getProfileCompany = async (userId: string) => {
+    console.log("Getting profile company for user:", userId);
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('company_id')
+      .eq('id', userId)
+      .single();
+
+    if (error) {
+      console.error('Error getting profile company:', error);
+      return null;
     }
 
-    // Get company from profile
-    const profileCompanyId = await getProfileCompany(userId);
-    
-    if (profileCompanyId) {
-      console.log("Found company ID in profile:", profileCompanyId);
-      return getCompanyDetails(profileCompanyId);
+    console.log("Profile company data:", data);
+    return data?.company_id;
+  };
+
+  const getCompanyDetails = async (companyId: string | null) => {
+    if (!companyId) {
+      console.log("No company ID provided");
+      return null;
     }
 
-    // If no company in profile, check user_companies table
-    const companyId = await getUserCompanyFromUserCompanies(userId);
-    console.log("Found company ID in user_companies:", companyId);
-    
-    const company = await getCompanyDetails(companyId);
+    console.log("Getting company details for:", companyId);
+    const { data, error } = await supabase
+      .from('companies')
+      .select('*')
+      .eq('id', companyId)
+      .single();
 
-    // Update profile with company_id if not set
-    await updateProfileCompany(userId, company.id);
+    if (error) {
+      console.error('Error getting company details:', error);
+      return null;
+    }
 
-    return company;
+    console.log("Company details:", data);
+    return data;
   };
 
   useEffect(() => {
-    const handleRedirect = async (session: any) => {
-      try {
-        const company = await getUserCompany(session.user.id);
-        
-        if (company.name === 'BWS') {
-          console.log("BWS user detected, redirecting to admin dashboard");
-          navigate('/', { replace: true });
-        } else {
-          console.log("Customer user detected, redirecting to:", `/customers/${company.id}`);
-          window.location.href = `/customers/${company.id}`;
-        }
-      } catch (error) {
-        console.error("Error handling redirect:", error);
-        await handleAuthError();
-      }
-    };
-
-    const checkSession = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        
-        if (!session?.user) {
-          console.log("No active session");
-          navigate('/auth', { replace: true });
-          return;
-        }
-
-        // Check if user is BWS user first
-        const isBWSUser = await checkBWSUser();
-        if (isBWSUser) {
-          console.log("BWS user detected during session check");
-          return; // Allow BWS users to stay on current page
-        }
-
-        console.log("Checking session for user:", session.user.email);
-        await handleRedirect(session);
-      } catch (error) {
-        await handleAuthError();
-      }
-    };
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const handleAuthStateChange = async (event: string, session: any) => {
       console.log("Auth state changed:", event);
       
       if (event === 'SIGNED_IN' && session) {
-        await handleRedirect(session);
+        const isBWSUser = await checkBWSUser();
+        console.log("Is BWS user:", isBWSUser);
+        
+        if (isBWSUser) {
+          console.log("BWS user detected, staying on current page");
+          return;
+        }
+
+        const profileCompany = await getProfileCompany(session.user.id);
+        const company = await getCompanyDetails(profileCompany);
+        
+        if (company) {
+          console.log("Redirecting to company dashboard:", company.id);
+          navigate(`/customers/${company.id}`, { replace: true });
+        } else {
+          console.log("No company found, redirecting to home");
+          navigate('/', { replace: true });
+        }
       }
       
       if (event === 'SIGNED_OUT') {
         console.log("User signed out, redirecting to auth");
-        window.location.href = '/auth';
+        navigate('/auth', { replace: true });
       }
-    });
+    };
 
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session?.user) {
+        console.log("No active session");
+        navigate('/auth', { replace: true });
+        return;
+      }
+
+      const isBWSUser = await checkBWSUser();
+      console.log("Session check - Is BWS user:", isBWSUser);
+      
+      if (isBWSUser) {
+        console.log("BWS user detected, staying on current page");
+        return;
+      }
+
+      const profileCompany = await getProfileCompany(session.user.id);
+      const company = await getCompanyDetails(profileCompany);
+      
+      if (company) {
+        console.log("Session check - Redirecting to company dashboard:", company.id);
+        navigate(`/customers/${company.id}`, { replace: true });
+      } else {
+        console.log("No company found, staying on current page");
+      }
+    };
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(handleAuthStateChange);
     checkSession();
 
     return () => {
