@@ -33,15 +33,18 @@ export const CustomerForm = () => {
 
   const { mutate: createCompany, isPending } = useMutation({
     mutationFn: async (data: CompanyFormData) => {
-      console.log("Submitting form data:", data);
-      const formattedData = {
-        ...data,
-        billingaddress: data.useSeparateBillingAddress ? data.billingaddress : data.address,
-      };
-      console.log("Formatted data before submission:", formattedData);
-      return await companyService.createCompany(formattedData);
+      console.log("Form submitted with data:", data);
+      try {
+        const result = await companyService.createCompany(data);
+        console.log("Company creation successful:", result);
+        return result;
+      } catch (error) {
+        console.error("Error in mutation:", error);
+        throw error;
+      }
     },
     onSuccess: () => {
+      console.log("Mutation successful, invalidating queries");
       queryClient.invalidateQueries({ queryKey: ["companies"] });
       toast({
         title: "Success",

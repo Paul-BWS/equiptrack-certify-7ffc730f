@@ -35,6 +35,7 @@ export const companyService = {
       throw new Error("Failed to create company");
     }
 
+    console.log("Successfully created company:", company);
     return company as Company;
   }
 };
