@@ -8,10 +8,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CompanyFormFields } from "./CompanyFormFields";
 import { companySchema, type CompanyFormData } from "@/schemas/companySchema";
-import { useCreateCompany } from "@/hooks/useCreateCompany";
+import { supabase } from "@/lib/supabase";
 
 export const CustomerForm = () => {
   const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<CompanyFormData>({
@@ -29,18 +30,55 @@ export const CustomerForm = () => {
     },
   });
 
-  const { mutate: createCompany, isPending } = useCreateCompany(() => {
-    form.reset();
-    setOpen(false);
-  });
+  const onSubmit = async (data: CompanyFormData) => {
+    try {
+      setIsSubmitting(true);
+      console.log("Form submitted with data:", data);
+      
+      toast({
+        title: "Processing",
+        description: "Creating new company...",
+      });
 
-  const onSubmit = (data: CompanyFormData) => {
-    console.log("Form submitted with data:", data);
-    toast({
-      title: "Processing",
-      description: "Submitting company details...",
-    });
-    createCompany(data);
+      const { error } = await supabase.from('companies').insert([{
+        name: data.name,
+        industry: data.industry,
+        website: data.website || null,
+        address: data.address,
+        useseparatebillingaddress: data.useSeparateBillingAddress,
+        billingaddress: data.useSeparateBillingAddress ? data.billingaddress : data.address,
+        notes: data.notes || null,
+        phone: data.phone || null,
+        mobile_phone: data.mobilePhone || null,
+      }]);
+
+      if (error) {
+        console.error("Error creating company:", error);
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "Success",
+        description: "Company created successfully!",
+      });
+
+      form.reset();
+      setOpen(false);
+    } catch (error) {
+      console.error("Error in form submission:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create company. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -75,9 +113,9 @@ export const CustomerForm = () => {
             <Button 
               type="submit" 
               className="w-full bg-primary hover:bg-primary/90 mt-6" 
-              disabled={isPending}
+              disabled={isSubmitting}
             >
-              {isPending ? "Creating..." : "Create Company"}
+              {isSubmitting ? "Creating..." : "Create Company"}
             </Button>
           </form>
         </Form>
