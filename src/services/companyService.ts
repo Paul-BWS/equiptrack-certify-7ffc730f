@@ -18,6 +18,8 @@ export const companyService = {
       useseparatebillingaddress: data.useSeparateBillingAddress,
     };
 
+    console.log("Formatted company data for Supabase:", companyData);
+
     const { data: company, error } = await supabase
       .from("companies")
       .insert([companyData])
