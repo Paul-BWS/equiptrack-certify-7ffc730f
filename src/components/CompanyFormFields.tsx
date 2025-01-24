@@ -19,7 +19,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
         name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-[#B3B3B3] text-[12px]">Company Name</FormLabel>
+            <FormLabel className="text-[#B3B3B3] text-[12px]">Company Name *</FormLabel>
             <FormControl>
               <Input 
                 placeholder="Enter company name" 
@@ -37,7 +37,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
         name="industry"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-[#B3B3B3] text-[12px]">Industry</FormLabel>
+            <FormLabel className="text-[#B3B3B3] text-[12px]">Industry *</FormLabel>
             <FormControl>
               <Input 
                 placeholder="Enter industry" 
@@ -109,7 +109,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
         name="address"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-[#B3B3B3] text-[12px]">Site Address</FormLabel>
+            <FormLabel className="text-[#B3B3B3] text-[12px]">Site Address *</FormLabel>
             <FormControl>
               <Input 
                 placeholder="Enter site address" 
@@ -146,7 +146,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
           name="billingaddress"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-[#B3B3B3] text-[12px]">Billing Address</FormLabel>
+              <FormLabel className="text-[#B3B3B3] text-[12px]">Billing Address *</FormLabel>
               <FormControl>
                 <Input 
                   placeholder="Enter billing address" 

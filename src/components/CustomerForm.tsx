@@ -7,7 +7,7 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CompanyFormFields } from "./company-edit/CompanyFormFields";
+import { CompanyFormFields } from "./CompanyFormFields";
 import { companySchema, type CompanyFormData } from "@/schemas/companySchema";
 import { companyService } from "@/services/companyService";
 
@@ -60,6 +60,8 @@ export const CustomerForm = () => {
         description: error instanceof Error ? error.message : "Failed to create company. Please try again.",
         variant: "destructive",
       });
+      // Don't close the modal on error
+      // setOpen(false); - removed this line
     },
   });
 
