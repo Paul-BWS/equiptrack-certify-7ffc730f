@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CompanyFormFields } from "./CompanyFormFields";
 import { companySchema, type CompanyFormData } from "@/schemas/companySchema";
-import { companyService } from "@/services/companyService";
+import { supabase } from "@/lib/supabase";
 
 export const CustomerForm = () => {
   const [open, setOpen] = useState(false);
@@ -33,15 +33,36 @@ export const CustomerForm = () => {
 
   const { mutate: createCompany, isPending } = useMutation({
     mutationFn: async (data: CompanyFormData) => {
+      toast({
+        title: "Connecting to Supabase...",
+        description: "Attempting to create company",
+      });
+
       console.log("Starting company creation with data:", data);
-      try {
-        const result = await companyService.createCompany(data);
-        console.log("Company creation successful:", result);
-        return result;
-      } catch (error) {
-        console.error("Error in mutation:", error);
+      
+      const { data: newCompany, error } = await supabase
+        .from('companies')
+        .insert([{
+          name: data.name,
+          industry: data.industry,
+          website: data.website || null,
+          address: data.address,
+          useseparatebillingaddress: data.useSeparateBillingAddress,
+          billingaddress: data.useSeparateBillingAddress ? data.billingaddress : data.address,
+          notes: data.notes || null,
+          phone: data.phone || null,
+          mobile_phone: data.mobilePhone || null,
+        }])
+        .select()
+        .single();
+
+      if (error) {
+        console.error("Supabase error:", error);
         throw error;
       }
+
+      console.log("Company created successfully:", newCompany);
+      return newCompany;
     },
     onSuccess: () => {
       console.log("Mutation successful, invalidating queries");
