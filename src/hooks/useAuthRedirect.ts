@@ -21,6 +21,13 @@ export const useAuthRedirect = () => {
       throw new Error("Failed to fetch user profile");
     }
 
+    // Check if user is BWS user first
+    const { data: isBWSUser } = await supabase.rpc('is_bws_user');
+    if (isBWSUser) {
+      console.log("BWS user detected");
+      return { id: null, name: 'BWS' };
+    }
+
     // If profile exists and has company_id, get company details
     if (profile?.company_id) {
       console.log("Found company ID in profile:", profile.company_id);
@@ -115,6 +122,13 @@ export const useAuthRedirect = () => {
           console.log("No active session");
           navigate('/auth', { replace: true });
           return;
+        }
+
+        // Check if user is BWS user first
+        const { data: isBWSUser } = await supabase.rpc('is_bws_user');
+        if (isBWSUser) {
+          console.log("BWS user detected during session check");
+          return; // Allow BWS users to stay on current page
         }
 
         console.log("Checking session for user:", session.user.email);
