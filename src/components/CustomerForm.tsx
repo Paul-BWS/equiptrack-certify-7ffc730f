@@ -33,7 +33,7 @@ export const CustomerForm = () => {
 
   const { mutate: createCompany, isPending } = useMutation({
     mutationFn: async (data: CompanyFormData) => {
-      console.log("Form submitted with data:", data);
+      console.log("Starting company creation with data:", data);
       try {
         const result = await companyService.createCompany(data);
         console.log("Company creation successful:", result);
@@ -54,7 +54,7 @@ export const CustomerForm = () => {
       setOpen(false);
     },
     onError: (error) => {
-      console.error("Error creating company:", error);
+      console.error("Detailed error in onError:", error);
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to create company. Please try again.",
@@ -64,7 +64,12 @@ export const CustomerForm = () => {
   });
 
   const onSubmit = (data: CompanyFormData) => {
-    console.log("Form submitted with data:", data);
+    console.log("Form submitted, validation passed with data:", data);
+    console.log("Form state:", form.formState);
+    if (Object.keys(form.formState.errors).length > 0) {
+      console.log("Form validation errors:", form.formState.errors);
+      return;
+    }
     createCompany(data);
   };
 
