@@ -1,49 +1,79 @@
 import { supabase } from "@/lib/supabase";
-import { AuthError } from "@supabase/supabase-js";
+import { toast } from "sonner";
 
-export const fetchUserCompany = async (userId: string) => {
-  const { data, error } = await supabase
-    .from('user_companies')
-    .select('company_id')
-    .eq('user_id', userId)
-    .single();
-
-  if (error) {
-    console.error("Error fetching user company:", error);
-    throw new Error("Error loading user profile");
+export const checkBWSUser = async () => {
+  const { data: isBWSUser } = await supabase.rpc('is_bws_user');
+  if (isBWSUser) {
+    console.log("BWS user detected");
+    return true;
   }
-
-  if (!data?.company_id) {
-    console.log("No company associated with user");
-    throw new Error("No company associated with your account. Please contact support.");
-  }
-
-  console.log("Found company ID:", data.company_id);
-  return data.company_id;
+  return false;
 };
 
-export const fetchCompanyDetails = async (companyId: string) => {
-  const { data, error } = await supabase
+export const getProfileCompany = async (userId: string) => {
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('company_id')
+    .eq('id', userId)
+    .maybeSingle();
+
+  if (profileError) {
+    console.error("Error fetching user profile:", profileError);
+    throw new Error("Failed to fetch user profile");
+  }
+
+  return profile?.company_id;
+};
+
+export const getCompanyDetails = async (companyId: string) => {
+  const { data: company, error: companyError } = await supabase
     .from('companies')
-    .select('name')
+    .select('id, name')
     .eq('id', companyId)
     .single();
 
-  if (error) {
-    console.error("Error fetching company:", error);
-    throw new Error("Error loading company information");
+  if (companyError || !company) {
+    console.error("Error fetching company:", companyError);
+    throw new Error("Failed to fetch company details");
   }
 
-  console.log("Company data:", data);
-  return data;
+  return company;
 };
 
-export const getErrorMessage = (error: AuthError) => {
-  if (error.message.includes("refresh_token_not_found")) {
-    return "Your session has expired. Please sign in again.";
+export const getUserCompanyFromUserCompanies = async (userId: string) => {
+  const { data: userCompany, error: userCompanyError } = await supabase
+    .from('user_companies')
+    .select('company_id')
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (userCompanyError) {
+    console.error("Error fetching user company:", userCompanyError);
+    throw new Error("No company association found");
   }
-  if (error.message.includes("invalid credentials")) {
-    return "Invalid email or password";
+
+  if (!userCompany?.company_id) {
+    console.error("No company_id found for user");
+    throw new Error("No company association found");
   }
-  return error.message;
+
+  return userCompany.company_id;
+};
+
+export const updateProfileCompany = async (userId: string, companyId: string) => {
+  const { error: updateError } = await supabase
+    .from('profiles')
+    .update({ company_id: companyId })
+    .eq('id', userId);
+
+  if (updateError) {
+    console.error("Error updating profile:", updateError);
+  }
+};
+
+export const handleAuthError = async () => {
+  console.error("Session check error");
+  toast.error("Failed to process login");
+  await supabase.auth.signOut();
+  window.location.href = '/auth';
 };

@@ -2,6 +2,14 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import { 
+  checkBWSUser, 
+  getProfileCompany, 
+  getCompanyDetails,
+  getUserCompanyFromUserCompanies,
+  updateProfileCompany,
+  handleAuthError
+} from "@/utils/authUtils";
 
 export const useAuthRedirect = () => {
   const navigate = useNavigate();
@@ -9,88 +17,29 @@ export const useAuthRedirect = () => {
   const getUserCompany = async (userId: string) => {
     console.log("Fetching company for user:", userId);
     
-    // First check if user has a profile
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('company_id')
-      .eq('id', userId)
-      .maybeSingle();
-
-    if (profileError) {
-      console.error("Error fetching user profile:", profileError);
-      throw new Error("Failed to fetch user profile");
-    }
-
     // Check if user is BWS user first
-    const { data: isBWSUser } = await supabase.rpc('is_bws_user');
+    const isBWSUser = await checkBWSUser();
     if (isBWSUser) {
-      console.log("BWS user detected");
       return { id: null, name: 'BWS' };
     }
 
-    // If profile exists and has company_id, get company details
-    if (profile?.company_id) {
-      console.log("Found company ID in profile:", profile.company_id);
-      const { data: company, error: companyError } = await supabase
-        .from('companies')
-        .select('id, name')
-        .eq('id', profile.company_id)
-        .single();
-
-      if (companyError || !company) {
-        console.error("Error fetching company:", companyError);
-        throw new Error("Failed to fetch company details");
-      }
-
-      console.log("Found company:", company);
-      return company;
+    // Get company from profile
+    const profileCompanyId = await getProfileCompany(userId);
+    
+    if (profileCompanyId) {
+      console.log("Found company ID in profile:", profileCompanyId);
+      return getCompanyDetails(profileCompanyId);
     }
 
     // If no company in profile, check user_companies table
-    const { data: userCompany, error: userCompanyError } = await supabase
-      .from('user_companies')
-      .select('company_id')
-      .eq('user_id', userId)
-      .maybeSingle();
-
-    if (userCompanyError) {
-      console.error("Error fetching user company:", userCompanyError);
-      throw new Error("No company association found");
-    }
-
-    if (!userCompany?.company_id) {
-      console.error("No company_id found for user");
-      throw new Error("No company association found");
-    }
-
-    console.log("Found company ID in user_companies:", userCompany.company_id);
-
-    // Get the company details
-    const { data: company, error: companyError } = await supabase
-      .from('companies')
-      .select('id, name')
-      .eq('id', userCompany.company_id)
-      .single();
-
-    if (companyError || !company) {
-      console.error("Error fetching company:", companyError);
-      throw new Error("Failed to fetch company details");
-    }
+    const companyId = await getUserCompanyFromUserCompanies(userId);
+    console.log("Found company ID in user_companies:", companyId);
+    
+    const company = await getCompanyDetails(companyId);
 
     // Update profile with company_id if not set
-    if (!profile?.company_id) {
-      const { error: updateError } = await supabase
-        .from('profiles')
-        .update({ company_id: company.id })
-        .eq('id', userId);
+    await updateProfileCompany(userId, company.id);
 
-      if (updateError) {
-        console.error("Error updating profile:", updateError);
-        // Don't throw here, just log the error as it's not critical
-      }
-    }
-
-    console.log("Found company:", company);
     return company;
   };
 
@@ -108,9 +57,7 @@ export const useAuthRedirect = () => {
         }
       } catch (error) {
         console.error("Error handling redirect:", error);
-        toast.error("Failed to process login");
-        await supabase.auth.signOut();
-        window.location.href = '/auth';
+        await handleAuthError();
       }
     };
 
@@ -125,7 +72,7 @@ export const useAuthRedirect = () => {
         }
 
         // Check if user is BWS user first
-        const { data: isBWSUser } = await supabase.rpc('is_bws_user');
+        const isBWSUser = await checkBWSUser();
         if (isBWSUser) {
           console.log("BWS user detected during session check");
           return; // Allow BWS users to stay on current page
@@ -134,10 +81,7 @@ export const useAuthRedirect = () => {
         console.log("Checking session for user:", session.user.email);
         await handleRedirect(session);
       } catch (error) {
-        console.error("Session check error:", error);
-        toast.error("Failed to process login");
-        await supabase.auth.signOut();
-        window.location.href = '/auth';
+        await handleAuthError();
       }
     };
 
