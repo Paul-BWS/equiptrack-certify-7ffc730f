@@ -15,6 +15,11 @@ export const CustomerList = ({ customers }: CustomerListProps) => {
   };
 
   const handleCustomerClick = (customerId: string) => {
+    console.log("Navigating to customer:", customerId); // Debug log
+    if (!customerId) {
+      console.error("Invalid customer ID");
+      return;
+    }
     navigate(`/customers/${customerId}`);
   };
 
