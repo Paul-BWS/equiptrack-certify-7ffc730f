@@ -31,6 +31,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
           </FormItem>
         )}
       />
+
       <FormField
         control={form.control}
         name="industry"
@@ -48,6 +49,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
           </FormItem>
         )}
       />
+
       <FormField
         control={form.control}
         name="website"
@@ -65,6 +67,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
           </FormItem>
         )}
       />
+
       <FormField
         control={form.control}
         name="phone"
@@ -82,6 +85,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
           </FormItem>
         )}
       />
+
       <FormField
         control={form.control}
         name="mobilePhone"
@@ -99,6 +103,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
           </FormItem>
         )}
       />
+
       <FormField
         control={form.control}
         name="address"
@@ -116,6 +121,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
           </FormItem>
         )}
       />
+
       <FormField
         control={form.control}
         name="useSeparateBillingAddress"
@@ -133,6 +139,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
           </FormItem>
         )}
       />
+
       {watchUseSeparateBillingAddress && (
         <FormField
           control={form.control}
@@ -152,6 +159,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
           )}
         />
       )}
+
       <FormField
         control={form.control}
         name="notes"

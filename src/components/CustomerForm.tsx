@@ -91,10 +91,10 @@ export const CustomerForm = () => {
           New Company
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-background p-6">
+      <DialogContent className="sm:max-w-[425px] bg-[#f9fafb] p-6">
         <DialogHeader className="mb-4">
           <DialogTitle className="text-xl font-semibold">Add New Company</DialogTitle>
-          <DialogDescription className="text-muted-foreground">
+          <DialogDescription className="text-[#B3B3B3]">
             Fill in the company details below. All fields marked with * are required.
           </DialogDescription>
         </DialogHeader>
