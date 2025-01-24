@@ -19,7 +19,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
         name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Company Name</FormLabel>
+            <FormLabel>Company Name *</FormLabel>
             <FormControl>
               <Input placeholder="Enter company name" {...field} />
             </FormControl>
@@ -32,7 +32,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
         name="industry"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Industry</FormLabel>
+            <FormLabel>Industry *</FormLabel>
             <FormControl>
               <Input placeholder="Enter industry" {...field} />
             </FormControl>
@@ -55,10 +55,36 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
       />
       <FormField
         control={form.control}
+        name="phone"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Phone Number</FormLabel>
+            <FormControl>
+              <Input placeholder="Enter phone number (optional)" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="mobilePhone"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Mobile Number</FormLabel>
+            <FormControl>
+              <Input placeholder="Enter mobile number (optional)" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
         name="address"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Site Address</FormLabel>
+            <FormLabel>Site Address *</FormLabel>
             <FormControl>
               <Input placeholder="Enter site address" {...field} />
             </FormControl>
@@ -89,7 +115,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
           name="billingaddress"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Billing Address</FormLabel>
+              <FormLabel>Billing Address *</FormLabel>
               <FormControl>
                 <Input placeholder="Enter billing address" {...field} />
               </FormControl>
