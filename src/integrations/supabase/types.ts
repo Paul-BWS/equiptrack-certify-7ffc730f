@@ -69,6 +69,13 @@ export type Database = {
             referencedRelation: "companies"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "axle_stands_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "user_company_details"
+            referencedColumns: ["company_id"]
+          },
         ]
       }
       beamsetter: {
@@ -121,6 +128,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "companies"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "beamsetter_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "user_company_details"
+            referencedColumns: ["company_id"]
           },
         ]
       }
@@ -290,6 +304,13 @@ export type Database = {
             referencedRelation: "companies"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "contacts_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "user_company_details"
+            referencedColumns: ["company_id"]
+          },
         ]
       }
       customers: {
@@ -427,6 +448,13 @@ export type Database = {
             referencedRelation: "companies"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "lifting_equipment_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "user_company_details"
+            referencedColumns: ["company_id"]
+          },
         ]
       }
       profiles: {
@@ -452,6 +480,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "companies"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "user_company_details"
+            referencedColumns: ["company_id"]
           },
         ]
       }
@@ -523,6 +558,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "companies"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "staff_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "user_company_details"
+            referencedColumns: ["company_id"]
           },
         ]
       }
@@ -709,6 +751,13 @@ export type Database = {
             referencedRelation: "companies"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "tyre_gauges_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "user_company_details"
+            referencedColumns: ["company_id"]
+          },
         ]
       }
       user_companies: {
@@ -763,7 +812,16 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      user_company_details: {
+        Row: {
+          company_id: string | null
+          company_name: string | null
+          created_at: string | null
+          id: string | null
+          user_email: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       get_next_certificate_number: {
