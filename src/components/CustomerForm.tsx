@@ -33,8 +33,13 @@ export const CustomerForm = () => {
 
   const { mutate: createCompany, isPending } = useMutation({
     mutationFn: async (data: CompanyFormData) => {
-      console.log("Form data before submission:", data);
-      return await companyService.createCompany(data);
+      console.log("Submitting form data:", data);
+      const formattedData = {
+        ...data,
+        billingaddress: data.useSeparateBillingAddress ? data.billingaddress : data.address,
+      };
+      console.log("Formatted data before submission:", formattedData);
+      return await companyService.createCompany(formattedData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["companies"] });

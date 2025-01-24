@@ -9,13 +9,13 @@ export const companyService = {
     const companyData = {
       name: data.name,
       industry: data.industry,
-      website: data.website,
+      website: data.website || null,
       address: data.address,
-      billingaddress: data.useSeparateBillingAddress ? data.billingaddress : data.address,
-      notes: data.notes,
-      phone: data.phone,
-      mobile_phone: data.mobilePhone,
+      phone: data.phone || null,
+      mobile_phone: data.mobilePhone || null,
+      notes: data.notes || null,
       useseparatebillingaddress: data.useSeparateBillingAddress,
+      billingaddress: data.useSeparateBillingAddress ? data.billingaddress : data.address,
     };
 
     console.log("Formatted company data for Supabase:", companyData);
