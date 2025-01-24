@@ -70,7 +70,7 @@ export const CustomerForm = () => {
           New Company
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-[#f9fafb]">
+      <DialogContent className="sm:max-w-[425px] bg-[#F9F9F9]">
         <DialogHeader>
           <DialogTitle>Add New Company</DialogTitle>
           <DialogDescription>

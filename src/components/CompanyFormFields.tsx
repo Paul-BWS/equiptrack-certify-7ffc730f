@@ -19,12 +19,12 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
         name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Company Name</FormLabel>
+            <FormLabel className="text-[#B3B3B3] text-[12px]">Company Name</FormLabel>
             <FormControl>
               <Input 
                 placeholder="Enter company name" 
                 {...field} 
-                className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white"
+                className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white text-[#B3B3B3] text-[16px] px-4"
               />
             </FormControl>
             <FormMessage />
@@ -36,12 +36,12 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
         name="industry"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Industry</FormLabel>
+            <FormLabel className="text-[#B3B3B3] text-[12px]">Industry</FormLabel>
             <FormControl>
               <Input 
                 placeholder="Enter industry" 
                 {...field} 
-                className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white"
+                className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white text-[#B3B3B3] text-[16px] px-4"
               />
             </FormControl>
             <FormMessage />
@@ -53,12 +53,12 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
         name="website"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Website</FormLabel>
+            <FormLabel className="text-[#B3B3B3] text-[12px]">Website</FormLabel>
             <FormControl>
               <Input 
                 placeholder="Enter website URL (optional)" 
                 {...field} 
-                className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white"
+                className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white text-[#B3B3B3] text-[16px] px-4"
               />
             </FormControl>
             <FormMessage />
@@ -70,12 +70,12 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
         name="address"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Site Address</FormLabel>
+            <FormLabel className="text-[#B3B3B3] text-[12px]">Site Address</FormLabel>
             <FormControl>
               <Input 
                 placeholder="Enter site address" 
                 {...field} 
-                className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white"
+                className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white text-[#B3B3B3] text-[16px] px-4"
               />
             </FormControl>
             <FormMessage />
@@ -94,7 +94,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
               />
             </FormControl>
             <div className="space-y-1 leading-none">
-              <FormLabel>Use separate billing address</FormLabel>
+              <FormLabel className="text-[#B3B3B3] text-[12px]">Use separate billing address</FormLabel>
             </div>
           </FormItem>
         )}
@@ -105,12 +105,12 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
           name="billingaddress"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Billing Address</FormLabel>
+              <FormLabel className="text-[#B3B3B3] text-[12px]">Billing Address</FormLabel>
               <FormControl>
                 <Input 
                   placeholder="Enter billing address" 
                   {...field} 
-                  className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white"
+                  className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white text-[#B3B3B3] text-[16px] px-4"
                 />
               </FormControl>
               <FormMessage />
@@ -123,11 +123,11 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
         name="notes"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Notes</FormLabel>
+            <FormLabel className="text-[#B3B3B3] text-[12px]">Notes</FormLabel>
             <FormControl>
               <Textarea 
                 placeholder="Enter any additional notes"
-                className="resize-none border-gray-200 rounded-lg focus-visible:ring-1 bg-white"
+                className="resize-none border-gray-200 rounded-lg focus-visible:ring-1 bg-white text-[#B3B3B3] text-[16px] px-4"
                 {...field}
               />
             </FormControl>
