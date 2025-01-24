@@ -31,17 +31,22 @@ export const CustomerForm = () => {
   });
 
   const onSubmit = async (data: CompanyFormData) => {
+    if (isSubmitting) return; // Prevent double submission
+    
     try {
       console.log("Step 1: Starting form submission");
       setIsSubmitting(true);
       console.log("Form data to be submitted:", data);
       
+      // Show initial processing toast
       toast({
         title: "Processing",
         description: "Creating new company...",
+        duration: 3000, // Show for 3 seconds
       });
       console.log("Step 2: Initial toast shown");
 
+      // Attempt to insert the company
       const { error, data: newCompany } = await supabase.from('companies').insert([{
         name: data.name,
         industry: data.industry,
@@ -52,7 +57,7 @@ export const CustomerForm = () => {
         notes: data.notes || null,
         phone: data.phone || null,
         mobile_phone: data.mobilePhone || null,
-      }]);
+      }]).select();
 
       console.log("Step 3: Supabase response received", { error, newCompany });
 
@@ -60,27 +65,32 @@ export const CustomerForm = () => {
         console.error("Error creating company:", error);
         toast({
           title: "Error",
-          description: error.message,
+          description: error.message || "Failed to create company",
           variant: "destructive",
+          duration: 5000, // Show error for longer
         });
         console.log("Step 4a: Error toast shown");
         return;
       }
 
       console.log("Step 4b: Company created successfully");
+      // Show success toast and reset form
       toast({
         title: "Success",
         description: "Company created successfully!",
+        duration: 3000,
       });
 
       form.reset();
       setOpen(false);
     } catch (error) {
       console.error("Caught error in form submission:", error);
+      // Show error toast for unexpected errors
       toast({
         title: "Error",
-        description: "Failed to create company. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to create company. Please try again.",
         variant: "destructive",
+        duration: 5000,
       });
     } finally {
       console.log("Step 5: Form submission completed");
@@ -99,6 +109,7 @@ export const CustomerForm = () => {
             toast({
               title: "Form Opened",
               description: "Please fill in the company details",
+              duration: 3000,
             });
             setOpen(true);
           }}
