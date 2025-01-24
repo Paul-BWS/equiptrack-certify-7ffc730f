@@ -106,7 +106,7 @@ export const useAuthRedirect = () => {
           navigate('/');
         } else {
           console.log("Customer user detected, redirecting to:", `/customers/${company.id}`);
-          navigate(`/customers/${company.id}`);
+          navigate(`/customers/${company.id}`, { replace: true }); // Added replace: true
         }
       } catch (error) {
         console.error("Session check error:", error);
@@ -117,7 +117,7 @@ export const useAuthRedirect = () => {
     };
 
     // Remove any existing subscription
-    let { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("Auth state changed:", event);
       
       if (event === 'SIGNED_IN' && session) {
@@ -129,7 +129,7 @@ export const useAuthRedirect = () => {
             navigate('/');
           } else {
             console.log("Customer user detected, redirecting to:", `/customers/${company.id}`);
-            navigate(`/customers/${company.id}`);
+            navigate(`/customers/${company.id}`, { replace: true }); // Added replace: true
           }
         } catch (error) {
           console.error("Error handling sign in:", error);
