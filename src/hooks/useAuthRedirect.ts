@@ -88,60 +88,55 @@ export const useAuthRedirect = () => {
   };
 
   useEffect(() => {
+    const handleRedirect = async (session: any) => {
+      try {
+        const company = await getUserCompany(session.user.id);
+        
+        if (company.name === 'BWS') {
+          console.log("BWS user detected, redirecting to admin dashboard");
+          navigate('/', { replace: true });
+        } else {
+          console.log("Customer user detected, redirecting to:", `/customers/${company.id}`);
+          window.location.href = `/customers/${company.id}`;
+        }
+      } catch (error) {
+        console.error("Error handling redirect:", error);
+        toast.error("Failed to process login");
+        await supabase.auth.signOut();
+        window.location.href = '/auth';
+      }
+    };
+
     const checkSession = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
         
         if (!session?.user) {
           console.log("No active session");
-          navigate('/auth');
+          navigate('/auth', { replace: true });
           return;
         }
 
         console.log("Checking session for user:", session.user.email);
-        const company = await getUserCompany(session.user.id);
-        
-        if (company.name === 'BWS') {
-          console.log("BWS user detected, redirecting to admin dashboard");
-          navigate('/');
-        } else {
-          console.log("Customer user detected, redirecting to:", `/customers/${company.id}`);
-          navigate(`/customers/${company.id}`, { replace: true }); // Added replace: true
-        }
+        await handleRedirect(session);
       } catch (error) {
         console.error("Session check error:", error);
         toast.error("Failed to process login");
         await supabase.auth.signOut();
-        window.location.replace('/auth');
+        window.location.href = '/auth';
       }
     };
 
-    // Remove any existing subscription
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("Auth state changed:", event);
       
       if (event === 'SIGNED_IN' && session) {
-        try {
-          const company = await getUserCompany(session.user.id);
-          
-          if (company.name === 'BWS') {
-            console.log("BWS user detected, redirecting to admin dashboard");
-            navigate('/');
-          } else {
-            console.log("Customer user detected, redirecting to:", `/customers/${company.id}`);
-            navigate(`/customers/${company.id}`, { replace: true }); // Added replace: true
-          }
-        } catch (error) {
-          console.error("Error handling sign in:", error);
-          toast.error("Failed to process login");
-          await supabase.auth.signOut();
-          window.location.replace('/auth');
-        }
+        await handleRedirect(session);
       }
       
       if (event === 'SIGNED_OUT') {
         console.log("User signed out, redirecting to auth");
-        window.location.replace('/auth');
+        window.location.href = '/auth';
       }
     });
 
