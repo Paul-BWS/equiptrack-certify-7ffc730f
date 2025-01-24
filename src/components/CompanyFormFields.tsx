@@ -21,7 +21,11 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
           <FormItem>
             <FormLabel>Company Name</FormLabel>
             <FormControl>
-              <Input placeholder="Enter company name" {...field} />
+              <Input 
+                placeholder="Enter company name" 
+                {...field} 
+                className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white"
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -34,7 +38,11 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
           <FormItem>
             <FormLabel>Industry</FormLabel>
             <FormControl>
-              <Input placeholder="Enter industry" {...field} />
+              <Input 
+                placeholder="Enter industry" 
+                {...field} 
+                className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white"
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -47,7 +55,11 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
           <FormItem>
             <FormLabel>Website</FormLabel>
             <FormControl>
-              <Input placeholder="Enter website URL (optional)" {...field} />
+              <Input 
+                placeholder="Enter website URL (optional)" 
+                {...field} 
+                className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white"
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -60,7 +72,11 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
           <FormItem>
             <FormLabel>Site Address</FormLabel>
             <FormControl>
-              <Input placeholder="Enter site address" {...field} />
+              <Input 
+                placeholder="Enter site address" 
+                {...field} 
+                className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white"
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -91,7 +107,11 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
             <FormItem>
               <FormLabel>Billing Address</FormLabel>
               <FormControl>
-                <Input placeholder="Enter billing address" {...field} />
+                <Input 
+                  placeholder="Enter billing address" 
+                  {...field} 
+                  className="border-gray-200 rounded-lg focus-visible:ring-1 bg-white"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -107,7 +127,7 @@ export const CompanyFormFields = ({ form }: CompanyFormFieldsProps) => {
             <FormControl>
               <Textarea 
                 placeholder="Enter any additional notes"
-                className="resize-none"
+                className="resize-none border-gray-200 rounded-lg focus-visible:ring-1 bg-white"
                 {...field}
               />
             </FormControl>
