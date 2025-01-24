@@ -1,17 +1,17 @@
-import React from "react";
+import { type ReactElement } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CompanyFormFields } from "./CompanyFormFields";
 import { companySchema, type CompanyFormData } from "@/schemas/companySchema";
 import { supabase } from "@/lib/supabase";
 
-export const CustomerForm = () => {
+export const CustomerForm = (): ReactElement => {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
@@ -48,17 +48,17 @@ export const CustomerForm = () => {
   };
 
   // React to changes in watched fields
-  React.useEffect(() => {
+  useEffect(() => {
     if (watchName) handleFieldComplete("Company Name", watchName);
-  }, [watchName]);
+  }, [watchName, toast]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (watchIndustry) handleFieldComplete("Industry", watchIndustry);
-  }, [watchIndustry]);
+  }, [watchIndustry, toast]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (watchAddress) handleFieldComplete("Site Address", watchAddress);
-  }, [watchAddress]);
+  }, [watchAddress, toast]);
 
   const onSubmit = async (data: CompanyFormData) => {
     if (isSubmitting) {
