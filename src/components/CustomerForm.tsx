@@ -32,15 +32,17 @@ export const CustomerForm = () => {
 
   const onSubmit = async (data: CompanyFormData) => {
     try {
+      console.log("Step 1: Starting form submission");
       setIsSubmitting(true);
-      console.log("Form submitted with data:", data);
+      console.log("Form data to be submitted:", data);
       
       toast({
         title: "Processing",
         description: "Creating new company...",
       });
+      console.log("Step 2: Initial toast shown");
 
-      const { error } = await supabase.from('companies').insert([{
+      const { error, data: newCompany } = await supabase.from('companies').insert([{
         name: data.name,
         industry: data.industry,
         website: data.website || null,
@@ -52,6 +54,8 @@ export const CustomerForm = () => {
         mobile_phone: data.mobilePhone || null,
       }]);
 
+      console.log("Step 3: Supabase response received", { error, newCompany });
+
       if (error) {
         console.error("Error creating company:", error);
         toast({
@@ -59,9 +63,11 @@ export const CustomerForm = () => {
           description: error.message,
           variant: "destructive",
         });
+        console.log("Step 4a: Error toast shown");
         return;
       }
 
+      console.log("Step 4b: Company created successfully");
       toast({
         title: "Success",
         description: "Company created successfully!",
@@ -70,13 +76,14 @@ export const CustomerForm = () => {
       form.reset();
       setOpen(false);
     } catch (error) {
-      console.error("Error in form submission:", error);
+      console.error("Caught error in form submission:", error);
       toast({
         title: "Error",
         description: "Failed to create company. Please try again.",
         variant: "destructive",
       });
     } finally {
+      console.log("Step 5: Form submission completed");
       setIsSubmitting(false);
     }
   };
