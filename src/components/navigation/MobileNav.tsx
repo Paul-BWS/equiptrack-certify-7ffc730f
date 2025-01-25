@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ClipboardList, LayoutDashboard, Users, LogOut } from "lucide-react";
+import { ClipboardList, LayoutDashboard, Users, LogOut, ArrowRight } from "lucide-react";
 import { Button } from "../ui/button";
 
 interface MobileNavProps {
@@ -28,6 +28,14 @@ export const MobileNav = ({ isOpen, onClose, onSignOut }: MobileNavProps) => {
       >
         <ClipboardList size={20} />
         <span>Equipment</span>
+      </Link>
+      <Link
+        to="/customers/1/beamsetter"
+        className="text-white hover:text-accent flex items-center gap-2 border border-white rounded-lg p-2"
+        onClick={onClose}
+      >
+        <ArrowRight size={20} />
+        <span>Beamsetter</span>
       </Link>
       <Button
         variant="ghost"

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Users, ClipboardList } from "lucide-react";
+import { Users, ClipboardList, ArrowRight } from "lucide-react";
 
 export const NavigationLinks = () => {
   return (
@@ -17,6 +17,13 @@ export const NavigationLinks = () => {
       >
         <ClipboardList size={20} />
         <span>Equipment</span>
+      </Link>
+      <Link
+        to="/customers/1/beamsetter"
+        className="text-white hover:text-accent flex items-center gap-2"
+      >
+        <ArrowRight size={20} />
+        <span>Beamsetter</span>
       </Link>
     </div>
   );
