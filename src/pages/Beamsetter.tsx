@@ -1,4 +1,4 @@
-import { Navigation } from "@/components/Navigation";
+import { BeamsetterLayout } from "@/components/layouts/BeamsetterLayout";
 import { BeamsetterReadingsModal } from "@/components/beamsetter/BeamsetterReadingsModal";
 import { BeamsetterCertificateModal } from "@/components/beamsetter/BeamsetterCertificateModal";
 import { useState } from "react";
@@ -93,36 +93,30 @@ const Beamsetter = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background">
-        <Navigation />
-        <main className="container mx-auto py-8">
-          <div className="flex justify-center items-center h-48">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-          </div>
-        </main>
-      </div>
+      <BeamsetterLayout>
+        <div className="flex justify-center items-center h-48">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      </BeamsetterLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation />
-      <main className="container mx-auto py-8">
-        <div className="space-y-6">
-          <BeamsetterHeader
-            customerId={customerId!}
-            customerName={customerData?.name}
-            onNewBeamsetter={handleNewBeamsetter}
-          />
-          
-          <BeamsetterList
-            beamsetters={beamsetters}
-            onNewBeamsetter={handleNewBeamsetter}
-            onGenerateCertificate={handleGenerateCertificate}
-            onViewReadings={handleViewReadings}
-          />
-        </div>
-      </main>
+    <BeamsetterLayout>
+      <div className="space-y-6">
+        <BeamsetterHeader
+          customerId={customerId!}
+          customerName={customerData?.name}
+          onNewBeamsetter={handleNewBeamsetter}
+        />
+        
+        <BeamsetterList
+          beamsetters={beamsetters}
+          onNewBeamsetter={handleNewBeamsetter}
+          onGenerateCertificate={handleGenerateCertificate}
+          onViewReadings={handleViewReadings}
+        />
+      </div>
 
       <BeamsetterReadingsModal
         open={showReadingsModal}
@@ -137,7 +131,7 @@ const Beamsetter = () => {
           equipment={selectedEquipment}
         />
       )}
-    </div>
+    </BeamsetterLayout>
   );
 };
 
